@@ -4,12 +4,12 @@ if (createLink != null) {
 }
 
 async function credentialCreateClick(event) {
-    const response = await fetchCreadentialsCreateInitialize();
+    const response = await fetchAttestationOptions();
 
     await credentialCreate(response);
 }
 
-async function fetchCreadentialsCreateInitialize() {
+async function fetchAttestationOptions() {
     try {
         const response = await fetch('/attestation/options/', {
             method: 'POST',
@@ -26,38 +26,76 @@ async function fetchCreadentialsCreateInitialize() {
     }
 }
 
+async function fetchAttestationResult(request) {
+    try {
+        const response = await fetch('/attestation/result/', {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(request)
+        });
+
+        if (response.ok) {
+            return await response.json();
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 async function credentialCreate(response) {
     const credentialCreationOptions = {
         publicKey: {
-            challenge: base64ToUint8Array(response.challenge),
+            challenge: toUint8Array(response.challenge),
             rp: {
                 id: response.rp.id,
                 name: response.rp.name,
             },
             user: {
-                id: base64ToUint8Array(response.challenge),
+                id: toUint8Array(response.challenge),
                 name: response.user.name,
                 displayName: response.user.displayName,
             },
             pubKeyCredParams: [
                 {
                     type: "public-key",
+                    alg: -257, // RS256
+                },
+                {
+                    type: "public-key",
                     alg: -7, // ES256
                 },
             ],
+            attestation: "direct"
         },
     };
 
-    navigator.credentials
-        .create(credentialCreationOptions)
-        .then(function (assertion) {
-            // Send assertion to server for verification
-        }).catch(function (error) {
-            console.error(error);
-        });
+    let assertion;
+    try {
+        assertion = await navigator.credentials.create(credentialCreationOptions);
+    }
+    catch (error) {
+        console.error(error);
+        return
+    }
+
+    const credentials = {
+        id: assertion.id,
+        rawId: toBase64(assertion.rawId),
+        response: {
+            attestationObject: toBase64(assertion.response.attestationObject),
+            clientDataJson: toBase64(assertion.response.clientDataJSON),
+            signature: toBase64(assertion.response.signature),
+            userHandler: toBase64(assertion.response.userHandler),
+        },
+        type: assertion.type,
+    };
+
+    await fetchAttestationResult(credentials);
 }
 
-function base64ToUint8Array(base64) {
+function toUint8Array(base64) {
     // Decode the Base64 string to a binary string
     const binaryString = atob(base64);
 
@@ -68,6 +106,14 @@ function base64ToUint8Array(base64) {
     }
 
     return uint8Array;
+}
+
+function toBase64(uint8Array) {
+    // Convert Uint8Array to a binary string
+    const binaryString = String.fromCharCode.apply(null, new Uint8Array(uint8Array));
+
+    // Encode the binary string to Base64
+    return btoa(binaryString);
 }
 
 window.credentialCreateClick = credentialCreateClick;

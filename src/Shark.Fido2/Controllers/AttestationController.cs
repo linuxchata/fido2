@@ -1,5 +1,8 @@
-﻿using System.Security.Cryptography;
+﻿using System.Net;
+using System.Security.Cryptography;
 using Microsoft.AspNetCore.Mvc;
+using Shark.Fido2.Constants;
+using Shark.Fido2.Requests;
 using Shark.Fido2.Responses;
 
 namespace Shark.Fido2.Controllers;
@@ -12,7 +15,7 @@ namespace Shark.Fido2.Controllers;
 public class AttestationController : ControllerBase
 {
     /// <summary>
-    /// Gets Credential Creation Options
+    /// Gets credential creation options
     /// </summary>
     /// <returns>The HTTP response.</returns>
     [HttpPost("options")]
@@ -22,7 +25,7 @@ public class AttestationController : ControllerBase
         using var randomNumberGenerator = RandomNumberGenerator.Create();
         randomNumberGenerator.GetBytes(challengeBytes);
 
-        var response = new CreadentialCreateInitializeResponse
+        var response = new CredentialGetOptionsResponse
         {
             Challenge = Convert.ToBase64String(challengeBytes),
             RelyingParty = new RelyingPartyResponse
@@ -42,12 +45,23 @@ public class AttestationController : ControllerBase
     }
 
     /// <summary>
-    /// Complete registration
+    /// Validate credential
     /// </summary>
+    /// <param name="request"></param>
     /// <returns>The HTTP response.</returns>
-    [HttpPost("complete")]
-    public async Task<IActionResult> Complete()
+    [HttpPost("result")]
+    public async Task<IActionResult> Result(ServerPublicKeyCredential request)
     {
-        return Ok();
+        // The server will validate challenges, origins, signatures and the rest of
+        // the ServerAuthenticatorAttestationResponse according to the algorithm
+        // described in section 7.1 of the [Webauthn] specs, and will respond with
+        // the appropriate ServerResponse message.
+
+        var response = new CredentialValidateResponse
+        {
+            Status = Status.Ok,
+        };
+
+        return Ok(response);
     }
 }

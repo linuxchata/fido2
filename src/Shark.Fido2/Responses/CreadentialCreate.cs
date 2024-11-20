@@ -2,7 +2,7 @@
 
 namespace Shark.Fido2.Responses;
 
-public sealed class CreadentialCreateInitializeResponse
+public sealed class CredentialGetOptionsResponse
 {
     [JsonPropertyName("rp")]
     public required RelyingPartyResponse RelyingParty { get; set; }
