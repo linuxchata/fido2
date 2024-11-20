@@ -1,7 +1,9 @@
-﻿using System.Net;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
+using System.Text;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Shark.Fido2.Constants;
+using Shark.Fido2.Models;
 using Shark.Fido2.Requests;
 using Shark.Fido2.Responses;
 
@@ -41,6 +43,8 @@ public class AttestationController : ControllerBase
             }
         };
 
+        HttpContext.Session.SetString("Challenge", response.Challenge);
+
         return Ok(response);
     }
 
@@ -57,11 +61,62 @@ public class AttestationController : ControllerBase
         // described in section 7.1 of the [Webauthn] specs, and will respond with
         // the appropriate ServerResponse message.
 
-        var response = new CredentialValidateResponse
+        var clientDataJsonArray = Convert.FromBase64String(request.Response.ClientDataJson);
+        var decodedClientDataJson = Encoding.UTF8.GetString(clientDataJsonArray);
+
+        var clientData = JsonSerializer.Deserialize<ClientDataModel>(decodedClientDataJson);
+
+        var expectedChallenge = HttpContext.Session.GetString("Challenge");
+
+        var response = new CredentialValidateResponse();
+
+        var base64StringChallenge = Base64UrlToBase64(clientData?.Challenge!);
+
+        if (!Compare(expectedChallenge!, base64StringChallenge))
         {
-            Status = Status.Ok,
-        };
+            response.Status = Status.Failed;
+        }
+        else
+        {
+            response.Status = Status.Ok;
+        }
 
         return Ok(response);
+    }
+
+    private static string Base64UrlToBase64(string base64Url)
+    {
+        // Replace Base64URL characters with Base64 equivalents
+        var base64 = base64Url.Replace('-', '+').Replace('_', '/');
+
+        // Add padding if necessary
+        var padding = base64.Length % 4;
+        if (padding > 0)
+        {
+            base64 += new string('=', 4 - padding);
+        }
+
+        return base64;
+    }
+
+    private bool Compare(string expected, string actual)
+    {
+        var expectedData = Convert.FromBase64String(expected);
+        var actualData = Convert.FromBase64String(actual);
+
+        if (expectedData.Length != actualData.Length)
+        {
+            return false;
+        }
+
+        for (var i = 0; i < expectedData.Length; i++)
+        {
+            if (expectedData[i] != actualData[i])
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
