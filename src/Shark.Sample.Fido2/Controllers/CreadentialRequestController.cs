@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Shark.Fido2.Controllers;
+namespace Shark.Sample.Fido2.Controllers;
 
 [Route("[controller]")]
 [ApiController]

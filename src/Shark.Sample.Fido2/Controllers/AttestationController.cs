@@ -1,21 +1,23 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
-using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Shark.Fido2.Core;
-using Shark.Fido2.Models;
-using Shark.Fido2.Requests;
+using Shark.Fido2.Core.Abstractions;
+using Shark.Fido2.Domain;
 using Shark.Fido2.Responses;
+using Shark.Sample.Fido2.Requests;
 
-namespace Shark.Fido2.Controllers;
+namespace Shark.Sample.Fido2.Controllers;
 
 /// <summary>
 /// Registration
 /// </summary>
 [Route("[controller]")]
 [ApiController]
-public class AttestationController : ControllerBase
+public class AttestationController(IAttestationService attestationService) : ControllerBase
 {
+    private readonly IAttestationService _attestationService = attestationService;
+
     /// <summary>
     /// Gets credential creation options
     /// </summary>
@@ -27,9 +29,11 @@ public class AttestationController : ControllerBase
         using var randomNumberGenerator = RandomNumberGenerator.Create();
         randomNumberGenerator.GetBytes(challengeBytes);
 
+        var credentialOptions = _attestationService.GetOptions();
+
         var response = new CredentialGetOptionsResponse
         {
-            Challenge = Convert.ToBase64String(challengeBytes),
+            Challenge = credentialOptions.Challenge,
             RelyingParty = new RelyingPartyResponse
             {
                 Identifier = "localhost",
@@ -54,69 +58,34 @@ public class AttestationController : ControllerBase
     /// <param name="request"></param>
     /// <returns>The HTTP response.</returns>
     [HttpPost("result")]
-    public async Task<IActionResult> Result(ServerPublicKeyCredential request)
+    public async Task<IActionResult> Result(PublicKeyCredentialResponse request)
     {
         // The server will validate challenges, origins, signatures and the rest of
         // the ServerAuthenticatorAttestationResponse according to the algorithm
         // described in section 7.1 of the [Webauthn] specs, and will respond with
         // the appropriate ServerResponse message.
 
-        var clientDataJsonArray = Convert.FromBase64String(request.Response.ClientDataJson);
-        var decodedClientDataJson = Encoding.UTF8.GetString(clientDataJsonArray);
-
-        var clientData = JsonSerializer.Deserialize<ClientDataModel>(decodedClientDataJson);
-
         var expectedChallenge = HttpContext.Session.GetString("Challenge");
 
         var response = new CredentialValidateResponse();
 
-        var base64StringChallenge = Base64UrlToBase64(clientData?.Challenge!);
+        _attestationService.Complete(new PublicKeyCredential
+        {
+            Id = request.Id,
+            RawId = request.RawId,
+            Response = new Shark.Fido2.Domain.AuthenticatorAttestationResponse
+            {
+                AttestationObject = request.Response.AttestationObject,
+                ClientDataJson = request.Response.ClientDataJson,
+                Signature = request.Response.Signature,
+                UserHandler = request.Response.UserHandler,
+            }
+        },
+        expectedChallenge);
 
-        if (!Compare(expectedChallenge!, base64StringChallenge))
-        {
-            response.Status = ResponseStatus.Failed;
-        }
-        else
-        {
-            response.Status = ResponseStatus.Ok;
-        }
+        response.Status = ResponseStatus.Failed;
+        response.Status = ResponseStatus.Ok;
 
         return Ok(response);
-    }
-
-    private static string Base64UrlToBase64(string base64Url)
-    {
-        // Replace Base64URL characters with Base64 equivalents
-        var base64 = base64Url.Replace('-', '+').Replace('_', '/');
-
-        // Add padding if necessary
-        var padding = base64.Length % 4;
-        if (padding > 0)
-        {
-            base64 += new string('=', 4 - padding);
-        }
-
-        return base64;
-    }
-
-    private bool Compare(string expected, string actual)
-    {
-        var expectedData = Convert.FromBase64String(expected);
-        var actualData = Convert.FromBase64String(actual);
-
-        if (expectedData.Length != actualData.Length)
-        {
-            return false;
-        }
-
-        for (var i = 0; i < expectedData.Length; i++)
-        {
-            if (expectedData[i] != actualData[i])
-            {
-                return false;
-            }
-        }
-
-        return true;
     }
 }

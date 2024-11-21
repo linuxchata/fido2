@@ -1,8 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Shark.Fido2.Requests;
+namespace Shark.Sample.Fido2.Requests;
 
-public sealed class ServerAuthenticatorAttestationResponse
+public sealed class AuthenticatorAttestationResponse
 {
     [JsonPropertyName("clientDataJSON")]
     public required string ClientDataJson { get; set; }
