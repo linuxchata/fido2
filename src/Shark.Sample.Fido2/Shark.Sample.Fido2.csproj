@@ -14,5 +14,9 @@
   <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="7.0.0" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Shark.Fido2.Core\Shark.Fido2.Core.csproj" />
+  </ItemGroup>
 
 </Project>

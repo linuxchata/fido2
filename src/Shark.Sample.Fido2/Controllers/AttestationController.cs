@@ -2,7 +2,7 @@
 using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
-using Shark.Fido2.Constants;
+using Shark.Fido2.Core;
 using Shark.Fido2.Models;
 using Shark.Fido2.Requests;
 using Shark.Fido2.Responses;
@@ -74,11 +74,11 @@ public class AttestationController : ControllerBase
 
         if (!Compare(expectedChallenge!, base64StringChallenge))
         {
-            response.Status = Status.Failed;
+            response.Status = ResponseStatus.Failed;
         }
         else
         {
-            response.Status = Status.Ok;
+            response.Status = ResponseStatus.Ok;
         }
 
         return Ok(response);
