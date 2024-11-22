@@ -17,7 +17,7 @@ public class AttestationServiceTests
 
         var fido2ConfigurationMock = new Fido2Configuration
         {
-            Origin = "localhost"
+            Origin = "localhost",
         };
 
         _sut = new AttestationService(challengeGeneratorMock.Object, Options.Create(fido2ConfigurationMock));

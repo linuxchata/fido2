@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Net.Mime;
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Core.Constants;
@@ -9,7 +10,7 @@ using Shark.Sample.Fido2.Requests;
 namespace Shark.Sample.Fido2.Controllers;
 
 /// <summary>
-/// Registration
+/// Attestation (registration)
 /// </summary>
 [Route("[controller]")]
 [ApiController]
@@ -22,6 +23,8 @@ public class AttestationController(IAttestationService attestationService) : Con
     /// </summary>
     /// <returns>The HTTP response.</returns>
     [HttpPost("options")]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> Options()
     {
         var credentialOptions = _attestationService.GetOptions();
@@ -53,6 +56,9 @@ public class AttestationController(IAttestationService attestationService) : Con
     /// <param name="request"></param>
     /// <returns>The HTTP response.</returns>
     [HttpPost("result")]
+    [Consumes(MediaTypeNames.Application.Json)]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> Result(PublicKeyCredentialResponse request)
     {
         // The server will validate challenges, origins, signatures and the rest of

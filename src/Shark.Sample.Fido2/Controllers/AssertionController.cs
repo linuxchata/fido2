@@ -4,7 +4,7 @@ namespace Shark.Sample.Fido2.Controllers;
 
 [Route("[controller]")]
 [ApiController]
-public class CreadentialRequestController : ControllerBase
+public class AssertionController : ControllerBase
 {
     [HttpPost("initialize")]
     public async Task<IActionResult> Initialize()
