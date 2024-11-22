@@ -18,9 +18,5 @@
   <ItemGroup>
     <ProjectReference Include="..\Shark.Fido2.Core\Shark.Fido2.Core.csproj" />
   </ItemGroup>
-  
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
 
 </Project>

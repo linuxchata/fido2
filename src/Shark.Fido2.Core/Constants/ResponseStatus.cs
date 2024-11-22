@@ -1,4 +1,4 @@
-﻿namespace Shark.Fido2.Core
+﻿namespace Shark.Fido2.Core.Constants
 {
     public static class ResponseStatus
     {

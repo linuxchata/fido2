@@ -1,3 +1,5 @@
+using Shark.Sample.Fido2.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorPages();
@@ -12,6 +14,8 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "Shark.Fido2.xml"));
 });
+
+builder.Services.AddFido2(builder.Configuration);
 
 var app = builder.Build();
 

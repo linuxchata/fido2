@@ -1,8 +1,7 @@
-﻿using System.Security.Cryptography;
-using System.Text;
+﻿using System.Text;
 using Microsoft.AspNetCore.Mvc;
-using Shark.Fido2.Core;
 using Shark.Fido2.Core.Abstractions;
+using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Domain;
 using Shark.Fido2.Responses;
 using Shark.Sample.Fido2.Requests;
@@ -25,10 +24,6 @@ public class AttestationController(IAttestationService attestationService) : Con
     [HttpPost("options")]
     public async Task<IActionResult> Options()
     {
-        var challengeBytes = new byte[16];
-        using var randomNumberGenerator = RandomNumberGenerator.Create();
-        randomNumberGenerator.GetBytes(challengeBytes);
-
         var credentialOptions = _attestationService.GetOptions();
 
         var response = new CredentialGetOptionsResponse
