@@ -1,0 +1,29 @@
+name: build
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - src/**
+  pull_request:
+    branches:
+      - main
+    paths:
+      - src/**
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Restore dependencies
+      run: dotnet restore ./src/Shark.Fido2.sln
+
+    - name: Build with dotnet
+      run: dotnet build ./src/Shark.Fido2.sln --configuration Release --no-restore
