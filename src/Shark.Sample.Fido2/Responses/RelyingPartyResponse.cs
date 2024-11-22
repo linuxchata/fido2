@@ -8,5 +8,5 @@ public sealed class RelyingPartyResponse
     public required string Identifier { get; set; }
 
     [JsonPropertyName("name")]
-    public required string Name { get; set; }
+    public string? Name { get; set; }
 }

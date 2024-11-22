@@ -14,9 +14,9 @@ namespace Shark.Sample.Fido2.Controllers;
 /// </summary>
 [Route("[controller]")]
 [ApiController]
-public class AttestationController(IAttestationService attestationService) : ControllerBase
+public class AttestationController(IAttestation attestation) : ControllerBase
 {
-    private readonly IAttestationService _attestationService = attestationService;
+    private readonly IAttestation _attestation = attestation;
 
     /// <summary>
     /// Gets credential creation options
@@ -25,9 +25,9 @@ public class AttestationController(IAttestationService attestationService) : Con
     [HttpPost("options")]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> Options()
+    public IActionResult Options()
     {
-        var credentialOptions = _attestationService.GetOptions();
+        var credentialOptions = _attestation.GetOptions();
 
         var response = new CredentialGetOptionsResponse
         {
@@ -35,7 +35,7 @@ public class AttestationController(IAttestationService attestationService) : Con
             RelyingParty = new RelyingPartyResponse
             {
                 Identifier = "localhost",
-                Name = "Example CORP",
+                //Name = "Example CORP",
             },
             User = new UserResponse
             {
@@ -59,7 +59,7 @@ public class AttestationController(IAttestationService attestationService) : Con
     [Consumes(MediaTypeNames.Application.Json)]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> Result(PublicKeyCredentialResponse request)
+    public IActionResult Result(PublicKeyCredentialResponse request)
     {
         // The server will validate challenges, origins, signatures and the rest of
         // the ServerAuthenticatorAttestationResponse according to the algorithm
@@ -70,7 +70,7 @@ public class AttestationController(IAttestationService attestationService) : Con
 
         var response = new CredentialValidateResponse();
 
-        _attestationService.Complete(new PublicKeyCredential
+        _attestation.Complete(new PublicKeyCredential
         {
             Id = request.Id,
             RawId = request.RawId,

@@ -7,13 +7,13 @@ namespace Shark.Sample.Fido2.Controllers;
 public class AssertionController : ControllerBase
 {
     [HttpPost("initialize")]
-    public async Task<IActionResult> Initialize()
+    public IActionResult Initialize()
     {
         return Ok();
     }
 
     [HttpPost("complete")]
-    public async Task<IActionResult> Complete()
+    public IActionResult Complete()
     {
         return Ok();
     }

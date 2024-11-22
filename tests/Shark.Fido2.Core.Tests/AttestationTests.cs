@@ -6,9 +6,9 @@ using Shark.Fido2.Domain;
 
 namespace Shark.Fido2.Core.Tests;
 
-public class AttestationServiceTests
+public class AttestationTests
 {
-    private IAttestationService _sut = null!;
+    private IAttestation _sut = null!;
 
     [SetUp]
     public void Setup()
@@ -20,7 +20,7 @@ public class AttestationServiceTests
             Origin = "localhost",
         };
 
-        _sut = new AttestationService(challengeGeneratorMock.Object, Options.Create(fido2ConfigurationMock));
+        _sut = new Attestation(challengeGeneratorMock.Object, Options.Create(fido2ConfigurationMock));
     }
 
     [Test]
@@ -45,6 +45,5 @@ public class AttestationServiceTests
         _sut.Complete(publicKeyCredential, "t2pJGIQ7Y4DXF2b98tnBjg==");
 
         // Assert
-
     }
 }
