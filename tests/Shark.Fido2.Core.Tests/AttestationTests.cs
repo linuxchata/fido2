@@ -1,7 +1,9 @@
 using Microsoft.Extensions.Options;
 using Moq;
 using Shark.Fido2.Core.Abstractions;
+using Shark.Fido2.Core.Abstractions.Handlers;
 using Shark.Fido2.Core.Configurations;
+using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Domain;
 
 namespace Shark.Fido2.Core.Tests;
@@ -13,6 +15,7 @@ public class AttestationTests
     [SetUp]
     public void Setup()
     {
+        var clientDataHandlerMock = new Mock<IClientDataHandler>();
         var challengeGeneratorMock = new Mock<IChallengeGenerator>();
 
         var fido2ConfigurationMock = new Fido2Configuration
@@ -20,11 +23,14 @@ public class AttestationTests
             Origin = "localhost",
         };
 
-        _sut = new Attestation(challengeGeneratorMock.Object, Options.Create(fido2ConfigurationMock));
+        _sut = new Attestation(
+            clientDataHandlerMock.Object,
+            challengeGeneratorMock.Object,
+            Options.Create(fido2ConfigurationMock));
     }
 
     [Test]
-    public void Complete_When_Then()
+    public void Complete_WhenPublicKeyCredentialValid_ThenReturnsSuccess()
     {
         // Arrange
         var publicKeyCredential = new PublicKeyCredential
@@ -40,10 +46,13 @@ public class AttestationTests
             },
             Type = "public-key",
         };
+        var expectedChallenge = "t2pJGIQ7Y4DXF2b98tnBjg";
 
         // Act
-        _sut.Complete(publicKeyCredential, "t2pJGIQ7Y4DXF2b98tnBjg==");
+        var result = _sut.Complete(publicKeyCredential, $"{expectedChallenge}==");
 
         // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.Status, Is.EqualTo(ResponseStatus.Ok));
     }
 }
