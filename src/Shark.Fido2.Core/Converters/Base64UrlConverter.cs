@@ -1,7 +1,10 @@
 ﻿using System;
 
-namespace Shark.Fido2.Core.Helpers
+namespace Shark.Fido2.Core.Converters
 {
+    /// <summary>
+    /// Converter for Base64URL
+    /// </summary>
     public static class Base64UrlConverter
     {
         public static string ToBase64(string base64Url)

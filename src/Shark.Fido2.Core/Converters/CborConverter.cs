@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Formats.Cbor;
 
-namespace Shark.Fido2.Core.Helpers
+namespace Shark.Fido2.Core.Converters
 {
     /// <summary>
     /// Converter for Concise Binary Object Representation
@@ -16,7 +16,7 @@ namespace Shark.Fido2.Core.Helpers
             var reader = new CborReader(valueBytes);
             var result = Read(reader) as Dictionary<string, object>;
 
-            return result ?? throw new ArgumentException("Data cannot be decoded with CBOR converter");
+            return result ?? throw new ArgumentException("Failed to decode data from CBOR format");
         }
 
         private static object Read(CborReader reader)

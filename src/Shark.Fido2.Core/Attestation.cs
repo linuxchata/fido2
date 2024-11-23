@@ -6,6 +6,7 @@ using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Core.Comparers;
 using Shark.Fido2.Core.Configurations;
 using Shark.Fido2.Core.Constants;
+using Shark.Fido2.Core.Converters;
 using Shark.Fido2.Core.Helpers;
 using Shark.Fido2.Core.Models;
 using Shark.Fido2.Domain;
@@ -35,7 +36,7 @@ namespace Shark.Fido2.Core
             return credentialOptions;
         }
 
-        public void Complete(PublicKeyCredential publicKeyCredential, string? expectedChallenge)
+        public AttestationCompleteResult Complete(PublicKeyCredential publicKeyCredential, string? expectedChallenge)
         {
             if (publicKeyCredential == null)
             {
@@ -49,22 +50,19 @@ namespace Shark.Fido2.Core
 
             if (publicKeyCredential.Response == null)
             {
-                // Return failed result
-                return;
+                return AttestationCompleteResult.CreateFailure("Response cannot be null");
             }
 
             var clientData = GetClientData(publicKeyCredential.Response.ClientDataJson);
             if (clientData == null)
             {
-                // Return failed result
-                return;
+                return AttestationCompleteResult.CreateFailure("Client data JSON cannot be null");
             }
 
             // Type
             if (!string.Equals(clientData.Type, WebauthnType.Create, StringComparison.OrdinalIgnoreCase))
             {
-                // Return failed result
-                return;
+                return AttestationCompleteResult.CreateFailure($"Type mismatch. Expected type is {WebauthnType.Create}");
             }
 
             // Challenge
@@ -72,7 +70,7 @@ namespace Shark.Fido2.Core
             if (!Base64Comparer.Compare(expectedChallenge!, base64StringChallenge))
             {
                 // Return failed result
-                return;
+                return AttestationCompleteResult.CreateFailure("Challenge mismatch");
             }
 
             // Origin
@@ -80,14 +78,12 @@ namespace Shark.Fido2.Core
 
             if (!Uri.TryCreate(clientData.Origin, UriKind.Absolute, out var originUri))
             {
-                // Return failed result
-                return;
+                return AttestationCompleteResult.CreateFailure("Invalid origin");
             }
 
             if (!string.Equals(originUri.Host, expectedOrigin, StringComparison.OrdinalIgnoreCase))
             {
-                // Return failed result
-                return;
+                return AttestationCompleteResult.CreateFailure("Origin mismatch");
             }
 
             var decodedAttestationObject = CborConverter.Decode(publicKeyCredential.Response.AttestationObject);
@@ -100,6 +96,8 @@ namespace Shark.Fido2.Core
             var rpIdHash = new byte[32];
             Array.Copy(authenticatorData, rpIdHash, 32);
             var result = BytesArrayComparer.CompareAsSpan(hash, rpIdHash);
+
+            return AttestationCompleteResult.Create();
         }
 
         private ClientDataModel? GetClientData(string clientDataJson)
