@@ -61,7 +61,9 @@ namespace Shark.Fido2.Core
             }
 
             var decodedAttestationObject = CborConverter.Decode(publicKeyCredential.Response.AttestationObject);
+
             var authenticatorData = decodedAttestationObject["authData"] as byte[];
+            var temp = Convert.ToBase64String(authenticatorData);
             var hash = HashProvider.GetSha256Hash("localhost");
 
             // Slice array into peaces

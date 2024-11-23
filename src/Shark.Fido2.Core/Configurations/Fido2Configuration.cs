@@ -4,6 +4,6 @@
     {
         public const string Name = nameof(Fido2Configuration);
 
-        public string Origin { get; set; }
+        public string Origin { get; set; } = null!;
     }
 }

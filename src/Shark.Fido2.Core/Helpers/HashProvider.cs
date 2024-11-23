@@ -11,6 +11,5 @@ namespace Shark.Fido2.Core.Helpers
 
             return sha256.ComputeHash(Encoding.UTF8.GetBytes(value));
         }
-
     }
 }

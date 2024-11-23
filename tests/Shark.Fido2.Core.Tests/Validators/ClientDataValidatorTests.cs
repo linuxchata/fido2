@@ -4,7 +4,7 @@ using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Models;
 using Shark.Fido2.Core.Validators;
 
-namespace Shark.Fido2.Core.Tests;
+namespace Shark.Fido2.Core.Tests.Validators;
 
 public class ClientDataValidatorTests
 {

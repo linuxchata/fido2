@@ -2,13 +2,13 @@
 {
     public sealed class PublicKeyCredential
     {
-        public string Id { get; set; }
+        public string Id { get; set; } = null!;
 
-        public string RawId { get; set; }
+        public string RawId { get; set; } = null!;
 
-        public AuthenticatorAttestationResponse Response { get; set; }
+        public AuthenticatorAttestationResponse Response { get; set; } = null!;
 
-        public string Type { get; set; }
+        public string Type { get; set; } = null!;
     }
 }
 

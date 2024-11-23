@@ -2,6 +2,6 @@
 {
     public sealed class PublicKeyCredentialCreationOptions
     {
-        public string Challenge { get; set; }
+        public string Challenge { get; set; } = null!;
     }
 }

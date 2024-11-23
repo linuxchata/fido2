@@ -4,7 +4,7 @@ using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Handlers;
 using Shark.Fido2.Core.Models;
 
-namespace Shark.Fido2.Core.Tests;
+namespace Shark.Fido2.Core.Tests.Handlers;
 
 public class ClientDataHandlerTests
 {
