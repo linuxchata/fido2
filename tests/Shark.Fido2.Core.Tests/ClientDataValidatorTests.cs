@@ -1,6 +1,4 @@
 ﻿using Microsoft.Extensions.Options;
-using Moq;
-using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Configurations;
 using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Models;
@@ -10,8 +8,7 @@ namespace Shark.Fido2.Core.Tests;
 
 public class ClientDataValidatorTests
 {
-    private IClientDataValidator _sut = null!;
-    private Mock<IClientDataValidator> _clientDataValidatorMock = null!;
+    private ClientDataValidator _sut = null!;
 
     [SetUp]
     public void Setup()

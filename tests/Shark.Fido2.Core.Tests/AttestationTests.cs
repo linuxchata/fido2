@@ -10,7 +10,7 @@ namespace Shark.Fido2.Core.Tests;
 
 public class AttestationTests
 {
-    private IAttestation _sut = null!;
+    private Attestation _sut = null!;
 
     [SetUp]
     public void Setup()

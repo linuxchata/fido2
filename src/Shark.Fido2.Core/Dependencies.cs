@@ -18,6 +18,9 @@ namespace Shark.Fido2.Core
             services.AddTransient<IClientDataValidator, ClientDataValidator>();
             services.AddTransient<IClientDataHandler, ClientDataHandler>();
 
+            services.AddTransient<IAttestationObjectValidator, AttestationObjectValidator>();
+            services.AddTransient<IAttestationObjectHandler, AttestationObjectHandler>();
+
             services.AddTransient<IAttestation, Attestation>();
         }
     }
