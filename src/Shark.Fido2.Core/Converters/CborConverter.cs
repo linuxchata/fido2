@@ -19,6 +19,51 @@ namespace Shark.Fido2.Core.Converters
             return result ?? throw new ArgumentException("Failed to decode data from CBOR format");
         }
 
+        public static Dictionary<string, object> ParseCoseKey(byte[] coseKeyBytes)
+        {
+            var result = new Dictionary<string, object>();
+
+            var reader = new CborReader(coseKeyBytes);
+            var mapLength = reader.ReadStartMap();
+
+            for (var i = 0; i < mapLength; i++)
+            {
+                var key = reader.ReadInt32(); // Keys are integers in COSE_Key format
+
+                // Map the integer key to human-readable name
+                string keyName = key switch
+                {
+                    1 => "Key Type",
+                    3 => "Algorithm",
+                    -1 => "Curve",
+                    -2 => "X-coordinate",
+                    -3 => "Y-coordinate",
+                    -4 => "Private Key",
+                    _ => $"Unknown Key ({key})"
+                };
+
+                object? value = null;
+
+                switch (reader.PeekState())
+                {
+                    case CborReaderState.UnsignedInteger:
+                    case CborReaderState.NegativeInteger:
+                        value = reader.ReadInt32();
+                        break;
+                    case CborReaderState.ByteString:
+                        value = reader.ReadByteString();
+                        break;
+                    default:
+                        break;
+                }
+
+                result[keyName] = value;
+            }
+
+            reader.ReadEndMap();
+            return result;
+        }
+
         private static object Read(CborReader reader)
         {
             switch (reader.PeekState())

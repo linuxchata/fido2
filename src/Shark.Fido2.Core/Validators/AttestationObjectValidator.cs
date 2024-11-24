@@ -12,7 +12,7 @@ namespace Shark.Fido2.Core.Validators
         {
             if (authenticatorData == null)
             {
-                AttestationCompleteResult.CreateFailure("Authenticator data cannot be null");
+                AttestationCompleteResult.CreateFailure("Authenticator Data cannot be null");
             }
 
             // Verify that the rpIdHash in authData is the SHA-256 hash of the RP ID expected by the Relying Party.
@@ -24,11 +24,18 @@ namespace Shark.Fido2.Core.Validators
             }
 
             // Verify that the User Present bit of the flags in authData is set.
-            // TODO: Currently User Present bit is set to false.
+            if (!authenticatorData.UserPresent)
+            {
+                return AttestationCompleteResult.CreateFailure("User Present bit is not set");
+            }
 
             // If user verification is required for this registration, verify
             // that the User Verified bit of the flags in authData is set.
             // TODO: Should it be part of configuration?
+            if (!authenticatorData.UserVerified)
+            {
+                return AttestationCompleteResult.CreateFailure("User Verified bit is not set");
+            }
 
             // Verify that the "alg" parameter in the credential public key in authData
             // matches the alg attribute of one of the items in options.pubKeyCredParams.

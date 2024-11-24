@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Buffers.Binary;
-using System.Collections;
 using Shark.Fido2.Core.Abstractions.Helpers;
+using Shark.Fido2.Core.Converters;
 using Shark.Fido2.Core.Models;
 
 namespace Shark.Fido2.Core.Helpers
@@ -18,57 +18,63 @@ namespace Shark.Fido2.Core.Helpers
         private const int AaguidLength = 16;
         private const int CredentialIdLengthLength = 2;
 
-        public AuthenticatorDataModel? Get(byte[]? authenticatorData)
+        public AuthenticatorDataModel? Get(byte[]? authenticatorDataArray)
         {
-            if (authenticatorData == null)
+            if (authenticatorDataArray == null)
             {
                 return null;
             }
 
-            var result = new AuthenticatorDataModel();
+            var authenticatorData = new AuthenticatorDataModel();
 
             var startIndex = 0;
 
-            // rpIdHash
-            var rpIdHashArray = authenticatorData.AsSpan(startIndex, RpIdHashLength);
-            result.RpIdHash = rpIdHashArray.ToArray();
+            // Relying Party Identifier Hash
+            var rpIdHashArray = authenticatorDataArray.AsSpan(startIndex, RpIdHashLength);
+            authenticatorData.RpIdHash = rpIdHashArray.ToArray();
 
             // Flags
             startIndex += RpIdHashLength;
-            var flagsArray = authenticatorData.AsSpan(startIndex, FlagsLength);
-            GetFlags(flagsArray[0], result);
-            result.Flags = flagsArray[0];
+            var flagsArray = authenticatorDataArray.AsSpan(startIndex, FlagsLength);
+            GetAndSetFlags(flagsArray[0], authenticatorData);
+            authenticatorData.Flags = flagsArray[0];
 
             // Signature Counter
             startIndex += FlagsLength;
-            var signCountArray = authenticatorData.AsSpan(startIndex, SignCountLength);
+            var signCountArray = authenticatorDataArray.AsSpan(startIndex, SignCountLength);
             var signCount = BinaryPrimitives.ReadUInt32BigEndian(signCountArray);
-            result.SignCount = signCount;
+            authenticatorData.SignCount = signCount;
 
             // AAGUID of the authenticator
             startIndex += SignCountLength;
-            var aaguidArray = authenticatorData.AsSpan(startIndex, AaguidLength);
-            result.AttestedCredentialData.AaGuid = new Guid(aaguidArray);
+            var aaguidArray = authenticatorDataArray.AsSpan(startIndex, AaguidLength);
+            authenticatorData.AttestedCredentialData.AaGuid = new Guid(aaguidArray);
 
             // Credential ID Length
             startIndex += AaguidLength;
-            var credentialIdLengthArray = authenticatorData.AsSpan(startIndex, CredentialIdLengthLength);
+            var credentialIdLengthArray = authenticatorDataArray.AsSpan(startIndex, CredentialIdLengthLength);
             var credentialIdLength = BinaryPrimitives.ReadUInt16BigEndian(credentialIdLengthArray);
 
             // Credential ID
-            startIndex += credentialIdLength;
-            var credentialId = authenticatorData.AsSpan(startIndex, credentialIdLength);
-            result.AttestedCredentialData.CredentialId = credentialId.ToArray();
+            startIndex += CredentialIdLengthLength;
+            var credentialId = authenticatorDataArray.AsSpan(startIndex, credentialIdLength);
+            authenticatorData.AttestedCredentialData.CredentialId = credentialId.ToArray();
 
-            return result;
+            // Credential Public Key
+            startIndex += credentialIdLength;
+            var credentialPublicKeyLength = authenticatorDataArray.Length - startIndex;
+            var credentialPublicKeyArray = authenticatorDataArray.AsSpan(startIndex, credentialPublicKeyLength);
+            CborConverter.ParseCoseKey(credentialPublicKeyArray.ToArray());
+
+            return authenticatorData;
         }
 
-        private void GetFlags(byte flag, AuthenticatorDataModel authenticatorData)
+        private void GetAndSetFlags(byte flags, AuthenticatorDataModel authenticatorData)
         {
-            authenticatorData.UserPresent = (flag & 0b00000001) != 0;
-            authenticatorData.UserVerified = (flag & 0b00000100) != 0;
-            authenticatorData.AttestedCredentialDataIncluded = (flag & 0b01000000) != 0;
-            authenticatorData.ExtensionDataIncluded = (flag & 0b10000000) != 0;
+            authenticatorData.UserPresent = (flags & 0b00000001) != 0; // Bit 0
+            authenticatorData.UserVerified = (flags & 0b00000100) != 0; // Bit 2
+            authenticatorData.AttestedCredentialDataIncluded = (flags & 0b01000000) != 0; // Bit 6
+            authenticatorData.ExtensionDataIncluded = (flags & 0b10000000) != 0; // Bit 7
         }
     }
 }
