@@ -36,7 +36,6 @@ namespace Shark.Fido2.Core.Validators
             var base64StringChallenge = Base64UrlConverter.ToBase64(clientData?.Challenge!);
             if (!Base64Comparer.Compare(expectedChallenge!, base64StringChallenge))
             {
-                // Return failed result
                 return AttestationCompleteResult.CreateFailure("Challenge mismatch");
             }
 
@@ -51,6 +50,12 @@ namespace Shark.Fido2.Core.Validators
             if (!string.Equals(originUri.Host, expectedOrigin, StringComparison.OrdinalIgnoreCase))
             {
                 return AttestationCompleteResult.CreateFailure("Origin mismatch");
+            }
+
+            // Token binding
+            if (clientData?.TokenBinding != null)
+            {
+                throw new NotImplementedException("See #10 of 7.1. Registering a New Credential");
             }
 
             return null;

@@ -3,7 +3,6 @@ using Shark.Fido2.Core.Abstractions.Handlers;
 using Shark.Fido2.Core.Abstractions.Helpers;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Converters;
-using Shark.Fido2.Core.Helpers;
 using Shark.Fido2.Domain;
 
 namespace Shark.Fido2.Core.Handlers
@@ -29,14 +28,10 @@ namespace Shark.Fido2.Core.Handlers
             }
 
             var authenticatorDataArray = GetAuthenticatorData(attestationObject);
-            if (authenticatorDataArray == null)
-            {
-                return AttestationCompleteResult.CreateFailure("Authenticator data cannot be null");
-            }
-
-            var hash = HashProvider.GetSha256Hash("localhost");
 
             var authenticatorData = _authenticatorDataProvider.Get(authenticatorDataArray);
+
+            _attestationObjectValidator.Validate(authenticatorData);
 
             throw new NotImplementedException();
         }

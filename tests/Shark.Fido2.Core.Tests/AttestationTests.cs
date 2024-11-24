@@ -16,6 +16,7 @@ public class AttestationTests
     public void Setup()
     {
         var clientDataHandlerMock = new Mock<IClientDataHandler>();
+        var attestationObjectHandlerMock = new Mock<IAttestationObjectHandler>();
         var challengeGeneratorMock = new Mock<IChallengeGenerator>();
 
         var fido2ConfigurationMock = new Fido2Configuration
@@ -25,6 +26,7 @@ public class AttestationTests
 
         _sut = new Attestation(
             clientDataHandlerMock.Object,
+            attestationObjectHandlerMock.Object,
             challengeGeneratorMock.Object,
             Options.Create(fido2ConfigurationMock));
     }

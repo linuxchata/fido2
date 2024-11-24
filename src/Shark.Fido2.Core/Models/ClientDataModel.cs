@@ -2,6 +2,9 @@
 
 namespace Shark.Fido2.Core.Models
 {
+    /// <summary>
+    /// 5.8.1. Client Data Used in WebAuthn Signatures
+    /// </summary>
     public sealed class ClientDataModel
     {
         [JsonPropertyName("type")]
@@ -15,5 +18,8 @@ namespace Shark.Fido2.Core.Models
 
         [JsonPropertyName("crossOrigin")]
         public bool CrossOrigin { get; set; }
+
+        [JsonPropertyName("tokenBinding")]
+        public TokenBindingModel? TokenBinding { get; set; }
     }
 }

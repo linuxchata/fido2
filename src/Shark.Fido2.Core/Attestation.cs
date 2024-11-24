@@ -5,6 +5,7 @@ using Shark.Fido2.Core.Abstractions.Handlers;
 using Shark.Fido2.Core.Comparers;
 using Shark.Fido2.Core.Configurations;
 using Shark.Fido2.Core.Converters;
+using Shark.Fido2.Core.Handlers;
 using Shark.Fido2.Core.Helpers;
 using Shark.Fido2.Domain;
 
@@ -13,15 +14,18 @@ namespace Shark.Fido2.Core
     public sealed class Attestation : IAttestation
     {
         private readonly IClientDataHandler _clientDataHandler;
+        private readonly IAttestationObjectHandler _attestationObjectHandler;
         private readonly IChallengeGenerator _challengeGenerator;
         private readonly Fido2Configuration _configuration;
 
         public Attestation(
             IClientDataHandler clientDataHandler,
+            IAttestationObjectHandler attestationObjectHandler,
             IChallengeGenerator challengeGenerator,
             IOptions<Fido2Configuration> options)
         {
             _clientDataHandler = clientDataHandler;
+            _attestationObjectHandler = attestationObjectHandler;
             _challengeGenerator = challengeGenerator;
             _configuration = options.Value;
         }
@@ -59,6 +63,8 @@ namespace Shark.Fido2.Core
             {
                 return clientDataHandlerResult;
             }
+
+            _attestationObjectHandler.Handle(publicKeyCredential.Response.AttestationObject);
 
             var decodedAttestationObject = CborConverter.Decode(publicKeyCredential.Response.AttestationObject);
 

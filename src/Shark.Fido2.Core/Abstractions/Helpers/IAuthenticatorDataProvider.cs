@@ -2,8 +2,8 @@
 
 namespace Shark.Fido2.Core.Abstractions.Helpers
 {
-    internal interface IAuthenticatorDataProvider
+    public interface IAuthenticatorDataProvider
     {
-        AuthenticatorDataModel Get(byte[] authenticatorData);
+        AuthenticatorDataModel? Get(byte[]? authenticatorData);
     }
 }
