@@ -1,5 +1,4 @@
-﻿using System;
-using Shark.Fido2.Core.Abstractions.Handlers;
+﻿using Shark.Fido2.Core.Abstractions.Handlers;
 using Shark.Fido2.Core.Abstractions.Helpers;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Converters;
@@ -33,13 +32,18 @@ namespace Shark.Fido2.Core.Handlers
 
             _attestationObjectValidator.Validate(authenticatorData);
 
-            throw new NotImplementedException();
+            return null;
         }
 
         private byte[]? GetAuthenticatorData(string attestationObject)
         {
             var decodedAttestationObject = CborConverter.Decode(attestationObject);
-            return decodedAttestationObject["authData"] as byte[];
+
+            var attestationStatementFormat = decodedAttestationObject["fmt"] as string;
+            var attestationStatement = decodedAttestationObject["attStmt"] as object;
+            var authenticatorData = decodedAttestationObject["authData"] as byte[];
+
+            return authenticatorData;
         }
     }
 }

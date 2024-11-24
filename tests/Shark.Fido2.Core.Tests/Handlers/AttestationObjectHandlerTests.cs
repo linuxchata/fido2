@@ -23,7 +23,7 @@ public class AttestationObjectHandlerTests
     }
 
     [Test]
-    public void Handle_WhenClientDataJsonValid_ThenReturnsNull()
+    public void Handle_WhenAttestationObjectValid_ThenReturnsNull()
     {
         // Arrange
         var attestationObject = "o2NmbXRkbm9uZWdhdHRTdG10oGhhdXRoRGF0YViYSZYN5YgOjGh0NBcPZHZgW4/krrmihjLHmVzzuoMdl2NdAAAAAAAAAAAAAAAAAAAAAAAAAAAAFNIOIaOVgJRyI6ffE8tNV4tHvGJVpQECAyYgASFYIEgIOe/+LSvpyPB010CZ4+ox3EAG6dp611nzoff5QH15IlggC/DWA8k1rogu86PSgVzEjD9ObamYaO2dbj710ogx1dw=";

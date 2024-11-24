@@ -8,12 +8,12 @@
 
         public static AttestationCompleteResult Create()
         {
-            return new AttestationCompleteResult { Status = "OK" };
+            return new AttestationCompleteResult { Status = "ok" };
         }
 
         public static AttestationCompleteResult CreateFailure(string message)
         {
-            return new AttestationCompleteResult { Status = "OK", Message = message };
+            return new AttestationCompleteResult { Status = "failed", Message = message };
         }
     }
 }

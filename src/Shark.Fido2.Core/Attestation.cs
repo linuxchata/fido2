@@ -2,11 +2,7 @@
 using Microsoft.Extensions.Options;
 using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Core.Abstractions.Handlers;
-using Shark.Fido2.Core.Comparers;
 using Shark.Fido2.Core.Configurations;
-using Shark.Fido2.Core.Converters;
-using Shark.Fido2.Core.Handlers;
-using Shark.Fido2.Core.Helpers;
 using Shark.Fido2.Domain;
 
 namespace Shark.Fido2.Core
@@ -64,20 +60,12 @@ namespace Shark.Fido2.Core
                 return clientDataHandlerResult;
             }
 
-            _attestationObjectHandler.Handle(publicKeyCredential.Response.AttestationObject);
-
-            var decodedAttestationObject = CborConverter.Decode(publicKeyCredential.Response.AttestationObject);
-
-            var authenticatorData = decodedAttestationObject["authData"] as byte[];
-            var temp = Convert.ToBase64String(authenticatorData);
-            var hash = HashProvider.GetSha256Hash("localhost");
-
-            // Slice array into peaces
-            // 6.1. Authenticator Data
-            // https://www.w3.org/TR/webauthn-2/#rpidhash
-            var rpIdHash = new byte[32];
-            Array.Copy(authenticatorData, rpIdHash, 32);
-            var result = BytesArrayComparer.CompareAsSpan(hash, rpIdHash);
+            var attestationObjectHandlerResult = _attestationObjectHandler.Handle(
+                publicKeyCredential.Response.AttestationObject);
+            if (attestationObjectHandlerResult != null)
+            {
+                return attestationObjectHandlerResult;
+            }
 
             return AttestationCompleteResult.Create();
         }
