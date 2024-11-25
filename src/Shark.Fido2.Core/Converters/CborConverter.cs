@@ -9,40 +9,33 @@ namespace Shark.Fido2.Core.Converters
     /// </summary>
     public static class CborConverter
     {
-        public static Dictionary<string, object> Decode(string value)
+        public static Dictionary<string, object> Decode(string input)
         {
-            var valueBytes = Convert.FromBase64String(value);
+            var inputBytes = Convert.FromBase64String(input);
 
-            var reader = new CborReader(valueBytes);
+            var reader = new CborReader(inputBytes);
             var result = Read(reader) as Dictionary<string, object>;
 
             return result ?? throw new ArgumentException("Failed to decode data from CBOR format");
         }
 
-        public static Dictionary<string, object> ParseCoseKey(byte[] coseKeyBytes)
+        public static Dictionary<int, object> DecodeToCoseKeyFormat(byte[] input)
         {
-            var result = new Dictionary<string, object>();
+            var result = new Dictionary<int, object>();
 
-            var reader = new CborReader(coseKeyBytes);
+            var reader = new CborReader(input);
             var mapLength = reader.ReadStartMap();
+
+            if (mapLength < 1)
+            {
+                throw new ArgumentException("Malformed COSE Key structure");
+            }
 
             for (var i = 0; i < mapLength; i++)
             {
-                var key = reader.ReadInt32(); // Keys are integers in COSE_Key format
+                var key = reader.ReadInt32();
 
-                // Map the integer key to human-readable name
-                string keyName = key switch
-                {
-                    1 => "Key Type",
-                    3 => "Algorithm",
-                    -1 => "Curve",
-                    -2 => "X-coordinate",
-                    -3 => "Y-coordinate",
-                    -4 => "Private Key",
-                    _ => $"Unknown Key ({key})"
-                };
-
-                object? value = null;
+                object value = null!;
 
                 switch (reader.PeekState())
                 {
@@ -57,7 +50,7 @@ namespace Shark.Fido2.Core.Converters
                         break;
                 }
 
-                result[keyName] = value;
+                result[key] = value;
             }
 
             reader.ReadEndMap();

@@ -64,7 +64,7 @@ namespace Shark.Fido2.Core.Helpers
             startIndex += credentialIdLength;
             var credentialPublicKeyLength = authenticatorDataArray.Length - startIndex;
             var credentialPublicKeyArray = authenticatorDataArray.AsSpan(startIndex, credentialPublicKeyLength);
-            CborConverter.ParseCoseKey(credentialPublicKeyArray.ToArray());
+            CborConverter.DecodeToCoseKeyFormat(credentialPublicKeyArray.ToArray());
 
             return authenticatorData;
         }
