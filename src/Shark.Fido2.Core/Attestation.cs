@@ -48,20 +48,19 @@ namespace Shark.Fido2.Core
                 throw new ArgumentNullException(nameof(expectedChallenge));
             }
 
-            if (publicKeyCredential.Response == null)
+            var response = publicKeyCredential.Response;
+            if (response == null)
             {
                 return AttestationCompleteResult.CreateFailure("Response cannot be null");
             }
 
-            var clientDataHandlerResult = _clientDataHandler.Handle(
-                publicKeyCredential.Response.ClientDataJson, expectedChallenge);
+            var clientDataHandlerResult = _clientDataHandler.Handle(response.ClientDataJson, expectedChallenge);
             if (clientDataHandlerResult != null)
             {
                 return clientDataHandlerResult;
             }
 
-            var attestationObjectHandlerResult = _attestationObjectHandler.Handle(
-                publicKeyCredential.Response.AttestationObject);
+            var attestationObjectHandlerResult = _attestationObjectHandler.Handle(response.AttestationObject);
             if (attestationObjectHandlerResult != null)
             {
                 return attestationObjectHandlerResult;
