@@ -7,6 +7,11 @@ namespace Shark.Fido2.Core.Models
     /// </summary>
     public sealed class AttestedCredentialDataModel
     {
+        public AttestedCredentialDataModel()
+        {
+            CredentialPublicKey = new CredentialPublicKeyModel();
+        }
+
         /// <summary>
         /// The AAGUID of the authenticator
         /// </summary>
@@ -20,6 +25,6 @@ namespace Shark.Fido2.Core.Models
         /// <summary>
         /// The credential public key
         /// </summary>
-        public byte[] CredentialPublicKey { get; set; } = null!;
+        public CredentialPublicKeyModel CredentialPublicKey { get; set; } = null!;
     }
 }

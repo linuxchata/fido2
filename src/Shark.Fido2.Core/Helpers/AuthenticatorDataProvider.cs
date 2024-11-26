@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Buffers.Binary;
+using System.Collections.Generic;
 using Shark.Fido2.Core.Abstractions.Helpers;
 using Shark.Fido2.Core.Converters;
 using Shark.Fido2.Core.Models;
@@ -17,6 +18,7 @@ namespace Shark.Fido2.Core.Helpers
         private const int SignCountLength = 4;
         private const int AaguidLength = 16;
         private const int CredentialIdLengthLength = 2;
+        private const int CoseKeyAlgorithmIndex = 3; // https://datatracker.ietf.org/doc/html/rfc8152#section-7
 
         public AuthenticatorDataModel? Get(byte[]? authenticatorDataArray)
         {
@@ -64,7 +66,9 @@ namespace Shark.Fido2.Core.Helpers
             startIndex += credentialIdLength;
             var credentialPublicKeyLength = authenticatorDataArray.Length - startIndex;
             var credentialPublicKeyArray = authenticatorDataArray.AsSpan(startIndex, credentialPublicKeyLength);
-            CborConverter.DecodeToCoseKeyFormat(credentialPublicKeyArray.ToArray());
+            var credentialPublicKeyCoseKeyFormat = CborConverter.DecodeToCoseKeyFormat(credentialPublicKeyArray.ToArray());
+            authenticatorData.AttestedCredentialData.CredentialPublicKey.Algorithm =
+                GetCredentialPublicKeyAlgorithm(credentialPublicKeyCoseKeyFormat);
 
             return authenticatorData;
         }
@@ -75,6 +79,16 @@ namespace Shark.Fido2.Core.Helpers
             authenticatorData.UserVerified = (flags & 0b00000100) != 0; // Bit 2
             authenticatorData.AttestedCredentialDataIncluded = (flags & 0b01000000) != 0; // Bit 6
             authenticatorData.ExtensionDataIncluded = (flags & 0b10000000) != 0; // Bit 7
+        }
+
+        private int? GetCredentialPublicKeyAlgorithm(Dictionary<int, object> coseKeyFormat)
+        {
+            if (coseKeyFormat.TryGetValue(CoseKeyAlgorithmIndex, out var algorithm))
+            {
+                return Convert.ToInt32(algorithm);
+            };
+
+            return null;
         }
     }
 }

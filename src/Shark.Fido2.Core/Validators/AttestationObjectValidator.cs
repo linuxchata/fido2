@@ -31,7 +31,6 @@ namespace Shark.Fido2.Core.Validators
 
             // If user verification is required for this registration, verify
             // that the User Verified bit of the flags in authData is set.
-            // TODO: Should it be part of configuration?
             if (!authenticatorData.UserVerified)
             {
                 return AttestationCompleteResult.CreateFailure("User Verified bit is not set");
@@ -39,7 +38,11 @@ namespace Shark.Fido2.Core.Validators
 
             // Verify that the "alg" parameter in the credential public key in authData
             // matches the alg attribute of one of the items in options.pubKeyCredParams.
-            // TODO: How to do it?
+            // TODO: Fix compare? Should it be taken from configuration?
+            if (!authenticatorData.AttestedCredentialData.CredentialPublicKey.Algorithm.HasValue)
+            {
+                return AttestationCompleteResult.CreateFailure("Credential public key algorithm is not set");
+            }
 
             return null;
         }
