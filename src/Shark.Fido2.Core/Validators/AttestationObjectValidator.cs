@@ -1,5 +1,6 @@
 ﻿using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Comparers;
+using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Helpers;
 using Shark.Fido2.Core.Models;
 using Shark.Fido2.Domain;
@@ -8,8 +9,14 @@ namespace Shark.Fido2.Core.Validators
 {
     internal class AttestationObjectValidator : IAttestationObjectValidator
     {
-        public AttestationCompleteResult? Validate(AuthenticatorDataModel? authenticatorData)
+        public AttestationCompleteResult? Validate(AttestationObjectDataModel? attestationObjectData)
         {
+            if (attestationObjectData == null)
+            {
+                AttestationCompleteResult.CreateFailure("Attestation Object cannot be null");
+            }
+
+            var authenticatorData = attestationObjectData!.AuthenticatorData;
             if (authenticatorData == null)
             {
                 AttestationCompleteResult.CreateFailure("Authenticator Data cannot be null");
@@ -42,6 +49,24 @@ namespace Shark.Fido2.Core.Validators
             if (!authenticatorData.AttestedCredentialData.CredentialPublicKey.Algorithm.HasValue)
             {
                 return AttestationCompleteResult.CreateFailure("Credential public key algorithm is not set");
+            }
+
+            // Verify that the values of the client extension outputs in clientExtensionResults
+            // and the authenticator extension outputs in the extensions in authData are as expected
+            // TODO: Implement
+
+            // Case-sensitive match on fmt against the set of supported WebAuthn
+            // Attestation Statement Format Identifier values
+            var attestationStatementFormat = attestationObjectData.AttestationStatementFormat;
+            if (attestationStatementFormat == null)
+            {
+                AttestationCompleteResult.CreateFailure("Attestation statement format cannot be null");
+            }
+
+            if (!AttestationStatementFormatIdentifier.Supported.Contains(attestationStatementFormat!))
+            {
+                return AttestationCompleteResult.CreateFailure(
+                    $"Attestation statement format [{attestationStatementFormat}] is not supported");
             }
 
             return null;

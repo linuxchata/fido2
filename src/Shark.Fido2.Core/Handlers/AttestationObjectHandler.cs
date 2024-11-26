@@ -1,7 +1,9 @@
 ﻿using Shark.Fido2.Core.Abstractions.Handlers;
 using Shark.Fido2.Core.Abstractions.Helpers;
 using Shark.Fido2.Core.Abstractions.Validators;
+using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Converters;
+using Shark.Fido2.Core.Models;
 using Shark.Fido2.Domain;
 
 namespace Shark.Fido2.Core.Handlers
@@ -26,24 +28,26 @@ namespace Shark.Fido2.Core.Handlers
                 return AttestationCompleteResult.CreateFailure("Attestation object cannot be null");
             }
 
-            var authenticatorDataArray = GetAuthenticatorData(attestationObject);
+            var attestationObjectData = GetAttestationObjectData(attestationObject);
 
-            var authenticatorData = _authenticatorDataProvider.Get(authenticatorDataArray);
-
-            _attestationObjectValidator.Validate(authenticatorData);
-
-            return null;
+            return _attestationObjectValidator.Validate(attestationObjectData);
         }
 
-        private byte[]? GetAuthenticatorData(string attestationObject)
+        private AttestationObjectDataModel GetAttestationObjectData(string attestationObject)
         {
             var decodedAttestationObject = CborConverter.Decode(attestationObject);
 
-            var attestationStatementFormat = decodedAttestationObject["fmt"] as string;
-            var attestationStatement = decodedAttestationObject["attStmt"] as object;
-            var authenticatorData = decodedAttestationObject["authData"] as byte[];
+            var authenticatorDataArray = decodedAttestationObject[AttestationObjectKey.AuthData] as byte[];
+            var authenticatorData = _authenticatorDataProvider.Get(authenticatorDataArray);
 
-            return authenticatorData;
+            var attestationObjectData = new AttestationObjectDataModel
+            {
+                AttestationStatementFormat = decodedAttestationObject[AttestationObjectKey.Fmt] as string,
+                AttestationStatement = decodedAttestationObject[AttestationObjectKey.AttStmt] as object,
+                AuthenticatorData = authenticatorData,
+            };
+
+            return attestationObjectData;
         }
     }
 }
