@@ -3,23 +3,23 @@ using Shark.Fido2.Core.Comparers;
 using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Helpers;
 using Shark.Fido2.Core.Models;
-using Shark.Fido2.Domain;
+using Shark.Fido2.Core.Results;
 
 namespace Shark.Fido2.Core.Validators
 {
     internal class AttestationObjectValidator : IAttestationObjectValidator
     {
-        public AttestationCompleteResult? Validate(AttestationObjectDataModel? attestationObjectData)
+        public ValidatorInternalResult Validate(AttestationObjectDataModel? attestationObjectData)
         {
             if (attestationObjectData == null)
             {
-                AttestationCompleteResult.CreateFailure("Attestation Object cannot be null");
+                return ValidatorInternalResult.Invalid("Attestation Object cannot be null");
             }
 
             var authenticatorData = attestationObjectData!.AuthenticatorData;
             if (authenticatorData == null)
             {
-                AttestationCompleteResult.CreateFailure("Authenticator Data cannot be null");
+                return ValidatorInternalResult.Invalid("Authenticator Data cannot be null");
             }
 
             // Verify that the rpIdHash in authData is the SHA-256 hash of the RP ID expected by the Relying Party.
@@ -27,20 +27,20 @@ namespace Shark.Fido2.Core.Validators
             var rpIdHash = HashProvider.GetSha256Hash(rpId);
             if (!BytesArrayComparer.CompareAsSpan(rpIdHash, authenticatorData!.RpIdHash))
             {
-                return AttestationCompleteResult.CreateFailure("SHA-256 hash of the RP ID mismatch");
+                return ValidatorInternalResult.Invalid("SHA-256 hash of the RP ID mismatch");
             }
 
             // Verify that the User Present bit of the flags in authData is set.
             if (!authenticatorData.UserPresent)
             {
-                return AttestationCompleteResult.CreateFailure("User Present bit is not set");
+                return ValidatorInternalResult.Invalid("User Present bit is not set");
             }
 
             // If user verification is required for this registration, verify
             // that the User Verified bit of the flags in authData is set.
             if (!authenticatorData.UserVerified)
             {
-                return AttestationCompleteResult.CreateFailure("User Verified bit is not set");
+                return ValidatorInternalResult.Invalid("User Verified bit is not set");
             }
 
             // Verify that the "alg" parameter in the credential public key in authData
@@ -48,7 +48,7 @@ namespace Shark.Fido2.Core.Validators
             // TODO: Fix compare? Should it be taken from configuration?
             if (!authenticatorData.AttestedCredentialData.CredentialPublicKey.Algorithm.HasValue)
             {
-                return AttestationCompleteResult.CreateFailure("Credential public key algorithm is not set");
+                return ValidatorInternalResult.Invalid("Credential public key algorithm is not set");
             }
 
             // Verify that the values of the client extension outputs in clientExtensionResults
@@ -60,16 +60,16 @@ namespace Shark.Fido2.Core.Validators
             var attestationStatementFormat = attestationObjectData.AttestationStatementFormat;
             if (attestationStatementFormat == null)
             {
-                AttestationCompleteResult.CreateFailure("Attestation statement format cannot be null");
+                return ValidatorInternalResult.Invalid("Attestation statement format cannot be null");
             }
 
             if (!AttestationStatementFormatIdentifier.Supported.Contains(attestationStatementFormat!))
             {
-                return AttestationCompleteResult.CreateFailure(
+                return ValidatorInternalResult.Invalid(
                     $"Attestation statement format [{attestationStatementFormat}] is not supported");
             }
 
-            return null;
+            return ValidatorInternalResult.Valid();
         }
     }
 }

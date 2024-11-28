@@ -9,7 +9,7 @@ using Shark.Fido2.Core.Validators;
 
 namespace Shark.Fido2.Core
 {
-    public static class Dependencies
+    public static class DependencyInjection
     {
         public static void Register(this IServiceCollection services, IConfiguration configuration)
         {

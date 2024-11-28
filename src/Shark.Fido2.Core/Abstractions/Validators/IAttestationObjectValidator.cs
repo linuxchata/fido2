@@ -1,10 +1,10 @@
 ﻿using Shark.Fido2.Core.Models;
-using Shark.Fido2.Domain;
+using Shark.Fido2.Core.Results;
 
 namespace Shark.Fido2.Core.Abstractions.Validators
 {
     public interface IAttestationObjectValidator
     {
-        AttestationCompleteResult? Validate(AttestationObjectDataModel? attestationObjectData);
+        ValidatorInternalResult Validate(AttestationObjectDataModel? attestationObjectData);
     }
 }

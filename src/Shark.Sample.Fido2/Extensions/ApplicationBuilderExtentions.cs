@@ -7,7 +7,7 @@ public static class ApplicationBuilderExtentions
 {
     public static IServiceCollection AddFido2(this IServiceCollection services, IConfiguration configuration)
     {
-        Dependencies.Register(services, configuration);
+        DependencyInjection.Register(services, configuration);
 
         services.AddOptions<Fido2Configuration>().Bind(configuration.GetSection(Fido2Configuration.Name));
 

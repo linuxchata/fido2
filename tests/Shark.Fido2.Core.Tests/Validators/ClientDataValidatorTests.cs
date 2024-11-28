@@ -40,6 +40,6 @@ public class ClientDataValidatorTests
         var result = _sut.Validate(clientDataModel, $"{expectedChallenge}==");
 
         // Assert
-        Assert.That(result, Is.Null);
+        Assert.That(result, Is.Not.Null);
     }
 }

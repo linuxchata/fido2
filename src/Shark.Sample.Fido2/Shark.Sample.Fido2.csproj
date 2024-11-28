@@ -17,6 +17,7 @@
   
   <ItemGroup>
     <ProjectReference Include="..\Shark.Fido2.Core\Shark.Fido2.Core.csproj" />
+    <ProjectReference Include="..\Shark.Fido2.Repositories.InMemory\Shark.Fido2.Repositories.InMemory.csproj" />
   </ItemGroup>
 
 </Project>

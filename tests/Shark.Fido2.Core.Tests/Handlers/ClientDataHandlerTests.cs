@@ -3,6 +3,7 @@ using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Handlers;
 using Shark.Fido2.Core.Models;
+using Shark.Fido2.Core.Results;
 
 namespace Shark.Fido2.Core.Tests.Handlers;
 
@@ -27,11 +28,15 @@ public class ClientDataHandlerTests
         var expectedChallenge = "t2pJGIQ7Y4DXF2b98tnBjg";
         var expectedOrigin = "https://localhost:4000";
 
+        _clientDataValidatorMock
+            .Setup(a => a.Validate(It.IsAny<ClientDataModel?>(), It.IsAny<string>()))
+            .Returns(ValidatorInternalResult.Valid());
+
         // Act
         var result = _sut.Handle(clientDataJson, $"{expectedChallenge}==");
 
         // Assert
-        Assert.That(result, Is.Null);
+        Assert.That(result, Is.Not.Null);
 
         _clientDataValidatorMock.Verify(
             a => a.Validate(

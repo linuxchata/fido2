@@ -4,7 +4,7 @@ using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Converters;
 using Shark.Fido2.Core.Models;
-using Shark.Fido2.Domain;
+using Shark.Fido2.Core.Results.Attestation;
 
 namespace Shark.Fido2.Core.Handlers
 {
@@ -21,16 +21,23 @@ namespace Shark.Fido2.Core.Handlers
             _attestationObjectValidator = attestationObjectValidator;
         }
 
-        public AttestationCompleteResult? Handle(string attestationObject)
+        public InternalResult<AttestationObjectDataModel> Handle(string attestationObject)
         {
             if (string.IsNullOrWhiteSpace(attestationObject))
             {
-                return AttestationCompleteResult.CreateFailure("Attestation object cannot be null");
+                return new InternalResult<AttestationObjectDataModel>(
+                    "Attestation object cannot be null");
             }
 
             var attestationObjectData = GetAttestationObjectData(attestationObject);
 
-            return _attestationObjectValidator.Validate(attestationObjectData);
+            var result = _attestationObjectValidator.Validate(attestationObjectData);
+            if (!result.IsValid)
+            {
+                return new InternalResult<AttestationObjectDataModel>(result.Message!);
+            }
+
+            return new InternalResult<AttestationObjectDataModel>(attestationObjectData!);
         }
 
         private AttestationObjectDataModel GetAttestationObjectData(string attestationObject)

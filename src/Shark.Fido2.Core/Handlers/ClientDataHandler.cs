@@ -4,7 +4,7 @@ using System.Text.Json;
 using Shark.Fido2.Core.Abstractions.Handlers;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Models;
-using Shark.Fido2.Domain;
+using Shark.Fido2.Core.Results.Attestation;
 
 namespace Shark.Fido2.Core.Handlers
 {
@@ -17,16 +17,22 @@ namespace Shark.Fido2.Core.Handlers
             _clientDataValidator = clientDataValidator;
         }
 
-        public AttestationCompleteResult? Handle(string clientDataJson, string expectedChallenge)
+        public InternalResult<ClientDataModel> Handle(string clientDataJson, string expectedChallenge)
         {
             if (string.IsNullOrWhiteSpace(clientDataJson))
             {
-                return AttestationCompleteResult.CreateFailure("Client data JSON cannot be null");
+                return new InternalResult<ClientDataModel>("Client data JSON cannot be null");
             }
 
             var clientData = GetClientData(clientDataJson);
 
-            return _clientDataValidator.Validate(clientData, expectedChallenge);
+            var result = _clientDataValidator.Validate(clientData, expectedChallenge);
+            if (!result.IsValid)
+            {
+                return new InternalResult<ClientDataModel>(result.Message!);
+            }
+
+            return new InternalResult<ClientDataModel>(clientData!);
         }
 
         private ClientDataModel? GetClientData(string clientDataJson)

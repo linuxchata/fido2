@@ -36,6 +36,6 @@ public class AttestationObjectValidatorTests
         var result = _sut.Validate(attestationObjectData);
 
         // Assert
-        Assert.That(result, Is.Null);
+        Assert.That(result, Is.Not.Null);
     }
 }

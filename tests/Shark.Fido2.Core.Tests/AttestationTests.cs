@@ -4,6 +4,8 @@ using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Core.Abstractions.Handlers;
 using Shark.Fido2.Core.Configurations;
 using Shark.Fido2.Core.Constants;
+using Shark.Fido2.Core.Models;
+using Shark.Fido2.Core.Results.Attestation;
 using Shark.Fido2.Domain;
 
 namespace Shark.Fido2.Core.Tests;
@@ -11,12 +13,14 @@ namespace Shark.Fido2.Core.Tests;
 public class AttestationTests
 {
     private Attestation _sut = null!;
+    private Mock<IClientDataHandler> _clientDataHandlerMock = null!;
+    private Mock<IAttestationObjectHandler> _attestationObjectHandlerMock = null!;
 
     [SetUp]
     public void Setup()
     {
-        var clientDataHandlerMock = new Mock<IClientDataHandler>();
-        var attestationObjectHandlerMock = new Mock<IAttestationObjectHandler>();
+        _clientDataHandlerMock = new Mock<IClientDataHandler>();
+        _attestationObjectHandlerMock = new Mock<IAttestationObjectHandler>();
         var challengeGeneratorMock = new Mock<IChallengeGenerator>();
 
         var fido2ConfigurationMock = new Fido2Configuration
@@ -25,8 +29,8 @@ public class AttestationTests
         };
 
         _sut = new Attestation(
-            clientDataHandlerMock.Object,
-            attestationObjectHandlerMock.Object,
+            _clientDataHandlerMock.Object,
+            _attestationObjectHandlerMock.Object,
             challengeGeneratorMock.Object,
             Options.Create(fido2ConfigurationMock));
     }
@@ -49,6 +53,14 @@ public class AttestationTests
             Type = "public-key",
         };
         var expectedChallenge = "t2pJGIQ7Y4DXF2b98tnBjg";
+
+        _clientDataHandlerMock
+            .Setup(a => a.Handle(It.IsAny<string>(), It.IsAny<string>()))
+            .Returns(new InternalResult<ClientDataModel>(new ClientDataModel()));
+
+        _attestationObjectHandlerMock
+            .Setup(a => a.Handle(It.IsAny<string>()))
+            .Returns(new InternalResult<AttestationObjectDataModel>(new AttestationObjectDataModel()));
 
         // Act
         var result = _sut.Complete(publicKeyCredential, $"{expectedChallenge}==");

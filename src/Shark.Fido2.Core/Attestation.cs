@@ -55,15 +55,15 @@ namespace Shark.Fido2.Core
             }
 
             var clientDataHandlerResult = _clientDataHandler.Handle(response.ClientDataJson, expectedChallenge);
-            if (clientDataHandlerResult != null)
+            if (clientDataHandlerResult.HasError)
             {
-                return clientDataHandlerResult;
+                return AttestationCompleteResult.CreateFailure(clientDataHandlerResult.Message);
             }
 
             var attestationObjectHandlerResult = _attestationObjectHandler.Handle(response.AttestationObject);
-            if (attestationObjectHandlerResult != null)
+            if (attestationObjectHandlerResult.HasError)
             {
-                return attestationObjectHandlerResult;
+                return AttestationCompleteResult.CreateFailure(attestationObjectHandlerResult.Message);
             }
 
             return AttestationCompleteResult.Create();
