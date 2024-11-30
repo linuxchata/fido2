@@ -22,7 +22,7 @@ public class ClientDataValidatorTests
     }
 
     [Test]
-    public void Validate_WhenClientDataValid_ThenReturnsNull()
+    public void Validate_WhenClientDataValid_ThenReturnsValidResult()
     {
         // Arrange
         var expectedChallenge = "t2pJGIQ7Y4DXF2b98tnBjg";
@@ -41,5 +41,31 @@ public class ClientDataValidatorTests
 
         // Assert
         Assert.That(result, Is.Not.Null);
+        Assert.That(result.IsValid, Is.True);
+        Assert.That(result.Message, Is.Null);
+    }
+
+    [Test]
+    public void Validate_WhenClientDataInvalid_ThenReturnsInvalidResult()
+    {
+        // Arrange
+        var expectedChallenge = "t2pJGIQ7Y4DXF2b98tnBjg";
+        var expectedOrigin = "https://localhost:4000";
+
+        var clientDataModel = new ClientDataModel
+        {
+            Type = WebauthnType.Create,
+            Challenge = expectedChallenge,
+            Origin = expectedOrigin,
+            CrossOrigin = false,
+        };
+
+        // Act
+        var result = _sut.Validate(clientDataModel, "1epJGYQ2Y9DXF1b98tnGwr==");
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.IsValid, Is.False);
+        Assert.That(result.Message, Is.Not.Null);
     }
 }

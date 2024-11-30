@@ -76,5 +76,6 @@ public class AttestationTests
         // Assert
         Assert.That(result, Is.Not.Null);
         Assert.That(result.Status, Is.EqualTo(ResponseStatus.Ok));
+        Assert.That(result.Message, Is.Null);
     }
 }

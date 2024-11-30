@@ -21,7 +21,7 @@ public class ClientDataHandlerTests
     }
 
     [Test]
-    public void Handle_WhenClientDataJsonValid_ThenReturnsNull()
+    public void Handle_WheniPhoneClientDataJsonValid_ThenReturnsNull()
     {
         // Arrange
         var clientDataJson = "eyJ0eXBlIjoid2ViYXV0aG4uY3JlYXRlIiwiY2hhbGxlbmdlIjoidDJwSkdJUTdZNERYRjJiOTh0bkJqZyIsIm9yaWdpbiI6Imh0dHBzOi8vbG9jYWxob3N0OjQwMDAiLCJjcm9zc09yaWdpbiI6ZmFsc2UsIm90aGVyX2tleXNfY2FuX2JlX2FkZGVkX2hlcmUiOiJkbyBub3QgY29tcGFyZSBjbGllbnREYXRhSlNPTiBhZ2FpbnN0IGEgdGVtcGxhdGUuIFNlZSBodHRwczovL2dvby5nbC95YWJQZXgifQ==";
@@ -37,6 +37,9 @@ public class ClientDataHandlerTests
 
         // Assert
         Assert.That(result, Is.Not.Null);
+        Assert.That(result.HasError, Is.False);
+        Assert.That(result.Message, Is.Null);
+        Assert.That(result.Value, Is.Not.Null);
 
         _clientDataValidatorMock.Verify(
             a => a.Validate(
