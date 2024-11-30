@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Core.Abstractions.Handlers;
+using Shark.Fido2.Core.Abstractions.Helpers;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Handlers;
 using Shark.Fido2.Core.Helpers;
@@ -18,6 +19,7 @@ namespace Shark.Fido2.Core
             services.AddTransient<IClientDataValidator, ClientDataValidator>();
             services.AddTransient<IClientDataHandler, ClientDataHandler>();
 
+            services.AddTransient<IAuthenticatorDataProvider, AuthenticatorDataProvider>();
             services.AddTransient<IAttestationObjectValidator, AttestationObjectValidator>();
             services.AddTransient<IAttestationObjectHandler, AttestationObjectHandler>();
 

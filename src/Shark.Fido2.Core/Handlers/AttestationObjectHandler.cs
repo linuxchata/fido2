@@ -25,8 +25,7 @@ namespace Shark.Fido2.Core.Handlers
         {
             if (string.IsNullOrWhiteSpace(attestationObject))
             {
-                return new InternalResult<AttestationObjectDataModel>(
-                    "Attestation object cannot be null");
+                return new InternalResult<AttestationObjectDataModel>("Attestation object cannot be null");
             }
 
             var attestationObjectData = GetAttestationObjectData(attestationObject);
