@@ -59,7 +59,7 @@ public class AttestationController(IAttestation attestation) : ControllerBase
     [Consumes(MediaTypeNames.Application.Json)]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public IActionResult Result(PublicKeyCredentialResponse request)
+    public async Task<IActionResult> Result(PublicKeyCredentialResponse request)
     {
         // The server will validate challenges, origins, signatures and the rest of
         // the ServerAuthenticatorAttestationResponse according to the algorithm
@@ -70,7 +70,7 @@ public class AttestationController(IAttestation attestation) : ControllerBase
 
         var response = new CredentialValidateResponse();
 
-        _attestation.Complete(new PublicKeyCredential
+        await _attestation.Complete(new PublicKeyCredential
         {
             Id = request.Id,
             RawId = request.RawId,

@@ -5,6 +5,6 @@ namespace Shark.Fido2.Core.Abstractions.Repositories
 {
     public interface ICredentialRepository
     {
-        Task<Credential?> Get(string? id);
+        Task<Credential?> Get(byte[]? id);
     }
 }

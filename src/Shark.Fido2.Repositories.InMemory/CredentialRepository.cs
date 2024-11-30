@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Caching.Distributed;
 using Shark.Fido2.Core.Abstractions.Repositories;
@@ -15,21 +16,23 @@ namespace Shark.Fido2.Repositories.InMemory
             _cache = cache;
         }
 
-        public async Task<Credential?> Get(string? id)
+        public async Task<Credential?> Get(byte[]? id)
         {
-            if (string.IsNullOrWhiteSpace(id))
+            if (id == null)
             {
-                return null!;
+                return null;
             }
 
-            var serializedItem = await _cache.GetStringAsync(id);
+            var idString = Convert.ToBase64String(id);
+
+            var serializedItem = await _cache.GetStringAsync(idString);
 
             if (!string.IsNullOrWhiteSpace(serializedItem))
             {
                 return JsonSerializer.Deserialize<Credential>(serializedItem);
             }
 
-            return null!;
+            return null;
         }
     }
 }

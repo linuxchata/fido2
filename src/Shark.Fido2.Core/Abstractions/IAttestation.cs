@@ -1,4 +1,5 @@
-﻿using Shark.Fido2.Domain;
+﻿using System.Threading.Tasks;
+using Shark.Fido2.Domain;
 
 namespace Shark.Fido2.Core.Abstractions
 {
@@ -6,6 +7,6 @@ namespace Shark.Fido2.Core.Abstractions
     {
         PublicKeyCredentialCreationOptions GetOptions();
 
-        AttestationCompleteResult Complete(PublicKeyCredential publicKeyCredential, string? expectedChallenge);
+        Task<AttestationCompleteResult> Complete(PublicKeyCredential publicKeyCredential, string? expectedChallenge);
     }
 }

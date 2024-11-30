@@ -2,6 +2,7 @@ using Microsoft.Extensions.Options;
 using Moq;
 using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Core.Abstractions.Handlers;
+using Shark.Fido2.Core.Abstractions.Repositories;
 using Shark.Fido2.Core.Configurations;
 using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Models;
@@ -15,6 +16,7 @@ public class AttestationTests
     private Attestation _sut = null!;
     private Mock<IClientDataHandler> _clientDataHandlerMock = null!;
     private Mock<IAttestationObjectHandler> _attestationObjectHandlerMock = null!;
+    private Mock<ICredentialRepository> _credentialRepositoryMock = null!;
 
     [SetUp]
     public void Setup()
@@ -22,6 +24,7 @@ public class AttestationTests
         _clientDataHandlerMock = new Mock<IClientDataHandler>();
         _attestationObjectHandlerMock = new Mock<IAttestationObjectHandler>();
         var challengeGeneratorMock = new Mock<IChallengeGenerator>();
+        _credentialRepositoryMock = new Mock<ICredentialRepository>();
 
         var fido2ConfigurationMock = new Fido2Configuration
         {
@@ -32,11 +35,12 @@ public class AttestationTests
             _clientDataHandlerMock.Object,
             _attestationObjectHandlerMock.Object,
             challengeGeneratorMock.Object,
+            _credentialRepositoryMock.Object,
             Options.Create(fido2ConfigurationMock));
     }
 
     [Test]
-    public void Complete_WhenPublicKeyCredentialValid_ThenReturnsSuccess()
+    public async Task Complete_WhenPublicKeyCredentialValid_ThenReturnsSuccess()
     {
         // Arrange
         var publicKeyCredential = new PublicKeyCredential
@@ -62,8 +66,12 @@ public class AttestationTests
             .Setup(a => a.Handle(It.IsAny<string>()))
             .Returns(new InternalResult<AttestationObjectDataModel>(new AttestationObjectDataModel()));
 
+        _credentialRepositoryMock
+            .Setup(a => a.Get(It.IsAny<byte[]>()))
+            .ReturnsAsync((Credential?)null);
+
         // Act
-        var result = _sut.Complete(publicKeyCredential, $"{expectedChallenge}==");
+        var result = await _sut.Complete(publicKeyCredential, $"{expectedChallenge}==");
 
         // Assert
         Assert.That(result, Is.Not.Null);
