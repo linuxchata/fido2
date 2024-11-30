@@ -80,6 +80,9 @@ namespace Shark.Fido2.Core
                 return AttestationCompleteResult.CreateFailure("Credential has already been registered");
             }
 
+            credential = new Credential { CredentialId = credentialId! };
+            await _credentialRepository.Add(credential);
+
             return AttestationCompleteResult.Create();
         }
     }

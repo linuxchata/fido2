@@ -23,9 +23,9 @@ namespace Shark.Fido2.Repositories.InMemory
                 return null;
             }
 
-            var idString = Convert.ToBase64String(id);
+            var credentialIdString = Convert.ToBase64String(id);
 
-            var serializedItem = await _cache.GetStringAsync(idString);
+            var serializedItem = await _cache.GetStringAsync(credentialIdString);
 
             if (!string.IsNullOrWhiteSpace(serializedItem))
             {
@@ -33,6 +33,20 @@ namespace Shark.Fido2.Repositories.InMemory
             }
 
             return null;
+        }
+
+        public async Task Add(Credential credential)
+        {
+            if (credential == null)
+            {
+                throw new ArgumentNullException(nameof(credential));
+            }
+
+            var credentialIdString = Convert.ToBase64String(credential.CredentialId);
+
+            var serializedItem = JsonSerializer.Serialize(credential);
+
+            await _cache.SetStringAsync(credentialIdString, serializedItem);
         }
     }
 }
