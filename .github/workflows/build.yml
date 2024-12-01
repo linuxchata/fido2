@@ -21,9 +21,9 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
-
     - name: Restore dependencies
       run: dotnet restore ./src/Shark.Fido2.sln
-
-    - name: Build with dotnet
+    - name: Build
       run: dotnet build ./src/Shark.Fido2.sln --configuration Release --no-restore
+    - name: Test
+      run: dotnet test ./src/Shark.Fido2.sln --configuration Release --no-build --verbosity normal
