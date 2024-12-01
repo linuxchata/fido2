@@ -73,14 +73,21 @@ namespace Shark.Fido2.Core
                 return AttestationCompleteResult.CreateFailure(attestationObjectHandlerResult.Message!);
             }
 
-            var credentialId = attestationObjectHandlerResult.Value?.AuthenticatorData?.AttestedCredentialData.CredentialId;
+            var attestedCredentialData = attestationObjectHandlerResult.Value!.AuthenticatorData!.AttestedCredentialData;
+            var credentialId = attestedCredentialData!.CredentialId;
             var credential = await _credentialRepository.Get(credentialId);
             if (credential != null)
             {
                 return AttestationCompleteResult.CreateFailure("Credential has already been registered");
             }
 
-            credential = new Credential { CredentialId = credentialId! };
+            credential = new Credential
+            {
+                CredentialId = credentialId!,
+                CredentialPublicKey = attestedCredentialData.CredentialPublicKey,
+                SignCount = attestationObjectHandlerResult.Value.AuthenticatorData!.SignCount,
+            };
+
             await _credentialRepository.Add(credential);
 
             return AttestationCompleteResult.Create();

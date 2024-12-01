@@ -18,6 +18,7 @@ namespace Shark.Fido2.Core.Helpers
         private const int SignCountLength = 4;
         private const int AaguidLength = 16;
         private const int CredentialIdLengthLength = 2;
+        private const int CoseKeyKeyTypeIndex = 1; // https://datatracker.ietf.org/doc/html/rfc8152#section-7
         private const int CoseKeyAlgorithmIndex = 3; // https://datatracker.ietf.org/doc/html/rfc8152#section-7
 
         public AuthenticatorData? Get(byte[]? authenticatorDataArray)
@@ -67,8 +68,10 @@ namespace Shark.Fido2.Core.Helpers
             var credentialPublicKeyLength = authenticatorDataArray.Length - startIndex;
             var credentialPublicKeyArray = authenticatorDataArray.AsSpan(startIndex, credentialPublicKeyLength);
             var credentialPublicKeyCoseKeyFormat = CborConverter.DecodeToCoseKeyFormat(credentialPublicKeyArray.ToArray());
+            authenticatorData.AttestedCredentialData.CredentialPublicKey.KeyType =
+                GetCredentialPublicKeyParameter(credentialPublicKeyCoseKeyFormat, CoseKeyKeyTypeIndex);
             authenticatorData.AttestedCredentialData.CredentialPublicKey.Algorithm =
-                GetCredentialPublicKeyAlgorithm(credentialPublicKeyCoseKeyFormat);
+                GetCredentialPublicKeyParameter(credentialPublicKeyCoseKeyFormat, CoseKeyAlgorithmIndex);
 
             return authenticatorData;
         }
@@ -81,11 +84,11 @@ namespace Shark.Fido2.Core.Helpers
             authenticatorData.ExtensionDataIncluded = (flags & 0b10000000) != 0; // Bit 7
         }
 
-        private int? GetCredentialPublicKeyAlgorithm(Dictionary<int, object> coseKeyFormat)
+        private int? GetCredentialPublicKeyParameter(Dictionary<int, object> coseKeyFormat, int coseKeyAlgorithmIndex)
         {
-            if (coseKeyFormat.TryGetValue(CoseKeyAlgorithmIndex, out var algorithm))
+            if (coseKeyFormat.TryGetValue(coseKeyAlgorithmIndex, out var value))
             {
-                return Convert.ToInt32(algorithm);
+                return Convert.ToInt32(value);
             };
 
             return null;

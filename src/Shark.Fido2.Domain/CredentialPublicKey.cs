@@ -6,8 +6,13 @@
     public sealed class CredentialPublicKey
     {
         /// <summary>
-        /// Cryptographic signature algorithm
+        /// Identification of the key type (kty)
         /// </summary>
-        public long? Algorithm { get; set; }
+        public int? KeyType { get; set; }
+
+        /// <summary>
+        /// Cryptographic signature algorithm (alg)
+        /// </summary>
+        public int? Algorithm { get; set; }
     }
 }

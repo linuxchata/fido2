@@ -24,7 +24,7 @@ internal class AuthenticatorDataProviderTests
 
         // Assert
         Assert.That(result, Is.Not.Null);
-        Assert.That(result.AttestedCredentialData, Is.Not.Null);
+        Assert.That(result!.AttestedCredentialData, Is.Not.Null);
         Assert.That(result.AttestedCredentialData.CredentialPublicKey, Is.Not.Null);
     }
 
@@ -40,7 +40,7 @@ internal class AuthenticatorDataProviderTests
 
         // Assert
         Assert.That(result, Is.Not.Null);
-        Assert.That(result.AttestedCredentialData, Is.Not.Null);
+        Assert.That(result!.AttestedCredentialData, Is.Not.Null);
         Assert.That(result.AttestedCredentialData.CredentialPublicKey, Is.Not.Null);
     }
 }
