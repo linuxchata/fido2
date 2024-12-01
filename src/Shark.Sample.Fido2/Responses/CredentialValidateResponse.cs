@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Shark.Fido2.Responses;
+namespace Shark.Sample.Fido2.Responses;
 
 public sealed class CredentialValidateResponse
 {

@@ -2,6 +2,7 @@
 using System.Buffers.Binary;
 using System.Collections.Generic;
 using Shark.Fido2.Core.Abstractions.Helpers;
+using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Converters;
 using Shark.Fido2.Domain;
 
@@ -18,8 +19,6 @@ namespace Shark.Fido2.Core.Helpers
         private const int SignCountLength = 4;
         private const int AaguidLength = 16;
         private const int CredentialIdLengthLength = 2;
-        private const int CoseKeyKeyTypeIndex = 1; // https://datatracker.ietf.org/doc/html/rfc8152#section-7
-        private const int CoseKeyAlgorithmIndex = 3; // https://datatracker.ietf.org/doc/html/rfc8152#section-7
 
         public AuthenticatorData? Get(byte[]? authenticatorDataArray)
         {
@@ -69,9 +68,9 @@ namespace Shark.Fido2.Core.Helpers
             var credentialPublicKeyArray = authenticatorDataArray.AsSpan(startIndex, credentialPublicKeyLength);
             var credentialPublicKeyCoseKeyFormat = CborConverter.DecodeToCoseKeyFormat(credentialPublicKeyArray.ToArray());
             authenticatorData.AttestedCredentialData.CredentialPublicKey.KeyType =
-                GetCredentialPublicKeyParameter(credentialPublicKeyCoseKeyFormat, CoseKeyKeyTypeIndex);
+                GetCredentialPublicKeyParameter(credentialPublicKeyCoseKeyFormat, CoseKeyIndex.KeyType);
             authenticatorData.AttestedCredentialData.CredentialPublicKey.Algorithm =
-                GetCredentialPublicKeyParameter(credentialPublicKeyCoseKeyFormat, CoseKeyAlgorithmIndex);
+                GetCredentialPublicKeyParameter(credentialPublicKeyCoseKeyFormat, CoseKeyIndex.Algorithm);
 
             return authenticatorData;
         }

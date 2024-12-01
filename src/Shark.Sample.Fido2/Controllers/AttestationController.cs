@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Domain;
-using Shark.Fido2.Responses;
 using Shark.Sample.Fido2.Requests;
+using Shark.Sample.Fido2.Responses;
 
 namespace Shark.Sample.Fido2.Controllers;
 
