@@ -1,10 +1,10 @@
-﻿namespace Shark.Fido2.Core.Models
+﻿namespace Shark.Fido2.Domain
 {
-    public sealed class AuthenticatorDataModel
+    public sealed class AuthenticatorData
     {
-        public AuthenticatorDataModel()
+        public AuthenticatorData()
         {
-            AttestedCredentialData = new AttestedCredentialDataModel();
+            AttestedCredentialData = new AttestedCredentialData();
         }
 
         /// <summary>
@@ -45,7 +45,7 @@
         /// <summary>
         /// Attested Credential Data
         /// </summary>
-        public AttestedCredentialDataModel AttestedCredentialData { get; set; }
+        public AttestedCredentialData AttestedCredentialData { get; set; }
 
         public string Extensions { get; set; } = null!;
     }

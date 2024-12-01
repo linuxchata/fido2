@@ -3,8 +3,8 @@ using Shark.Fido2.Core.Abstractions.Helpers;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Handlers;
 using Shark.Fido2.Core.Helpers;
-using Shark.Fido2.Core.Models;
 using Shark.Fido2.Core.Results;
+using Shark.Fido2.Domain;
 
 namespace Shark.Fido2.Core.Tests.Handlers;
 
@@ -32,7 +32,7 @@ public class AttestationObjectHandlerTests
         var attestationObject = "o2NmbXRkbm9uZWdhdHRTdG10oGhhdXRoRGF0YViYSZYN5YgOjGh0NBcPZHZgW4/krrmihjLHmVzzuoMdl2NdAAAAAAAAAAAAAAAAAAAAAAAAAAAAFNIOIaOVgJRyI6ffE8tNV4tHvGJVpQECAyYgASFYIEgIOe/+LSvpyPB010CZ4+ox3EAG6dp611nzoff5QH15IlggC/DWA8k1rogu86PSgVzEjD9ObamYaO2dbj710ogx1dw=";
 
         _attestationObjectValidatorMock
-            .Setup(a => a.Validate(It.IsAny<AttestationObjectDataModel?>()))
+            .Setup(a => a.Validate(It.IsAny<AttestationObjectData?>()))
             .Returns(ValidatorInternalResult.Valid());
 
         // Act

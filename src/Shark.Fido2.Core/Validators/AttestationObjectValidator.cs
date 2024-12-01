@@ -2,14 +2,14 @@
 using Shark.Fido2.Core.Comparers;
 using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Helpers;
-using Shark.Fido2.Core.Models;
 using Shark.Fido2.Core.Results;
+using Shark.Fido2.Domain;
 
 namespace Shark.Fido2.Core.Validators
 {
     internal class AttestationObjectValidator : IAttestationObjectValidator
     {
-        public ValidatorInternalResult Validate(AttestationObjectDataModel? attestationObjectData)
+        public ValidatorInternalResult Validate(AttestationObjectData? attestationObjectData)
         {
             if (attestationObjectData == null)
             {

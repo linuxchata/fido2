@@ -3,7 +3,7 @@ using System.Buffers.Binary;
 using System.Collections.Generic;
 using Shark.Fido2.Core.Abstractions.Helpers;
 using Shark.Fido2.Core.Converters;
-using Shark.Fido2.Core.Models;
+using Shark.Fido2.Domain;
 
 namespace Shark.Fido2.Core.Helpers
 {
@@ -20,14 +20,14 @@ namespace Shark.Fido2.Core.Helpers
         private const int CredentialIdLengthLength = 2;
         private const int CoseKeyAlgorithmIndex = 3; // https://datatracker.ietf.org/doc/html/rfc8152#section-7
 
-        public AuthenticatorDataModel? Get(byte[]? authenticatorDataArray)
+        public AuthenticatorData? Get(byte[]? authenticatorDataArray)
         {
             if (authenticatorDataArray == null)
             {
                 return null;
             }
 
-            var authenticatorData = new AuthenticatorDataModel();
+            var authenticatorData = new AuthenticatorData();
 
             var startIndex = 0;
 
@@ -73,7 +73,7 @@ namespace Shark.Fido2.Core.Helpers
             return authenticatorData;
         }
 
-        private void GetAndSetFlags(byte flags, AuthenticatorDataModel authenticatorData)
+        private void GetAndSetFlags(byte flags, AuthenticatorData authenticatorData)
         {
             authenticatorData.UserPresent = (flags & 0b00000001) != 0; // Bit 0
             authenticatorData.UserVerified = (flags & 0b00000100) != 0; // Bit 2

@@ -1,9 +1,9 @@
-﻿using Shark.Fido2.Core.Models;
+﻿using Shark.Fido2.Domain;
 
 namespace Shark.Fido2.Core.Abstractions.Helpers
 {
     public interface IAuthenticatorDataProvider
     {
-        AuthenticatorDataModel? Get(byte[]? authenticatorDataArray);
+        AuthenticatorData? Get(byte[]? authenticatorDataArray);
     }
 }

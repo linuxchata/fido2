@@ -1,9 +1,9 @@
-﻿namespace Shark.Fido2.Core.Models
+﻿namespace Shark.Fido2.Domain
 {
     /// <summary>
     /// Credential Public Key
     /// </summary>
-    public sealed class CredentialPublicKeyModel
+    public sealed class CredentialPublicKey
     {
         /// <summary>
         /// Cryptographic signature algorithm

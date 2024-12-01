@@ -1,15 +1,15 @@
 ﻿using System;
 
-namespace Shark.Fido2.Core.Models
+namespace Shark.Fido2.Domain
 {
     /// <summary>
     /// Attested Credential Data
     /// </summary>
-    public sealed class AttestedCredentialDataModel
+    public sealed class AttestedCredentialData
     {
-        public AttestedCredentialDataModel()
+        public AttestedCredentialData()
         {
-            CredentialPublicKey = new CredentialPublicKeyModel();
+            CredentialPublicKey = new CredentialPublicKey();
         }
 
         /// <summary>
@@ -25,6 +25,6 @@ namespace Shark.Fido2.Core.Models
         /// <summary>
         /// The credential public key
         /// </summary>
-        public CredentialPublicKeyModel CredentialPublicKey { get; set; } = null!;
+        public CredentialPublicKey CredentialPublicKey { get; set; } = null!;
     }
 }

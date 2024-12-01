@@ -1,10 +1,10 @@
-﻿namespace Shark.Fido2.Core.Models
+﻿namespace Shark.Fido2.Domain
 {
     /// <summary>
     /// Attestation Object Data
     /// https://www.w3.org/TR/webauthn-2/#attestation-object
     /// </summary>
-    public sealed class AttestationObjectDataModel
+    public sealed class AttestationObjectData
     {
         /// <summary>
         /// An attestation statement format (fmt).
@@ -19,6 +19,6 @@
         /// <summary>
         /// A byte array containing authenticator data (attStmt).
         /// </summary>
-        public AuthenticatorDataModel? AuthenticatorData { get; set; }
+        public AuthenticatorData? AuthenticatorData { get; set; }
     }
 }

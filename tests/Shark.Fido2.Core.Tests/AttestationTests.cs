@@ -64,7 +64,7 @@ public class AttestationTests
 
         _attestationObjectHandlerMock
             .Setup(a => a.Handle(It.IsAny<string>()))
-            .Returns(new InternalResult<AttestationObjectDataModel>(new AttestationObjectDataModel()));
+            .Returns(new InternalResult<AttestationObjectData>(new AttestationObjectData()));
 
         _credentialRepositoryMock
             .Setup(a => a.Get(It.IsAny<byte[]>()))
