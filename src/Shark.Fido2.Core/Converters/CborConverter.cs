@@ -40,6 +40,8 @@ namespace Shark.Fido2.Core.Converters
                 switch (reader.PeekState())
                 {
                     case CborReaderState.UnsignedInteger:
+                        value = reader.ReadUInt32();
+                        break;
                     case CborReaderState.NegativeInteger:
                         value = reader.ReadInt32();
                         break;
@@ -65,6 +67,10 @@ namespace Shark.Fido2.Core.Converters
                     return reader.ReadTextString();
                 case CborReaderState.ByteString:
                     return reader.ReadByteString();
+                case CborReaderState.UnsignedInteger:
+                    return reader.ReadUInt32();
+                case CborReaderState.NegativeInteger:
+                    return reader.ReadInt32();
                 case CborReaderState.StartMap:
                     var result = new Dictionary<string, object>();
                     reader.ReadStartMap();

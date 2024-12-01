@@ -40,4 +40,30 @@ public class AttestationObjectValidatorTests
         Assert.That(result.IsValid, Is.True);
         Assert.That(result.Message, Is.Null);
     }
+
+    [Test]
+    public void Validate_WhenWindowsClientDataValid_ThenReturnsValidResult()
+    {
+        // Arrange
+        var authenticatorDataString = "SZYN5YgOjGh0NBcPZHZgW4/krrmihjLHmVzzuoMdl2NFAAAAAGAosBex1EwCtLOvza/Ja7IAIPbZ8TFtu1QIdgyeU/8pErsPUlpyNOO78e5M2fuf6qbapAEDAzkBACBZAQDyo0pfoOrWf6nTz8BLydkpXJwNwU4cdciPBhSrj3oUif0N4MoXDE4cwoBgbtGQ4MVVwKbnn+iTsmi/TJc+G9tIX/LPRyj+0Z2bcMW1TJr1vD3BurP5VV4pd7eeQofWbO0zG7pSn6P/txKRqkCtQu0drUXlfrOek/P1v7rruhAvcXq4JNdVEeajP6OARISK/G62CcpI122cZ/CYH41/4ES0Ik0HgmwtEkRZrQQXAksDWVtf6Cq0xv6nL9CB+b8Stx2jEei5P9mHhP0Kanj0eEUXmjB1kVmwxMSWM0iSc8E9lefS0os9Cue/32eqzf0ybOVaObVb+BUE1kjzrRwmIOjZIUMBAAE=";
+        var authenticatorDataArray = Convert.FromBase64String(authenticatorDataString);
+
+        // Temporary simplification of tests is to use instance of AuthenticatorDataProvider
+        var provider = new AuthenticatorDataProvider();
+        var authenticatorData = provider.Get(authenticatorDataArray);
+
+        var attestationObjectData = new AttestationObjectData
+        {
+            AttestationStatementFormat = AttestationStatementFormatIdentifier.None,
+            AuthenticatorData = authenticatorData,
+        };
+
+        // Act
+        var result = _sut.Validate(attestationObjectData);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.IsValid, Is.True);
+        Assert.That(result.Message, Is.Null);
+    }
 }
