@@ -5,8 +5,8 @@ using Shark.Fido2.Core.Comparers;
 using Shark.Fido2.Core.Configurations;
 using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Converters;
-using Shark.Fido2.Core.Models;
 using Shark.Fido2.Core.Results;
+using Shark.Fido2.Domain;
 
 namespace Shark.Fido2.Core.Validators
 {
@@ -19,7 +19,7 @@ namespace Shark.Fido2.Core.Validators
             _configuration = options.Value;
         }
 
-        public ValidatorInternalResult Validate(ClientDataModel? clientData, string expectedChallenge)
+        public ValidatorInternalResult Validate(ClientData? clientData, string expectedChallenge)
         {
             if (clientData == null)
             {
@@ -27,10 +27,10 @@ namespace Shark.Fido2.Core.Validators
             }
 
             // Type
-            if (!string.Equals(clientData.Type, WebauthnType.Create, StringComparison.OrdinalIgnoreCase))
+            if (!string.Equals(clientData.Type, WebAuthnType.Create, StringComparison.OrdinalIgnoreCase))
             {
                 return ValidatorInternalResult.Invalid(
-                    $"Type mismatch. Expected type is {WebauthnType.Create}");
+                    $"Type mismatch. Expected type is {WebAuthnType.Create}");
             }
 
             // Challenge

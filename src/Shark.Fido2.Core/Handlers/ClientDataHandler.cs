@@ -3,8 +3,8 @@ using System.Text;
 using System.Text.Json;
 using Shark.Fido2.Core.Abstractions.Handlers;
 using Shark.Fido2.Core.Abstractions.Validators;
-using Shark.Fido2.Core.Models;
 using Shark.Fido2.Core.Results.Attestation;
+using Shark.Fido2.Domain;
 
 namespace Shark.Fido2.Core.Handlers
 {
@@ -17,11 +17,11 @@ namespace Shark.Fido2.Core.Handlers
             _clientDataValidator = clientDataValidator;
         }
 
-        public InternalResult<ClientDataModel> Handle(string clientDataJson, string expectedChallenge)
+        public InternalResult<ClientData> Handle(string clientDataJson, string expectedChallenge)
         {
             if (string.IsNullOrWhiteSpace(clientDataJson))
             {
-                return new InternalResult<ClientDataModel>("Client data JSON cannot be null");
+                return new InternalResult<ClientData>("Client data JSON cannot be null");
             }
 
             var clientData = GetClientData(clientDataJson);
@@ -29,17 +29,17 @@ namespace Shark.Fido2.Core.Handlers
             var result = _clientDataValidator.Validate(clientData, expectedChallenge);
             if (!result.IsValid)
             {
-                return new InternalResult<ClientDataModel>(result.Message!);
+                return new InternalResult<ClientData>(result.Message!);
             }
 
-            return new InternalResult<ClientDataModel>(clientData!);
+            return new InternalResult<ClientData>(clientData!);
         }
 
-        private ClientDataModel? GetClientData(string clientDataJson)
+        private ClientData? GetClientData(string clientDataJson)
         {
             var clientDataJsonArray = Convert.FromBase64String(clientDataJson);
             var decodedClientDataJson = Encoding.UTF8.GetString(clientDataJsonArray);
-            return JsonSerializer.Deserialize<ClientDataModel>(decodedClientDataJson);
+            return JsonSerializer.Deserialize<ClientData>(decodedClientDataJson);
         }
     }
 }

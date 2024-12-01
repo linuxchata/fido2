@@ -1,4 +1,4 @@
-﻿namespace Shark.Fido2.Core.Models
+﻿namespace Shark.Fido2.Domain
 {
     public enum TokenBindingStatus
     {

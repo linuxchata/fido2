@@ -1,11 +1,11 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Shark.Fido2.Core.Models
+namespace Shark.Fido2.Domain
 {
     /// <summary>
     /// 5.8.1. Client Data Used in WebAuthn Signatures
     /// </summary>
-    public sealed class ClientDataModel
+    public sealed class ClientData
     {
         [JsonPropertyName("type")]
         public string Type { get; set; } = null!;
@@ -20,6 +20,6 @@ namespace Shark.Fido2.Core.Models
         public bool CrossOrigin { get; set; }
 
         [JsonPropertyName("tokenBinding")]
-        public TokenBindingModel? TokenBinding { get; set; }
+        public TokenBinding? TokenBinding { get; set; }
     }
 }

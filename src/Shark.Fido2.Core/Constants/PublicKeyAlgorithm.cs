@@ -2,7 +2,7 @@
 {
     internal enum PublicKeyAlgorithm
     {
-        EsS256 = -7,
-        RS256 = -257
+        Es256 = -7,
+        Rs256 = -257
     }
 }

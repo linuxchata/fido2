@@ -1,8 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Shark.Fido2.Core.Models
+namespace Shark.Fido2.Domain
 {
-    public class TokenBindingModel
+    public class TokenBinding
     {
         [JsonPropertyName("status")]
         public TokenBindingStatus Status { get; set; }

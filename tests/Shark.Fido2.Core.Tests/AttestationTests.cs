@@ -5,7 +5,6 @@ using Shark.Fido2.Core.Abstractions.Handlers;
 using Shark.Fido2.Core.Abstractions.Repositories;
 using Shark.Fido2.Core.Configurations;
 using Shark.Fido2.Core.Constants;
-using Shark.Fido2.Core.Models;
 using Shark.Fido2.Core.Results.Attestation;
 using Shark.Fido2.Domain;
 
@@ -60,7 +59,7 @@ public class AttestationTests
 
         _clientDataHandlerMock
             .Setup(a => a.Handle(It.IsAny<string>(), It.IsAny<string>()))
-            .Returns(new InternalResult<ClientDataModel>(new ClientDataModel()));
+            .Returns(new InternalResult<ClientData>(new ClientData()));
 
         _attestationObjectHandlerMock
             .Setup(a => a.Handle(It.IsAny<string>()))
