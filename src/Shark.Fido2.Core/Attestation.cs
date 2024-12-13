@@ -33,12 +33,17 @@ namespace Shark.Fido2.Core
 
         public PublicKeyCredentialCreationOptions GetOptions()
         {
-            var credentialOptions = new PublicKeyCredentialCreationOptions
+            var credentialCreationOptions = new PublicKeyCredentialCreationOptions
             {
-                Challenge = _challengeGenerator.Get()
+                RelyingParty = new PublicKeyCredentialRpEntity
+                {
+                    Id = _configuration.RelyingPartyId,
+                    Name = _configuration.RelyingPartyIdName,
+                },
+                Challenge = _challengeGenerator.Get(),
             };
 
-            return credentialOptions;
+            return credentialCreationOptions;
         }
 
         public async Task<AttestationCompleteResult> Complete(

@@ -5,5 +5,9 @@
         public const string Name = nameof(Fido2Configuration);
 
         public string Origin { get; set; } = null!;
+
+        public string RelyingPartyId { get; set; } = null!;
+
+        public string RelyingPartyIdName { get; set; } = null!;
     }
 }

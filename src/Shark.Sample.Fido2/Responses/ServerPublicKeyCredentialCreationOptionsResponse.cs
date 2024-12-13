@@ -2,7 +2,7 @@
 
 namespace Shark.Sample.Fido2.Responses;
 
-public sealed class CredentialGetOptionsResponse
+public sealed class ServerPublicKeyCredentialCreationOptionsResponse : ServerResponse
 {
     [JsonPropertyName("rp")]
     public required RelyingPartyResponse RelyingParty { get; set; }
@@ -12,4 +12,7 @@ public sealed class CredentialGetOptionsResponse
 
     [JsonPropertyName("challenge")]
     public required string Challenge { get; set; }
+
+    [JsonPropertyName("timeout")]
+    public uint Timeout { get; set; }
 }

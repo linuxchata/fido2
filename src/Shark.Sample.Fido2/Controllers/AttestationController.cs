@@ -2,7 +2,6 @@
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Shark.Fido2.Core.Abstractions;
-using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Domain;
 using Shark.Sample.Fido2.Requests;
 using Shark.Sample.Fido2.Responses;
@@ -25,24 +24,26 @@ public class AttestationController(IAttestation attestation) : ControllerBase
     [HttpPost("options")]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public IActionResult Options()
+    public IActionResult Options(ServerPublicKeyCredentialCreationOptionsRequest request)
     {
         var credentialOptions = _attestation.GetOptions();
 
-        var response = new CredentialGetOptionsResponse
+        var response = new ServerPublicKeyCredentialCreationOptionsResponse
         {
+            Status = "ok",
             Challenge = credentialOptions.Challenge,
             RelyingParty = new RelyingPartyResponse
             {
-                Identifier = "localhost",
-                //Name = "Example CORP",
+                Identifier = credentialOptions.RelyingParty.Id,
+                Name = credentialOptions.RelyingParty.Name,
             },
             User = new UserResponse
             {
                 Identifier = Guid.NewGuid().ToString(),
                 Name = "johndoe@example.com",
                 DisplayName = "John Doe",
-            }
+            },
+            Timeout = credentialOptions.Timeout,
         };
 
         HttpContext.Session.SetString("Challenge", response.Challenge);
@@ -61,14 +62,17 @@ public class AttestationController(IAttestation attestation) : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> Result(PublicKeyCredentialResponse request)
     {
+        if (request == null)
+        {
+            return Ok(ServerResponse.CreateFailed());
+        }
+
         // The server will validate challenges, origins, signatures and the rest of
         // the ServerAuthenticatorAttestationResponse according to the algorithm
         // described in section 7.1 of the [Webauthn] specs, and will respond with
         // the appropriate ServerResponse message.
 
         var expectedChallenge = HttpContext.Session.GetString("Challenge");
-
-        var response = new CredentialValidateResponse();
 
         await _attestation.Complete(new PublicKeyCredential
         {
@@ -84,9 +88,6 @@ public class AttestationController(IAttestation attestation) : ControllerBase
         },
         expectedChallenge);
 
-        response.Status = ResponseStatus.Failed;
-        response.Status = ResponseStatus.Ok;
-
-        return Ok(response);
+        return Ok(ServerResponse.Create());
     }
 }
