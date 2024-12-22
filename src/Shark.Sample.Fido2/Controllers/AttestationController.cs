@@ -3,8 +3,9 @@ using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Domain;
-using Shark.Sample.Fido2.Requests;
-using Shark.Sample.Fido2.Responses;
+using Shark.Fido2.Models.Mappers;
+using Shark.Fido2.Models.Requests;
+using Shark.Fido2.Models.Responses;
 
 namespace Shark.Sample.Fido2.Controllers;
 
@@ -28,23 +29,7 @@ public class AttestationController(IAttestation attestation) : ControllerBase
     {
         var credentialOptions = _attestation.GetOptions();
 
-        var response = new ServerPublicKeyCredentialCreationOptionsResponse
-        {
-            Status = "ok",
-            Challenge = credentialOptions.Challenge,
-            RelyingParty = new RelyingPartyResponse
-            {
-                Identifier = credentialOptions.RelyingParty.Id,
-                Name = credentialOptions.RelyingParty.Name,
-            },
-            User = new UserResponse
-            {
-                Identifier = Guid.NewGuid().ToString(),
-                Name = "johndoe@example.com",
-                DisplayName = "John Doe",
-            },
-            Timeout = credentialOptions.Timeout,
-        };
+        var response = credentialOptions.Map();
 
         HttpContext.Session.SetString("Challenge", response.Challenge);
 

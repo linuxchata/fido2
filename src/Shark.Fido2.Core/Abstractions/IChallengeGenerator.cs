@@ -2,6 +2,6 @@
 {
     public interface IChallengeGenerator
     {
-        string Get();
+        byte[] Get();
     }
 }

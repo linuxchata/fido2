@@ -8,7 +8,9 @@
     {
         public PublicKeyCredentialRpEntity RelyingParty { get; set; } = null!;
 
-        public string Challenge { get; set; } = null!;
+        public PublicKeyCredentialUserEntity User { get; set; } = null!;
+
+        public byte[] Challenge { get; set; } = null!;
 
         public uint Timeout { get; set; }
     }
