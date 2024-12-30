@@ -10,6 +10,9 @@ namespace Shark.Fido2.Models.Responses
         [JsonPropertyName("user")]
         public UserResponse User { get; set; } = null!;
 
+        [JsonPropertyName("pubKeyCredParams")]
+        public ParameterResponse[] Parameters { get; set; } = null!;
+
         [JsonPropertyName("challenge")]
         public string Challenge { get; set; } = null!;
 

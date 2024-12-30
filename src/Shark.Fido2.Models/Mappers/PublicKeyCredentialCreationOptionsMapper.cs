@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Shark.Fido2.Domain;
 using Shark.Fido2.Models.Responses;
 
@@ -24,6 +25,11 @@ namespace Shark.Fido2.Models.Mappers
                     Name = "johndoe@example.com",
                     DisplayName = "John Doe",
                 },
+                Parameters = credentialOptions.PublicKeyCredentialParams?.Select(p => new ParameterResponse
+                {
+                    Type = p.Type,
+                    Algorithm = (long)p.Algorithm,
+                }).ToArray() ?? new ParameterResponse[0],
                 Timeout = credentialOptions.Timeout,
             };
 
