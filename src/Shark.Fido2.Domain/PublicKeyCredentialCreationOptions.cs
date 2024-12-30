@@ -10,6 +10,8 @@
 
         public PublicKeyCredentialUserEntity User { get; set; } = null!;
 
+        public PublicKeyCredentialParameter[] PublicKeyCredentialParams { get; set; } = null!;
+
         public byte[] Challenge { get; set; } = null!;
 
         public uint Timeout { get; set; }

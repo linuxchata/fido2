@@ -41,6 +41,10 @@ namespace Shark.Fido2.Core
                     Name = _configuration.RelyingPartyIdName,
                 },
                 Challenge = _challengeGenerator.Get(),
+                PublicKeyCredentialParams = new[]
+                {
+                    new PublicKeyCredentialParameter { Algorithm = Domain.Enums.PublicKeyAlgorithmEnum.Es256 }
+                }
             };
 
             return credentialCreationOptions;

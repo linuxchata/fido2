@@ -1,10 +1,10 @@
-﻿namespace Shark.Fido2.Core.Enums
+﻿namespace Shark.Fido2.Domain.Enums
 {
     /// <summary>
     /// COSE Algorithms
     /// https://www.iana.org/assignments/cose/cose.xhtml#algorithms
     /// </summary>
-    internal enum PublicKeyAlgorithmEnum
+    public enum PublicKeyAlgorithmEnum
     {
         Es256 = -7,
 

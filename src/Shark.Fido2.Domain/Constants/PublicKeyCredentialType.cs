@@ -1,4 +1,4 @@
-﻿namespace Shark.Fido2.Core.Constants
+﻿namespace Shark.Fido2.Domain.Constants
 {
     /// <summary>
     /// Credential type
