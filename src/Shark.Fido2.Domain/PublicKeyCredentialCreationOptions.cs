@@ -15,5 +15,9 @@
         public byte[] Challenge { get; set; } = null!;
 
         public uint Timeout { get; set; }
+
+        public PublicKeyCredentialDescriptor[] ExcludeCredentials { get; set; } = new PublicKeyCredentialDescriptor[0];
+
+        public string Attestation { get; set; } = null!;
     }
 }

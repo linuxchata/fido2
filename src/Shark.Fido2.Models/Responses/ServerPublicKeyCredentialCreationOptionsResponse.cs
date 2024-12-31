@@ -18,5 +18,11 @@ namespace Shark.Fido2.Models.Responses
 
         [JsonPropertyName("timeout")]
         public uint Timeout { get; set; }
+
+        [JsonPropertyName("excludeCredentials")]
+        public DescriptorResponse[] ExcludeCredentials { get; set; } = null!;
+
+        [JsonPropertyName("attestation")]
+        public string Attestation { get; set; } = null!;
     }
 }

@@ -6,6 +6,8 @@ using Shark.Fido2.Core.Abstractions.Handlers;
 using Shark.Fido2.Core.Abstractions.Repositories;
 using Shark.Fido2.Core.Configurations;
 using Shark.Fido2.Domain;
+using Shark.Fido2.Domain.Constants;
+using Shark.Fido2.Domain.Enums;
 
 namespace Shark.Fido2.Core
 {
@@ -43,8 +45,10 @@ namespace Shark.Fido2.Core
                 Challenge = _challengeGenerator.Get(),
                 PublicKeyCredentialParams = new[]
                 {
-                    new PublicKeyCredentialParameter { Algorithm = Domain.Enums.PublicKeyAlgorithmEnum.Es256 }
-                }
+                    new PublicKeyCredentialParameter { Algorithm = PublicKeyAlgorithmEnum.Es256 }
+                },
+                ExcludeCredentials = new PublicKeyCredentialDescriptor[0],
+                Attestation = AttestationConveyancePreference.None,
             };
 
             return credentialCreationOptions;

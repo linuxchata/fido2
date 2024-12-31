@@ -19,7 +19,7 @@ public class AttestationController(IAttestation attestation) : ControllerBase
     private readonly IAttestation _attestation = attestation;
 
     /// <summary>
-    /// Gets credential creation options
+    /// Gets credential creation options.
     /// </summary>
     /// <returns>The HTTP response.</returns>
     [HttpPost("options")]
@@ -37,7 +37,7 @@ public class AttestationController(IAttestation attestation) : ControllerBase
     }
 
     /// <summary>
-    /// Validate credential
+    /// Validate credential.
     /// </summary>
     /// <param name="request"></param>
     /// <returns>The HTTP response.</returns>
