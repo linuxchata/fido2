@@ -22,6 +22,9 @@ namespace Shark.Fido2.Models.Responses
         [JsonPropertyName("excludeCredentials")]
         public DescriptorResponse[] ExcludeCredentials { get; set; } = null!;
 
+        [JsonPropertyName("authenticatorSelection")]
+        public AuthenticatorSelectionCriteriaResponse AuthenticatorSelection { get; set; } = null!;
+
         [JsonPropertyName("attestation")]
         public string Attestation { get; set; } = null!;
     }

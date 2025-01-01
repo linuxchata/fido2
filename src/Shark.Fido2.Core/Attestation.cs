@@ -48,6 +48,7 @@ namespace Shark.Fido2.Core
                     new PublicKeyCredentialParameter { Algorithm = PublicKeyAlgorithmEnum.Es256 }
                 },
                 ExcludeCredentials = new PublicKeyCredentialDescriptor[0],
+                AuthenticatorSelection = new AuthenticatorSelectionCriteria(),
                 Attestation = AttestationConveyancePreference.None,
             };
 

@@ -26,22 +26,49 @@ namespace Shark.Fido2.Models.Mappers
                     Name = "johndoe@example.com",
                     DisplayName = "John Doe",
                 },
-                Parameters = credentialOptions.PublicKeyCredentialParams?.Select(p => new ParameterResponse
-                {
-                    Type = p.Type,
-                    Algorithm = (long)p.Algorithm,
-                }).ToArray() ?? new ParameterResponse[0],
+                Parameters = Map(credentialOptions.PublicKeyCredentialParams),
                 Timeout = credentialOptions.Timeout,
-                ExcludeCredentials = credentialOptions.ExcludeCredentials?.Select(ex => new DescriptorResponse
-                {
-                    Type = ex.Type,
-                    Id = Convert.ToBase64String(ex.Id),
-                    Transports = ex.Transports.Select(t => t.GetEnumMemberValue()).ToArray(),
-                }).ToArray() ?? new DescriptorResponse[0],
+                ExcludeCredentials = Map(credentialOptions.ExcludeCredentials),
+                AuthenticatorSelection = Map(credentialOptions.AuthenticatorSelection),
                 Attestation = credentialOptions.Attestation,
             };
 
             return response;
+        }
+
+        private static ParameterResponse[] Map(PublicKeyCredentialParameter[] publicKeyCredentialParams)
+        {
+            return publicKeyCredentialParams?.Select(p => new ParameterResponse
+            {
+                Type = p.Type,
+                Algorithm = (long)p.Algorithm,
+            }).ToArray() ?? new ParameterResponse[0];
+        }
+
+        private static DescriptorResponse[] Map(PublicKeyCredentialDescriptor[]? excludeCredentials)
+        {
+            return excludeCredentials?.Select(credentials => new DescriptorResponse
+            {
+                Type = credentials.Type,
+                Id = Convert.ToBase64String(credentials.Id),
+                Transports = credentials.Transports.Select(t => t.GetEnumMemberValue()).ToArray(),
+            }).ToArray() ?? new DescriptorResponse[0];
+        }
+
+        private static AuthenticatorSelectionCriteriaResponse Map(AuthenticatorSelectionCriteria authenticatorSelection)
+        {
+            if (authenticatorSelection == null)
+            {
+                return new AuthenticatorSelectionCriteriaResponse();
+            }
+
+            return new AuthenticatorSelectionCriteriaResponse
+            {
+                AuthenticatorAttachment = authenticatorSelection.AuthenticatorAttachment,
+                ResidentKey = authenticatorSelection.ResidentKey,
+                RequireResidentKey = authenticatorSelection.RequireResidentKey,
+                UserVerification = authenticatorSelection.UserVerification,
+            };
         }
     }
 }

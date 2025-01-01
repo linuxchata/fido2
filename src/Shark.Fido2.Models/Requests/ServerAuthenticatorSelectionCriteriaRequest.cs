@@ -1,19 +1,15 @@
 ﻿using System.Text.Json.Serialization;
 using Shark.Fido2.Domain.Constants;
 
-namespace Shark.Fido2.Models.Responses
+namespace Shark.Fido2.Models.Requests
 {
-    /// <summary>
-    /// 5.4.4. Authenticator Selection Criteria
-    /// https://www.w3.org/TR/webauthn-2/#dictionary-authenticatorSelection
-    /// </summary>
-    public class AuthenticatorSelectionCriteria
+    public class ServerAuthenticatorSelectionCriteriaRequest
     {
         [JsonPropertyName("authenticatorAttachment")]
-        public string? AuthenticatorAttachment { get; set; }
+        public string AuthenticatorAttachment { get; set; } = null!;
 
         [JsonPropertyName("residentKey")]
-        public string? ResidentKey { get; set; }
+        public string ResidentKey { get; set; } = null!;
 
         [JsonPropertyName("requireResidentKey")]
         public bool RequireResidentKey { get; set; } = false;

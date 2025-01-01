@@ -10,13 +10,15 @@
 
         public PublicKeyCredentialUserEntity User { get; set; } = null!;
 
-        public PublicKeyCredentialParameter[] PublicKeyCredentialParams { get; set; } = null!;
-
         public byte[] Challenge { get; set; } = null!;
+
+        public PublicKeyCredentialParameter[] PublicKeyCredentialParams { get; set; } = null!;
 
         public uint Timeout { get; set; }
 
         public PublicKeyCredentialDescriptor[] ExcludeCredentials { get; set; } = new PublicKeyCredentialDescriptor[0];
+
+        public AuthenticatorSelectionCriteria AuthenticatorSelection { get; set; } = null!;
 
         public string Attestation { get; set; } = null!;
     }
