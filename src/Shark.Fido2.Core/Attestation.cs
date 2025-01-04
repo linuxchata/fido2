@@ -57,7 +57,8 @@ namespace Shark.Fido2.Core
                 Challenge = _challengeGenerator.Get(),
                 PublicKeyCredentialParams = new[]
                 {
-                    new PublicKeyCredentialParameter { Algorithm = PublicKeyAlgorithmEnum.Es256 }
+                    new PublicKeyCredentialParameter { Algorithm = PublicKeyAlgorithmEnum.Es256 },
+                    new PublicKeyCredentialParameter { Algorithm = PublicKeyAlgorithmEnum.Rs256 },
                 },
                 Timeout = _configuration.Timeout,
                 ExcludeCredentials = new PublicKeyCredentialDescriptor[0],
