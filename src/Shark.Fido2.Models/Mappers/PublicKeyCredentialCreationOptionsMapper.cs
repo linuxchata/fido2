@@ -15,17 +15,8 @@ namespace Shark.Fido2.Models.Mappers
             {
                 Status = "ok",
                 Challenge = Convert.ToBase64String(credentialOptions.Challenge),
-                RelyingParty = new RelyingPartyResponse
-                {
-                    Identifier = credentialOptions.RelyingParty.Id,
-                    Name = credentialOptions.RelyingParty.Name,
-                },
-                User = new UserResponse
-                {
-                    Identifier = Guid.NewGuid().ToString(),
-                    Name = "johndoe@example.com",
-                    DisplayName = "John Doe",
-                },
+                RelyingParty = Map(credentialOptions.RelyingParty),
+                User = Map(credentialOptions.User),
                 Parameters = Map(credentialOptions.PublicKeyCredentialParams),
                 Timeout = credentialOptions.Timeout,
                 ExcludeCredentials = Map(credentialOptions.ExcludeCredentials),
@@ -34,6 +25,30 @@ namespace Shark.Fido2.Models.Mappers
             };
 
             return response;
+        }
+
+        private static RelyingPartyResponse Map(PublicKeyCredentialRpEntity relyingParty)
+        {
+            return new RelyingPartyResponse
+            {
+                Identifier = relyingParty.Id,
+                Name = relyingParty.Name,
+            };
+        }
+
+        private static UserResponse Map(PublicKeyCredentialUserEntity userEntity)
+        {
+            if (userEntity == null)
+            {
+                return new UserResponse();
+            }
+
+            return new UserResponse
+            {
+                Identifier = Convert.ToBase64String(userEntity.Id),
+                Name = userEntity.Name,
+                DisplayName = userEntity.DisplayName,
+            };
         }
 
         private static ParameterResponse[] Map(PublicKeyCredentialParameter[] publicKeyCredentialParams)

@@ -27,7 +27,16 @@ public class AttestationController(IAttestation attestation) : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public IActionResult Options(ServerPublicKeyCredentialCreationOptionsRequest request)
     {
-        var credentialOptions = _attestation.GetOptions();
+        var userName = "shark";
+
+        var userEntity = new PublicKeyCredentialUserEntity
+        {
+            Id = Encoding.UTF8.GetBytes(userName),
+            Name = userName,
+            DisplayName = userName,
+        };
+
+        var credentialOptions = _attestation.GetOptions(userEntity);
 
         var response = credentialOptions.Map();
 

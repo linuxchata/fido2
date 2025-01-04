@@ -2,7 +2,7 @@
 {
     public class PublicKeyCredentialUserEntity
     {
-        public byte Id { get; set; }
+        public byte[] Id { get; set; } = null!;
 
         public string Name { get; set; } = null!;
 

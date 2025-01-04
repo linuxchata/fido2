@@ -17,7 +17,7 @@ namespace Shark.Fido2.Models.Responses
         public string Challenge { get; set; } = null!;
 
         [JsonPropertyName("timeout")]
-        public uint Timeout { get; set; }
+        public ulong Timeout { get; set; }
 
         [JsonPropertyName("excludeCredentials")]
         public DescriptorResponse[] ExcludeCredentials { get; set; } = null!;

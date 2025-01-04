@@ -33,8 +33,13 @@ namespace Shark.Fido2.Core
             _configuration = options.Value;
         }
 
-        public PublicKeyCredentialCreationOptions GetOptions()
+        public PublicKeyCredentialCreationOptions GetOptions(PublicKeyCredentialUserEntity userEntity)
         {
+            if (userEntity == null || userEntity.Id == null)
+            {
+                throw new ArgumentNullException(nameof(userEntity));
+            }
+
             var credentialCreationOptions = new PublicKeyCredentialCreationOptions
             {
                 RelyingParty = new PublicKeyCredentialRpEntity
@@ -42,11 +47,13 @@ namespace Shark.Fido2.Core
                     Id = _configuration.RelyingPartyId,
                     Name = _configuration.RelyingPartyIdName,
                 },
+                User = userEntity ?? new PublicKeyCredentialUserEntity(),
                 Challenge = _challengeGenerator.Get(),
                 PublicKeyCredentialParams = new[]
                 {
                     new PublicKeyCredentialParameter { Algorithm = PublicKeyAlgorithmEnum.Es256 }
                 },
+                Timeout = _configuration.Timeout,
                 ExcludeCredentials = new PublicKeyCredentialDescriptor[0],
                 AuthenticatorSelection = new AuthenticatorSelectionCriteria(),
                 Attestation = AttestationConveyancePreference.None,

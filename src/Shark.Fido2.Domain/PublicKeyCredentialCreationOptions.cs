@@ -14,7 +14,7 @@
 
         public PublicKeyCredentialParameter[] PublicKeyCredentialParams { get; set; } = null!;
 
-        public uint Timeout { get; set; }
+        public ulong Timeout { get; set; }
 
         public PublicKeyCredentialDescriptor[] ExcludeCredentials { get; set; } = new PublicKeyCredentialDescriptor[0];
 

@@ -9,5 +9,7 @@
         public string RelyingPartyId { get; set; } = null!;
 
         public string RelyingPartyIdName { get; set; } = null!;
+
+        public ulong Timeout { get; set; } = 60000;
     }
 }
