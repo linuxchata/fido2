@@ -66,7 +66,7 @@ namespace Shark.Fido2.Models.Mappers
             {
                 Type = credentials.Type,
                 Id = Convert.ToBase64String(credentials.Id),
-                Transports = credentials.Transports.Select(t => t.GetEnumMemberValue()).ToArray(),
+                Transports = credentials.Transports.Select(t => t.GetValue()).ToArray(),
             }).ToArray() ?? new DescriptorResponse[0];
         }
 
@@ -79,10 +79,10 @@ namespace Shark.Fido2.Models.Mappers
 
             return new AuthenticatorSelectionCriteriaResponse
             {
-                AuthenticatorAttachment = authenticatorSelection.AuthenticatorAttachment,
-                ResidentKey = authenticatorSelection.ResidentKey,
+                AuthenticatorAttachment = authenticatorSelection.AuthenticatorAttachment.GetValue(),
+                ResidentKey = authenticatorSelection.ResidentKey.GetValue(),
                 RequireResidentKey = authenticatorSelection.RequireResidentKey,
-                UserVerification = authenticatorSelection.UserVerification,
+                UserVerification = authenticatorSelection.UserVerification!.Value.GetValue(),
             };
         }
     }

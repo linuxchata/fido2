@@ -1,5 +1,4 @@
-﻿using System.Text.Json.Serialization;
-using Shark.Fido2.Domain.Constants;
+﻿using Shark.Fido2.Domain.Enums;
 
 namespace Shark.Fido2.Domain
 {
@@ -9,12 +8,12 @@ namespace Shark.Fido2.Domain
     /// </summary>
     public class AuthenticatorSelectionCriteria
     {
-        public string AuthenticatorAttachment { get; set; } = null!;
+        public AuthenticatorAttachment AuthenticatorAttachment { get; set; }
 
-        public string ResidentKey { get; set; } = null!;
+        public ResidentKeyRequirement ResidentKey { get; set; }
 
         public bool RequireResidentKey { get; set; } = false;
 
-        public string UserVerification { get; set; } = ResidentKeyRequirement.Preferred;
+        public UserVerificationRequirement? UserVerification { get; set; }
     }
 }

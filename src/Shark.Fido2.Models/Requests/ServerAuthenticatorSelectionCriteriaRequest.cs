@@ -1,5 +1,4 @@
 ﻿using System.Text.Json.Serialization;
-using Shark.Fido2.Domain.Constants;
 
 namespace Shark.Fido2.Models.Requests
 {
@@ -15,6 +14,6 @@ namespace Shark.Fido2.Models.Requests
         public bool RequireResidentKey { get; set; } = false;
 
         [JsonPropertyName("userVerification")]
-        public string? UserVerification { get; set; } = ResidentKeyRequirement.Preferred;
+        public string? UserVerification { get; set; }
     }
 }

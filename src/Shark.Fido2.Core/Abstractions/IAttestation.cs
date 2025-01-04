@@ -5,7 +5,7 @@ namespace Shark.Fido2.Core.Abstractions
 {
     public interface IAttestation
     {
-        PublicKeyCredentialCreationOptions GetOptions(PublicKeyCredentialUserEntity userEntity);
+        PublicKeyCredentialCreationOptions GetOptions(PublicKeyCredentialCreationOptionsRequest request);
 
         Task<AttestationCompleteResult> Complete(PublicKeyCredential publicKeyCredential, string? expectedChallenge);
     }

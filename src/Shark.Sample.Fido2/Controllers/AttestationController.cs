@@ -6,6 +6,8 @@ using Shark.Fido2.Domain;
 using Shark.Fido2.Models.Mappers;
 using Shark.Fido2.Models.Requests;
 using Shark.Fido2.Models.Responses;
+using Shark.Sample.Fido2.Swagger;
+using Swashbuckle.AspNetCore.Filters;
 
 namespace Shark.Sample.Fido2.Controllers;
 
@@ -25,18 +27,10 @@ public class AttestationController(IAttestation attestation) : ControllerBase
     [HttpPost("options")]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [SwaggerRequestExample(typeof(ServerPublicKeyCredentialCreationOptionsRequest), typeof(ServerPublicKeyCredentialCreationOptionsRequestExample))]
     public IActionResult Options(ServerPublicKeyCredentialCreationOptionsRequest request)
     {
-        var userName = "shark";
-
-        var userEntity = new PublicKeyCredentialUserEntity
-        {
-            Id = Encoding.UTF8.GetBytes(userName),
-            Name = userName,
-            DisplayName = userName,
-        };
-
-        var credentialOptions = _attestation.GetOptions(userEntity);
+        var credentialOptions = _attestation.GetOptions(request.Map());
 
         var response = credentialOptions.Map();
 

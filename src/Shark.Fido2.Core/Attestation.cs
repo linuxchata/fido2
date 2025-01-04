@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Shark.Fido2.Core.Abstractions;
@@ -33,11 +34,11 @@ namespace Shark.Fido2.Core
             _configuration = options.Value;
         }
 
-        public PublicKeyCredentialCreationOptions GetOptions(PublicKeyCredentialUserEntity userEntity)
+        public PublicKeyCredentialCreationOptions GetOptions(PublicKeyCredentialCreationOptionsRequest request)
         {
-            if (userEntity == null || userEntity.Id == null)
+            if (request == null)
             {
-                throw new ArgumentNullException(nameof(userEntity));
+                throw new ArgumentNullException(nameof(request));
             }
 
             var credentialCreationOptions = new PublicKeyCredentialCreationOptions
@@ -47,7 +48,12 @@ namespace Shark.Fido2.Core
                     Id = _configuration.RelyingPartyId,
                     Name = _configuration.RelyingPartyIdName,
                 },
-                User = userEntity ?? new PublicKeyCredentialUserEntity(),
+                User = new PublicKeyCredentialUserEntity
+                {
+                    Id = Encoding.UTF8.GetBytes(request.Username),
+                    Name = request.Username,
+                    DisplayName = request.DisplayName,
+                },
                 Challenge = _challengeGenerator.Get(),
                 PublicKeyCredentialParams = new[]
                 {
@@ -55,8 +61,15 @@ namespace Shark.Fido2.Core
                 },
                 Timeout = _configuration.Timeout,
                 ExcludeCredentials = new PublicKeyCredentialDescriptor[0],
-                AuthenticatorSelection = new AuthenticatorSelectionCriteria(),
-                Attestation = AttestationConveyancePreference.None,
+                AuthenticatorSelection = request.AuthenticatorSelection != null ? new AuthenticatorSelectionCriteria
+                {
+                    AuthenticatorAttachment = request.AuthenticatorSelection.AuthenticatorAttachment,
+                    ResidentKey = request.AuthenticatorSelection.ResidentKey,
+                    RequireResidentKey = request.AuthenticatorSelection.RequireResidentKey,
+                    UserVerification = request.AuthenticatorSelection.UserVerification ??
+                        UserVerificationRequirement.Preferred,
+                } : new AuthenticatorSelectionCriteria(),
+                Attestation = request.Attestation ?? AttestationConveyancePreference.None,
             };
 
             return credentialCreationOptions;
