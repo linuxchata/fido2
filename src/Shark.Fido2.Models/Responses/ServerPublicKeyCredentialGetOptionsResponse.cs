@@ -2,7 +2,7 @@
 
 namespace Shark.Fido2.Models.Responses
 {
-    public sealed class ServerPublicKeyCredentialGetOptionsResponse
+    public sealed class ServerPublicKeyCredentialGetOptionsResponse : ServerResponse
     {
         [JsonPropertyName("challenge")]
         public string Challenge { get; set; } = null!;
