@@ -76,6 +76,16 @@ namespace Shark.Fido2.Core
             return credentialCreationOptions;
         }
 
+        public PublicKeyCredentialRequestOptions RequestOptions(PublicKeyCredentialRequestOptionsRequest request)
+        {
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+
+            return new PublicKeyCredentialRequestOptions();
+        }
+
         public async Task<AttestationCompleteResult> Complete(
             PublicKeyCredential publicKeyCredential,
             string? expectedChallenge)

@@ -34,5 +34,15 @@ namespace Shark.Fido2.Models.Extensions
 
             throw new ArgumentException($"Value '{value}' can not be convert to {typeof(T).Name}");
         }
+
+        public static T? ToNullableEnum<T>(this string? value) where T : struct, Enum
+        {
+            if (value == null)
+            {
+                return null;
+            }
+
+            return ToEnum<T>(value);
+        }
     }
 }

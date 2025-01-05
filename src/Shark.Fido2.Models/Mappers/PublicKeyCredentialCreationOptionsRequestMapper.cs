@@ -33,7 +33,7 @@ namespace Shark.Fido2.Models.Mappers
                 AuthenticatorAttachment = criteriaRequest.AuthenticatorAttachment.ToEnum<AuthenticatorAttachment>(),
                 ResidentKey = criteriaRequest.ResidentKey.ToEnum<ResidentKeyRequirement>(),
                 RequireResidentKey = criteriaRequest.RequireResidentKey,
-                UserVerification = criteriaRequest.UserVerification?.ToEnum<UserVerificationRequirement>()
+                UserVerification = criteriaRequest.UserVerification?.ToEnum<UserVerificationRequirement>(),
             };
         }
     }
