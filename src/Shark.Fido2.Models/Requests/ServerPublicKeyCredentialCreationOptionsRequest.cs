@@ -1,5 +1,4 @@
 ﻿using System.Text.Json.Serialization;
-using Shark.Fido2.Domain.Constants;
 
 namespace Shark.Fido2.Models.Requests
 {

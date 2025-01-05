@@ -16,7 +16,7 @@
 
         public ulong Timeout { get; set; }
 
-        public PublicKeyCredentialDescriptor[] ExcludeCredentials { get; set; } = new PublicKeyCredentialDescriptor[0];
+        public PublicKeyCredentialDescriptor[] ExcludeCredentials { get; set; } = null!;
 
         public AuthenticatorSelectionCriteria AuthenticatorSelection { get; set; } = null!;
 

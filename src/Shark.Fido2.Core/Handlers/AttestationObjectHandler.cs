@@ -1,5 +1,4 @@
-﻿using System;
-using Shark.Fido2.Core.Abstractions.Handlers;
+﻿using Shark.Fido2.Core.Abstractions.Handlers;
 using Shark.Fido2.Core.Abstractions.Helpers;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Constants;

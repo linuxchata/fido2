@@ -1,8 +1,7 @@
-using Shark.Sample.Fido2.Extensions;
 using Shark.Fido2.Repositories.InMemory;
-using Microsoft.Extensions.Options;
-using Swashbuckle.AspNetCore.Filters;
+using Shark.Sample.Fido2.Extensions;
 using Shark.Sample.Fido2.Swagger;
+using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
