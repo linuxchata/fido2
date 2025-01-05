@@ -27,7 +27,9 @@ public class AttestationController(IAttestation attestation) : ControllerBase
     [HttpPost("options")]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [SwaggerRequestExample(typeof(ServerPublicKeyCredentialCreationOptionsRequest), typeof(ServerPublicKeyCredentialCreationOptionsRequestExample))]
+    [SwaggerRequestExample(
+        typeof(ServerPublicKeyCredentialCreationOptionsRequest),
+        typeof(ServerPublicKeyCredentialCreationOptionsRequestExample))]
     public IActionResult Options(ServerPublicKeyCredentialCreationOptionsRequest request)
     {
         var credentialOptions = _attestation.GetOptions(request.Map());

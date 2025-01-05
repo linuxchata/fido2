@@ -62,11 +62,11 @@ namespace Shark.Fido2.Models.Mappers
 
         private static DescriptorResponse[] Map(PublicKeyCredentialDescriptor[]? excludeCredentials)
         {
-            return excludeCredentials?.Select(credentials => new DescriptorResponse
+            return excludeCredentials?.Select(credential => new DescriptorResponse
             {
-                Type = credentials.Type,
-                Id = Convert.ToBase64String(credentials.Id),
-                Transports = credentials.Transports.Select(t => t.GetValue()).ToArray(),
+                Type = credential.Type,
+                Id = Convert.ToBase64String(credential.Id),
+                Transports = credential.Transports.Select(t => t.GetValue()).ToArray(),
             }).ToArray() ?? new DescriptorResponse[0];
         }
 

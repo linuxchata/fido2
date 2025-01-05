@@ -10,6 +10,6 @@
 
         public string RelyingPartyIdName { get; set; } = null!;
 
-        public ulong Timeout { get; set; } = 60000;
+        public ulong? Timeout { get; set; }
     }
 }

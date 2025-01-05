@@ -24,6 +24,7 @@ namespace Shark.Fido2.Core
             services.AddTransient<IAttestationObjectHandler, AttestationObjectHandler>();
 
             services.AddTransient<IAttestation, Attestation>();
+            services.AddTransient<IAssertion, Assertion>();
         }
     }
 }

@@ -7,7 +7,8 @@ namespace Shark.Fido2.Models.Mappers
 {
     public static class PublicKeyCredentialRequestOptionsRequestMapper
     {
-        public static PublicKeyCredentialRequestOptionsRequest Map(ServerPublicKeyCredentialGetOptionsRequest request)
+        public static PublicKeyCredentialRequestOptionsRequest Map(
+            this ServerPublicKeyCredentialGetOptionsRequest request)
         {
             return new PublicKeyCredentialRequestOptionsRequest
             {

@@ -14,6 +14,8 @@ namespace Shark.Fido2.Core
 {
     public sealed class Attestation : IAttestation
     {
+        private const ulong DefaultTimeout = 60000;
+
         private readonly IClientDataHandler _clientDataHandler;
         private readonly IAttestationObjectHandler _attestationObjectHandler;
         private readonly IChallengeGenerator _challengeGenerator;
@@ -60,7 +62,7 @@ namespace Shark.Fido2.Core
                     new PublicKeyCredentialParameter { Algorithm = PublicKeyAlgorithmEnum.Es256 },
                     new PublicKeyCredentialParameter { Algorithm = PublicKeyAlgorithmEnum.Rs256 },
                 },
-                Timeout = _configuration.Timeout,
+                Timeout = _configuration.Timeout ?? DefaultTimeout,
                 ExcludeCredentials = new PublicKeyCredentialDescriptor[0],
                 AuthenticatorSelection = request.AuthenticatorSelection != null ? new AuthenticatorSelectionCriteria
                 {
@@ -74,16 +76,6 @@ namespace Shark.Fido2.Core
             };
 
             return credentialCreationOptions;
-        }
-
-        public PublicKeyCredentialRequestOptions RequestOptions(PublicKeyCredentialRequestOptionsRequest request)
-        {
-            if (request == null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
-
-            return new PublicKeyCredentialRequestOptions();
         }
 
         public async Task<AttestationCompleteResult> Complete(

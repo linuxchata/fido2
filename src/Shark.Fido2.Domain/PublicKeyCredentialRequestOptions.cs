@@ -14,7 +14,7 @@ namespace Shark.Fido2.Domain
 
         public string RpId { get; set; } = null!;
 
-        public PublicKeyCredentialDescriptor[] AllowCredentials { get; set; } = null!;
+        public PublicKeyCredentialDescriptor[]? AllowCredentials { get; set; }
 
         public UserVerificationRequirement? UserVerification { get; set; }
     }

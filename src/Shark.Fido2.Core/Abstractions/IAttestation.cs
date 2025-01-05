@@ -7,8 +7,6 @@ namespace Shark.Fido2.Core.Abstractions
     {
         PublicKeyCredentialCreationOptions GetOptions(PublicKeyCredentialCreationOptionsRequest request);
 
-        PublicKeyCredentialRequestOptions RequestOptions(PublicKeyCredentialRequestOptionsRequest request);
-
         Task<AttestationCompleteResult> Complete(PublicKeyCredential publicKeyCredential, string? expectedChallenge);
     }
 }
