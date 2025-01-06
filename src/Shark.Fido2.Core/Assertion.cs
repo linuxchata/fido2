@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Core.Configurations;
@@ -34,6 +35,29 @@ namespace Shark.Fido2.Core
                 RpId = _configuration.RelyingPartyId,
                 UserVerification = request.UserVerification ?? UserVerificationRequirement.Preferred,
             };
+        }
+
+        public Task<AssertionCompleteResult> Complete(
+            PublicKeyCredentialAssertion publicKeyCredential,
+            string? expectedChallenge)
+        {
+            if (publicKeyCredential == null)
+            {
+                throw new ArgumentNullException(nameof(publicKeyCredential));
+            }
+
+            if (string.IsNullOrWhiteSpace(expectedChallenge))
+            {
+                throw new ArgumentNullException(nameof(expectedChallenge));
+            }
+
+            var response = publicKeyCredential.Response;
+            if (response == null)
+            {
+                return Task.FromResult(AssertionCompleteResult.CreateFailure("Response cannot be null"));
+            }
+
+            return Task.FromResult(AssertionCompleteResult.Create());
         }
     }
 }

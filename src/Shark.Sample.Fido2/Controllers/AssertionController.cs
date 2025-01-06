@@ -1,5 +1,6 @@
 ﻿using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
+using Shark.Fido2.Core;
 using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Models.Mappers;
 using Shark.Fido2.Models.Requests;
@@ -48,12 +49,16 @@ public class AssertionController(IAssertion assertion) : ControllerBase
     [Consumes(MediaTypeNames.Application.Json)]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public IActionResult Result(ServerPublicKeyCredential<ServerAuthenticatorAssertionResponse> request)
+    public async Task<IActionResult> Result(ServerPublicKeyCredentialAssertion request)
     {
         if (request == null)
         {
             return Ok(ServerResponse.CreateFailed());
         }
+
+        var expectedChallenge = HttpContext.Session.GetString("Challenge");
+
+        await _assertion.Complete(request.Map(), expectedChallenge);
 
         return Ok();
     }

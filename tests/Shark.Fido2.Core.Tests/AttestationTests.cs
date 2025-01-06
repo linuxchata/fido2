@@ -42,7 +42,7 @@ public class AttestationTests
     public async Task Complete_WhenPublicKeyCredentialValid_ThenReturnsSuccess()
     {
         // Arrange
-        var publicKeyCredential = new PublicKeyCredential
+        var publicKeyCredential = new PublicKeyCredentialAttestation
         {
             Id = "0g4ho5WAlHIjp98Ty01Xi0e8YlU",
             RawId = "0g4ho5WAlHIjp98Ty01Xi0e8YlU=",

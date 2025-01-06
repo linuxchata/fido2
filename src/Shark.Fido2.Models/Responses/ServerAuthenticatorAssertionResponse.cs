@@ -10,8 +10,8 @@ namespace Shark.Fido2.Models.Responses
         [JsonPropertyName("clientDataJSON")]
         public string ClientDataJson { get; set; } = null!;
 
-        [JsonPropertyName("attestationObject")]
-        public string AttestationObject { get; set; } = null!;
+        [JsonPropertyName("authenticatorData")]
+        public string AuthenticatorData { get; set; } = null!;
 
         [JsonPropertyName("signature")]
         public string? Signature { get; set; }

@@ -79,7 +79,7 @@ namespace Shark.Fido2.Core
         }
 
         public async Task<AttestationCompleteResult> Complete(
-            PublicKeyCredential publicKeyCredential,
+            PublicKeyCredentialAttestation publicKeyCredential,
             string? expectedChallenge)
         {
             if (publicKeyCredential == null)

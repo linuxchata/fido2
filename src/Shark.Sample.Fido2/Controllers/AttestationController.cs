@@ -1,9 +1,7 @@
 ﻿using System.Net.Mime;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using Shark.Fido2.Core.Abstractions;
-using Shark.Fido2.Domain;
 using Shark.Fido2.Models.Mappers;
 using Shark.Fido2.Models.Requests;
 using Shark.Fido2.Models.Responses;
@@ -52,7 +50,7 @@ public class AttestationController(IAttestation attestation) : ControllerBase
     [Consumes(MediaTypeNames.Application.Json)]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> Result(ServerPublicKeyCredential<ServerAuthenticatorAttestationResponse> request)
+    public async Task<IActionResult> Result(ServerPublicKeyCredentialAttestation request)
     {
         if (request == null)
         {
@@ -66,19 +64,7 @@ public class AttestationController(IAttestation attestation) : ControllerBase
 
         var expectedChallenge = HttpContext.Session.GetString("Challenge");
 
-        await _attestation.Complete(new PublicKeyCredential
-        {
-            Id = request.Id,
-            RawId = request.RawId,
-            Response = new AuthenticatorAttestationResponse
-            {
-                AttestationObject = request.Response.AttestationObject,
-                ClientDataJson = request.Response.ClientDataJson,
-                Signature = request.Response.Signature,
-                UserHandler = request.Response.UserHandler,
-            }
-        },
-        expectedChallenge);
+        await _attestation.Complete(request.Map(), expectedChallenge);
 
         return Ok(ServerResponse.Create());
     }
