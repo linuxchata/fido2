@@ -1,7 +1,8 @@
 ﻿namespace Shark.Fido2.Domain.Constants
 {
     /// <summary>
-    /// Credential type
+    /// 5.8.2. Credential Type Enumeration (enum PublicKeyCredentialType)
+    /// https://www.w3.org/TR/webauthn-2/#enum-credentialType
     /// </summary>
     internal static class PublicKeyCredentialType
     {

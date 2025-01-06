@@ -4,7 +4,7 @@
     /// COSE Algorithms
     /// https://www.iana.org/assignments/cose/cose.xhtml#algorithms
     /// </summary>
-    public enum PublicKeyAlgorithmEnum
+    public enum PublicKeyAlgorithm
     {
         Es256 = -7,
 

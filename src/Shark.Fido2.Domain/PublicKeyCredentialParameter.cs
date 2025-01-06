@@ -7,6 +7,6 @@ namespace Shark.Fido2.Domain
     {
         public string Type { get; set; } = PublicKeyCredentialType.PublicKey;
 
-        public PublicKeyAlgorithmEnum Algorithm { get; set; }
+        public PublicKeyAlgorithm Algorithm { get; set; }
     }
 }

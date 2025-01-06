@@ -3,7 +3,11 @@ using Shark.Fido2.Domain.Enums;
 
 namespace Shark.Fido2.Domain
 {
-    public class PublicKeyCredentialDescriptor
+    /// <summary>
+    /// 5.8.3. Credential Descriptor (dictionary PublicKeyCredentialDescriptor)
+    /// https://www.w3.org/TR/webauthn-2/#dictionary-credential-descriptor
+    /// </summary>
+    public sealed class PublicKeyCredentialDescriptor
     {
         public string Type { get; set; } = PublicKeyCredentialType.PublicKey;
 
