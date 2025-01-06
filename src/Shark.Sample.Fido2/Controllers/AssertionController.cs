@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Models.Mappers;
 using Shark.Fido2.Models.Requests;
+using Shark.Fido2.Models.Responses;
 using Shark.Sample.Fido2.Swagger;
 using Swashbuckle.AspNetCore.Filters;
 
@@ -38,9 +39,22 @@ public class AssertionController(IAssertion assertion) : ControllerBase
         return Ok(response);
     }
 
-    [HttpPost("complete")]
-    public IActionResult Complete()
+    /// <summary>
+    /// Validate credential.
+    /// </summary>
+    /// <param name="request">The request.</param>
+    /// <returns>The HTTP response.</returns>
+    [HttpPost("result")]
+    [Consumes(MediaTypeNames.Application.Json)]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public IActionResult Result(ServerPublicKeyCredential<ServerAuthenticatorAssertionResponse> request)
     {
+        if (request == null)
+        {
+            return Ok(ServerResponse.CreateFailed());
+        }
+
         return Ok();
     }
 }

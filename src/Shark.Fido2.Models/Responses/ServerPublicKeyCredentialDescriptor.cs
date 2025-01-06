@@ -2,7 +2,7 @@
 
 namespace Shark.Fido2.Models.Responses
 {
-    public sealed class DescriptorResponse
+    public sealed class ServerPublicKeyCredentialDescriptor
     {
         [JsonPropertyName("type")]
         public string Type { get; set; } = null!;

@@ -24,14 +24,14 @@ namespace Shark.Fido2.Models.Mappers
             return response;
         }
 
-        private static DescriptorResponse[] Map(PublicKeyCredentialDescriptor[]? allowCredentials)
+        private static ServerPublicKeyCredentialDescriptor[] Map(PublicKeyCredentialDescriptor[]? allowCredentials)
         {
-            return allowCredentials?.Select(credential => new DescriptorResponse
+            return allowCredentials?.Select(credential => new ServerPublicKeyCredentialDescriptor
             {
                 Type = credential.Type,
                 Id = Convert.ToBase64String(credential.Id),
                 Transports = credential.Transports.Select(t => t.GetValue()).ToArray(),
-            }).ToArray() ?? Array.Empty<DescriptorResponse>();
+            }).ToArray() ?? Array.Empty<ServerPublicKeyCredentialDescriptor>();
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Shark.Fido2.Models.Responses
         public string? RpId { get; set; }
 
         [JsonPropertyName("allowCredentials")]
-        public DescriptorResponse[] AllowCredentials { get; set; } = null!;
+        public ServerPublicKeyCredentialDescriptor[] AllowCredentials { get; set; } = null!;
 
         [JsonPropertyName("userVerification")]
         public string UserVerification { get; set; } = null!;

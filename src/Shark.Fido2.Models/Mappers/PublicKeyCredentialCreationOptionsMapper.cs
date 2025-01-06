@@ -27,23 +27,23 @@ namespace Shark.Fido2.Models.Mappers
             return response;
         }
 
-        private static RelyingPartyResponse Map(PublicKeyCredentialRpEntity relyingParty)
+        private static ServerPublicKeyCredentialRpEntity Map(PublicKeyCredentialRpEntity relyingParty)
         {
-            return new RelyingPartyResponse
+            return new ServerPublicKeyCredentialRpEntity
             {
                 Identifier = relyingParty.Id,
                 Name = relyingParty.Name,
             };
         }
 
-        private static UserResponse Map(PublicKeyCredentialUserEntity userEntity)
+        private static ServerPublicKeyCredentialUserEntity Map(PublicKeyCredentialUserEntity userEntity)
         {
             if (userEntity == null)
             {
-                return new UserResponse();
+                return new ServerPublicKeyCredentialUserEntity();
             }
 
-            return new UserResponse
+            return new ServerPublicKeyCredentialUserEntity
             {
                 Identifier = Convert.ToBase64String(userEntity.Id),
                 Name = userEntity.Name,
@@ -51,33 +51,33 @@ namespace Shark.Fido2.Models.Mappers
             };
         }
 
-        private static ParameterResponse[] Map(PublicKeyCredentialParameter[] publicKeyCredentialParams)
+        private static ServerPublicKeyCredentialParameters[] Map(PublicKeyCredentialParameter[] publicKeyCredentialParams)
         {
-            return publicKeyCredentialParams?.Select(p => new ParameterResponse
+            return publicKeyCredentialParams?.Select(p => new ServerPublicKeyCredentialParameters
             {
                 Type = p.Type,
                 Algorithm = (long)p.Algorithm,
-            }).ToArray() ?? new ParameterResponse[0];
+            }).ToArray() ?? new ServerPublicKeyCredentialParameters[0];
         }
 
-        private static DescriptorResponse[] Map(PublicKeyCredentialDescriptor[]? excludeCredentials)
+        private static ServerPublicKeyCredentialDescriptor[] Map(PublicKeyCredentialDescriptor[]? excludeCredentials)
         {
-            return excludeCredentials?.Select(credential => new DescriptorResponse
+            return excludeCredentials?.Select(credential => new ServerPublicKeyCredentialDescriptor
             {
                 Type = credential.Type,
                 Id = Convert.ToBase64String(credential.Id),
                 Transports = credential.Transports.Select(t => t.GetValue()).ToArray(),
-            }).ToArray() ?? new DescriptorResponse[0];
+            }).ToArray() ?? new ServerPublicKeyCredentialDescriptor[0];
         }
 
-        private static AuthenticatorSelectionCriteriaResponse Map(AuthenticatorSelectionCriteria authenticatorSelection)
+        private static Responses.ServerAuthenticatorSelectionCriteria Map(Domain.AuthenticatorSelectionCriteria authenticatorSelection)
         {
             if (authenticatorSelection == null)
             {
-                return new AuthenticatorSelectionCriteriaResponse();
+                return new Responses.ServerAuthenticatorSelectionCriteria();
             }
 
-            return new AuthenticatorSelectionCriteriaResponse
+            return new Responses.ServerAuthenticatorSelectionCriteria
             {
                 AuthenticatorAttachment = authenticatorSelection.AuthenticatorAttachment.GetValue(),
                 ResidentKey = authenticatorSelection.ResidentKey.GetValue(),

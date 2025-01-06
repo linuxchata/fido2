@@ -1,6 +1,7 @@
 ﻿using System.Net.Mime;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Domain;
 using Shark.Fido2.Models.Mappers;
@@ -23,6 +24,7 @@ public class AttestationController(IAttestation attestation) : ControllerBase
     /// <summary>
     /// Gets credential creation options.
     /// </summary>
+    /// <param name="request">The request.</param>
     /// <returns>The HTTP response.</returns>
     [HttpPost("options")]
     [Produces(MediaTypeNames.Application.Json)]
@@ -44,13 +46,13 @@ public class AttestationController(IAttestation attestation) : ControllerBase
     /// <summary>
     /// Validate credential.
     /// </summary>
-    /// <param name="request"></param>
+    /// <param name="request">The request.</param>
     /// <returns>The HTTP response.</returns>
     [HttpPost("result")]
     [Consumes(MediaTypeNames.Application.Json)]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> Result(PublicKeyCredentialResponse request)
+    public async Task<IActionResult> Result(ServerPublicKeyCredential<ServerAuthenticatorAttestationResponse> request)
     {
         if (request == null)
         {
@@ -68,7 +70,7 @@ public class AttestationController(IAttestation attestation) : ControllerBase
         {
             Id = request.Id,
             RawId = request.RawId,
-            Response = new Shark.Fido2.Domain.AuthenticatorAttestationResponse
+            Response = new AuthenticatorAttestationResponse
             {
                 AttestationObject = request.Response.AttestationObject,
                 ClientDataJson = request.Response.ClientDataJson,

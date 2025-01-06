@@ -2,7 +2,7 @@
 
 namespace Shark.Fido2.Models.Responses
 {
-    public sealed class RelyingPartyResponse
+    public sealed class ServerPublicKeyCredentialRpEntity
     {
         [JsonPropertyName("id")]
         public string Identifier { get; set; } = null!;
