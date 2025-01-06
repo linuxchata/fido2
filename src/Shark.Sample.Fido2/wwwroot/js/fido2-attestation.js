@@ -1,21 +1,29 @@
-﻿var createLink = document.getElementById('credential-create');
+﻿// Registration
+
+var createLink = document.getElementById('credential-create');
 if (createLink != null) {
     createLink.addEventListener('click', credentialCreateClick);
 }
 
 async function credentialCreateClick(event) {
-    const response = await fetchAttestationOptions();
+    const optionsRequest = {
+        username: 'shark',
+        displayName: 'Shark',
+    };
 
-    await credentialCreate(response);
+    const options = await fetchAttestationOptions(optionsRequest);
+
+    await credentialCreate(options);
 }
 
-async function fetchAttestationOptions() {
+async function fetchAttestationOptions(optionsRequest) {
     try {
         const response = await fetch('/attestation/options/', {
             method: 'POST',
             headers: {
                 'content-type': 'application/json'
-            }
+            },
+            body: JSON.stringify(optionsRequest)
         });
 
         if (response.ok) {
@@ -26,14 +34,14 @@ async function fetchAttestationOptions() {
     }
 }
 
-async function fetchAttestationResult(request) {
+async function fetchAttestationResult(credentials) {
     try {
         const response = await fetch('/attestation/result/', {
             method: 'POST',
             headers: {
                 'content-type': 'application/json'
             },
-            body: JSON.stringify(request)
+            body: JSON.stringify(credentials)
         });
 
         if (response.ok) {
@@ -44,30 +52,25 @@ async function fetchAttestationResult(request) {
     }
 }
 
-async function credentialCreate(response) {
+async function credentialCreate(options) {
     const credentialCreationOptions = {
         publicKey: {
-            challenge: toUint8Array(response.challenge),
             rp: {
-                id: response.rp.id,
-                name: response.rp.name,
+                id: options.rp.id,
+                name: options.rp.name,
             },
             user: {
-                id: toUint8Array(response.challenge),
-                name: response.user.name,
-                displayName: response.user.displayName,
+                id: toUint8Array(options.user.id),
+                name: options.user.name,
+                displayName: options.user.displayName,
             },
-            pubKeyCredParams: [
-                {
-                    type: "public-key",
-                    alg: -257, // RS256
-                },
-                {
-                    type: "public-key",
-                    alg: -7, // ES256
-                },
-            ],
-            attestation: "direct"
+            pubKeyCredParams: options.pubKeyCredParams.map(param => ({
+                type: param.type,
+                alg: param.alg,
+            })),
+            challenge: toUint8Array(options.challenge),
+            timeout: options.timeout,
+            attestation: options.attestation
         },
     };
 
@@ -93,27 +96,6 @@ async function credentialCreate(response) {
     };
 
     await fetchAttestationResult(credentials);
-}
-
-function toUint8Array(base64) {
-    // Decode the Base64 string to a binary string
-    const binaryString = atob(base64);
-
-    // Create a Uint8Array and fill it with the character codes
-    const uint8Array = new Uint8Array(binaryString.length);
-    for (let i = 0; i < binaryString.length; i++) {
-        uint8Array[i] = binaryString.charCodeAt(i);
-    }
-
-    return uint8Array;
-}
-
-function toBase64(uint8Array) {
-    // Convert Uint8Array to a binary string
-    const binaryString = String.fromCharCode.apply(null, new Uint8Array(uint8Array));
-
-    // Encode the binary string to Base64
-    return btoa(binaryString);
 }
 
 window.credentialCreateClick = credentialCreateClick;
