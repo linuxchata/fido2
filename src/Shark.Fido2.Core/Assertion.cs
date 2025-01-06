@@ -9,8 +9,6 @@ namespace Shark.Fido2.Core
 {
     public sealed class Assertion : IAssertion
     {
-        private const ulong DefaultTimeout = 60000;
-
         private readonly IChallengeGenerator _challengeGenerator;
         private readonly Fido2Configuration _configuration;
 
@@ -32,7 +30,7 @@ namespace Shark.Fido2.Core
             return new PublicKeyCredentialRequestOptions
             {
                 Challenge = _challengeGenerator.Get(),
-                Timeout = _configuration.Timeout ?? DefaultTimeout,
+                Timeout = _configuration.Timeout,
                 RpId = _configuration.RelyingPartyId,
                 UserVerification = request.UserVerification ?? UserVerificationRequirement.Preferred,
             };

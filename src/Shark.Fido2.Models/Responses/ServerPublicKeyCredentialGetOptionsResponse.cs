@@ -8,10 +8,10 @@ namespace Shark.Fido2.Models.Responses
         public string Challenge { get; set; } = null!;
 
         [JsonPropertyName("timeout")]
-        public ulong Timeout { get; set; }
+        public ulong? Timeout { get; set; }
 
         [JsonPropertyName("rpId")]
-        public string RpId { get; set; } = null!;
+        public string? RpId { get; set; }
 
         [JsonPropertyName("allowCredentials")]
         public DescriptorResponse[] AllowCredentials { get; set; } = null!;

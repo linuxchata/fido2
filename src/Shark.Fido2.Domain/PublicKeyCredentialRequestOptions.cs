@@ -10,9 +10,9 @@ namespace Shark.Fido2.Domain
     {
         public byte[] Challenge { get; set; } = null!;
 
-        public ulong Timeout { get; set; }
+        public ulong? Timeout { get; set; }
 
-        public string RpId { get; set; } = null!;
+        public string? RpId { get; set; }
 
         public PublicKeyCredentialDescriptor[]? AllowCredentials { get; set; }
 
