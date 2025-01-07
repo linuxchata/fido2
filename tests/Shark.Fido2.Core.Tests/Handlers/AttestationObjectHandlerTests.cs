@@ -8,6 +8,7 @@ using Shark.Fido2.Domain;
 
 namespace Shark.Fido2.Core.Tests.Handlers;
 
+[TestFixture]
 public class AttestationObjectHandlerTests
 {
     private AttestationObjectHandler _sut = null!;

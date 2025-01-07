@@ -10,6 +10,7 @@ using Shark.Fido2.Domain;
 
 namespace Shark.Fido2.Core.Tests;
 
+[TestFixture]
 public class AttestationTests
 {
     private Attestation _sut = null!;

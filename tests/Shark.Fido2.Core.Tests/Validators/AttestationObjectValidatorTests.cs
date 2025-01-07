@@ -5,6 +5,7 @@ using Shark.Fido2.Domain;
 
 namespace Shark.Fido2.Core.Tests.Validators;
 
+[TestFixture]
 public class AttestationObjectValidatorTests
 {
     private AttestationObjectValidator _sut = null!;

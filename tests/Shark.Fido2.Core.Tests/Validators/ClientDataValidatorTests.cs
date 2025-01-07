@@ -6,6 +6,7 @@ using Shark.Fido2.Domain;
 
 namespace Shark.Fido2.Core.Tests.Validators;
 
+[TestFixture]
 public class ClientDataValidatorTests
 {
     private ClientDataValidator _sut = null!;
@@ -26,13 +27,12 @@ public class ClientDataValidatorTests
     {
         // Arrange
         var expectedChallenge = "t2pJGIQ7Y4DXF2b98tnBjg";
-        var expectedOrigin = "https://localhost:4000";
 
         var clientDataModel = new ClientData
         {
             Type = WebAuthnType.Create,
             Challenge = expectedChallenge,
-            Origin = expectedOrigin,
+            Origin = "https://localhost:4000",
             CrossOrigin = false,
         };
 
@@ -49,14 +49,11 @@ public class ClientDataValidatorTests
     public void Validate_WhenClientDataInvalid_ThenReturnsInvalidResult()
     {
         // Arrange
-        var expectedChallenge = "t2pJGIQ7Y4DXF2b98tnBjg";
-        var expectedOrigin = "https://localhost:4000";
-
         var clientDataModel = new ClientData
         {
             Type = WebAuthnType.Create,
-            Challenge = expectedChallenge,
-            Origin = expectedOrigin,
+            Challenge = "t2pJGIQ7Y4DXF2b98tnBjg",
+            Origin = "https://localhost:4000",
             CrossOrigin = false,
         };
 

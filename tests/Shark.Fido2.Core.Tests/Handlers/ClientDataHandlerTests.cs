@@ -7,6 +7,7 @@ using Shark.Fido2.Domain;
 
 namespace Shark.Fido2.Core.Tests.Handlers;
 
+[TestFixture]
 public class ClientDataHandlerTests
 {
     private ClientDataHandler _sut = null!;
