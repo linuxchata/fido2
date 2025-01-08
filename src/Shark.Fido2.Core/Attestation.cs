@@ -80,16 +80,16 @@ namespace Shark.Fido2.Core
 
         public async Task<AttestationCompleteResult> Complete(
             PublicKeyCredentialAttestation publicKeyCredential,
-            string? expectedChallenge)
+            PublicKeyCredentialCreationOptions? creationOptions)
         {
             if (publicKeyCredential == null)
             {
                 throw new ArgumentNullException(nameof(publicKeyCredential));
             }
 
-            if (string.IsNullOrWhiteSpace(expectedChallenge))
+            if (creationOptions == null)
             {
-                throw new ArgumentNullException(nameof(expectedChallenge));
+                throw new ArgumentNullException(nameof(creationOptions));
             }
 
             var response = publicKeyCredential.Response;
@@ -98,7 +98,8 @@ namespace Shark.Fido2.Core
                 return AttestationCompleteResult.CreateFailure("Response cannot be null");
             }
 
-            var clientDataHandlerResult = _clientDataHandler.Handle(response.ClientDataJson, expectedChallenge);
+            var challenge = Convert.ToBase64String(creationOptions.Challenge);
+            var clientDataHandlerResult = _clientDataHandler.Handle(response.ClientDataJson, challenge);
             if (clientDataHandlerResult.HasError)
             {
                 return AttestationCompleteResult.CreateFailure(clientDataHandlerResult.Message!);

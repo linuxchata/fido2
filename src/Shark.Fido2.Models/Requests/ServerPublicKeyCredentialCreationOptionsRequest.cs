@@ -2,7 +2,7 @@
 
 namespace Shark.Fido2.Models.Requests
 {
-    public class ServerPublicKeyCredentialCreationOptionsRequest
+    public sealed class ServerPublicKeyCredentialCreationOptionsRequest
     {
         [JsonPropertyName("username")]
         [JsonRequired]

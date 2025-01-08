@@ -2,7 +2,7 @@
 
 namespace Shark.Fido2.Models.Requests
 {
-    public class ServerAuthenticatorSelectionCriteriaRequest
+    public sealed class ServerAuthenticatorSelectionCriteriaRequest
     {
         [JsonPropertyName("authenticatorAttachment")]
         public string AuthenticatorAttachment { get; set; } = null!;

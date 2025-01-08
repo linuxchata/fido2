@@ -1,4 +1,6 @@
-﻿using Shark.Fido2.Core.Constants;
+﻿using Microsoft.Extensions.Options;
+using Shark.Fido2.Core.Configurations;
+using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Helpers;
 using Shark.Fido2.Core.Validators;
 using Shark.Fido2.Domain;
@@ -13,7 +15,13 @@ public class AttestationObjectValidatorTests
     [SetUp]
     public void Setup()
     {
-        _sut = new AttestationObjectValidator();
+        var fido2ConfigurationMock = new Fido2Configuration
+        {
+            Origin = "localhost",
+            RelyingPartyId = "localhost",
+        };
+
+        _sut = new AttestationObjectValidator(Options.Create(fido2ConfigurationMock));
     }
 
     [Test]

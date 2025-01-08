@@ -39,16 +39,16 @@ namespace Shark.Fido2.Core
 
         public Task<AssertionCompleteResult> Complete(
             PublicKeyCredentialAssertion publicKeyCredential,
-            string? expectedChallenge)
+            PublicKeyCredentialRequestOptions? requestOptions)
         {
             if (publicKeyCredential == null)
             {
                 throw new ArgumentNullException(nameof(publicKeyCredential));
             }
 
-            if (string.IsNullOrWhiteSpace(expectedChallenge))
+            if (requestOptions == null)
             {
-                throw new ArgumentNullException(nameof(expectedChallenge));
+                throw new ArgumentNullException(nameof(requestOptions));
             }
 
             var response = publicKeyCredential.Response;

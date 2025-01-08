@@ -1,22 +1,33 @@
-﻿using Shark.Fido2.Domain;
+﻿using System;
+using Shark.Fido2.Domain;
 using Shark.Fido2.Models.Responses;
 
 namespace Shark.Fido2.Models.Mappers
 {
     public static class PublicKeyCredentialAssertionMapper
     {
-        public static PublicKeyCredentialAssertion Map(this ServerPublicKeyCredentialAssertion value)
+        public static PublicKeyCredentialAssertion Map(this ServerPublicKeyCredentialAssertion assertion)
         {
+            if (assertion == null)
+            {
+                throw new ArgumentNullException(nameof(assertion));
+            }
+
+            if (assertion.Response == null)
+            {
+                throw new ArgumentNullException(nameof(assertion.Response));
+            }
+
             return new PublicKeyCredentialAssertion
             {
-                Id = value.Id,
-                RawId = value.RawId,
+                Id = assertion.Id,
+                RawId = assertion.RawId,
                 Response = new AuthenticatorAssertionResponse
                 {
-                    ClientDataJson = value.Response.ClientDataJson,
-                    AuthenticatorData = value.Response.AuthenticatorData,
-                    Signature = value.Response.Signature,
-                    UserHandler = value.Response.UserHandler,
+                    ClientDataJson = assertion.Response.ClientDataJson,
+                    AuthenticatorData = assertion.Response.AuthenticatorData,
+                    Signature = assertion.Response.Signature!,
+                    UserHandler = assertion.Response.UserHandler,
                 }
             };
         }

@@ -3,6 +3,10 @@ using Shark.Fido2.Domain.Enums;
 
 namespace Shark.Fido2.Domain
 {
+    /// <summary>
+    /// 5.8.1. Client Data Used in WebAuthn Signatures
+    /// https://www.w3.org/TR/webauthn-2/#dictionary-client-data
+    /// </summary>
     public sealed class TokenBinding
     {
         [JsonPropertyName("status")]

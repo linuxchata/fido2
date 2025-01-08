@@ -56,7 +56,12 @@ public class AttestationTests
             },
             Type = "public-key",
         };
+
         var expectedChallenge = "t2pJGIQ7Y4DXF2b98tnBjg";
+        var publicKeyCredentialCreationOptions = new PublicKeyCredentialCreationOptions
+        {
+            Challenge = Convert.FromBase64String($"{expectedChallenge}=="),
+        };
 
         _clientDataHandlerMock
             .Setup(a => a.Handle(It.IsAny<string>(), It.IsAny<string>()))
@@ -71,7 +76,7 @@ public class AttestationTests
             .ReturnsAsync((Credential?)null);
 
         // Act
-        var result = await _sut.Complete(publicKeyCredential, $"{expectedChallenge}==");
+        var result = await _sut.Complete(publicKeyCredential, publicKeyCredentialCreationOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);

@@ -7,6 +7,26 @@ namespace Shark.Fido2.Models.Tests;
 public class PublicKeyCredentialAttestationMapperTests
 {
     [Test]
+    public void Map_WhenAttestationIsNull_ThenThrowsArgumentNullException()
+    {
+        // Arrange
+        var attestation = (ServerPublicKeyCredentialAttestation)null!;
+
+        // Act & Assert
+        Assert.Throws<ArgumentNullException>(() => attestation!.Map());
+    }
+
+    [Test]
+    public void Map_WhenAttestationResponseIsNull_ThenThrowsArgumentNullException()
+    {
+        // Arrange
+        var attestation = new ServerPublicKeyCredentialAttestation();
+
+        // Act & Assert
+        Assert.Throws<ArgumentNullException>(() => attestation!.Map());
+    }
+
+    [Test]
     public void Map_WhenAttestationValid_ThenReturnsPublicKeyCredentialAttestation()
     {
         // Arrange

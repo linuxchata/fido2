@@ -26,22 +26,23 @@ namespace Shark.Fido2.Core.Validators
                 return ValidatorInternalResult.Invalid("Client data cannot be null");
             }
 
-            // Type
+            // 7.1. Registering a New Credential (#7 - #10)
+
+            // #7 Type
             if (!string.Equals(clientData.Type, WebAuthnType.Create, StringComparison.OrdinalIgnoreCase))
             {
-                return ValidatorInternalResult.Invalid(
-                    $"Type mismatch. Expected type is {WebAuthnType.Create}");
+                return ValidatorInternalResult.Invalid($"Type mismatch. Expected type is {WebAuthnType.Create}");
             }
 
-            // Challenge
-            var base64StringChallenge = Base64UrlConverter.ToBase64(clientData?.Challenge!);
+            // #8 Challenge
+            var base64StringChallenge = Base64UrlConverter.ToBase64(clientData.Challenge!);
             if (!Base64Comparer.Compare(expectedChallenge!, base64StringChallenge))
             {
                 return ValidatorInternalResult.Invalid("Challenge mismatch");
             }
 
-            // Origin
-            if (!Uri.TryCreate(clientData?.Origin, UriKind.Absolute, out var originUri))
+            // #9 Origin
+            if (!Uri.TryCreate(clientData.Origin, UriKind.Absolute, out var originUri))
             {
                 return ValidatorInternalResult.Invalid("Invalid origin");
             }
@@ -53,11 +54,19 @@ namespace Shark.Fido2.Core.Validators
                 return ValidatorInternalResult.Invalid("Origin mismatch");
             }
 
-            // Token binding
-            if (clientData?.TokenBinding != null)
+            // #10 Token binding
+            if (clientData.TokenBinding != null)
             {
+                // TODO: Verify that the value of C.tokenBinding.status matches the state of Token Binding
+                // for the TLS connection over which the assertion was obtained. If Token Binding was used
+                // on that TLS connection, also verify that C.tokenBinding.id matches the base64url encoding
+                // of the Token Binding ID for the connection.
                 throw new NotImplementedException("See #10 of 7.1. Registering a New Credential");
             }
+
+            // #11 Hash
+            // TODO: Let hash be the result of computing a hash over response.clientDataJSON using SHA-256.
+            // How this hash over response.clientDataJSON is used?
 
             return ValidatorInternalResult.Valid();
         }

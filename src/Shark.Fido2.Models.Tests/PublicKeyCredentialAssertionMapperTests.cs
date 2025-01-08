@@ -7,6 +7,26 @@ namespace Shark.Fido2.Models.Tests;
 public class PublicKeyCredentialAssertionMapperTests
 {
     [Test]
+    public void Map_WhenAssertionIsNull_ThenThrowsArgumentNullException()
+    {
+        // Arrange
+        var assertion = (ServerPublicKeyCredentialAssertion)null!;
+
+        // Act & Assert
+        Assert.Throws<ArgumentNullException>(() => assertion!.Map());
+    }
+
+    [Test]
+    public void Map_WhenAssertionResponseIsNull_ThenThrowsArgumentNullException()
+    {
+        // Arrange
+        var assertion = new ServerPublicKeyCredentialAssertion();
+
+        // Act & Assert
+        Assert.Throws<ArgumentNullException>(() => assertion!.Map());
+    }
+
+    [Test]
     public void Map_WhenAssertionValid_ThenReturnsPublicKeyCredentialAssertion()
     {
         // Arrange

@@ -1,7 +1,9 @@
 ﻿using System.Net.Mime;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Shark.Fido2.Core;
 using Shark.Fido2.Core.Abstractions;
+using Shark.Fido2.Domain;
 using Shark.Fido2.Models.Mappers;
 using Shark.Fido2.Models.Requests;
 using Shark.Fido2.Models.Responses;
@@ -35,7 +37,7 @@ public class AssertionController(IAssertion assertion) : ControllerBase
 
         var response = requestOptions.Map();
 
-        HttpContext.Session.SetString("Challenge", response.Challenge);
+        HttpContext.Session.SetString("RequestOptions", JsonSerializer.Serialize(response));
 
         return Ok(response);
     }
@@ -56,9 +58,11 @@ public class AssertionController(IAssertion assertion) : ControllerBase
             return Ok(ServerResponse.CreateFailed());
         }
 
-        var expectedChallenge = HttpContext.Session.GetString("Challenge");
+        var requestOptionsString = HttpContext.Session.GetString("RequestOptions");
 
-        await _assertion.Complete(request.Map(), expectedChallenge);
+        var requestOptions = JsonSerializer.Deserialize<PublicKeyCredentialRequestOptions>(requestOptionsString!);
+
+        await _assertion.Complete(request.Map(), requestOptions);
 
         return Ok();
     }

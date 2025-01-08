@@ -1,7 +1,9 @@
 ﻿using System.Net.Mime;
 using System.Text;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Shark.Fido2.Core.Abstractions;
+using Shark.Fido2.Domain;
 using Shark.Fido2.Models.Mappers;
 using Shark.Fido2.Models.Requests;
 using Shark.Fido2.Models.Responses;
@@ -32,11 +34,11 @@ public class AttestationController(IAttestation attestation) : ControllerBase
         typeof(ServerPublicKeyCredentialCreationOptionsRequestExample))]
     public IActionResult Options(ServerPublicKeyCredentialCreationOptionsRequest request)
     {
-        var credentialOptions = _attestation.GetOptions(request.Map());
+        var creationOptions = _attestation.GetOptions(request.Map());
 
-        var response = credentialOptions.Map();
+        var response = creationOptions.Map();
 
-        HttpContext.Session.SetString("Challenge", response.Challenge);
+        HttpContext.Session.SetString("CreationOptions", JsonSerializer.Serialize(creationOptions));
 
         return Ok(response);
     }
@@ -52,7 +54,7 @@ public class AttestationController(IAttestation attestation) : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> Result(ServerPublicKeyCredentialAttestation request)
     {
-        if (request == null)
+        if (request == null || request.Response == null)
         {
             return Ok(ServerResponse.CreateFailed());
         }
@@ -62,9 +64,11 @@ public class AttestationController(IAttestation attestation) : ControllerBase
         // described in section 7.1 of the [Webauthn] specs, and will respond with
         // the appropriate ServerResponse message.
 
-        var expectedChallenge = HttpContext.Session.GetString("Challenge");
+        var creationOptionsString = HttpContext.Session.GetString("CreationOptions");
 
-        await _attestation.Complete(request.Map(), expectedChallenge);
+        var creationOptions = JsonSerializer.Deserialize<PublicKeyCredentialCreationOptions>(creationOptionsString!);
+
+        await _attestation.Complete(request.Map(), creationOptions);
 
         return Ok(ServerResponse.Create());
     }
