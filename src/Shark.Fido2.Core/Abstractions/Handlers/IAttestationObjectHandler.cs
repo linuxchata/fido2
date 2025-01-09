@@ -5,6 +5,8 @@ namespace Shark.Fido2.Core.Abstractions.Handlers
 {
     public interface IAttestationObjectHandler
     {
-        InternalResult<AttestationObjectData> Handle(string attestationObject);
+        InternalResult<AttestationObjectData> Handle(
+            string attestationObject,
+            PublicKeyCredentialCreationOptions creationOptions);
     }
 }

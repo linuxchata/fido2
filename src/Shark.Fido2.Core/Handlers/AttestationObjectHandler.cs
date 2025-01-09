@@ -21,16 +21,23 @@ namespace Shark.Fido2.Core.Handlers
             _attestationObjectValidator = attestationObjectValidator;
         }
 
-        public InternalResult<AttestationObjectData> Handle(string attestationObject)
+        public InternalResult<AttestationObjectData> Handle(
+            string attestationObject,
+            PublicKeyCredentialCreationOptions creationOptions)
         {
             if (string.IsNullOrWhiteSpace(attestationObject))
             {
                 return new InternalResult<AttestationObjectData>("Attestation object cannot be null");
             }
 
+            if (creationOptions == null)
+            {
+                return new InternalResult<AttestationObjectData>("Creation options cannot be null");
+            }
+
             var attestationObjectData = GetAttestationObjectData(attestationObject);
 
-            var result = _attestationObjectValidator.Validate(attestationObjectData);
+            var result = _attestationObjectValidator.Validate(attestationObjectData, creationOptions);
             if (!result.IsValid)
             {
                 return new InternalResult<AttestationObjectData>(result.Message!);

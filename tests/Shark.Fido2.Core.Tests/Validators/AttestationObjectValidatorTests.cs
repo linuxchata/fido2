@@ -4,6 +4,7 @@ using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Helpers;
 using Shark.Fido2.Core.Validators;
 using Shark.Fido2.Domain;
+using Shark.Fido2.Domain.Enums;
 
 namespace Shark.Fido2.Core.Tests.Validators;
 
@@ -41,8 +42,17 @@ public class AttestationObjectValidatorTests
             AuthenticatorData = authenticatorData,
         };
 
+        var creationOptions = new PublicKeyCredentialCreationOptions
+        {
+            PublicKeyCredentialParams = [ new() { Algorithm = PublicKeyAlgorithm.Es256 } ],
+            AuthenticatorSelection = new AuthenticatorSelectionCriteria
+            {
+                UserVerification = UserVerificationRequirement.Required,
+            },
+        };
+
         // Act
-        var result = _sut.Validate(attestationObjectData);
+        var result = _sut.Validate(attestationObjectData, creationOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -67,8 +77,17 @@ public class AttestationObjectValidatorTests
             AuthenticatorData = authenticatorData,
         };
 
+        var creationOptions = new PublicKeyCredentialCreationOptions
+        {
+            PublicKeyCredentialParams = [new() { Algorithm = PublicKeyAlgorithm.Rs256 }],
+            AuthenticatorSelection = new AuthenticatorSelectionCriteria
+            {
+                UserVerification = UserVerificationRequirement.Required,
+            },
+        };
+
         // Act
-        var result = _sut.Validate(attestationObjectData);
+        var result = _sut.Validate(attestationObjectData, creationOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);

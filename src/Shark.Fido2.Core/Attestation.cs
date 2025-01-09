@@ -98,14 +98,17 @@ namespace Shark.Fido2.Core
                 return AttestationCompleteResult.CreateFailure("Response cannot be null");
             }
 
-            var challenge = Convert.ToBase64String(creationOptions.Challenge);
-            var clientDataHandlerResult = _clientDataHandler.Handle(response.ClientDataJson, challenge);
+            var clientDataHandlerResult = _clientDataHandler.Handle(
+                response.ClientDataJson,
+                Convert.ToBase64String(creationOptions.Challenge));
             if (clientDataHandlerResult.HasError)
             {
                 return AttestationCompleteResult.CreateFailure(clientDataHandlerResult.Message!);
             }
 
-            var attestationObjectHandlerResult = _attestationObjectHandler.Handle(response.AttestationObject);
+            var attestationObjectHandlerResult = _attestationObjectHandler.Handle(
+                response.AttestationObject,
+                creationOptions);
             if (attestationObjectHandlerResult.HasError)
             {
                 return AttestationCompleteResult.CreateFailure(attestationObjectHandlerResult.Message!);

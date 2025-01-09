@@ -5,6 +5,8 @@ namespace Shark.Fido2.Core.Abstractions.Validators
 {
     public interface IAttestationObjectValidator
     {
-        ValidatorInternalResult Validate(AttestationObjectData? attestationObjectData);
+        ValidatorInternalResult Validate(
+            AttestationObjectData? attestationObjectData,
+            PublicKeyCredentialCreationOptions creationOptions);
     }
 }

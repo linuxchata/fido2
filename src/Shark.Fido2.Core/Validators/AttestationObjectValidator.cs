@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using System.Linq;
+using Microsoft.Extensions.Options;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Comparers;
 using Shark.Fido2.Core.Configurations;
@@ -6,6 +7,7 @@ using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Helpers;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain;
+using Shark.Fido2.Domain.Enums;
 
 namespace Shark.Fido2.Core.Validators
 {
@@ -18,11 +20,18 @@ namespace Shark.Fido2.Core.Validators
             _configuration = options.Value;
         }
 
-        public ValidatorInternalResult Validate(AttestationObjectData? attestationObjectData)
+        public ValidatorInternalResult Validate(
+            AttestationObjectData? attestationObjectData,
+            PublicKeyCredentialCreationOptions creationOptions)
         {
             if (attestationObjectData == null)
             {
                 return ValidatorInternalResult.Invalid("Attestation Object cannot be null");
+            }
+
+            if (creationOptions == null)
+            {
+                return ValidatorInternalResult.Invalid("Creation options cannot be null");
             }
 
             var authenticatorData = attestationObjectData.AuthenticatorData;
@@ -31,7 +40,7 @@ namespace Shark.Fido2.Core.Validators
                 return ValidatorInternalResult.Invalid("Authenticator Data cannot be null");
             }
 
-            // 7.1. Registering a New Credential (#13 - #10)
+            // 7.1. Registering a New Credential (#13 - #18)
 
             // #13 Verify that the rpIdHash in authData is the SHA-256 hash of the RP ID expected
             // by the Relying Party.
@@ -49,25 +58,31 @@ namespace Shark.Fido2.Core.Validators
 
             // #15 If user verification is required for this registration, verify that the User Verified
             // bit of the flags in authData is set.
-            if (!authenticatorData.UserVerified)
+            if (creationOptions.AuthenticatorSelection.UserVerification == UserVerificationRequirement.Required &&
+                !authenticatorData.UserVerified)
             {
                 return ValidatorInternalResult.Invalid("User Verified bit is not set");
             }
 
-            // Verify that the "alg" parameter in the credential public key in authData
+            // #16 Verify that the "alg" parameter in the credential public key in authData
             // matches the alg attribute of one of the items in options.pubKeyCredParams.
-            // TODO: Fix compare? Should it be taken from configuration?
-            if (!authenticatorData.AttestedCredentialData.CredentialPublicKey.Algorithm.HasValue)
+            var algorithm = authenticatorData.AttestedCredentialData.CredentialPublicKey.Algorithm;
+            if (!algorithm.HasValue)
             {
                 return ValidatorInternalResult.Invalid("Credential public key algorithm is not set");
             }
 
-            // Verify that the values of the client extension outputs in clientExtensionResults
+            if (!creationOptions.PublicKeyCredentialParams.Any(p => (int)p.Algorithm == algorithm.Value))
+            {
+                return ValidatorInternalResult.Invalid("Credential public key algorithm mismatch");
+            }
+
+            // #17 Verify that the values of the client extension outputs in clientExtensionResults
             // and the authenticator extension outputs in the extensions in authData are as expected
             // TODO: Implement
 
-            // Case-sensitive match on fmt against the set of supported WebAuthn
-            // Attestation Statement Format Identifier values
+            // #18 Determine the attestation statement format by performing a USASCII case-sensitive match on
+            // fmt against the set of supported WebAuthn Attestation Statement Format Identifier values.
             var attestationStatementFormat = attestationObjectData.AttestationStatementFormat;
             if (attestationStatementFormat == null)
             {
