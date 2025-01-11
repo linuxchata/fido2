@@ -4,9 +4,11 @@ using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Core.Abstractions.Handlers;
 using Shark.Fido2.Core.Abstractions.Helpers;
 using Shark.Fido2.Core.Abstractions.Validators;
+using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Handlers;
 using Shark.Fido2.Core.Helpers;
 using Shark.Fido2.Core.Validators;
+using Shark.Fido2.Core.Validators.AttestationStatementValidators;
 
 namespace Shark.Fido2.Core
 {
@@ -21,6 +23,7 @@ namespace Shark.Fido2.Core
 
             services.AddTransient<IAuthenticatorDataProvider, AuthenticatorDataProvider>();
             services.AddTransient<IAttestationObjectValidator, AttestationObjectValidator>();
+            services.AddTransient<IAttestationStatementValidator, AttestationStatementValidator>();
             services.AddTransient<IAttestationObjectHandler, AttestationObjectHandler>();
 
             services.AddTransient<IAttestation, Attestation>();

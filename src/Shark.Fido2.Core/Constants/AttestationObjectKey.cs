@@ -2,10 +2,10 @@
 {
     internal static class AttestationObjectKey
     {
-        public const string AuthData = "authData";
+        public const string AuthData = "authData"; // Authenticator data
 
-        public const string Fmt = "fmt";
+        public const string Fmt = "fmt"; // Attestation statement format
 
-        public const string AttStmt = "attStmt";
+        public const string AttStmt = "attStmt"; // Attestation statement structure
     }
 }

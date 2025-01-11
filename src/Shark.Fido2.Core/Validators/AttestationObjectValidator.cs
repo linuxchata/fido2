@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Microsoft.Extensions.Options;
 using Shark.Fido2.Core.Abstractions.Validators;
+using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Comparers;
 using Shark.Fido2.Core.Configurations;
 using Shark.Fido2.Core.Constants;
@@ -13,10 +14,14 @@ namespace Shark.Fido2.Core.Validators
 {
     internal class AttestationObjectValidator : IAttestationObjectValidator
     {
+        private readonly IAttestationStatementValidator _attestationStatementValidator;
         private readonly Fido2Configuration _configuration;
 
-        public AttestationObjectValidator(IOptions<Fido2Configuration> options)
+        public AttestationObjectValidator(
+            IAttestationStatementValidator attestationStatementValidator,
+            IOptions<Fido2Configuration> options)
         {
+            _attestationStatementValidator = attestationStatementValidator;
             _configuration = options.Value;
         }
 
@@ -94,6 +99,13 @@ namespace Shark.Fido2.Core.Validators
                 return ValidatorInternalResult.Invalid(
                     $"Attestation statement format [{attestationStatementFormat}] is not supported");
             }
+
+            // #19 Verify that attStmt is a correct attestation statement, conveying a valid attestation
+            // signature, by using the attestation statement format fmt’s verification procedure given
+            // attStmt, authData and hash.
+            var attestationStatement = attestationObjectData.AttestationStatement;
+
+            _attestationStatementValidator.Validate(attestationStatementFormat, attestationStatement);
 
             return ValidatorInternalResult.Valid();
         }
