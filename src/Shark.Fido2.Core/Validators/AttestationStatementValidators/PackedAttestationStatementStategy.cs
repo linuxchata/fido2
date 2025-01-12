@@ -47,17 +47,28 @@ namespace Shark.Fido2.Core.Validators.AttestationStatementValidators
 
             // Verify that sig is a valid signature over the concatenation of authenticatorData and
             // clientDataHash using the credential public key with alg.
-            var authenticatorData = attestationObjectData.AuthenticatorRawData;
-            var clientDataHash = clientData.ClientDataHash;
-
-            var dataToVerify = new byte[authenticatorData.Length + clientDataHash.Length];
-            Buffer.BlockCopy(authenticatorData, 0, dataToVerify, 0, authenticatorData.Length);
-            Buffer.BlockCopy(clientDataHash, 0, dataToVerify, authenticatorData.Length, clientDataHash.Length);
+            var concatenatedData = GetConcatenatedData(
+                attestationObjectData.AuthenticatorRawData,
+                clientData.ClientDataHash);
 
             using var rsa = RSA.Create();
-            var isValid = rsa.VerifyData(dataToVerify, (byte[])signature, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+
+            var isValid = rsa.VerifyData(
+                concatenatedData,
+                (byte[])signature,
+                HashAlgorithmName.SHA256,
+                RSASignaturePadding.Pkcs1);
 
             return ValidatorInternalResult.Valid();
+        }
+
+        private static byte[] GetConcatenatedData(byte[] authenticatorData, byte[] clientDataHash)
+        {
+            var concatenatedData = new byte[authenticatorData.Length + clientDataHash.Length];
+            Buffer.BlockCopy(authenticatorData, 0, concatenatedData, 0, authenticatorData.Length);
+            Buffer.BlockCopy(clientDataHash, 0, concatenatedData, authenticatorData.Length, clientDataHash.Length);
+
+            return concatenatedData;
         }
     }
 }

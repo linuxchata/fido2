@@ -4,7 +4,6 @@ using System.Text.Json;
 using Shark.Fido2.Core.Abstractions.Handlers;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Helpers;
-using Shark.Fido2.Core.Results;
 using Shark.Fido2.Core.Results.Attestation;
 using Shark.Fido2.Domain;
 

@@ -50,7 +50,7 @@ public class AttestationObjectValidatorTests
 
         var creationOptions = new PublicKeyCredentialCreationOptions
         {
-            PublicKeyCredentialParams = [ new() { Algorithm = PublicKeyAlgorithm.Es256 } ],
+            PublicKeyCredentialParams = [new() { Algorithm = PublicKeyAlgorithm.Es256 }],
             AuthenticatorSelection = new AuthenticatorSelectionCriteria
             {
                 UserVerification = UserVerificationRequirement.Required,
