@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Shark.Fido2.Core.Abstractions.Helpers;
 using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Converters;
+using Shark.Fido2.Core.Enums;
 using Shark.Fido2.Domain;
 
 namespace Shark.Fido2.Core.Helpers
@@ -88,9 +89,21 @@ namespace Shark.Fido2.Core.Helpers
             {
                 KeyType = GetCredentialPublicKeyIntParameter(coseKeyFormat, CoseKeyIndex.KeyType),
                 Algorithm = GetCredentialPublicKeyIntParameter(coseKeyFormat, CoseKeyIndex.Algorithm),
-                Modulus = GetCredentialPublicKeyParameter(coseKeyFormat, CoseKeyIndex.Modulus),
-                Exponent = GetCredentialPublicKeyParameter(coseKeyFormat, CoseKeyIndex.Exponent),
             };
+
+            if (credentialPublicKey.KeyType == (int)KeyTypeEnum.Rsa)
+            {
+                // https://datatracker.ietf.org/doc/html/rfc8230#section-4
+                credentialPublicKey.Modulus = GetCredentialPublicKeyParameter(coseKeyFormat, CoseKeyIndex.Modulus);
+                credentialPublicKey.Exponent = GetCredentialPublicKeyParameter(coseKeyFormat, CoseKeyIndex.Exponent);
+            }
+            else if (credentialPublicKey.KeyType == (int)KeyTypeEnum.Ec2)
+            {
+                // https://datatracker.ietf.org/doc/html/rfc8152#section-13.1
+                credentialPublicKey.Curve = GetCredentialPublicKeyIntParameter(coseKeyFormat, CoseKeyIndex.Curve);
+                credentialPublicKey.XCoordinate = GetCredentialPublicKeyParameter(coseKeyFormat, CoseKeyIndex.XCoordinate);
+                credentialPublicKey.YCoordinate = GetCredentialPublicKeyParameter(coseKeyFormat, CoseKeyIndex.YCoordinate);
+            }
 
             return credentialPublicKey;
         }

@@ -24,5 +24,20 @@
         /// The RSA public exponent e
         /// </summary>
         public byte[]? Exponent { get; set; }
+
+        /// <summary>
+        /// Elliptic Curves
+        /// </summary>
+        public int? Curve { get; set; }
+
+        /// <summary>
+        /// X-coordinate for the EC point
+        /// </summary>
+        public byte[]? XCoordinate { get; set; }
+
+        /// <summary>
+        /// Y-coordinate for the EC point
+        /// </summary>
+        public byte[]? YCoordinate { get; set; }
     }
 }
