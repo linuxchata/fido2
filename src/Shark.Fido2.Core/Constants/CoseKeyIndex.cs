@@ -9,5 +9,9 @@
         public const int KeyType = 1;
 
         public const int Algorithm = 3;
+
+        public const int Modulus = -1;
+
+        public const int Exponent = -2;
     }
 }

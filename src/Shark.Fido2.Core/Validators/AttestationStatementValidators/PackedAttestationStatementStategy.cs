@@ -51,7 +51,11 @@ namespace Shark.Fido2.Core.Validators.AttestationStatementValidators
                 attestationObjectData.AuthenticatorRawData,
                 clientData.ClientDataHash);
 
-            using var rsa = RSA.Create();
+            using var rsa = RSA.Create(new RSAParameters
+            {
+                Modulus = attestedCredentialData.CredentialPublicKey.Modulus,
+                Exponent = attestedCredentialData.CredentialPublicKey.Exponent,
+            });
 
             var isValid = rsa.VerifyData(
                 concatenatedData,

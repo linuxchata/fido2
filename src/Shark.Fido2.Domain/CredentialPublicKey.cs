@@ -14,5 +14,15 @@
         /// Cryptographic signature algorithm (alg)
         /// </summary>
         public int? Algorithm { get; set; }
+
+        /// <summary>
+        /// The RSA modulus n
+        /// </summary>
+        public byte[]? Modulus { get; set; }
+
+        /// <summary>
+        /// The RSA public exponent e
+        /// </summary>
+        public byte[]? Exponent { get; set; }
     }
 }

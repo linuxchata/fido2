@@ -68,9 +68,13 @@ namespace Shark.Fido2.Core.Helpers
             var credentialPublicKeyArray = authenticatorDataArray.AsSpan(startIndex, credentialPublicKeyLength);
             var credentialPublicKeyCoseKeyFormat = CborConverter.DecodeToCoseKeyFormat(credentialPublicKeyArray.ToArray());
             authenticatorData.AttestedCredentialData.CredentialPublicKey.KeyType =
-                GetCredentialPublicKeyParameter(credentialPublicKeyCoseKeyFormat, CoseKeyIndex.KeyType);
+                GetCredentialPublicKeyIntParameter(credentialPublicKeyCoseKeyFormat, CoseKeyIndex.KeyType);
             authenticatorData.AttestedCredentialData.CredentialPublicKey.Algorithm =
-                GetCredentialPublicKeyParameter(credentialPublicKeyCoseKeyFormat, CoseKeyIndex.Algorithm);
+                GetCredentialPublicKeyIntParameter(credentialPublicKeyCoseKeyFormat, CoseKeyIndex.Algorithm);
+            authenticatorData.AttestedCredentialData.CredentialPublicKey.Modulus =
+                GetCredentialPublicKeyParameter(credentialPublicKeyCoseKeyFormat, CoseKeyIndex.Modulus);
+            authenticatorData.AttestedCredentialData.CredentialPublicKey.Exponent =
+                GetCredentialPublicKeyParameter(credentialPublicKeyCoseKeyFormat, CoseKeyIndex.Exponent);
 
             return authenticatorData;
         }
@@ -83,11 +87,21 @@ namespace Shark.Fido2.Core.Helpers
             authenticatorData.ExtensionDataIncluded = (flags & 0b10000000) != 0; // Bit 7
         }
 
-        private int? GetCredentialPublicKeyParameter(Dictionary<int, object> coseKeyFormat, int coseKeyAlgorithmIndex)
+        private int? GetCredentialPublicKeyIntParameter(Dictionary<int, object> coseKeyFormat, int coseKeyAlgorithmIndex)
         {
             if (coseKeyFormat.TryGetValue(coseKeyAlgorithmIndex, out var value))
             {
                 return Convert.ToInt32(value);
+            };
+
+            return null;
+        }
+
+        private byte[]? GetCredentialPublicKeyParameter(Dictionary<int, object> coseKeyFormat, int coseKeyAlgorithmIndex)
+        {
+            if (coseKeyFormat.TryGetValue(coseKeyAlgorithmIndex, out var value))
+            {
+                return (byte[])value;
             };
 
             return null;
