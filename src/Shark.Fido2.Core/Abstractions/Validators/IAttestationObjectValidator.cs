@@ -7,6 +7,7 @@ namespace Shark.Fido2.Core.Abstractions.Validators
     {
         ValidatorInternalResult Validate(
             AttestationObjectData? attestationObjectData,
+            ClientData clientData,
             PublicKeyCredentialCreationOptions creationOptions);
     }
 }

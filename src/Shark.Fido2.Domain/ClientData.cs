@@ -22,5 +22,8 @@ namespace Shark.Fido2.Domain
 
         [JsonPropertyName("tokenBinding")]
         public TokenBinding? TokenBinding { get; set; }
+
+        [JsonIgnore]
+        public byte[] ClientDataHash { get; set; } = null!;
     }
 }

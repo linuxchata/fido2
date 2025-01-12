@@ -58,7 +58,7 @@ public class AttestationObjectValidatorTests
         };
 
         // Act
-        var result = _sut.Validate(attestationObjectData, creationOptions);
+        var result = _sut.Validate(attestationObjectData, new ClientData(), creationOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -93,7 +93,7 @@ public class AttestationObjectValidatorTests
         };
 
         // Act
-        var result = _sut.Validate(attestationObjectData, creationOptions);
+        var result = _sut.Validate(attestationObjectData, new ClientData(), creationOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);

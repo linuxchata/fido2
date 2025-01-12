@@ -12,18 +12,17 @@ namespace Shark.Fido2.Core.Validators.AttestationStatementValidators
     internal class PackedAttestationStatementStategy : IAttestationStatementStategy
     {
         public ValidatorInternalResult Validate(
-            object? attestationStatement,
-            AuthenticatorData authenticatorData,
+            AttestationObjectData attestationObjectData,
+            ClientData clientData,
             PublicKeyCredentialCreationOptions creationOptions)
         {
+            var attestationStatement = attestationObjectData.AttestationStatement;
             if (attestationStatement == null)
             {
                 throw new ArgumentNullException(nameof(attestationStatement));
             }
 
-            var attestationStatementDict = attestationStatement as Dictionary<string, object>;
-
-            if (attestationStatementDict == null)
+            if (!(attestationStatement is Dictionary<string, object> attestationStatementDict))
             {
                 throw new ArgumentNullException(nameof(attestationStatement), "Attestation statement cannot be read");
             }
@@ -34,7 +33,8 @@ namespace Shark.Fido2.Core.Validators.AttestationStatementValidators
             }
 
             // Validate that alg matches the algorithm of the credentialPublicKey in authenticatorData.
-            if (authenticatorData.AttestedCredentialData.CredentialPublicKey.Algorithm != (int)algorithm)
+            var attestedCredentialData = attestationObjectData.AuthenticatorData!.AttestedCredentialData;
+            if (attestedCredentialData.CredentialPublicKey.Algorithm != (int)algorithm)
             {
                 return ValidatorInternalResult.Invalid("Attestation statement algorithm mismatch");
             }
@@ -43,6 +43,9 @@ namespace Shark.Fido2.Core.Validators.AttestationStatementValidators
             {
                 return ValidatorInternalResult.Invalid("Attestation statement signature cannot be read");
             }
+
+            var a = attestationObjectData.AuthenticatorRawData;
+            var c = clientData.ClientDataHash;
 
             return ValidatorInternalResult.Valid();
         }

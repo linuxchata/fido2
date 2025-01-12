@@ -4,6 +4,7 @@ using System.Text.Json;
 using Shark.Fido2.Core.Abstractions.Handlers;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Helpers;
+using Shark.Fido2.Core.Results;
 using Shark.Fido2.Core.Results.Attestation;
 using Shark.Fido2.Domain;
 
@@ -36,11 +37,25 @@ namespace Shark.Fido2.Core.Handlers
             return new InternalResult<ClientData>(clientData!);
         }
 
-        private ClientData? GetClientData(string clientDataJson)
+        private ClientData GetClientData(string clientDataJson)
         {
+            // 7.1. #5 Let JSONtext be the result of running UTF-8 decode on the value of response.clientDataJSON.
             var clientDataJsonArray = Convert.FromBase64String(clientDataJson);
             var decodedClientDataJson = Encoding.UTF8.GetString(clientDataJsonArray);
-            return JsonSerializer.Deserialize<ClientData>(decodedClientDataJson);
+
+            // 7.1. #6 Let C, the client data claimed as collected during the credential creation,
+            // be the result of running an implementation-specific JSON parser on JSONtext.
+            var clientData = JsonSerializer.Deserialize<ClientData>(decodedClientDataJson);
+
+            if (clientData == null)
+            {
+                throw new ArgumentException("Client data cannot be read", nameof(clientData));
+            }
+
+            // 7.1. #11 Let hash be the result of computing a hash over response.clientDataJSON using SHA-256.
+            clientData.ClientDataHash = HashProvider.GetSha256Hash(clientDataJson);
+
+            return clientData;
         }
     }
 }

@@ -35,9 +35,16 @@ public class PackedAttestationStatementStategyTests
         var provider = new AuthenticatorDataProvider();
         var authenticatorData = provider.Get(authenticatorDataArray);
 
+        var attestationObjectData = new AttestationObjectData
+        {
+            AttestationStatement = attestationStatement,
+            AuthenticatorData = authenticatorData,
+            AuthenticatorRawData = authenticatorDataArray,
+        };
+
         var creationOptions = new PublicKeyCredentialCreationOptions();
 
         // Act
-        _sut.Validate(attestationStatement, authenticatorData!, creationOptions);
+        _sut.Validate(attestationObjectData, new ClientData(), creationOptions);
     }
 }

@@ -5,9 +5,9 @@ namespace Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidator
     public interface IAttestationStatementValidator
     {
         void Validate(
-            string attestationStatementFormat,
-            object? attestationStatement,
+            AttestationObjectData attestationObjectData,
             AuthenticatorData authenticatorData,
+            ClientData clientData,
             PublicKeyCredentialCreationOptions creationOptions);
     }
 }

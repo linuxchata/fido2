@@ -9,12 +9,19 @@ namespace Shark.Fido2.Core.Validators.AttestationStatementValidators
     internal class AttestationStatementValidator : IAttestationStatementValidator
     {
         public void Validate(
-            string attestationStatementFormat,
-            object? attestationStatement,
+            AttestationObjectData attestationObjectData,
             AuthenticatorData authenticatorData,
+            ClientData clientData,
             PublicKeyCredentialCreationOptions creationOptions)
         {
-            if (string.IsNullOrWhiteSpace(attestationStatementFormat))
+            if (attestationObjectData == null)
+            {
+                throw new ArgumentNullException(nameof(attestationObjectData));
+            }
+
+            var attestationStatementFormat = attestationObjectData.AttestationStatementFormat;
+
+            if (string.IsNullOrEmpty(attestationStatementFormat))
             {
                 throw new ArgumentNullException(nameof(attestationStatementFormat));
             }
@@ -28,7 +35,7 @@ namespace Shark.Fido2.Core.Validators.AttestationStatementValidators
                 strategyMap[attestationStatementFormat] :
                 throw new ArgumentException($"{attestationStatementFormat} is not supported");
 
-            strategy.Validate(attestationStatementFormat, authenticatorData, creationOptions);
+            strategy.Validate(attestationObjectData, clientData, creationOptions);
         }
     }
 }

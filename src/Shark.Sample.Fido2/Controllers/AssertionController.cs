@@ -1,7 +1,6 @@
 ﻿using System.Net.Mime;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
-using Shark.Fido2.Core;
 using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Domain;
 using Shark.Fido2.Models.Mappers;

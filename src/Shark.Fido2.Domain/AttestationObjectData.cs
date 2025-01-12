@@ -20,5 +20,7 @@
         /// A byte array containing authenticator data (attStmt).
         /// </summary>
         public AuthenticatorData? AuthenticatorData { get; set; }
+
+        public byte[] AuthenticatorRawData { get; set; } = null!;
     }
 }

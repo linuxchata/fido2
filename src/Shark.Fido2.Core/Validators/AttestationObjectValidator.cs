@@ -27,6 +27,7 @@ namespace Shark.Fido2.Core.Validators
 
         public ValidatorInternalResult Validate(
             AttestationObjectData? attestationObjectData,
+            ClientData clientData,
             PublicKeyCredentialCreationOptions creationOptions)
         {
             if (attestationObjectData == null)
@@ -104,9 +105,10 @@ namespace Shark.Fido2.Core.Validators
             // signature, by using the attestation statement format fmt’s verification procedure given
             // attStmt, authData and hash.
             _attestationStatementValidator.Validate(
-                attestationStatementFormat,
-                attestationObjectData.AttestationStatement,
-                authenticatorData, creationOptions);
+                attestationObjectData,
+                authenticatorData,
+                clientData,
+                creationOptions);
 
             return ValidatorInternalResult.Valid();
         }

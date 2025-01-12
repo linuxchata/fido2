@@ -17,6 +17,9 @@ public class ClientDataHandlerTests
     public void Setup()
     {
         _clientDataValidatorMock = new Mock<IClientDataValidator>();
+        _clientDataValidatorMock
+            .Setup(a => a.Validate(It.IsAny<ClientData>(), It.IsAny<string>()))
+            .Returns(ValidatorInternalResult.Valid());
 
         _sut = new ClientDataHandler(_clientDataValidatorMock.Object);
     }
@@ -29,10 +32,6 @@ public class ClientDataHandlerTests
         var expectedChallenge = "t2pJGIQ7Y4DXF2b98tnBjg";
         var expectedOrigin = "https://localhost:4000";
 
-        _clientDataValidatorMock
-            .Setup(a => a.Validate(It.IsAny<ClientData?>(), It.IsAny<string>()))
-            .Returns(ValidatorInternalResult.Valid());
-
         // Act
         var result = _sut.Handle(clientDataJson, $"{expectedChallenge}==");
 
@@ -44,7 +43,7 @@ public class ClientDataHandlerTests
 
         _clientDataValidatorMock.Verify(
             a => a.Validate(
-                It.Is<ClientData?>(c =>
+                It.Is<ClientData>(c =>
                     c != null &&
                     c.Type == WebAuthnType.Create &&
                     c.Challenge == expectedChallenge &&

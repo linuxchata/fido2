@@ -108,6 +108,7 @@ namespace Shark.Fido2.Core
 
             var attestationObjectHandlerResult = _attestationObjectHandler.Handle(
                 response.AttestationObject,
+                clientDataHandlerResult.Value!,
                 creationOptions);
             if (attestationObjectHandlerResult.HasError)
             {

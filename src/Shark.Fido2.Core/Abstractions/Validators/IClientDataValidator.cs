@@ -5,6 +5,6 @@ namespace Shark.Fido2.Core.Abstractions.Validators
 {
     public interface IClientDataValidator
     {
-        ValidatorInternalResult Validate(ClientData? clientData, string expectedChallenge);
+        ValidatorInternalResult Validate(ClientData clientData, string expectedChallenge);
     }
 }

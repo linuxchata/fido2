@@ -19,13 +19,8 @@ namespace Shark.Fido2.Core.Validators
             _configuration = options.Value;
         }
 
-        public ValidatorInternalResult Validate(ClientData? clientData, string expectedChallenge)
+        public ValidatorInternalResult Validate(ClientData clientData, string expectedChallenge)
         {
-            if (clientData == null)
-            {
-                return ValidatorInternalResult.Invalid("Client data cannot be null");
-            }
-
             // 7.1. #7 Verify that the value of C.type is webauthn.create.
             if (!string.Equals(clientData.Type, WebAuthnType.Create, StringComparison.OrdinalIgnoreCase))
             {
@@ -61,10 +56,6 @@ namespace Shark.Fido2.Core.Validators
                 // TODO: Implement
                 throw new NotImplementedException("See #10 of 7.1. Registering a New Credential");
             }
-
-            // 7.1. #11 Let hash be the result of computing a hash over response.clientDataJSON using SHA-256.
-            // TODO: Implement
-            // How this hash over response.clientDataJSON is used?
 
             return ValidatorInternalResult.Valid();
         }
