@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain;
@@ -44,8 +45,17 @@ namespace Shark.Fido2.Core.Validators.AttestationStatementValidators
                 return ValidatorInternalResult.Invalid("Attestation statement signature cannot be read");
             }
 
-            var a = attestationObjectData.AuthenticatorRawData;
-            var c = clientData.ClientDataHash;
+            // Verify that sig is a valid signature over the concatenation of authenticatorData and
+            // clientDataHash using the credential public key with alg.
+            var authenticatorData = attestationObjectData.AuthenticatorRawData;
+            var clientDataHash = clientData.ClientDataHash;
+
+            var dataToVerify = new byte[authenticatorData.Length + clientDataHash.Length];
+            Buffer.BlockCopy(authenticatorData, 0, dataToVerify, 0, authenticatorData.Length);
+            Buffer.BlockCopy(clientDataHash, 0, dataToVerify, authenticatorData.Length, clientDataHash.Length);
+
+            using var rsa = RSA.Create();
+            var isValid = rsa.VerifyData(dataToVerify, (byte[])signature, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
 
             return ValidatorInternalResult.Valid();
         }

@@ -53,7 +53,7 @@ namespace Shark.Fido2.Core.Handlers
             }
 
             // 7.1. #11 Let hash be the result of computing a hash over response.clientDataJSON using SHA-256.
-            clientData.ClientDataHash = HashProvider.GetSha256Hash(clientDataJson);
+            clientData.ClientDataHash = HashProvider.GetSha256Hash(clientDataJsonArray);
 
             return clientData;
         }

@@ -9,6 +9,7 @@ async function credentialCreateClick(event) {
     const optionsRequest = {
         username: 'shark',
         displayName: 'Shark',
+        attestation: 'direct'
     };
 
     const options = await fetchAttestationOptions(optionsRequest);

@@ -45,7 +45,7 @@ public class PackedAttestationStatementStategyTests
         var clientDataJson = "eyJ0eXBlIjoid2ViYXV0aG4uY3JlYXRlIiwiY2hhbGxlbmdlIjoiZ3NqSlRqZzNyY21sM2NmRUx3eEF4USIsIm9yaWdpbiI6Imh0dHBzOi8vbG9jYWxob3N0OjQwMDAiLCJjcm9zc09yaWdpbiI6ZmFsc2V9";
         var clientData = new ClientData
         {
-            ClientDataHash = HashProvider.GetSha256Hash(clientDataJson),
+            ClientDataHash = HashProvider.GetSha256Hash(Convert.FromBase64String(clientDataJson)),
         };
 
         var creationOptions = new PublicKeyCredentialCreationOptions();
