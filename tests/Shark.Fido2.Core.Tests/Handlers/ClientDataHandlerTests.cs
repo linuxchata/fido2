@@ -52,4 +52,33 @@ public class ClientDataHandlerTests
                 It.IsAny<string>()),
             Times.Once);
     }
+
+    [Test]
+    public void Handle_WhenWindowsClientDataJsonValid_ThenReturnsNull()
+    {
+        // Arrange
+        var clientDataJson = "eyJ0eXBlIjoid2ViYXV0aG4uY3JlYXRlIiwiY2hhbGxlbmdlIjoiZ3NqSlRqZzNyY21sM2NmRUx3eEF4USIsIm9yaWdpbiI6Imh0dHBzOi8vbG9jYWxob3N0OjQwMDAiLCJjcm9zc09yaWdpbiI6ZmFsc2V9";
+        var expectedChallenge = "gsjJTjg3rcml3cfELwxAxQ";
+        var expectedOrigin = "https://localhost:4000";
+
+        // Act
+        var result = _sut.Handle(clientDataJson, $"{expectedChallenge}==");
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.HasError, Is.False);
+        Assert.That(result.Message, Is.Null);
+        Assert.That(result.Value, Is.Not.Null);
+
+        _clientDataValidatorMock.Verify(
+            a => a.Validate(
+                It.Is<ClientData>(c =>
+                    c != null &&
+                    c.Type == WebAuthnType.Create &&
+                    c.Challenge == expectedChallenge &&
+                    c.Origin == expectedOrigin &&
+                    c.CrossOrigin == false),
+                It.IsAny<string>()),
+            Times.Once);
+    }
 }

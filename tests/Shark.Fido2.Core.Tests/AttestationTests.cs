@@ -94,19 +94,19 @@ public class AttestationTests
         // Arrange
         var publicKeyCredential = new PublicKeyCredentialAttestation
         {
-            Id = "InvZ7_ZJi4-xByVUxjUwSknCRCtBui8nZUMUpQVNXXk",
-            RawId = "InvZ7/ZJi4+xByVUxjUwSknCRCtBui8nZUMUpQVNXXk=",
+            Id = "eCmlfd8Sr1hLO0eSLBvXuezT4_HSL5xJ31pOSbUkPks",
+            RawId = "eCmlfd8Sr1hLO0eSLBvXuezT4/HSL5xJ31pOSbUkPks=",
             Response = new AuthenticatorAttestationResponse
             {
-                AttestationObject = "o2NmbXRkbm9uZWdhdHRTdG10oGhhdXRoRGF0YVkBZ0mWDeWIDoxodDQXD2R2YFuP5K65ooYyx5lc87qDHZdjRQAAAAAAAAAAAAAAAAAAAAAAAAAAACAie9nv9kmLj7EHJVTGNTBKScJEK0G6LydlQxSlBU1deaQBAwM5AQAgWQEAtMJIZwd8jZ5hacwaNfGkAMBLVlj4HkFcQpYiSsyigauVSdfMvzLi+w5trCHdvjK4lIU6odXm6nIKqtCk98sHoCSlRU884TEhIED5E/uh0dw0WlfApP8h9Fdi+6qMpqlqe0K836TDYHpuo9ntp/Pt3HqrK2zKIFI9FiyRj+XTL06wUe88qIKE2r2JRkWVl8sGptsPr2elC4nG9WudlFOHN7nlfsmGdSwjTIZhWvPeT4ErpncjS5TK1Vz9auddr97FeWD8lNZET1sgNav6T9D4kIei+aVJi8G8vtUGReByUiBpJM9PvUkjbDLFfwSg3kK0P6EY7uu/5AGGd+1PHV+2rSFDAQAB",
-                ClientDataJson = "eyJ0eXBlIjoid2ViYXV0aG4uY3JlYXRlIiwiY2hhbGxlbmdlIjoiOWlLTGRyVUFTeHJtT0hCTm44SElEQSIsIm9yaWdpbiI6Imh0dHBzOi8vbG9jYWxob3N0OjQwMDAiLCJjcm9zc09yaWdpbiI6ZmFsc2V9",
+                AttestationObject = "o2NmbXRmcGFja2VkZ2F0dFN0bXSiY2FsZzkBAGNzaWdZAQClP2a8p8lm+FUiGJAUj76ThUfAVUUWut6EVWUdZvC4/HBxyOCh3sZ15o+CgW4TA1dPYZpYJAx1f7AdK5JXJ7MEpgmIuVWTNklGSyWBI5FJWDgGg0LDzDFZqDuGFbupXPzWT9PP4/yBTOcAQ2ZM6YMe7o7ix95Ke9PZnyQ30oySbVyUINCQZTZucBJh9cGfb92na5I2iNEfd7JN80ea3g58xBjEol+jLAmkfPabTVa4PDuI3B7PtjV2AbpmFjB3yfq+PpScSTObjx9EqZ3EsSvEZHAfj9LwhMbEkBzDEfUxHt6xW9Vgqn32aV7VAKdkohTh5CUZNGFIC2CvKjeqFBWWaGF1dGhEYXRhWQFnSZYN5YgOjGh0NBcPZHZgW4/krrmihjLHmVzzuoMdl2NFAAAAAGAosBex1EwCtLOvza/Ja7IAIHgppX3fEq9YSztHkiwb17ns0+Px0i+cSd9aTkm1JD5LpAEDAzkBACBZAQCmBcYvuGi9gyjh5lXY0wiL0oYw1voBr5XHTwP+14ezQBR90zV93anRBAfqFr5MLzY+0EB+YhwjvhL51G0INgmFS6rUhpfG1wQp+MvSU7tSaK1MwZKB35r17oU77/zjroBt780iDHGdYaUx4UN0Mi4oIGe9pmZTTiSUOwq9KpoE4aixjVQNfurWUs036xnkFJ5ZMVON4ki8dXLuOtqgtNy06/X98EKsFcwNKA83ob6XKUZCnG2GlWQJyMBnE8p1p4k46r3DF5p6vdVH+3Ibujmcxhw/f6/M6UTvhvYofT+ljqFYhHKT2iRp1m2+iFQJAbcGCvXW9AWVWeqU1tBQ5yENIUMBAAE=",
+                ClientDataJson = "eyJ0eXBlIjoid2ViYXV0aG4uY3JlYXRlIiwiY2hhbGxlbmdlIjoiZ3NqSlRqZzNyY21sM2NmRUx3eEF4USIsIm9yaWdpbiI6Imh0dHBzOi8vbG9jYWxob3N0OjQwMDAiLCJjcm9zc09yaWdpbiI6ZmFsc2V9",
                 Signature = string.Empty,
                 UserHandler = string.Empty,
             },
             Type = PublicKeyCredentialType.PublicKey,
         };
 
-        var expectedChallenge = "t2pJGIQ7Y4DXF2b98tnBjg";
+        var expectedChallenge = "gsjJTjg3rcml3cfELwxAxQ";
         var publicKeyCredentialCreationOptions = new PublicKeyCredentialCreationOptions
         {
             Challenge = Convert.FromBase64String($"{expectedChallenge}=="),

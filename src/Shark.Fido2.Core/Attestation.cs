@@ -98,9 +98,8 @@ namespace Shark.Fido2.Core
                 return AttestationCompleteResult.CreateFailure("Response cannot be null");
             }
 
-            var clientDataHandlerResult = _clientDataHandler.Handle(
-                response.ClientDataJson,
-                Convert.ToBase64String(creationOptions.Challenge));
+            var challengeString = Convert.ToBase64String(creationOptions.Challenge);
+            var clientDataHandlerResult = _clientDataHandler.Handle(response.ClientDataJson, challengeString);
             if (clientDataHandlerResult.HasError)
             {
                 return AttestationCompleteResult.CreateFailure(clientDataHandlerResult.Message!);

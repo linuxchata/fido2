@@ -17,10 +17,10 @@ public class PackedAttestationStatementStategyTests
     }
 
     [Test]
-    public void Validate_()
+    public void Validate_WhenWindows()
     {
         // Arrange
-        var signatureString = "jFsg1pE0oG+yOUWvf7E/E5aP8DuA9q1fnxk2GZfRn8vQNhqz5Wkx/Zqyevp8RDh+EwjYJIkK3nrLYvTzbnGKMhFSdOJ2N2hacvSO3SsQ890DYTONlVThN6/PpPn4DZ+fEa/yr68vWXm5Lma2GDuJ4gSL08RFPWoerzQtWMNCE4aIv988JJvmIU6BA/uzux3kX9E2Golpn8Vs4XW53U0EsED6TyImTOuCtbSfB8/xkcq2JuhRaJwHQqaV2tIKHnqtvGFDB7yPMxiGi/Skzyv2QitsdlY4DS4jXDH4HrA1VxzIRjBbjfofy0WRAxJtgrEK7a0ZEOEPhaW0vqPR5KZHvQ==";
+        var signatureString = "pT9mvKfJZvhVIhiQFI++k4VHwFVFFrrehFVlHWbwuPxwccjgod7GdeaPgoFuEwNXT2GaWCQMdX+wHSuSVyezBKYJiLlVkzZJRkslgSORSVg4BoNCw8wxWag7hhW7qVz81k/Tz+P8gUznAENmTOmDHu6O4sfeSnvT2Z8kN9KMkm1clCDQkGU2bnASYfXBn2/dp2uSNojRH3eyTfNHmt4OfMQYxKJfoywJpHz2m01WuDw7iNwez7Y1dgG6ZhYwd8n6vj6UnEkzm48fRKmdxLErxGRwH4/S8ITGxJAcwxH1MR7esVvVYKp99mle1QCnZKIU4eQlGTRhSAtgryo3qhQVlg==";
 
         var attestationStatement = new Dictionary<string, object>
         {
@@ -28,7 +28,7 @@ public class PackedAttestationStatementStategyTests
             { "sig", Convert.FromBase64String(signatureString) },
         };
 
-        var authenticatorDataString = "SZYN5YgOjGh0NBcPZHZgW4/krrmihjLHmVzzuoMdl2NFAAAAAGAosBex1EwCtLOvza/Ja7IAIPbZ8TFtu1QIdgyeU/8pErsPUlpyNOO78e5M2fuf6qbapAEDAzkBACBZAQDyo0pfoOrWf6nTz8BLydkpXJwNwU4cdciPBhSrj3oUif0N4MoXDE4cwoBgbtGQ4MVVwKbnn+iTsmi/TJc+G9tIX/LPRyj+0Z2bcMW1TJr1vD3BurP5VV4pd7eeQofWbO0zG7pSn6P/txKRqkCtQu0drUXlfrOek/P1v7rruhAvcXq4JNdVEeajP6OARISK/G62CcpI122cZ/CYH41/4ES0Ik0HgmwtEkRZrQQXAksDWVtf6Cq0xv6nL9CB+b8Stx2jEei5P9mHhP0Kanj0eEUXmjB1kVmwxMSWM0iSc8E9lefS0os9Cue/32eqzf0ybOVaObVb+BUE1kjzrRwmIOjZIUMBAAE=";
+        var authenticatorDataString = "SZYN5YgOjGh0NBcPZHZgW4/krrmihjLHmVzzuoMdl2NFAAAAAGAosBex1EwCtLOvza/Ja7IAIHgppX3fEq9YSztHkiwb17ns0+Px0i+cSd9aTkm1JD5LpAEDAzkBACBZAQCmBcYvuGi9gyjh5lXY0wiL0oYw1voBr5XHTwP+14ezQBR90zV93anRBAfqFr5MLzY+0EB+YhwjvhL51G0INgmFS6rUhpfG1wQp+MvSU7tSaK1MwZKB35r17oU77/zjroBt780iDHGdYaUx4UN0Mi4oIGe9pmZTTiSUOwq9KpoE4aixjVQNfurWUs036xnkFJ5ZMVON4ki8dXLuOtqgtNy06/X98EKsFcwNKA83ob6XKUZCnG2GlWQJyMBnE8p1p4k46r3DF5p6vdVH+3Ibujmcxhw/f6/M6UTvhvYofT+ljqFYhHKT2iRp1m2+iFQJAbcGCvXW9AWVWeqU1tBQ5yENIUMBAAE=";
         var authenticatorDataArray = Convert.FromBase64String(authenticatorDataString);
 
         // Temporary simplification of tests is to use instance of AuthenticatorDataProvider
@@ -42,9 +42,15 @@ public class PackedAttestationStatementStategyTests
             AuthenticatorRawData = authenticatorDataArray,
         };
 
+        var clientDataJson = "eyJ0eXBlIjoid2ViYXV0aG4uY3JlYXRlIiwiY2hhbGxlbmdlIjoiZ3NqSlRqZzNyY21sM2NmRUx3eEF4USIsIm9yaWdpbiI6Imh0dHBzOi8vbG9jYWxob3N0OjQwMDAiLCJjcm9zc09yaWdpbiI6ZmFsc2V9";
+        var clientData = new ClientData
+        {
+            ClientDataHash = HashProvider.GetSha256Hash(clientDataJson),
+        };
+
         var creationOptions = new PublicKeyCredentialCreationOptions();
 
         // Act
-        _sut.Validate(attestationObjectData, new ClientData(), creationOptions);
+        _sut.Validate(attestationObjectData, clientData, creationOptions);
     }
 }
