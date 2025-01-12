@@ -103,9 +103,10 @@ namespace Shark.Fido2.Core.Validators
             // #19 Verify that attStmt is a correct attestation statement, conveying a valid attestation
             // signature, by using the attestation statement format fmt’s verification procedure given
             // attStmt, authData and hash.
-            var attestationStatement = attestationObjectData.AttestationStatement;
-
-            _attestationStatementValidator.Validate(attestationStatementFormat, attestationStatement);
+            _attestationStatementValidator.Validate(
+                attestationStatementFormat,
+                attestationObjectData.AttestationStatement,
+                authenticatorData, creationOptions);
 
             return ValidatorInternalResult.Valid();
         }
