@@ -66,15 +66,8 @@ namespace Shark.Fido2.Core.Helpers
             startIndex += credentialIdLength;
             var credentialPublicKeyLength = authenticatorDataArray.Length - startIndex;
             var credentialPublicKeyArray = authenticatorDataArray.AsSpan(startIndex, credentialPublicKeyLength);
-            var credentialPublicKeyCoseKeyFormat = CborConverter.DecodeToCoseKeyFormat(credentialPublicKeyArray.ToArray());
-            authenticatorData.AttestedCredentialData.CredentialPublicKey.KeyType =
-                GetCredentialPublicKeyIntParameter(credentialPublicKeyCoseKeyFormat, CoseKeyIndex.KeyType);
-            authenticatorData.AttestedCredentialData.CredentialPublicKey.Algorithm =
-                GetCredentialPublicKeyIntParameter(credentialPublicKeyCoseKeyFormat, CoseKeyIndex.Algorithm);
-            authenticatorData.AttestedCredentialData.CredentialPublicKey.Modulus =
-                GetCredentialPublicKeyParameter(credentialPublicKeyCoseKeyFormat, CoseKeyIndex.Modulus);
-            authenticatorData.AttestedCredentialData.CredentialPublicKey.Exponent =
-                GetCredentialPublicKeyParameter(credentialPublicKeyCoseKeyFormat, CoseKeyIndex.Exponent);
+            var credentialPublicKey = GetCredentialPublicKey(credentialPublicKeyArray);
+            authenticatorData.AttestedCredentialData.CredentialPublicKey = credentialPublicKey;
 
             return authenticatorData;
         }
@@ -87,7 +80,24 @@ namespace Shark.Fido2.Core.Helpers
             authenticatorData.ExtensionDataIncluded = (flags & 0b10000000) != 0; // Bit 7
         }
 
-        private int? GetCredentialPublicKeyIntParameter(Dictionary<int, object> coseKeyFormat, int coseKeyAlgorithmIndex)
+        private CredentialPublicKey GetCredentialPublicKey(Span<byte> credentialPublicKeyArray)
+        {
+            var coseKeyFormat = CborConverter.DecodeToCoseKeyFormat(credentialPublicKeyArray.ToArray());
+
+            var credentialPublicKey = new CredentialPublicKey
+            {
+                KeyType = GetCredentialPublicKeyIntParameter(coseKeyFormat, CoseKeyIndex.KeyType),
+                Algorithm = GetCredentialPublicKeyIntParameter(coseKeyFormat, CoseKeyIndex.Algorithm),
+                Modulus = GetCredentialPublicKeyParameter(coseKeyFormat, CoseKeyIndex.Modulus),
+                Exponent = GetCredentialPublicKeyParameter(coseKeyFormat, CoseKeyIndex.Exponent),
+            };
+
+            return credentialPublicKey;
+        }
+
+        private int? GetCredentialPublicKeyIntParameter(
+            Dictionary<int, object> coseKeyFormat,
+            int coseKeyAlgorithmIndex)
         {
             if (coseKeyFormat.TryGetValue(coseKeyAlgorithmIndex, out var value))
             {
@@ -97,7 +107,9 @@ namespace Shark.Fido2.Core.Helpers
             return null;
         }
 
-        private byte[]? GetCredentialPublicKeyParameter(Dictionary<int, object> coseKeyFormat, int coseKeyAlgorithmIndex)
+        private byte[]? GetCredentialPublicKeyParameter(
+            Dictionary<int, object> coseKeyFormat,
+            int coseKeyAlgorithmIndex)
         {
             if (coseKeyFormat.TryGetValue(coseKeyAlgorithmIndex, out var value))
             {
