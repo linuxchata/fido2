@@ -6,12 +6,12 @@
     public sealed class CredentialPublicKey
     {
         /// <summary>
-        /// Identification of the key type (kty)
+        /// The identification of the key type (kty)
         /// </summary>
         public int? KeyType { get; set; }
 
         /// <summary>
-        /// Cryptographic signature algorithm (alg)
+        /// The cryptographic signature algorithm (alg)
         /// </summary>
         public int? Algorithm { get; set; }
 
@@ -26,18 +26,23 @@
         public byte[]? Exponent { get; set; }
 
         /// <summary>
-        /// Elliptic Curves
+        /// The elliptic curves
         /// </summary>
         public int? Curve { get; set; }
 
         /// <summary>
-        /// X-coordinate for the EC point
+        /// X-coordinate for the elliptic curve point
         /// </summary>
         public byte[]? XCoordinate { get; set; }
 
         /// <summary>
-        /// Y-coordinate for the EC point
+        /// Y-coordinate for the elliptic curve point
         /// </summary>
         public byte[]? YCoordinate { get; set; }
+
+        /// <summary>
+        /// The symmetric key
+        /// </summary>
+        public byte[]? Key { get; set; }
     }
 }

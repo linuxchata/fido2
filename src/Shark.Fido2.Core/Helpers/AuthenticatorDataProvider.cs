@@ -91,18 +91,29 @@ namespace Shark.Fido2.Core.Helpers
                 Algorithm = GetCredentialPublicKeyIntParameter(coseKeyFormat, CoseKeyIndex.Algorithm),
             };
 
-            if (credentialPublicKey.KeyType == (int)KeyTypeEnum.Rsa)
+            if (credentialPublicKey.KeyType == (int)KeyTypeEnum.Okp)
             {
-                // https://datatracker.ietf.org/doc/html/rfc8230#section-4
-                credentialPublicKey.Modulus = GetCredentialPublicKeyParameter(coseKeyFormat, CoseKeyIndex.Modulus);
-                credentialPublicKey.Exponent = GetCredentialPublicKeyParameter(coseKeyFormat, CoseKeyIndex.Exponent);
+                // https://datatracker.ietf.org/doc/html/rfc8152#section-13.2
+                credentialPublicKey.Curve = GetCredentialPublicKeyIntParameter(coseKeyFormat, CoseKeyIndex.Curve);
+                credentialPublicKey.XCoordinate = GetCredentialPublicKeyParameter(coseKeyFormat, CoseKeyIndex.XCoordinate);
             }
-            else if (credentialPublicKey.KeyType == (int)KeyTypeEnum.Ec2)
+            else if(credentialPublicKey.KeyType == (int)KeyTypeEnum.Ec2)
             {
                 // https://datatracker.ietf.org/doc/html/rfc8152#section-13.1
                 credentialPublicKey.Curve = GetCredentialPublicKeyIntParameter(coseKeyFormat, CoseKeyIndex.Curve);
                 credentialPublicKey.XCoordinate = GetCredentialPublicKeyParameter(coseKeyFormat, CoseKeyIndex.XCoordinate);
                 credentialPublicKey.YCoordinate = GetCredentialPublicKeyParameter(coseKeyFormat, CoseKeyIndex.YCoordinate);
+            }
+            else if (credentialPublicKey.KeyType == (int)KeyTypeEnum.Rsa)
+            {
+                // https://datatracker.ietf.org/doc/html/rfc8230#section-4
+                credentialPublicKey.Modulus = GetCredentialPublicKeyParameter(coseKeyFormat, CoseKeyIndex.Modulus);
+                credentialPublicKey.Exponent = GetCredentialPublicKeyParameter(coseKeyFormat, CoseKeyIndex.Exponent);
+            }
+            else if (credentialPublicKey.KeyType == (int)KeyTypeEnum.Symmetric)
+            {
+                // https://datatracker.ietf.org/doc/html/rfc8152#section-13.3
+                credentialPublicKey.Key = GetCredentialPublicKeyParameter(coseKeyFormat, CoseKeyIndex.SymmetricKey);
             }
 
             return credentialPublicKey;
