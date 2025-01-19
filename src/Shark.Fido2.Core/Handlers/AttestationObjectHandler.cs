@@ -57,11 +57,10 @@ namespace Shark.Fido2.Core.Handlers
             var attestationObjectData = new AttestationObjectData
             {
                 AttestationStatementFormat = decodedAttestationObject[AttestationObjectKey.Fmt] as string,
-                AttestationStatement = decodedAttestationObject[AttestationObjectKey.AttStmt] as object,
+                AttestationStatement = decodedAttestationObject[AttestationObjectKey.AttStmt],
                 AuthenticatorData = authenticatorData,
+                AuthenticatorRawData = authenticatorDataArray!,
             };
-
-            attestationObjectData.AuthenticatorRawData = authenticatorDataArray!;
 
             return attestationObjectData;
         }

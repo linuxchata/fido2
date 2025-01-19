@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
+using Shark.Fido2.Core.Enums;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain;
+using Shark.Fido2.Domain.Mappers;
 
 namespace Shark.Fido2.Core.Validators.AttestationStatementValidators
 {
@@ -34,8 +36,8 @@ namespace Shark.Fido2.Core.Validators.AttestationStatementValidators
             }
 
             // Validate that alg matches the algorithm of the credentialPublicKey in authenticatorData.
-            var attestedCredentialData = attestationObjectData.AuthenticatorData!.AttestedCredentialData;
-            if (attestedCredentialData.CredentialPublicKey.Algorithm != (int)algorithm)
+            var credentialPublicKey = attestationObjectData.AuthenticatorData!.AttestedCredentialData.CredentialPublicKey;
+            if (credentialPublicKey.Algorithm != (int)algorithm)
             {
                 return ValidatorInternalResult.Invalid("Attestation statement algorithm mismatch");
             }
@@ -51,19 +53,26 @@ namespace Shark.Fido2.Core.Validators.AttestationStatementValidators
                 attestationObjectData.AuthenticatorRawData,
                 clientData.ClientDataHash);
 
-            using var rsa = RSA.Create(new RSAParameters
+            if (credentialPublicKey.KeyType == (int)KeyTypeEnum.Rsa)
             {
-                Modulus = attestedCredentialData.CredentialPublicKey.Modulus,
-                Exponent = attestedCredentialData.CredentialPublicKey.Exponent,
-            });
+                using var rsa = RSA.Create(new RSAParameters
+                {
+                    Modulus = credentialPublicKey.Modulus,
+                    Exponent = credentialPublicKey.Exponent,
+                });
 
-            var isValid = rsa.VerifyData(
-                concatenatedData,
-                (byte[])signature,
-                HashAlgorithmName.SHA256,
-                RSASignaturePadding.Pkcs1);
+                var algorithmDetails = RsaKeyTypeMapper.Get(credentialPublicKey.Algorithm.Value);
 
-            return ValidatorInternalResult.Valid();
+                var isValid = rsa.VerifyData(
+                    concatenatedData,
+                    (byte[])signature,
+                    algorithmDetails.HashAlgorithmName,
+                    algorithmDetails.Padding);
+
+                return ValidatorInternalResult.Valid();
+            }
+
+            return ValidatorInternalResult.Invalid("Invalid signature");
         }
 
         private static byte[] GetConcatenatedData(byte[] authenticatorData, byte[] clientDataHash)
