@@ -29,6 +29,7 @@ namespace Shark.Fido2.Core.Validators.AttestationStatementValidators
             var strategyMap = new Dictionary<string, IAttestationStatementStategy>
             {
                 { AttestationStatementFormatIdentifier.Packed, new PackedAttestationStatementStategy() },
+                { AttestationStatementFormatIdentifier.None, new NoneAttestationStatementStategy() },
             };
 
             var strategy = strategyMap.ContainsKey(attestationStatementFormat) ?
