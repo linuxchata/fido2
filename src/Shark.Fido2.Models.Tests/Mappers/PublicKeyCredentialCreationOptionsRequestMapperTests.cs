@@ -4,7 +4,7 @@ using Shark.Fido2.Models.Extensions;
 using Shark.Fido2.Models.Mappers;
 using Shark.Fido2.Models.Requests;
 
-namespace Shark.Fido2.Models.Tests;
+namespace Shark.Fido2.Models.Tests.Mappers;
 
 [TestFixture]
 public class PublicKeyCredentialCreationOptionsRequestMapperTests

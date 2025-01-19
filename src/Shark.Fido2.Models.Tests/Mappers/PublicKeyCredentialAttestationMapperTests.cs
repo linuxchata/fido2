@@ -1,7 +1,7 @@
 ﻿using Shark.Fido2.Models.Mappers;
 using Shark.Fido2.Models.Responses;
 
-namespace Shark.Fido2.Models.Tests;
+namespace Shark.Fido2.Models.Tests.Mappers;
 
 [TestFixture]
 public class PublicKeyCredentialAttestationMapperTests
