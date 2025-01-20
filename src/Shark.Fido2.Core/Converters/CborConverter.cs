@@ -72,19 +72,38 @@ namespace Shark.Fido2.Core.Converters
                 case CborReaderState.NegativeInteger:
                     return reader.ReadInt32();
                 case CborReaderState.StartMap:
-                    var result = new Dictionary<string, object>();
-                    reader.ReadStartMap();
-                    while (reader.PeekState() != CborReaderState.EndMap)
-                    {
-                        var key = reader.ReadTextString();
-                        var value = Read(reader);
-                        result[key] = value;
-                    }
-                    reader.ReadEndMap();
-                    return result;
+                    return ReadMap(reader);
+                case CborReaderState.StartArray:
+                    return ReadArray(reader);
                 default:
                     throw new InvalidOperationException($"Unsupported CBOR type {reader.PeekState()}");
             }
+        }
+
+        private static object ReadMap(CborReader reader)
+        {
+            var map = new Dictionary<string, object>();
+            reader.ReadStartMap();
+            while (reader.PeekState() != CborReaderState.EndMap)
+            {
+                var key = reader.ReadTextString();
+                var value = Read(reader);
+                map[key] = value;
+            }
+            reader.ReadEndMap();
+            return map;
+        }
+
+        private static object ReadArray(CborReader reader)
+        {
+            var array = new List<object>();
+            reader.ReadStartArray();
+            while (reader.PeekState() != CborReaderState.EndArray)
+            {
+                array.Add(Read(reader));
+            }
+            reader.ReadEndArray();
+            return array;
         }
     }
 }

@@ -71,6 +71,10 @@ namespace Shark.Fido2.Core.Validators.AttestationStatementValidators
 
                 return ValidatorInternalResult.Valid();
             }
+            else if (credentialPublicKey.KeyType == (int)KeyTypeEnum.Ec2)
+            {
+                return ValidatorInternalResult.Valid();
+            }
 
             return ValidatorInternalResult.Invalid("Invalid signature");
         }
