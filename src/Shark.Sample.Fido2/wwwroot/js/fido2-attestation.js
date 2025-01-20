@@ -75,9 +75,9 @@ async function credentialCreate(options) {
         },
     };
 
-    let assertion;
+    let credentials;
     try {
-        assertion = await navigator.credentials.create(credentialCreationOptions);
+        credentials = await navigator.credentials.create(credentialCreationOptions);
     }
     catch (error) {
         console.error(error);
@@ -85,15 +85,15 @@ async function credentialCreate(options) {
     }
 
     const credentials = {
-        id: assertion.id,
-        rawId: toBase64(assertion.rawId),
+        id: credentials.id,
+        rawId: toBase64(credentials.rawId),
         response: {
-            attestationObject: toBase64(assertion.response.attestationObject),
-            clientDataJson: toBase64(assertion.response.clientDataJSON),
-            signature: toBase64(assertion.response.signature),
-            userHandler: toBase64(assertion.response.userHandler),
+            attestationObject: toBase64(credentials.response.attestationObject),
+            clientDataJson: toBase64(credentials.response.clientDataJSON),
+            signature: toBase64(credentials.response.signature),
+            userHandler: toBase64(credentials.response.userHandler),
         },
-        type: assertion.type,
+        type: credentials.type,
     };
 
     await fetchAttestationResult(credentials);
