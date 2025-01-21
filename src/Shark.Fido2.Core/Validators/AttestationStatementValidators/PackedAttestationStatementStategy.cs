@@ -73,6 +73,18 @@ namespace Shark.Fido2.Core.Validators.AttestationStatementValidators
             }
             else if (credentialPublicKey.KeyType == (int)KeyTypeEnum.Ec2)
             {
+                using var ecdsa = ECDsa.Create(new ECParameters
+                {
+                    Q = new ECPoint
+                    {
+                        X = credentialPublicKey.XCoordinate,
+                        Y = credentialPublicKey.YCoordinate,
+                    },
+                    Curve = ECCurve.NamedCurves.nistP256, // https://www.rfc-editor.org/rfc/rfc9053.html#section-7.1
+                });
+
+                var isValid = ecdsa.VerifyData(concatenatedData, (byte[])signature, HashAlgorithmName.SHA256);
+
                 return ValidatorInternalResult.Valid();
             }
 

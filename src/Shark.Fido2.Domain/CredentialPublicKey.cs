@@ -27,6 +27,7 @@
 
         /// <summary>
         /// The elliptic curves
+        /// https://www.rfc-editor.org/rfc/rfc9053.html#section-7.1
         /// </summary>
         public int? Curve { get; set; }
 
