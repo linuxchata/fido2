@@ -10,6 +10,7 @@ namespace Shark.Fido2.Domain
     public sealed class TokenBinding
     {
         [JsonPropertyName("status")]
+        [JsonConverter(typeof(TokenBindingStatusConverter))]
         public TokenBindingStatus Status { get; set; }
 
         [JsonPropertyName("id")]

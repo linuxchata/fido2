@@ -25,7 +25,7 @@ public class ClientDataHandlerTests
     }
 
     [Test]
-    public void Handle_WheniPhoneClientDataJsonValid_ThenReturnsNull()
+    public void Handle_WhenClientDataJsonValid_ThenReturnsInternalResult()
     {
         // Arrange
         var clientDataJson = "eyJ0eXBlIjoid2ViYXV0aG4uY3JlYXRlIiwiY2hhbGxlbmdlIjoidDJwSkdJUTdZNERYRjJiOTh0bkJqZyIsIm9yaWdpbiI6Imh0dHBzOi8vbG9jYWxob3N0OjQwMDAiLCJjcm9zc09yaWdpbiI6ZmFsc2UsIm90aGVyX2tleXNfY2FuX2JlX2FkZGVkX2hlcmUiOiJkbyBub3QgY29tcGFyZSBjbGllbnREYXRhSlNPTiBhZ2FpbnN0IGEgdGVtcGxhdGUuIFNlZSBodHRwczovL2dvby5nbC95YWJQZXgifQ==";
@@ -54,15 +54,15 @@ public class ClientDataHandlerTests
     }
 
     [Test]
-    public void Handle_WhenWindowsClientDataJsonValid_ThenReturnsNull()
+    public void Handle_WhenClientDataJsonValidAndWithTokenBinding_ThenReturnsInternalResult()
     {
         // Arrange
-        var clientDataJson = "eyJ0eXBlIjoid2ViYXV0aG4uY3JlYXRlIiwiY2hhbGxlbmdlIjoiZ3NqSlRqZzNyY21sM2NmRUx3eEF4USIsIm9yaWdpbiI6Imh0dHBzOi8vbG9jYWxob3N0OjQwMDAiLCJjcm9zc09yaWdpbiI6ZmFsc2V9";
-        var expectedChallenge = "gsjJTjg3rcml3cfELwxAxQ";
-        var expectedOrigin = "https://localhost:4000";
+        var clientDataJson = "eyJjaGFsbGVuZ2UiOiJ1Vlg4OElnUmEwU1NyTUlSVF9xN2NSY2RmZ2ZSQnhDZ25fcGtwVUFuWEpLMnpPYjMwN3dkMU9MWFEwQXVOYU10QlIzYW1rNkhZenAtX1Z4SlRQcHdHdyIsIm9yaWdpbiI6Imh0dHBzOi8vd2ViYXV0aG4ub3JnIiwidG9rZW5CaW5kaW5nIjp7InN0YXR1cyI6Im5vdC1zdXBwb3J0ZWQifSwidHlwZSI6IndlYmF1dGhuLmNyZWF0ZSJ9";
+        var expectedChallenge = "uVX88IgRa0SSrMIRT_q7cRcdfgfRBxCgn_pkpUAnXJK2zOb307wd1OLXQ0AuNaMtBR3amk6HYzp-_VxJTPpwGw";
+        var expectedOrigin = "https://webauthn.org";
 
         // Act
-        var result = _sut.Handle(clientDataJson, $"{expectedChallenge}==");
+        var result = _sut.Handle(clientDataJson, expectedChallenge);
 
         // Assert
         Assert.That(result, Is.Not.Null);

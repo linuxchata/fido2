@@ -9,5 +9,8 @@ namespace Shark.Fido2.Domain.Enums
 
         [EnumMember(Value = "supported")]
         Supported = 1,
+
+        [EnumMember(Value = "not-supported")]
+        NotSupported = 2,
     }
 }
