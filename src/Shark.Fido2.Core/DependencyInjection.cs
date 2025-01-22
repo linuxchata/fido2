@@ -26,6 +26,9 @@ namespace Shark.Fido2.Core
             services.AddTransient<IAttestationStatementValidator, AttestationStatementValidator>();
             services.AddTransient<IAttestationObjectHandler, AttestationObjectHandler>();
 
+            services.AddTransient<IRsaCryptographyValidator, RsaCryptographyValidator>();
+            services.AddTransient<IEc2CryptographyValidator, Ec2CryptographyValidator>();
+
             services.AddTransient<IAttestation, Attestation>();
             services.AddTransient<IAssertion, Assertion>();
         }

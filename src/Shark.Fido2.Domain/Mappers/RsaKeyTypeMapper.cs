@@ -4,7 +4,7 @@ using Shark.Fido2.Domain.Enums;
 
 namespace Shark.Fido2.Domain.Mappers
 {
-    public class RsaKeyTypeMapper
+    public static class RsaKeyTypeMapper
     {
         public static Rs256Algorithm Get(int publicKeyAlgorithm)
         {

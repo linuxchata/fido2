@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
+using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Enums;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain;
-using Shark.Fido2.Domain.Mappers;
 
 namespace Shark.Fido2.Core.Validators.AttestationStatementValidators
 {
@@ -14,6 +13,17 @@ namespace Shark.Fido2.Core.Validators.AttestationStatementValidators
     /// </summary>
     internal class PackedAttestationStatementStategy : IAttestationStatementStategy
     {
+        private readonly IRsaCryptographyValidator _rsaCryptographyValidator;
+        private readonly IEc2CryptographyValidator _ec2CryptographyValidator;
+
+        public PackedAttestationStatementStategy(
+            IRsaCryptographyValidator rsaCryptographyValidator,
+            IEc2CryptographyValidator ec2CryptographyValidator)
+        {
+            _rsaCryptographyValidator = rsaCryptographyValidator;
+            _ec2CryptographyValidator = ec2CryptographyValidator;
+        }
+
         public ValidatorInternalResult Validate(
             AttestationObjectData attestationObjectData,
             ClientData clientData,
@@ -55,35 +65,15 @@ namespace Shark.Fido2.Core.Validators.AttestationStatementValidators
 
             if (credentialPublicKey.KeyType == (int)KeyTypeEnum.Rsa)
             {
-                using var rsa = RSA.Create(new RSAParameters
-                {
-                    Modulus = credentialPublicKey.Modulus,
-                    Exponent = credentialPublicKey.Exponent,
-                });
-
-                var algorithmDetails = RsaKeyTypeMapper.Get(credentialPublicKey.Algorithm.Value);
-
-                var isValid = rsa.VerifyData(
-                    concatenatedData,
-                    (byte[])signature,
-                    algorithmDetails.HashAlgorithmName,
-                    algorithmDetails.Padding);
+                var isValid = _rsaCryptographyValidator.IsValid(
+                    concatenatedData, (byte[])signature, credentialPublicKey);
 
                 return ValidatorInternalResult.Valid();
             }
             else if (credentialPublicKey.KeyType == (int)KeyTypeEnum.Ec2)
             {
-                using var ecdsa = ECDsa.Create(new ECParameters
-                {
-                    Q = new ECPoint
-                    {
-                        X = credentialPublicKey.XCoordinate,
-                        Y = credentialPublicKey.YCoordinate,
-                    },
-                    Curve = ECCurve.NamedCurves.nistP256, // https://www.rfc-editor.org/rfc/rfc9053.html#section-7.1
-                });
-
-                var isValid = ecdsa.VerifyData(concatenatedData, (byte[])signature, HashAlgorithmName.SHA256);
+                var isValid = _ec2CryptographyValidator.IsValid(
+                    concatenatedData, (byte[])signature, credentialPublicKey);
 
                 return ValidatorInternalResult.Valid();
             }

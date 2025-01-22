@@ -3,6 +3,7 @@ using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Handlers;
 using Shark.Fido2.Core.Helpers;
 using Shark.Fido2.Core.Results;
+using Shark.Fido2.Core.Validators;
 using Shark.Fido2.Core.Validators.AttestationStatementValidators;
 using Shark.Fido2.Domain;
 
@@ -37,7 +38,10 @@ public class PackedAttestationStatementStategyTests
             _authenticatorDataProvider,
             _attestationObjectValidatorMock.Object);
 
-        _sut = new PackedAttestationStatementStategy();
+        var rsaCryptographyValidator = new RsaCryptographyValidator();
+        var ec2CryptographyValidator = new Ec2CryptographyValidator();
+
+        _sut = new PackedAttestationStatementStategy(rsaCryptographyValidator, ec2CryptographyValidator);
     }
 
     [Test]
