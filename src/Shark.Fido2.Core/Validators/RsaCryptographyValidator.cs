@@ -5,7 +5,7 @@ using Shark.Fido2.Domain.Mappers;
 
 namespace Shark.Fido2.Core.Validators
 {
-    public sealed class RsaCryptographyValidator : IRsaCryptographyValidator
+    public sealed class RsaCryptographyValidator : ICryptographyValidator
     {
         public bool IsValid(byte[] data, byte[] signature, CredentialPublicKey credentialPublicKey)
         {

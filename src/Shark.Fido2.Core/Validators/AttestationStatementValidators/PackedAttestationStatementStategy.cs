@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Enums;
@@ -13,12 +14,12 @@ namespace Shark.Fido2.Core.Validators.AttestationStatementValidators
     /// </summary>
     internal class PackedAttestationStatementStategy : IAttestationStatementStategy
     {
-        private readonly IRsaCryptographyValidator _rsaCryptographyValidator;
-        private readonly IEc2CryptographyValidator _ec2CryptographyValidator;
+        private readonly ICryptographyValidator _rsaCryptographyValidator;
+        private readonly ICryptographyValidator _ec2CryptographyValidator;
 
         public PackedAttestationStatementStategy(
-            IRsaCryptographyValidator rsaCryptographyValidator,
-            IEc2CryptographyValidator ec2CryptographyValidator)
+            [FromKeyedServices("rsa")] ICryptographyValidator rsaCryptographyValidator,
+            [FromKeyedServices("ec2")] ICryptographyValidator ec2CryptographyValidator)
         {
             _rsaCryptographyValidator = rsaCryptographyValidator;
             _ec2CryptographyValidator = ec2CryptographyValidator;

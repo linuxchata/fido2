@@ -5,6 +5,7 @@ using Shark.Fido2.Core.Abstractions.Handlers;
 using Shark.Fido2.Core.Abstractions.Helpers;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
+using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Handlers;
 using Shark.Fido2.Core.Helpers;
 using Shark.Fido2.Core.Validators;
@@ -26,8 +27,13 @@ namespace Shark.Fido2.Core
             services.AddTransient<IAttestationStatementValidator, AttestationStatementValidator>();
             services.AddTransient<IAttestationObjectHandler, AttestationObjectHandler>();
 
-            services.AddTransient<IRsaCryptographyValidator, RsaCryptographyValidator>();
-            services.AddTransient<IEc2CryptographyValidator, Ec2CryptographyValidator>();
+            services.AddKeyedTransient<ICryptographyValidator, RsaCryptographyValidator>("rsa");
+            services.AddKeyedTransient<ICryptographyValidator, Ec2CryptographyValidator>("ec2");
+
+            services.AddKeyedTransient<IAttestationStatementStategy, PackedAttestationStatementStategy>(
+                AttestationStatementFormatIdentifier.Packed);
+            services.AddKeyedTransient<IAttestationStatementStategy, NoneAttestationStatementStategy>(
+                AttestationStatementFormatIdentifier.None);
 
             services.AddTransient<IAttestation, Attestation>();
             services.AddTransient<IAssertion, Assertion>();

@@ -2,7 +2,7 @@
 
 namespace Shark.Fido2.Core.Abstractions.Validators
 {
-    public interface IEc2CryptographyValidator
+    public interface ICryptographyValidator
     {
         bool IsValid(byte[] data, byte[] signature, CredentialPublicKey credentialPublicKey);
     }
