@@ -1,10 +1,9 @@
 ﻿using Shark.Fido2.Core.Results.Attestation;
 using Shark.Fido2.Domain;
 
-namespace Shark.Fido2.Core.Abstractions.Handlers
+namespace Shark.Fido2.Core.Abstractions.Handlers;
+
+public interface IClientDataHandler
 {
-    public interface IClientDataHandler
-    {
-        InternalResult<ClientData> Handle(string clientDataJson, string expectedChallenge);
-    }
+    InternalResult<ClientData> Handle(string clientDataJson, string expectedChallenge);
 }

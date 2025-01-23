@@ -1,20 +1,19 @@
-﻿namespace Shark.Fido2.Domain.Enums
+﻿namespace Shark.Fido2.Domain.Enums;
+
+public enum AttestationTypes
 {
-    public enum AttestationTypes
-    {
-        // Basic Attestation
-        Basic = 1,
+    // Basic Attestation
+    Basic = 1,
 
-        // Self Attestation
-        Self = 2,
+    // Self Attestation
+    Self = 2,
 
-        // Attestation CA
-        AttCA = 3,
+    // Attestation CA
+    AttCA = 3,
 
-        // Anonymization CA
-        AnonCA = 4,
+    // Anonymization CA
+    AnonCA = 4,
 
-        // No attestation statement
-        None = 5,
-    }
+    // No attestation statement
+    None = 5,
 }

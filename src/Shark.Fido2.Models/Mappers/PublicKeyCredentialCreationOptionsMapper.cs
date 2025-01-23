@@ -2,86 +2,85 @@
 using Shark.Fido2.Models.Extensions;
 using Shark.Fido2.Models.Responses;
 
-namespace Shark.Fido2.Models.Mappers
+namespace Shark.Fido2.Models.Mappers;
+
+public static class PublicKeyCredentialCreationOptionsMapper
 {
-    public static class PublicKeyCredentialCreationOptionsMapper
+    public static ServerPublicKeyCredentialCreationOptionsResponse Map(
+        this PublicKeyCredentialCreationOptions credentialOptions)
     {
-        public static ServerPublicKeyCredentialCreationOptionsResponse Map(
-            this PublicKeyCredentialCreationOptions credentialOptions)
+        var response = new ServerPublicKeyCredentialCreationOptionsResponse
         {
-            var response = new ServerPublicKeyCredentialCreationOptionsResponse
-            {
-                Status = "ok",
-                Challenge = Convert.ToBase64String(credentialOptions.Challenge),
-                RelyingParty = Map(credentialOptions.RelyingParty),
-                User = Map(credentialOptions.User),
-                Parameters = Map(credentialOptions.PublicKeyCredentialParams),
-                Timeout = credentialOptions.Timeout,
-                ExcludeCredentials = Map(credentialOptions.ExcludeCredentials),
-                AuthenticatorSelection = Map(credentialOptions.AuthenticatorSelection),
-                Attestation = credentialOptions.Attestation,
-            };
+            Status = "ok",
+            Challenge = Convert.ToBase64String(credentialOptions.Challenge),
+            RelyingParty = Map(credentialOptions.RelyingParty),
+            User = Map(credentialOptions.User),
+            Parameters = Map(credentialOptions.PublicKeyCredentialParams),
+            Timeout = credentialOptions.Timeout,
+            ExcludeCredentials = Map(credentialOptions.ExcludeCredentials),
+            AuthenticatorSelection = Map(credentialOptions.AuthenticatorSelection),
+            Attestation = credentialOptions.Attestation,
+        };
 
-            return response;
+        return response;
+    }
+
+    private static ServerPublicKeyCredentialRpEntity Map(PublicKeyCredentialRpEntity relyingParty)
+    {
+        return new ServerPublicKeyCredentialRpEntity
+        {
+            Identifier = relyingParty.Id,
+            Name = relyingParty.Name,
+        };
+    }
+
+    private static ServerPublicKeyCredentialUserEntity Map(PublicKeyCredentialUserEntity userEntity)
+    {
+        if (userEntity == null)
+        {
+            return new ServerPublicKeyCredentialUserEntity();
         }
 
-        private static ServerPublicKeyCredentialRpEntity Map(PublicKeyCredentialRpEntity relyingParty)
+        return new ServerPublicKeyCredentialUserEntity
         {
-            return new ServerPublicKeyCredentialRpEntity
-            {
-                Identifier = relyingParty.Id,
-                Name = relyingParty.Name,
-            };
+            Identifier = Convert.ToBase64String(userEntity.Id),
+            Name = userEntity.Name,
+            DisplayName = userEntity.DisplayName,
+        };
+    }
+
+    private static ServerPublicKeyCredentialParameters[] Map(PublicKeyCredentialParameter[] publicKeyCredentialParams)
+    {
+        return publicKeyCredentialParams?.Select(p => new ServerPublicKeyCredentialParameters
+        {
+            Type = p.Type,
+            Algorithm = (long)p.Algorithm,
+        }).ToArray() ?? [];
+    }
+
+    private static ServerPublicKeyCredentialDescriptor[] Map(PublicKeyCredentialDescriptor[]? excludeCredentials)
+    {
+        return excludeCredentials?.Select(credential => new ServerPublicKeyCredentialDescriptor
+        {
+            Type = credential.Type,
+            Id = Convert.ToBase64String(credential.Id),
+            Transports = credential.Transports?.Select(t => t.GetValue()).ToArray() ?? [],
+        }).ToArray() ?? [];
+    }
+
+    private static Responses.ServerAuthenticatorSelectionCriteria Map(Domain.AuthenticatorSelectionCriteria authenticatorSelection)
+    {
+        if (authenticatorSelection == null)
+        {
+            return new Responses.ServerAuthenticatorSelectionCriteria();
         }
 
-        private static ServerPublicKeyCredentialUserEntity Map(PublicKeyCredentialUserEntity userEntity)
+        return new Responses.ServerAuthenticatorSelectionCriteria
         {
-            if (userEntity == null)
-            {
-                return new ServerPublicKeyCredentialUserEntity();
-            }
-
-            return new ServerPublicKeyCredentialUserEntity
-            {
-                Identifier = Convert.ToBase64String(userEntity.Id),
-                Name = userEntity.Name,
-                DisplayName = userEntity.DisplayName,
-            };
-        }
-
-        private static ServerPublicKeyCredentialParameters[] Map(PublicKeyCredentialParameter[] publicKeyCredentialParams)
-        {
-            return publicKeyCredentialParams?.Select(p => new ServerPublicKeyCredentialParameters
-            {
-                Type = p.Type,
-                Algorithm = (long)p.Algorithm,
-            }).ToArray() ?? [];
-        }
-
-        private static ServerPublicKeyCredentialDescriptor[] Map(PublicKeyCredentialDescriptor[]? excludeCredentials)
-        {
-            return excludeCredentials?.Select(credential => new ServerPublicKeyCredentialDescriptor
-            {
-                Type = credential.Type,
-                Id = Convert.ToBase64String(credential.Id),
-                Transports = credential.Transports?.Select(t => t.GetValue()).ToArray() ?? [],
-            }).ToArray() ?? [];
-        }
-
-        private static Responses.ServerAuthenticatorSelectionCriteria Map(Domain.AuthenticatorSelectionCriteria authenticatorSelection)
-        {
-            if (authenticatorSelection == null)
-            {
-                return new Responses.ServerAuthenticatorSelectionCriteria();
-            }
-
-            return new Responses.ServerAuthenticatorSelectionCriteria
-            {
-                AuthenticatorAttachment = authenticatorSelection.AuthenticatorAttachment.GetValue(),
-                ResidentKey = authenticatorSelection.ResidentKey.GetValue(),
-                RequireResidentKey = authenticatorSelection.RequireResidentKey,
-                UserVerification = authenticatorSelection.UserVerification!.Value.GetValue(),
-            };
-        }
+            AuthenticatorAttachment = authenticatorSelection.AuthenticatorAttachment.GetValue(),
+            ResidentKey = authenticatorSelection.ResidentKey.GetValue(),
+            RequireResidentKey = authenticatorSelection.RequireResidentKey,
+            UserVerification = authenticatorSelection.UserVerification!.Value.GetValue(),
+        };
     }
 }

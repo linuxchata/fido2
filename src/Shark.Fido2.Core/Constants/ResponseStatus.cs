@@ -1,9 +1,8 @@
-﻿namespace Shark.Fido2.Core.Constants
-{
-    public static class ResponseStatus
-    {
-        public const string Ok = "ok";
+﻿namespace Shark.Fido2.Core.Constants;
 
-        public const string Failed = "failed";
-    }
+public static class ResponseStatus
+{
+    public const string Ok = "ok";
+
+    public const string Failed = "failed";
 }

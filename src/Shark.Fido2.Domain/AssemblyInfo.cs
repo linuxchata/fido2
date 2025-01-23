@@ -1,9 +1,8 @@
 ﻿using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Shark.Fido2.Core.Tests")]
-namespace Shark.Fido2.Domain
+namespace Shark.Fido2.Domain;
+
+public class AssemblyInfo
 {
-    public class AssemblyInfo
-    {
-    }
 }

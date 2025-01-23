@@ -1,9 +1,8 @@
-﻿namespace Shark.Fido2.Core.Constants
-{
-    internal static class WebAuthnType
-    {
-        public const string Create = "webauthn.create";
+﻿namespace Shark.Fido2.Core.Constants;
 
-        public const string Get = "webauthn.get";
-    }
+internal static class WebAuthnType
+{
+    public const string Create = "webauthn.create";
+
+    public const string Get = "webauthn.get";
 }

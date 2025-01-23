@@ -1,19 +1,18 @@
-﻿namespace Shark.Fido2.Core.Results
+﻿namespace Shark.Fido2.Core.Results;
+
+public class ValidatorInternalResult
 {
-    public class ValidatorInternalResult
+    public bool IsValid { get; private set; }
+
+    public string? Message { get; private set; }
+
+    public static ValidatorInternalResult Valid()
     {
-        public bool IsValid { get; private set; }
+        return new ValidatorInternalResult { IsValid = true };
+    }
 
-        public string? Message { get; private set; }
-
-        public static ValidatorInternalResult Valid()
-        {
-            return new ValidatorInternalResult { IsValid = true };
-        }
-
-        public static ValidatorInternalResult Invalid(string message)
-        {
-            return new ValidatorInternalResult { IsValid = false, Message = message };
-        }
+    public static ValidatorInternalResult Invalid(string message)
+    {
+        return new ValidatorInternalResult { IsValid = false, Message = message };
     }
 }

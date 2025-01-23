@@ -1,63 +1,60 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Core.Configurations;
 using Shark.Fido2.Domain;
 using Shark.Fido2.Domain.Enums;
 
-namespace Shark.Fido2.Core
+namespace Shark.Fido2.Core;
+
+public sealed class Assertion : IAssertion
 {
-    public sealed class Assertion : IAssertion
+    private readonly IChallengeGenerator _challengeGenerator;
+    private readonly Fido2Configuration _configuration;
+
+    public Assertion(
+        IChallengeGenerator challengeGenerator,
+        IOptions<Fido2Configuration> options)
     {
-        private readonly IChallengeGenerator _challengeGenerator;
-        private readonly Fido2Configuration _configuration;
+        _challengeGenerator = challengeGenerator;
+        _configuration = options.Value;
+    }
 
-        public Assertion(
-            IChallengeGenerator challengeGenerator,
-            IOptions<Fido2Configuration> options)
+    public PublicKeyCredentialRequestOptions RequestOptions(PublicKeyCredentialRequestOptionsRequest request)
+    {
+        if (request == null)
         {
-            _challengeGenerator = challengeGenerator;
-            _configuration = options.Value;
+            throw new ArgumentNullException(nameof(request));
         }
 
-        public PublicKeyCredentialRequestOptions RequestOptions(PublicKeyCredentialRequestOptionsRequest request)
+        return new PublicKeyCredentialRequestOptions
         {
-            if (request == null)
-            {
-                throw new ArgumentNullException(nameof(request));
-            }
+            Challenge = _challengeGenerator.Get(),
+            Timeout = _configuration.Timeout,
+            RpId = _configuration.RelyingPartyId,
+            UserVerification = request.UserVerification ?? UserVerificationRequirement.Preferred,
+        };
+    }
 
-            return new PublicKeyCredentialRequestOptions
-            {
-                Challenge = _challengeGenerator.Get(),
-                Timeout = _configuration.Timeout,
-                RpId = _configuration.RelyingPartyId,
-                UserVerification = request.UserVerification ?? UserVerificationRequirement.Preferred,
-            };
+    public Task<AssertionCompleteResult> Complete(
+        PublicKeyCredentialAssertion publicKeyCredential,
+        PublicKeyCredentialRequestOptions? requestOptions)
+    {
+        if (publicKeyCredential == null)
+        {
+            throw new ArgumentNullException(nameof(publicKeyCredential));
         }
 
-        public Task<AssertionCompleteResult> Complete(
-            PublicKeyCredentialAssertion publicKeyCredential,
-            PublicKeyCredentialRequestOptions? requestOptions)
+        if (requestOptions == null)
         {
-            if (publicKeyCredential == null)
-            {
-                throw new ArgumentNullException(nameof(publicKeyCredential));
-            }
-
-            if (requestOptions == null)
-            {
-                throw new ArgumentNullException(nameof(requestOptions));
-            }
-
-            var response = publicKeyCredential.Response;
-            if (response == null)
-            {
-                return Task.FromResult(AssertionCompleteResult.CreateFailure("Response cannot be null"));
-            }
-
-            return Task.FromResult(AssertionCompleteResult.Create());
+            throw new ArgumentNullException(nameof(requestOptions));
         }
+
+        var response = publicKeyCredential.Response;
+        if (response == null)
+        {
+            return Task.FromResult(AssertionCompleteResult.CreateFailure("Response cannot be null"));
+        }
+
+        return Task.FromResult(AssertionCompleteResult.Create());
     }
 }
