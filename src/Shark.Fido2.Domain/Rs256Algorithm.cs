@@ -6,6 +6,6 @@ namespace Shark.Fido2.Domain
     {
         public HashAlgorithmName HashAlgorithmName { get; set; }
 
-        public RSASignaturePadding Padding { get; set; }
+        public RSASignaturePadding? Padding { get; set; }
     }
 }

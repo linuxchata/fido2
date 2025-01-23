@@ -36,12 +36,12 @@ namespace Shark.Fido2.Core.Validators.AttestationStatementValidators
                 throw new ArgumentNullException(nameof(attestationStatement));
             }
 
-            if (!(attestationStatement is Dictionary<string, object> attestationStatementDict))
+            if (attestationStatement is not Dictionary<string, object> attestationStatementDict)
             {
-                throw new ArgumentNullException(nameof(attestationStatement), "Attestation statement cannot be read");
+                throw new ArgumentException(nameof(attestationStatement), "Attestation statement cannot be read");
             }
 
-            if (!attestationStatementDict.TryGetValue("alg", out var algorithm) || !(algorithm is int))
+            if (!attestationStatementDict.TryGetValue("alg", out var algorithm) || algorithm is not int)
             {
                 return ValidatorInternalResult.Invalid("Attestation statement algorithm cannot be read");
             }
@@ -53,7 +53,7 @@ namespace Shark.Fido2.Core.Validators.AttestationStatementValidators
                 return ValidatorInternalResult.Invalid("Attestation statement algorithm mismatch");
             }
 
-            if (!attestationStatementDict.TryGetValue("sig", out var signature) || !(signature is byte[]))
+            if (!attestationStatementDict.TryGetValue("sig", out var signature) || signature is not byte[])
             {
                 return ValidatorInternalResult.Invalid("Attestation statement signature cannot be read");
             }

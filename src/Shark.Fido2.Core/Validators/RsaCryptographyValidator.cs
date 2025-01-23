@@ -24,7 +24,7 @@ namespace Shark.Fido2.Core.Validators
 
             using var rsa = RSA.Create(parameters);
 
-            return rsa.VerifyData(data, signature, algorithmDetails.HashAlgorithmName, algorithmDetails.Padding);
+            return rsa.VerifyData(data, signature, algorithmDetails.HashAlgorithmName, algorithmDetails.Padding!);
         }
     }
 }

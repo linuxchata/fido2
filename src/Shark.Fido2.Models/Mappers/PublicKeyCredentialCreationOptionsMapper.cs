@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using Shark.Fido2.Domain;
+﻿using Shark.Fido2.Domain;
 using Shark.Fido2.Models.Extensions;
 using Shark.Fido2.Models.Responses;
 
@@ -57,7 +55,7 @@ namespace Shark.Fido2.Models.Mappers
             {
                 Type = p.Type,
                 Algorithm = (long)p.Algorithm,
-            }).ToArray() ?? new ServerPublicKeyCredentialParameters[0];
+            }).ToArray() ?? [];
         }
 
         private static ServerPublicKeyCredentialDescriptor[] Map(PublicKeyCredentialDescriptor[]? excludeCredentials)
@@ -66,8 +64,8 @@ namespace Shark.Fido2.Models.Mappers
             {
                 Type = credential.Type,
                 Id = Convert.ToBase64String(credential.Id),
-                Transports = credential.Transports.Select(t => t.GetValue()).ToArray(),
-            }).ToArray() ?? new ServerPublicKeyCredentialDescriptor[0];
+                Transports = credential.Transports?.Select(t => t.GetValue()).ToArray() ?? [],
+            }).ToArray() ?? [];
         }
 
         private static Responses.ServerAuthenticatorSelectionCriteria Map(Domain.AuthenticatorSelectionCriteria authenticatorSelection)

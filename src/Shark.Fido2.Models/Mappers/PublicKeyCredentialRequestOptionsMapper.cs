@@ -30,8 +30,8 @@ namespace Shark.Fido2.Models.Mappers
             {
                 Type = credential.Type,
                 Id = Convert.ToBase64String(credential.Id),
-                Transports = credential.Transports.Select(t => t.GetValue()).ToArray(),
-            }).ToArray() ?? Array.Empty<ServerPublicKeyCredentialDescriptor>();
+                Transports = credential.Transports?.Select(t => t.GetValue()).ToArray() ?? [],
+            }).ToArray() ?? [];
         }
     }
 }

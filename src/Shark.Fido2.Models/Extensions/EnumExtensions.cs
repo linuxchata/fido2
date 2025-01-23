@@ -14,7 +14,7 @@ namespace Shark.Fido2.Models.Extensions
                 var attribute = memberInfo[0].GetCustomAttribute<EnumMemberAttribute>();
                 if (attribute != null)
                 {
-                    return attribute.Value;
+                    return attribute.Value!;
                 }
             }
 
@@ -28,7 +28,7 @@ namespace Shark.Fido2.Models.Extensions
                 var attribute = field.GetCustomAttribute<EnumMemberAttribute>();
                 if (attribute?.Value == value)
                 {
-                    return (T)field.GetValue(null);
+                    return (T)field.GetValue(null)!;
                 }
             }
 

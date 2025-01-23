@@ -15,7 +15,7 @@ namespace Shark.Fido2.Core
 {
     public static class DependencyInjection
     {
-        public static void Register(this IServiceCollection services, IConfiguration configuration)
+        public static void Register(this IServiceCollection services)
         {
             services.AddTransient<IChallengeGenerator, ChallengeGenerator>();
 
