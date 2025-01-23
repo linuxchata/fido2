@@ -1,4 +1,6 @@
-﻿using System.Security.Cryptography;
+﻿using System.Diagnostics;
+using System.Formats.Asn1;
+using System.Security.Cryptography;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Domain;
 using Shark.Fido2.Domain.Mappers;
@@ -14,7 +16,7 @@ public sealed class Ec2CryptographyValidator : ICryptographyValidator
             return false;
         }
 
-        var algorithmDetails = EcdsaKeyTypeMapper.Get(credentialPublicKey.Algorithm.Value);
+        var algorithm = EcdsaKeyTypeMapper.Get(credentialPublicKey.Algorithm.Value);
 
         var parameters = new ECParameters
         {
@@ -23,11 +25,53 @@ public sealed class Ec2CryptographyValidator : ICryptographyValidator
                 X = credentialPublicKey.XCoordinate,
                 Y = credentialPublicKey.YCoordinate,
             },
-            Curve = algorithmDetails.Curve, // https://www.rfc-editor.org/rfc/rfc9053.html#section-7.1
+            Curve = algorithm.Curve, // https://www.rfc-editor.org/rfc/rfc9053.html#section-7.1
         };
 
         using var ecdsa = ECDsa.Create(parameters);
 
-        return ecdsa.VerifyData(data, signature, algorithmDetails.HashAlgorithmName);
+        var signatureIeeeP1363 = ConvertDerToIeeeP1363(signature, ecdsa.KeySize);
+
+        var isValid = ecdsa.VerifyData(data, signature, algorithm.HashAlgorithmName, DSASignatureFormat.Rfc3279DerSequence);
+
+        Debug.WriteLine(BitConverter.ToString(signature));
+        Debug.WriteLine(BitConverter.ToString(signatureIeeeP1363));
+
+        return isValid;
+    }
+
+    private static byte[] ConvertDerToIeeeP1363(byte[] derSignature, int keySize)
+    {
+        // Parse the ASN.1 DER signature
+        var reader = new AsnReader(derSignature, AsnEncodingRules.DER);
+        var sequence = reader.ReadSequence();
+
+        // Extract R and S as integers
+        var r = sequence.ReadIntegerBytes()[1..].ToArray();
+        var s = sequence.ReadIntegerBytes()[1..].ToArray();
+
+        // Ensure there is no extra data in the sequence
+        if (sequence.HasData)
+        {
+            throw new ArgumentException("Invalid DER signature format: extra data found.");
+        }
+
+        // Convert R and S to fixed-size, unsigned big-endian format
+        var byteLength = keySize / 8;
+        var fixedR = new byte[byteLength];
+        var fixedS = new byte[byteLength];
+
+        Array.Copy(r, 0, fixedR, byteLength - r.Length, r.Length); // Right-align
+        Array.Copy(s, 0, fixedS, byteLength - s.Length, s.Length); // Right-align
+
+        // Concatenate R and S to form IEEE P-1363 format
+        var ieeeSignature = new byte[byteLength * 2];
+        Array.Copy(fixedR, 0, ieeeSignature, 0, byteLength);
+        Array.Copy(fixedS, 0, ieeeSignature, byteLength, byteLength);
+
+        Debug.WriteLine(BitConverter.ToString(fixedR));
+        Debug.WriteLine(BitConverter.ToString(fixedS));
+
+        return ieeeSignature;
     }
 }

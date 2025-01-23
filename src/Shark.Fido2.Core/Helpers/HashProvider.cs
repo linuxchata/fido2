@@ -12,9 +12,7 @@ internal static class HashProvider
             throw new ArgumentNullException(nameof(value));
         }
 
-        using var sha256 = SHA256.Create();
-
-        return sha256.ComputeHash(Encoding.UTF8.GetBytes(value));
+        return SHA256.HashData(Encoding.UTF8.GetBytes(value));
     }
 
     internal static byte[] GetSha256Hash(byte[] value)
@@ -24,8 +22,6 @@ internal static class HashProvider
             throw new ArgumentNullException(nameof(value));
         }
 
-        using var sha256 = SHA256.Create();
-
-        return sha256.ComputeHash(value);
+        return SHA256.HashData(value);
     }
 }

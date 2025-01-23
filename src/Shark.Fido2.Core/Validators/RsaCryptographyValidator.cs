@@ -14,7 +14,7 @@ public sealed class RsaCryptographyValidator : ICryptographyValidator
             return false;
         }
 
-        var algorithmDetails = RsaKeyTypeMapper.Get(credentialPublicKey.Algorithm.Value);
+        var algorithm = RsaKeyTypeMapper.Get(credentialPublicKey.Algorithm.Value);
 
         var parameters = new RSAParameters
         {
@@ -24,6 +24,6 @@ public sealed class RsaCryptographyValidator : ICryptographyValidator
 
         using var rsa = RSA.Create(parameters);
 
-        return rsa.VerifyData(data, signature, algorithmDetails.HashAlgorithmName, algorithmDetails.Padding!);
+        return rsa.VerifyData(data, signature, algorithm.HashAlgorithmName, algorithm.Padding!);
     }
 }
