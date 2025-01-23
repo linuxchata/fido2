@@ -1,23 +1,22 @@
 ﻿using System.Runtime.Serialization;
 
-namespace Shark.Fido2.Domain.Enums
+namespace Shark.Fido2.Domain.Enums;
+
+/// <summary>
+/// 5.8.4. Authenticator Transport Enumeration (enum AuthenticatorTransport)
+/// https://www.w3.org/TR/webauthn-2/#enum-transport
+/// </summary>
+public enum AuthenticatorTransport
 {
-    /// <summary>
-    /// 5.8.4. Authenticator Transport Enumeration (enum AuthenticatorTransport)
-    /// https://www.w3.org/TR/webauthn-2/#enum-transport
-    /// </summary>
-    public enum AuthenticatorTransport
-    {
-        [EnumMember(Value = "usb")]
-        Usb = 0,
+    [EnumMember(Value = "usb")]
+    Usb = 0,
 
-        [EnumMember(Value = "nfc")]
-        Nfc,
+    [EnumMember(Value = "nfc")]
+    Nfc,
 
-        [EnumMember(Value = "ble")]
-        Ble,
+    [EnumMember(Value = "ble")]
+    Ble,
 
-        [EnumMember(Value = "internal")]
-        Internal,
-    }
+    [EnumMember(Value = "internal")]
+    Internal,
 }

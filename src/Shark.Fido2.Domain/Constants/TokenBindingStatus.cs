@@ -1,11 +1,10 @@
-﻿namespace Shark.Fido2.Domain.Constants
+﻿namespace Shark.Fido2.Domain.Constants;
+
+public static class TokenBindingStatus
 {
-    public static class TokenBindingStatus
-    {
-        public const string Present = "present";
+    public const string Present = "present";
 
-        public const string Supported = "supported";
+    public const string Supported = "supported";
 
-        public const string NotSupported = "not-supported";
-    }
+    public const string NotSupported = "not-supported";
 }

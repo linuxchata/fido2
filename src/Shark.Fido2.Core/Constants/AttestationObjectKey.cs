@@ -1,11 +1,10 @@
-﻿namespace Shark.Fido2.Core.Constants
+﻿namespace Shark.Fido2.Core.Constants;
+
+internal static class AttestationObjectKey
 {
-    internal static class AttestationObjectKey
-    {
-        public const string AuthData = "authData"; // Authenticator data
+    public const string AuthData = "authData"; // Authenticator data
 
-        public const string Fmt = "fmt"; // Attestation statement format
+    public const string Fmt = "fmt"; // Attestation statement format
 
-        public const string AttStmt = "attStmt"; // Attestation statement structure
-    }
+    public const string AttStmt = "attStmt"; // Attestation statement structure
 }

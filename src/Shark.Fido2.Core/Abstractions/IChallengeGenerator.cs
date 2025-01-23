@@ -1,7 +1,6 @@
-﻿namespace Shark.Fido2.Core.Abstractions
+﻿namespace Shark.Fido2.Core.Abstractions;
+
+public interface IChallengeGenerator
 {
-    public interface IChallengeGenerator
-    {
-        byte[] Get();
-    }
+    byte[] Get();
 }

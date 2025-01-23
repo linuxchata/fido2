@@ -1,6 +1,5 @@
-﻿namespace Shark.Fido2.Models.Responses
+﻿namespace Shark.Fido2.Models.Responses;
+
+public abstract class ServerAuthenticatorResponse
 {
-    public abstract class ServerAuthenticatorResponse
-    {
-    }
 }

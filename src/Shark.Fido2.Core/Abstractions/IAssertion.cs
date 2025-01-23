@@ -1,14 +1,12 @@
-﻿using System.Threading.Tasks;
-using Shark.Fido2.Domain;
+﻿using Shark.Fido2.Domain;
 
-namespace Shark.Fido2.Core.Abstractions
+namespace Shark.Fido2.Core.Abstractions;
+
+public interface IAssertion
 {
-    public interface IAssertion
-    {
-        PublicKeyCredentialRequestOptions RequestOptions(PublicKeyCredentialRequestOptionsRequest request);
+    PublicKeyCredentialRequestOptions RequestOptions(PublicKeyCredentialRequestOptionsRequest request);
 
-        Task<AssertionCompleteResult> Complete(
-            PublicKeyCredentialAssertion publicKeyCredential,
-            PublicKeyCredentialRequestOptions? requestOptions);
-    }
+    Task<AssertionCompleteResult> Complete(
+        PublicKeyCredentialAssertion publicKeyCredential,
+        PublicKeyCredentialRequestOptions? requestOptions);
 }

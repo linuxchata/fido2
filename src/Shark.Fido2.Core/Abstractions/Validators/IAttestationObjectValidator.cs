@@ -1,13 +1,12 @@
 ﻿using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain;
 
-namespace Shark.Fido2.Core.Abstractions.Validators
+namespace Shark.Fido2.Core.Abstractions.Validators;
+
+public interface IAttestationObjectValidator
 {
-    public interface IAttestationObjectValidator
-    {
-        ValidatorInternalResult Validate(
-            AttestationObjectData? attestationObjectData,
-            ClientData clientData,
-            PublicKeyCredentialCreationOptions creationOptions);
-    }
+    ValidatorInternalResult Validate(
+        AttestationObjectData? attestationObjectData,
+        ClientData clientData,
+        PublicKeyCredentialCreationOptions creationOptions);
 }

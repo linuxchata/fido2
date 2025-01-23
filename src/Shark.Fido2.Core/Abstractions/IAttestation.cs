@@ -1,14 +1,12 @@
-﻿using System.Threading.Tasks;
-using Shark.Fido2.Domain;
+﻿using Shark.Fido2.Domain;
 
-namespace Shark.Fido2.Core.Abstractions
+namespace Shark.Fido2.Core.Abstractions;
+
+public interface IAttestation
 {
-    public interface IAttestation
-    {
-        PublicKeyCredentialCreationOptions GetOptions(PublicKeyCredentialCreationOptionsRequest request);
+    PublicKeyCredentialCreationOptions GetOptions(PublicKeyCredentialCreationOptionsRequest request);
 
-        Task<AttestationCompleteResult> Complete(
-            PublicKeyCredentialAttestation publicKeyCredential,
-            PublicKeyCredentialCreationOptions? creationOptions);
-    }
+    Task<AttestationCompleteResult> Complete(
+        PublicKeyCredentialAttestation publicKeyCredential,
+        PublicKeyCredentialCreationOptions? creationOptions);
 }
