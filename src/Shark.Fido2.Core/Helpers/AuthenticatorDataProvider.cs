@@ -113,6 +113,10 @@ internal class AuthenticatorDataProvider : IAuthenticatorDataProvider
             // https://datatracker.ietf.org/doc/html/rfc8152#section-13.3
             credentialPublicKey.Key = GetCredentialPublicKeyParameter(coseKeyFormat, CoseKeyIndex.SymmetricKey);
         }
+        else
+        {
+            throw new NotSupportedException("Unsupported key type");
+        }
 
         return credentialPublicKey;
     }

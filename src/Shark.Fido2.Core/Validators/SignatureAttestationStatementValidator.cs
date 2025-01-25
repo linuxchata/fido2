@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Security.Cryptography.X509Certificates;
+using Microsoft.Extensions.DependencyInjection;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Enums;
 using Shark.Fido2.Core.Results;
@@ -24,6 +25,7 @@ internal class SignatureAttestationStatementValidator : ISignatureAttestationSta
     public ValidatorInternalResult Validate(
         Dictionary<string, object> attestationStatementDict,
         CredentialPublicKey credentialPublicKey,
+        X509Certificate2 attestationCertificate,
         byte[] authenticatorRawData,
         byte[] clientDataHash)
     {
@@ -36,13 +38,31 @@ internal class SignatureAttestationStatementValidator : ISignatureAttestationSta
 
         var concatenatedData = GetConcatenatedData(authenticatorRawData, clientDataHash);
 
+        bool isValid;
         if (credentialPublicKey.KeyType == (int)KeyTypeEnum.Rsa)
         {
-            _rsaCryptographyValidator.IsValid(concatenatedData, (byte[])signature, credentialPublicKey);
+            isValid = _rsaCryptographyValidator.IsValid(
+                concatenatedData,
+                (byte[])signature,
+                attestationCertificate,
+                credentialPublicKey);
         }
         else if (credentialPublicKey.KeyType == (int)KeyTypeEnum.Ec2)
         {
-            _ec2CryptographyValidator.IsValid(concatenatedData, (byte[])signature, credentialPublicKey);
+            isValid = _ec2CryptographyValidator.IsValid(
+                concatenatedData,
+                (byte[])signature,
+                attestationCertificate,
+                credentialPublicKey);
+        }
+        else
+        {
+            throw new NotSupportedException("Unsupported key type");
+        }
+
+        if (!isValid)
+        {
+            return ValidatorInternalResult.Invalid("Attestation statement signature is not valid");
         }
 
         return ValidatorInternalResult.Valid();

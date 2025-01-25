@@ -45,11 +45,14 @@ public class PackedAttestationStatementStategyTests
             new RsaCryptographyValidator(),
             new Ec2CryptographyValidator());
 
+        var certificateAttestationStatementProvider = new CertificateAttestationStatementProvider();
+
         var certificateAttestationStatementValidator = new CertificateAttestationStatementValidator();
 
         _sut = new PackedAttestationStatementStategy(
             algorithmAttestationStatementValidator,
             signatureAttestationStatementValidator,
+            certificateAttestationStatementProvider,
             certificateAttestationStatementValidator);
     }
 

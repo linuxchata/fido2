@@ -12,7 +12,7 @@ internal class AttestationStatementValidator : IAttestationStatementValidator
 
     public AttestationStatementValidator(
         [FromKeyedServices("packed")] IAttestationStatementStategy packedAttestationStatementStategy,
-        [FromKeyedServices("packed")] IAttestationStatementStategy noneAttestationStatementStategy)
+        [FromKeyedServices("none")] IAttestationStatementStategy noneAttestationStatementStategy)
     {
         _packedAttestationStatementStategy = packedAttestationStatementStategy;
         _noneAttestationStatementStategy = noneAttestationStatementStategy;
@@ -33,7 +33,7 @@ internal class AttestationStatementValidator : IAttestationStatementValidator
 
         if (string.IsNullOrEmpty(attestationStatementFormat))
         {
-            throw new ArgumentNullException(nameof(attestationStatementFormat));
+            throw new ArgumentNullException(nameof(attestationObjectData));
         }
 
         var strategyMap = new Dictionary<string, IAttestationStatementStategy>

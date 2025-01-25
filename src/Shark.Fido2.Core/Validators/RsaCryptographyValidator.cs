@@ -1,13 +1,14 @@
 ﻿using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Domain;
 using Shark.Fido2.Domain.Mappers;
 
 namespace Shark.Fido2.Core.Validators;
 
-public sealed class RsaCryptographyValidator : ICryptographyValidator
+internal sealed class RsaCryptographyValidator : ICryptographyValidator
 {
-    public bool IsValid(byte[] data, byte[] signature, CredentialPublicKey credentialPublicKey)
+    public bool IsValid(byte[] data, byte[] signature, X509Certificate2 attestationCertificate, CredentialPublicKey credentialPublicKey)
     {
         if (!credentialPublicKey.Algorithm.HasValue)
         {
