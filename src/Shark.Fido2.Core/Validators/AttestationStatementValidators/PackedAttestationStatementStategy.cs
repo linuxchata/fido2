@@ -2,6 +2,7 @@
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain;
+using Shark.Fido2.Domain.Enums;
 
 namespace Shark.Fido2.Core.Validators.AttestationStatementValidators;
 
@@ -57,11 +58,9 @@ internal class PackedAttestationStatementStategy : IAttestationStatementStategy
             }
 
             // Verify that attestnCert meets the requirements.
-            result = _certificateValidator.Validate(attestationStatementDict, attestationObjectData);
-            if (!result.IsValid)
-            {
-                return result;
-            }
+            // If successful, return implementation-specific values representing attestation
+            // type Basic, AttCA or uncertainty, and attestation trust path x5c.
+            return _certificateValidator.Validate(attestationStatementDict, attestationObjectData);
         }
         else
         {
@@ -88,8 +87,7 @@ internal class PackedAttestationStatementStategy : IAttestationStatementStategy
 
             // If successful, return implementation-specific values representing attestation
             // type Self and an empty attestation trust path.
+            return new AttestationStatementInternalResult(AttestationTypeEnum.Self);
         }
-
-        return ValidatorInternalResult.Invalid("Invalid attestation statement");
     }
 }

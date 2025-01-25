@@ -75,9 +75,8 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
             return ValidatorInternalResult.Invalid("Attestation statement certificate authority is invalid");
         }
 
-        // TODO
-        // An Authority Information Access (AIA) extension with entry id-ad-ocsp and a
-        // CRL Distribution Point extension [RFC5280] are both OPTIONAL as the status
+        // TODO: An Authority Information Access (AIA) extension with entry id-ad-ocsp and
+        // a CRL Distribution Point extension [RFC5280] are both OPTIONAL as the status
         // of many attestation certificates is available through authenticator metadata
         // services. See, for example, the FIDO Metadata Service [FIDOMetadataService].
 
@@ -94,14 +93,10 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
 
         // Optionally, inspect x5c and consult externally provided knowledge to determine
         // whether attStmt conveys a Basic or AttCA attestation.
-        if (attestationCertificate.Subject == attestationCertificate.Issuer)
-        {
-            return new AttestationStatementInternalResult(AttestationTypeEnum.Basic);
-        }
-        else
-        {
-            return new AttestationStatementInternalResult(AttestationTypeEnum.AttCA, [.. attestationTrustPath]);
-        }
+        var attestationType = (attestationCertificate.Subject == attestationCertificate.Issuer) ?
+            AttestationTypeEnum.Basic : AttestationTypeEnum.AttCA;
+
+        return new AttestationStatementInternalResult(attestationType, [.. attestationTrustPath]);
     }
 
     private static List<X509Certificate2> GetCertificates(object x5c)
