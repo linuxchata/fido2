@@ -40,13 +40,13 @@ public class PackedAttestationStatementStategyTests
 
         var algorithmAttestationStatementValidator = new AlgorithmAttestationStatementValidator();
 
-        var rsaCryptographyValidator = new RsaCryptographyValidator();
-        var ec2CryptographyValidator = new Ec2CryptographyValidator();
+        var signatureAttestationStatementValidator = new SignatureAttestationStatementValidator(
+            new RsaCryptographyValidator(),
+            new Ec2CryptographyValidator());
 
         _sut = new PackedAttestationStatementStategy(
             algorithmAttestationStatementValidator,
-            rsaCryptographyValidator,
-            ec2CryptographyValidator);
+            signatureAttestationStatementValidator);
     }
 
     [Test]

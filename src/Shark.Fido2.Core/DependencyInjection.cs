@@ -30,6 +30,7 @@ public static class DependencyInjection
         services.AddKeyedTransient<ICryptographyValidator, Ec2CryptographyValidator>("ec2");
 
         services.AddTransient<IAlgorithmAttestationStatementValidator, AlgorithmAttestationStatementValidator>();
+        services.AddTransient<ISignatureAttestationStatementValidator, SignatureAttestationStatementValidator>();
 
         services.AddKeyedTransient<IAttestationStatementStategy, PackedAttestationStatementStategy>(
             AttestationStatementFormatIdentifier.Packed);

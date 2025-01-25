@@ -1,8 +1,6 @@
 ﻿using System.Security.Cryptography.X509Certificates;
-using Microsoft.Extensions.DependencyInjection;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
-using Shark.Fido2.Core.Enums;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain;
 
@@ -13,18 +11,15 @@ namespace Shark.Fido2.Core.Validators.AttestationStatementValidators;
 /// </summary>
 internal class PackedAttestationStatementStategy : IAttestationStatementStategy
 {
-    private readonly IAlgorithmAttestationStatementValidator _algorithmAttestationStatementValidator;
-    private readonly ICryptographyValidator _rsaCryptographyValidator;
-    private readonly ICryptographyValidator _ec2CryptographyValidator;
+    private readonly IAlgorithmAttestationStatementValidator _algorithmValidator;
+    private readonly ISignatureAttestationStatementValidator _signatureValidator;
 
     public PackedAttestationStatementStategy(
         IAlgorithmAttestationStatementValidator algorithmAttestationStatementValidator,
-        [FromKeyedServices("rsa")] ICryptographyValidator rsaCryptographyValidator,
-        [FromKeyedServices("ec2")] ICryptographyValidator ec2CryptographyValidator)
+        ISignatureAttestationStatementValidator signatureAttestationStatementValidator)
     {
-        _algorithmAttestationStatementValidator = algorithmAttestationStatementValidator;
-        _rsaCryptographyValidator = rsaCryptographyValidator;
-        _ec2CryptographyValidator = ec2CryptographyValidator;
+        _algorithmValidator = algorithmAttestationStatementValidator;
+        _signatureValidator = signatureAttestationStatementValidator;
     }
 
     public ValidatorInternalResult Validate(
@@ -35,17 +30,18 @@ internal class PackedAttestationStatementStategy : IAttestationStatementStategy
         var attestationStatement = attestationObjectData.AttestationStatement;
         if (attestationStatement == null)
         {
-            throw new ArgumentNullException(nameof(attestationStatement));
+            throw new ArgumentNullException(nameof(attestationObjectData));
         }
 
         if (attestationStatement is not Dictionary<string, object> attestationStatementDict)
         {
-            throw new ArgumentException(nameof(attestationStatement), "Attestation statement cannot be read");
+            throw new ArgumentException("Attestation statement cannot be read", nameof(attestationObjectData));
         }
 
-        // Validate that alg matches the algorithm of the credentialPublicKey in authenticatorData.
         var credentialPublicKey = attestationObjectData.AuthenticatorData!.AttestedCredentialData.CredentialPublicKey;
-        var result = _algorithmAttestationStatementValidator.Validate(attestationStatementDict, credentialPublicKey);
+
+        // Validate that alg matches the algorithm of the credentialPublicKey in authenticatorData.
+        var result = _algorithmValidator.Validate(attestationStatementDict, credentialPublicKey);
         if (!result.IsValid)
         {
             return result;
@@ -53,22 +49,10 @@ internal class PackedAttestationStatementStategy : IAttestationStatementStategy
 
         // Verify that sig is a valid signature over the concatenation of authenticatorData and
         // clientDataHash using the credential public key with alg.
-        if (!attestationStatementDict.TryGetValue("sig", out var signature) || signature is not byte[])
+        result = _signatureValidator.Validate(attestationObjectData.AuthenticatorRawData, clientData.ClientDataHash, attestationStatementDict, credentialPublicKey);
+        if (!result.IsValid)
         {
-            return ValidatorInternalResult.Invalid("Attestation statement signature cannot be read");
-        }
-
-        var concatenatedData = GetConcatenatedData(
-            attestationObjectData.AuthenticatorRawData,
-            clientData.ClientDataHash);
-
-        if (credentialPublicKey.KeyType == (int)KeyTypeEnum.Rsa)
-        {
-            _rsaCryptographyValidator.IsValid(concatenatedData, (byte[])signature, credentialPublicKey);
-        }
-        else if (credentialPublicKey.KeyType == (int)KeyTypeEnum.Ec2)
-        {
-            _ec2CryptographyValidator.IsValid(concatenatedData, (byte[])signature, credentialPublicKey);
+            return result;
         }
 
         // Verify that attestnCert meets the requirements
@@ -142,15 +126,6 @@ internal class PackedAttestationStatementStategy : IAttestationStatementStategy
             }
         }
 
-        return ValidatorInternalResult.Invalid("Invalid signature");
-    }
-
-    private static byte[] GetConcatenatedData(byte[] authenticatorData, byte[] clientDataHash)
-    {
-        var concatenatedData = new byte[authenticatorData.Length + clientDataHash.Length];
-        Buffer.BlockCopy(authenticatorData, 0, concatenatedData, 0, authenticatorData.Length);
-        Buffer.BlockCopy(clientDataHash, 0, concatenatedData, authenticatorData.Length, clientDataHash.Length);
-
-        return concatenatedData;
+        return ValidatorInternalResult.Invalid("Invalid attestation statement");
     }
 }
