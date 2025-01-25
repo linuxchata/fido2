@@ -5,17 +5,18 @@ using Shark.Fido2.Core.Helpers;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Core.Validators.AttestationStatementValidators;
 using Shark.Fido2.Domain;
+using Shark.Fido2.Domain.Enums;
 
 namespace Shark.Fido2.Core.Tests.Validators.AttestationStatementValidators;
 
 [TestFixture]
-public class NoneAttestationStatementStategyTests
+public class NoneAttestationStatementStrategyTests
 {
     private Mock<IAttestationObjectValidator> _attestationObjectValidatorMock;
     private AuthenticatorDataProvider _provider;
     private PublicKeyCredentialCreationOptions _creationOptions;
 
-    private NoneAttestationStatementStategy _sut = null!;
+    private NoneAttestationStatementStrategy _sut = null!;
 
     [SetUp]
     public void Setup()
@@ -32,7 +33,7 @@ public class NoneAttestationStatementStategyTests
 
         _creationOptions = new PublicKeyCredentialCreationOptions();
 
-        _sut = new NoneAttestationStatementStategy();
+        _sut = new NoneAttestationStatementStrategy();
     }
 
     [Test]
@@ -49,9 +50,13 @@ public class NoneAttestationStatementStategyTests
 
         var handler = new AttestationObjectHandler(_provider, _attestationObjectValidatorMock.Object);
 
-        var result = handler.Handle(attestationObject, clientData, _creationOptions);
+        var internalResult = handler.Handle(attestationObject, clientData, _creationOptions);
 
         // Act
-        _sut.Validate(result.Value!, clientData, _creationOptions);
+        var result = _sut.Validate(internalResult.Value!, clientData, _creationOptions);
+
+        // Assert
+        var attestationStatementInternalResult = result as AttestationStatementInternalResult;
+        Assert.That(attestationStatementInternalResult!.AttestationType, Is.EqualTo(AttestationTypeEnum.None));
     }
 }

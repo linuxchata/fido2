@@ -31,12 +31,11 @@ public static class DependencyInjection
 
         services.AddTransient<IAlgorithmAttestationStatementValidator, AlgorithmAttestationStatementValidator>();
         services.AddTransient<ISignatureAttestationStatementValidator, SignatureAttestationStatementValidator>();
-        services.AddTransient<ICertificateAttestationStatementProvider, CertificateAttestationStatementProvider>();
         services.AddTransient<ICertificateAttestationStatementValidator, CertificateAttestationStatementValidator>();
 
-        services.AddKeyedTransient<IAttestationStatementStategy, PackedAttestationStatementStategy>(
+        services.AddKeyedTransient<IAttestationStatementStrategy, PackedAttestationStatementStrategy>(
             AttestationStatementFormatIdentifier.Packed);
-        services.AddKeyedTransient<IAttestationStatementStategy, NoneAttestationStatementStategy>(
+        services.AddKeyedTransient<IAttestationStatementStrategy, NoneAttestationStatementStrategy>(
             AttestationStatementFormatIdentifier.None);
 
         services.AddTransient<IAttestation, Attestation>();
