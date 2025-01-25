@@ -3,11 +3,11 @@ using Shark.Fido2.Domain;
 
 namespace Shark.Fido2.Core.Abstractions.Validators;
 
-public interface ISignatureAttestationStatementValidator
+public interface ICertificateAttestationStatementValidator
 {
+    bool IsCertificatePresent(Dictionary<string, object> attestationStatementDict);
+
     ValidatorInternalResult Validate(
         Dictionary<string, object> attestationStatementDict,
-        CredentialPublicKey credentialPublicKey,
-        byte[] authenticatorRawData,
-        byte[] clientDataHash);
+        AttestationObjectData attestationObjectData);
 }

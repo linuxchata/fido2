@@ -22,10 +22,10 @@ internal class SignatureAttestationStatementValidator : ISignatureAttestationSta
     }
 
     public ValidatorInternalResult Validate(
-        byte[] authenticatorRawData,
-        byte[] clientDataHash,
         Dictionary<string, object> attestationStatementDict,
-        CredentialPublicKey credentialPublicKey)
+        CredentialPublicKey credentialPublicKey,
+        byte[] authenticatorRawData,
+        byte[] clientDataHash)
     {
         // Verify that sig is a valid signature over the concatenation of authenticatorData and
         // clientDataHash using the credential public key with alg.

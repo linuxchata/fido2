@@ -53,7 +53,7 @@ public sealed class Ec2CryptographyValidator : ICryptographyValidator
         // Ensure there is no extra data in the sequence
         if (sequence.HasData)
         {
-            throw new ArgumentException("Invalid DER signature format: extra data found.");
+            throw new ArgumentException("Invalid DER signature format");
         }
 
         // Convert R and S to fixed-size, unsigned big-endian format
