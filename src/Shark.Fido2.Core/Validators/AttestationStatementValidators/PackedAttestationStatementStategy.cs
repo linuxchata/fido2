@@ -13,13 +13,16 @@ namespace Shark.Fido2.Core.Validators.AttestationStatementValidators;
 /// </summary>
 internal class PackedAttestationStatementStategy : IAttestationStatementStategy
 {
+    private readonly IAlgorithmAttestationStatementValidator _algorithmAttestationStatementValidator;
     private readonly ICryptographyValidator _rsaCryptographyValidator;
     private readonly ICryptographyValidator _ec2CryptographyValidator;
 
     public PackedAttestationStatementStategy(
+        IAlgorithmAttestationStatementValidator algorithmAttestationStatementValidator,
         [FromKeyedServices("rsa")] ICryptographyValidator rsaCryptographyValidator,
         [FromKeyedServices("ec2")] ICryptographyValidator ec2CryptographyValidator)
     {
+        _algorithmAttestationStatementValidator = algorithmAttestationStatementValidator;
         _rsaCryptographyValidator = rsaCryptographyValidator;
         _ec2CryptographyValidator = ec2CryptographyValidator;
     }
@@ -41,15 +44,11 @@ internal class PackedAttestationStatementStategy : IAttestationStatementStategy
         }
 
         // Validate that alg matches the algorithm of the credentialPublicKey in authenticatorData.
-        if (!attestationStatementDict.TryGetValue("alg", out var algorithm) || algorithm is not int)
-        {
-            return ValidatorInternalResult.Invalid("Attestation statement algorithm cannot be read");
-        }
-
         var credentialPublicKey = attestationObjectData.AuthenticatorData!.AttestedCredentialData.CredentialPublicKey;
-        if (credentialPublicKey.Algorithm != (int)algorithm)
+        var result = _algorithmAttestationStatementValidator.Validate(attestationStatementDict, credentialPublicKey);
+        if (!result.IsValid)
         {
-            return ValidatorInternalResult.Invalid("Attestation statement algorithm mismatch");
+            return result;
         }
 
         // Verify that sig is a valid signature over the concatenation of authenticatorData and

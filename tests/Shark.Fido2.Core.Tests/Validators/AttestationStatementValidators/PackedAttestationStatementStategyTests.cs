@@ -38,10 +38,15 @@ public class PackedAttestationStatementStategyTests
             _authenticatorDataProvider,
             _attestationObjectValidatorMock.Object);
 
+        var algorithmAttestationStatementValidator = new AlgorithmAttestationStatementValidator();
+
         var rsaCryptographyValidator = new RsaCryptographyValidator();
         var ec2CryptographyValidator = new Ec2CryptographyValidator();
 
-        _sut = new PackedAttestationStatementStategy(rsaCryptographyValidator, ec2CryptographyValidator);
+        _sut = new PackedAttestationStatementStategy(
+            algorithmAttestationStatementValidator,
+            rsaCryptographyValidator,
+            ec2CryptographyValidator);
     }
 
     [Test]
