@@ -1,15 +1,16 @@
 ﻿using System.Diagnostics;
 using System.Formats.Asn1;
 using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Domain;
 using Shark.Fido2.Domain.Mappers;
 
 namespace Shark.Fido2.Core.Validators;
 
-public sealed class Ec2CryptographyValidator : ICryptographyValidator
+internal sealed class Ec2CryptographyValidator : ICryptographyValidator
 {
-    public bool IsValid(byte[] data, byte[] signature, CredentialPublicKey credentialPublicKey)
+    public bool IsValid(byte[] data, byte[] signature, X509Certificate2 attestationCertificate, CredentialPublicKey credentialPublicKey)
     {
         if (!credentialPublicKey.Algorithm.HasValue)
         {
@@ -18,24 +19,32 @@ public sealed class Ec2CryptographyValidator : ICryptographyValidator
 
         var algorithm = EcdsaKeyTypeMapper.Get(credentialPublicKey.Algorithm.Value);
 
-        var parameters = new ECParameters
+        bool isValid;
+        if (attestationCertificate != null)
         {
-            Q = new ECPoint
+            using var ecdsa = attestationCertificate.GetECDsaPublicKey() ??
+                throw new ArgumentException("Certificate does not have an ECDsa public key");
+
+            isValid = ecdsa!.VerifyData(data, signature, algorithm.HashAlgorithmName, DSASignatureFormat.Rfc3279DerSequence);
+        }
+        else
+        {
+            var parameters = new ECParameters
             {
-                X = credentialPublicKey.XCoordinate,
-                Y = credentialPublicKey.YCoordinate,
-            },
-            Curve = algorithm.Curve, // https://www.rfc-editor.org/rfc/rfc9053.html#section-7.1
-        };
+                Q = new ECPoint
+                {
+                    X = credentialPublicKey.XCoordinate,
+                    Y = credentialPublicKey.YCoordinate,
+                },
+                Curve = algorithm.Curve, // https://www.rfc-editor.org/rfc/rfc9053.html#section-7.1
+            };
 
-        using var ecdsa = ECDsa.Create(parameters);
+            using var ecdsa = ECDsa.Create(parameters);
 
-        var signatureIeeeP1363 = ConvertDerToIeeeP1363(signature, ecdsa.KeySize);
+            var signatureIeeeP1363 = ConvertDerToIeeeP1363(signature, ecdsa.KeySize);
 
-        var isValid = ecdsa.VerifyData(data, signature, algorithm.HashAlgorithmName, DSASignatureFormat.Rfc3279DerSequence);
-
-        Debug.WriteLine(BitConverter.ToString(signature));
-        Debug.WriteLine(BitConverter.ToString(signatureIeeeP1363));
+            isValid = ecdsa.VerifyData(data, signature, algorithm.HashAlgorithmName, DSASignatureFormat.Rfc3279DerSequence);
+        }
 
         return isValid;
     }

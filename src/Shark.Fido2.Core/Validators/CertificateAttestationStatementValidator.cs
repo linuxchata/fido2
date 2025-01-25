@@ -2,7 +2,6 @@
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain;
-using Shark.Fido2.Domain.Enums;
 
 namespace Shark.Fido2.Core.Validators;
 
@@ -17,24 +16,16 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
     private const string SubjectCommonName = "CN";
     private const string OrganizationalUnitAuthenticatorAttestation = "Authenticator Attestation";
 
-    public bool IsCertificatePresent(Dictionary<string, object> attestationStatementDict)
-    {
-        return attestationStatementDict.TryGetValue(Certificate, out _);
-    }
-
     public ValidatorInternalResult Validate(
         Dictionary<string, object> attestationStatementDict,
+        X509Certificate2 attestationCertificate,
         AttestationObjectData attestationObjectData)
     {
-        // Verify that attestnCert meets the requirements in § 8.2.1 Packed Attestation Statement
-        // Certificate Requirements.
+        // Verify that attestnCert meets the requirements in § 8.2.1 Packed Attestation Statement Certificate Requirements.
         if (!attestationStatementDict.TryGetValue(Certificate, out var x5c) || x5c is not List<object>)
         {
             return ValidatorInternalResult.Invalid("Attestation certificates x5c cannot be read");
         }
-
-        var attestationTrustPath = GetCertificates(x5c);
-        var attestationCertificate = attestationTrustPath[0];
 
         // Version MUST be set to 3 (which is indicated by an ASN.1 INTEGER with value 2).
         if (attestationCertificate.Version != 3)
@@ -49,9 +40,9 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
             return ValidatorInternalResult.Invalid("Attestation statement certificate subject is invalid");
         }
 
-        // If the related attestation root certificate is used for multiple authenticator
-        // models, the Extension OID 1.3.6.1.4.1.45724.1.1.4 (id-fido-gen-ce-aaguid) MUST
-        // be present, containing the AAGUID as a 16-byte OCTET STRING.
+        // If the related attestation root certificate is used for multiple authenticator models, the Extension OID
+        // 1.3.6.1.4.1.45724.1.1.4 (id-fido-gen-ce-aaguid) MUST be present, containing the AAGUID as a 16-byte
+        // OCTET STRING.
         // TODO: How check for multiple authenticator models?
         var idFidoGenCeAaguid = attestationCertificate.Extensions?.FirstOrDefault(
             e => string.Equals(e.Oid?.Value, IdFidoGenCeAaguidExtension, StringComparison.Ordinal));
@@ -69,19 +60,17 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
         var basicConstraints = attestationCertificate.Extensions?
             .FirstOrDefault(e => string.Equals(e.Oid?.FriendlyName, BasicConstraintsExtension, StringComparison.Ordinal))
             as X509BasicConstraintsExtension;
-
         if (basicConstraints != null && basicConstraints.CertificateAuthority)
         {
             return ValidatorInternalResult.Invalid("Attestation statement certificate authority is invalid");
         }
 
-        // TODO: An Authority Information Access (AIA) extension with entry id-ad-ocsp and
-        // a CRL Distribution Point extension [RFC5280] are both OPTIONAL as the status
-        // of many attestation certificates is available through authenticator metadata
-        // services. See, for example, the FIDO Metadata Service [FIDOMetadataService].
+        // TODO: An Authority Information Access (AIA) extension with entry id-ad-ocsp and a CRL Distribution Point
+        // extension [RFC5280] are both OPTIONAL as the status  of many attestation certificates is available through
+        // authenticator metadata  services. See, for example, the FIDO Metadata Service [FIDOMetadataService].
 
-        // If attestnCert contains an extension with OID 1.3.6.1.4.1.45724.1.1.4 (id-fido-gen-ce-aaguid)
-        // verify that the value of this extension matches the aaguid in authenticatorData.
+        // If attestnCert contains an extension with OID 1.3.6.1.4.1.45724.1.1.4 (id-fido-gen-ce-aaguid) verify that
+        // the value of this extension matches the aaguid in authenticatorData.
         if (idFidoGenCeAaguid != null)
         {
             var aaGuid = ParseGuidFromOctetString(idFidoGenCeAaguid.RawData);
@@ -91,26 +80,7 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
             }
         }
 
-        // Optionally, inspect x5c and consult externally provided knowledge to determine
-        // whether attStmt conveys a Basic or AttCA attestation.
-        var attestationType = (attestationCertificate.Subject == attestationCertificate.Issuer) ?
-            AttestationTypeEnum.Basic : AttestationTypeEnum.AttCA;
-
-        return new AttestationStatementInternalResult(attestationType, [.. attestationTrustPath]);
-    }
-
-    private static List<X509Certificate2> GetCertificates(object x5c)
-    {
-        var certificates = (List<object>)x5c;
-        var attestationTrustPath = new List<X509Certificate2>();
-
-        foreach (var certificate in certificates)
-        {
-            var x509Certificate = new X509Certificate2((byte[])certificate);
-            attestationTrustPath.Add(x509Certificate);
-        }
-
-        return attestationTrustPath;
+        return ValidatorInternalResult.Valid();
     }
 
     private static bool VerifyCertificateSubject(X509Certificate2 certificate)

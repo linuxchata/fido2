@@ -1,4 +1,5 @@
-﻿using Shark.Fido2.Core.Abstractions.Validators;
+﻿using Shark.Fido2.Core.Abstractions.Helpers;
+using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain;
@@ -13,15 +14,18 @@ internal class PackedAttestationStatementStategy : IAttestationStatementStategy
 {
     private readonly IAlgorithmAttestationStatementValidator _algorithmValidator;
     private readonly ISignatureAttestationStatementValidator _signatureValidator;
+    private readonly ICertificateAttestationStatementProvider _certificateProvider;
     private readonly ICertificateAttestationStatementValidator _certificateValidator;
 
     public PackedAttestationStatementStategy(
         IAlgorithmAttestationStatementValidator algorithmAttestationStatementValidator,
         ISignatureAttestationStatementValidator signatureAttestationStatementValidator,
+        ICertificateAttestationStatementProvider certificateAttestationStatementProvider,
         ICertificateAttestationStatementValidator certificateAttestationStatementValidator)
     {
         _algorithmValidator = algorithmAttestationStatementValidator;
         _signatureValidator = signatureAttestationStatementValidator;
+        _certificateProvider = certificateAttestationStatementProvider;
         _certificateValidator = certificateAttestationStatementValidator;
     }
 
@@ -40,16 +44,17 @@ internal class PackedAttestationStatementStategy : IAttestationStatementStategy
 
         var credentialPublicKey = attestationObjectData.AuthenticatorData!.AttestedCredentialData.CredentialPublicKey;
 
-        if (_certificateValidator.IsCertificatePresent(attestationStatementDict))
+        // If x5c is present
+        if (_certificateProvider.IsCertificatePresent(attestationStatementDict))
         {
-            // If x5c is present
-
-            // Verify that sig is a valid signature over the concatenation of authenticatorData and
-            // clientDataHash using the attestation public key in attestnCert with the algorithm specified in alg.
-            // TODO: Check whether alg is correct (attestation public key in attestnCert with the algorithm specified in alg.)
+            // Verify that sig is a valid signature over the concatenation of authenticatorData and clientDataHash
+            // using the attestation public key in attestnCert with the algorithm specified in alg.
+            var certificates = _certificateProvider.GetCertificates(attestationStatementDict);
+            var attestationCertificate = _certificateProvider.GetAttestationCertificate(certificates);
             var result = _signatureValidator.Validate(
                 attestationStatementDict,
                 credentialPublicKey,
+                attestationCertificate,
                 attestationObjectData.AuthenticatorRawData,
                 clientData.ClientDataHash);
             if (!result.IsValid)
@@ -57,14 +62,27 @@ internal class PackedAttestationStatementStategy : IAttestationStatementStategy
                 return result;
             }
 
-            // Verify that attestnCert meets the requirements.
-            // If successful, return implementation-specific values representing attestation
-            // type Basic, AttCA or uncertainty, and attestation trust path x5c.
-            return _certificateValidator.Validate(attestationStatementDict, attestationObjectData);
+            // Verify that attestnCert meets the requirements in 8.2.1 Packed Attestation Statement Certificate Requirements.
+            // If attestnCert contains an extension with OID 1.3.6.1.4.1.45724.1.1.4 (id-fido-gen-ce-aaguid)
+            // verify that the value of this extension matches the aaguid in authenticatorData.
+            result = _certificateValidator.Validate(attestationStatementDict, attestationCertificate, attestationObjectData);
+            if (!result.IsValid)
+            {
+                return result;
+            }
+
+            // Optionally, inspect x5c and consult externally provided knowledge to determine whether attStmt conveys
+            // a Basic or AttCA attestation.
+            var attestationType = (attestationCertificate.Subject == attestationCertificate.Issuer) ?
+                AttestationTypeEnum.Basic : AttestationTypeEnum.AttCA;
+
+            // If successful, return implementation-specific values representing attestation type Basic, AttCA or
+            // uncertainty, and attestation trust path x5c.
+            return new AttestationStatementInternalResult(attestationType, [.. certificates]);
         }
+        // If x5c is not present, self attestation is in use.
         else
         {
-            // If x5c is not present, self attestation is in use.
 
             // Validate that alg matches the algorithm of the credentialPublicKey in authenticatorData.
             var result = _algorithmValidator.Validate(attestationStatementDict, credentialPublicKey);
@@ -73,11 +91,12 @@ internal class PackedAttestationStatementStategy : IAttestationStatementStategy
                 return result;
             }
 
-            // Verify that sig is a valid signature over the concatenation of authenticatorData and
-            // clientDataHash using the credential public key with alg.
+            // Verify that sig is a valid signature over the concatenation of authenticatorData and clientDataHash
+            // using the credential public key with alg.
             result = _signatureValidator.Validate(
                 attestationStatementDict,
                 credentialPublicKey,
+                null!,
                 attestationObjectData.AuthenticatorRawData,
                 clientData.ClientDataHash);
             if (!result.IsValid)
@@ -85,8 +104,8 @@ internal class PackedAttestationStatementStategy : IAttestationStatementStategy
                 return result;
             }
 
-            // If successful, return implementation-specific values representing attestation
-            // type Self and an empty attestation trust path.
+            // If successful, return implementation-specific values representing attestation type Self and an empty
+            // attestation trust path.
             return new AttestationStatementInternalResult(AttestationTypeEnum.Self);
         }
     }

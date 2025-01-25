@@ -31,6 +31,7 @@ public static class DependencyInjection
 
         services.AddTransient<IAlgorithmAttestationStatementValidator, AlgorithmAttestationStatementValidator>();
         services.AddTransient<ISignatureAttestationStatementValidator, SignatureAttestationStatementValidator>();
+        services.AddTransient<ICertificateAttestationStatementProvider, CertificateAttestationStatementProvider>();
         services.AddTransient<ICertificateAttestationStatementValidator, CertificateAttestationStatementValidator>();
 
         services.AddKeyedTransient<IAttestationStatementStategy, PackedAttestationStatementStategy>(
