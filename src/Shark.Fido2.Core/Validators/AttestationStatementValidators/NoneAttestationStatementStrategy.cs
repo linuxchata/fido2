@@ -8,7 +8,7 @@ namespace Shark.Fido2.Core.Validators.AttestationStatementValidators;
 /// <summary>
 /// None Attestation Statement Format
 /// </summary>
-internal class NoneAttestationStatementStategy : IAttestationStatementStategy
+internal class NoneAttestationStatementStrategy : IAttestationStatementStrategy
 {
     public ValidatorInternalResult Validate(
         AttestationObjectData attestationObjectData,

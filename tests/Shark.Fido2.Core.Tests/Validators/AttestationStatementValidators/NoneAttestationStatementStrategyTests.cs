@@ -10,13 +10,13 @@ using Shark.Fido2.Domain.Enums;
 namespace Shark.Fido2.Core.Tests.Validators.AttestationStatementValidators;
 
 [TestFixture]
-public class NoneAttestationStatementStategyTests
+public class NoneAttestationStatementStrategyTests
 {
     private Mock<IAttestationObjectValidator> _attestationObjectValidatorMock;
     private AuthenticatorDataProvider _provider;
     private PublicKeyCredentialCreationOptions _creationOptions;
 
-    private NoneAttestationStatementStategy _sut = null!;
+    private NoneAttestationStatementStrategy _sut = null!;
 
     [SetUp]
     public void Setup()
@@ -33,7 +33,7 @@ public class NoneAttestationStatementStategyTests
 
         _creationOptions = new PublicKeyCredentialCreationOptions();
 
-        _sut = new NoneAttestationStatementStategy();
+        _sut = new NoneAttestationStatementStrategy();
     }
 
     [Test]

@@ -10,14 +10,14 @@ namespace Shark.Fido2.Core.Validators.AttestationStatementValidators;
 /// <summary>
 /// 8.2. Packed Attestation Statement Format
 /// </summary>
-internal class PackedAttestationStatementStategy : IAttestationStatementStategy
+internal class PackedAttestationStatementStrategy : IAttestationStatementStrategy
 {
     private readonly IAlgorithmAttestationStatementValidator _algorithmValidator;
     private readonly ISignatureAttestationStatementValidator _signatureValidator;
     private readonly ICertificateAttestationStatementProvider _certificateProvider;
     private readonly ICertificateAttestationStatementValidator _certificateValidator;
 
-    public PackedAttestationStatementStategy(
+    public PackedAttestationStatementStrategy(
         IAlgorithmAttestationStatementValidator algorithmAttestationStatementValidator,
         ISignatureAttestationStatementValidator signatureAttestationStatementValidator,
         ICertificateAttestationStatementProvider certificateAttestationStatementProvider,
