@@ -1,9 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Shark.Fido2.Core.Abstractions.Validators;
+﻿using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
-using Shark.Fido2.Core.Enums;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain;
+using Shark.Fido2.Domain.Enums;
 
 namespace Shark.Fido2.Core.Validators.AttestationStatementValidators;
 
@@ -12,15 +11,18 @@ namespace Shark.Fido2.Core.Validators.AttestationStatementValidators;
 /// </summary>
 internal class PackedAttestationStatementStategy : IAttestationStatementStategy
 {
-    private readonly ICryptographyValidator _rsaCryptographyValidator;
-    private readonly ICryptographyValidator _ec2CryptographyValidator;
+    private readonly IAlgorithmAttestationStatementValidator _algorithmValidator;
+    private readonly ISignatureAttestationStatementValidator _signatureValidator;
+    private readonly ICertificateAttestationStatementValidator _certificateValidator;
 
     public PackedAttestationStatementStategy(
-        [FromKeyedServices("rsa")] ICryptographyValidator rsaCryptographyValidator,
-        [FromKeyedServices("ec2")] ICryptographyValidator ec2CryptographyValidator)
+        IAlgorithmAttestationStatementValidator algorithmAttestationStatementValidator,
+        ISignatureAttestationStatementValidator signatureAttestationStatementValidator,
+        ICertificateAttestationStatementValidator certificateAttestationStatementValidator)
     {
-        _rsaCryptographyValidator = rsaCryptographyValidator;
-        _ec2CryptographyValidator = ec2CryptographyValidator;
+        _algorithmValidator = algorithmAttestationStatementValidator;
+        _signatureValidator = signatureAttestationStatementValidator;
+        _certificateValidator = certificateAttestationStatementValidator;
     }
 
     public ValidatorInternalResult Validate(
@@ -28,64 +30,64 @@ internal class PackedAttestationStatementStategy : IAttestationStatementStategy
         ClientData clientData,
         PublicKeyCredentialCreationOptions creationOptions)
     {
-        var attestationStatement = attestationObjectData.AttestationStatement;
-        if (attestationStatement == null)
-        {
-            throw new ArgumentNullException(nameof(attestationStatement));
-        }
+        var attestationStatement = attestationObjectData.AttestationStatement ??
+            throw new ArgumentNullException(nameof(attestationObjectData));
 
         if (attestationStatement is not Dictionary<string, object> attestationStatementDict)
         {
-            throw new ArgumentException(nameof(attestationStatement), "Attestation statement cannot be read");
+            throw new ArgumentException("Attestation statement cannot be read", nameof(attestationObjectData));
         }
 
-        if (!attestationStatementDict.TryGetValue("alg", out var algorithm) || algorithm is not int)
-        {
-            return ValidatorInternalResult.Invalid("Attestation statement algorithm cannot be read");
-        }
-
-        // Validate that alg matches the algorithm of the credentialPublicKey in authenticatorData.
         var credentialPublicKey = attestationObjectData.AuthenticatorData!.AttestedCredentialData.CredentialPublicKey;
-        if (credentialPublicKey.Algorithm != (int)algorithm)
+
+        if (_certificateValidator.IsCertificatePresent(attestationStatementDict))
         {
-            return ValidatorInternalResult.Invalid("Attestation statement algorithm mismatch");
-        }
+            // If x5c is present
 
-        if (!attestationStatementDict.TryGetValue("sig", out var signature) || signature is not byte[])
+            // Verify that sig is a valid signature over the concatenation of authenticatorData and
+            // clientDataHash using the attestation public key in attestnCert with the algorithm specified in alg.
+            // TODO: Check whether alg is correct (attestation public key in attestnCert with the algorithm specified in alg.)
+            var result = _signatureValidator.Validate(
+                attestationStatementDict,
+                credentialPublicKey,
+                attestationObjectData.AuthenticatorRawData,
+                clientData.ClientDataHash);
+            if (!result.IsValid)
+            {
+                return result;
+            }
+
+            // Verify that attestnCert meets the requirements.
+            // If successful, return implementation-specific values representing attestation
+            // type Basic, AttCA or uncertainty, and attestation trust path x5c.
+            return _certificateValidator.Validate(attestationStatementDict, attestationObjectData);
+        }
+        else
         {
-            return ValidatorInternalResult.Invalid("Attestation statement signature cannot be read");
+            // If x5c is not present, self attestation is in use.
+
+            // Validate that alg matches the algorithm of the credentialPublicKey in authenticatorData.
+            var result = _algorithmValidator.Validate(attestationStatementDict, credentialPublicKey);
+            if (!result.IsValid)
+            {
+                return result;
+            }
+
+            // Verify that sig is a valid signature over the concatenation of authenticatorData and
+            // clientDataHash using the credential public key with alg.
+            result = _signatureValidator.Validate(
+                attestationStatementDict,
+                credentialPublicKey,
+                attestationObjectData.AuthenticatorRawData,
+                clientData.ClientDataHash);
+            if (!result.IsValid)
+            {
+                return result;
+            }
+
+            // If successful, return implementation-specific values representing attestation
+            // type Self and an empty attestation trust path.
+            return new AttestationStatementInternalResult(AttestationTypeEnum.Self);
         }
-
-        // Verify that sig is a valid signature over the concatenation of authenticatorData and
-        // clientDataHash using the credential public key with alg.
-        var concatenatedData = GetConcatenatedData(
-            attestationObjectData.AuthenticatorRawData,
-            clientData.ClientDataHash);
-
-        if (credentialPublicKey.KeyType == (int)KeyTypeEnum.Rsa)
-        {
-            var isValid = _rsaCryptographyValidator.IsValid(
-                concatenatedData, (byte[])signature, credentialPublicKey);
-
-            return ValidatorInternalResult.Valid();
-        }
-        else if (credentialPublicKey.KeyType == (int)KeyTypeEnum.Ec2)
-        {
-            var isValid = _ec2CryptographyValidator.IsValid(
-                concatenatedData, (byte[])signature, credentialPublicKey);
-
-            return ValidatorInternalResult.Valid();
-        }
-
-        return ValidatorInternalResult.Invalid("Invalid signature");
-    }
-
-    private static byte[] GetConcatenatedData(byte[] authenticatorData, byte[] clientDataHash)
-    {
-        var concatenatedData = new byte[authenticatorData.Length + clientDataHash.Length];
-        Buffer.BlockCopy(authenticatorData, 0, concatenatedData, 0, authenticatorData.Length);
-        Buffer.BlockCopy(clientDataHash, 0, concatenatedData, authenticatorData.Length, clientDataHash.Length);
-
-        return concatenatedData;
     }
 }

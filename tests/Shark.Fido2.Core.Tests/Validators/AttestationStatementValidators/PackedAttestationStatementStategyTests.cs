@@ -6,6 +6,7 @@ using Shark.Fido2.Core.Results;
 using Shark.Fido2.Core.Validators;
 using Shark.Fido2.Core.Validators.AttestationStatementValidators;
 using Shark.Fido2.Domain;
+using Shark.Fido2.Domain.Enums;
 
 namespace Shark.Fido2.Core.Tests.Validators.AttestationStatementValidators;
 
@@ -38,10 +39,18 @@ public class PackedAttestationStatementStategyTests
             _authenticatorDataProvider,
             _attestationObjectValidatorMock.Object);
 
-        var rsaCryptographyValidator = new RsaCryptographyValidator();
-        var ec2CryptographyValidator = new Ec2CryptographyValidator();
+        var algorithmAttestationStatementValidator = new AlgorithmAttestationStatementValidator();
 
-        _sut = new PackedAttestationStatementStategy(rsaCryptographyValidator, ec2CryptographyValidator);
+        var signatureAttestationStatementValidator = new SignatureAttestationStatementValidator(
+            new RsaCryptographyValidator(),
+            new Ec2CryptographyValidator());
+
+        var certificateAttestationStatementValidator = new CertificateAttestationStatementValidator();
+
+        _sut = new PackedAttestationStatementStategy(
+            algorithmAttestationStatementValidator,
+            signatureAttestationStatementValidator,
+            certificateAttestationStatementValidator);
     }
 
     [Test]
@@ -56,7 +65,11 @@ public class PackedAttestationStatementStategyTests
         var internalResult = _attestationObjectHandler.Handle(attestationObject, clientData, _creationOptions);
 
         // Act
-        _sut.Validate(internalResult.Value!, clientData, _creationOptions);
+        var result = _sut.Validate(internalResult.Value!, clientData, _creationOptions);
+
+        // Assert
+        var attestationStatementInternalResult = result as AttestationStatementInternalResult;
+        Assert.That(attestationStatementInternalResult!.AttestationType, Is.EqualTo(AttestationTypeEnum.Self));
     }
 
     [Test]
@@ -73,7 +86,11 @@ public class PackedAttestationStatementStategyTests
         var internalResult = _attestationObjectHandler.Handle(attestationObject, clientData, _creationOptions);
 
         // Act
-        _sut.Validate(internalResult.Value!, clientData, _creationOptions);
+        var result = _sut.Validate(internalResult.Value!, clientData, _creationOptions);
+
+        // Assert
+        var attestationStatementInternalResult = result as AttestationStatementInternalResult;
+        Assert.That(attestationStatementInternalResult!.AttestationType, Is.EqualTo(AttestationTypeEnum.AttCA));
     }
 
     private static ClientData GetClientData(string clientDataJson)
