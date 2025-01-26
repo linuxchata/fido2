@@ -27,10 +27,7 @@ internal class AttestationStatementValidator : IAttestationStatementValidator
         ClientData clientData,
         PublicKeyCredentialCreationOptions creationOptions)
     {
-        if (attestationObjectData == null)
-        {
-            throw new ArgumentNullException(nameof(attestationObjectData));
-        }
+        ArgumentNullException.ThrowIfNull(attestationObjectData);
 
         var attestationStatementFormat = attestationObjectData.AttestationStatementFormat;
 
