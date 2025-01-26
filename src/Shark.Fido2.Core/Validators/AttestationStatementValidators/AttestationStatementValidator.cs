@@ -8,13 +8,16 @@ namespace Shark.Fido2.Core.Validators.AttestationStatementValidators;
 internal class AttestationStatementValidator : IAttestationStatementValidator
 {
     private readonly IAttestationStatementStrategy _packedAttestationStatementStategy;
+    private readonly IAttestationStatementStrategy _tmpAttestationStatementStrategy;
     private readonly IAttestationStatementStrategy _noneAttestationStatementStategy;
 
     public AttestationStatementValidator(
         [FromKeyedServices("packed")] IAttestationStatementStrategy packedAttestationStatementStategy,
+        [FromKeyedServices("tpm")] IAttestationStatementStrategy tmpAttestationStatementStrategy,
         [FromKeyedServices("none")] IAttestationStatementStrategy noneAttestationStatementStategy)
     {
         _packedAttestationStatementStategy = packedAttestationStatementStategy;
+        _tmpAttestationStatementStrategy = tmpAttestationStatementStrategy;
         _noneAttestationStatementStategy = noneAttestationStatementStategy;
     }
 
@@ -39,6 +42,7 @@ internal class AttestationStatementValidator : IAttestationStatementValidator
         var strategyMap = new Dictionary<string, IAttestationStatementStrategy>
         {
             { AttestationStatementFormatIdentifier.Packed, _packedAttestationStatementStategy },
+            { AttestationStatementFormatIdentifier.Tpm, _tmpAttestationStatementStrategy },
             { AttestationStatementFormatIdentifier.None, _noneAttestationStatementStategy },
         };
 

@@ -35,6 +35,8 @@ public static class DependencyInjection
 
         services.AddKeyedTransient<IAttestationStatementStrategy, PackedAttestationStatementStrategy>(
             AttestationStatementFormatIdentifier.Packed);
+        services.AddKeyedTransient<IAttestationStatementStrategy, TmpAttestationStatementStrategy>(
+            AttestationStatementFormatIdentifier.Tpm);
         services.AddKeyedTransient<IAttestationStatementStrategy, NoneAttestationStatementStrategy>(
             AttestationStatementFormatIdentifier.None);
 
