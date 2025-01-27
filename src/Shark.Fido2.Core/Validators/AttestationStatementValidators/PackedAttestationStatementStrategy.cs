@@ -1,4 +1,4 @@
-﻿using Shark.Fido2.Core.Abstractions.Helpers;
+﻿using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Results;
@@ -14,13 +14,13 @@ internal class PackedAttestationStatementStrategy : IAttestationStatementStrateg
 {
     private readonly IAlgorithmAttestationStatementValidator _algorithmValidator;
     private readonly ISignatureAttestationStatementValidator _signatureValidator;
-    private readonly ICertificateAttestationStatementProvider _certificateProvider;
+    private readonly ICertificateAttestationStatementService _certificateProvider;
     private readonly ICertificateAttestationStatementValidator _certificateValidator;
 
     public PackedAttestationStatementStrategy(
         IAlgorithmAttestationStatementValidator algorithmAttestationStatementValidator,
         ISignatureAttestationStatementValidator signatureAttestationStatementValidator,
-        ICertificateAttestationStatementProvider certificateAttestationStatementProvider,
+        ICertificateAttestationStatementService certificateAttestationStatementProvider,
         ICertificateAttestationStatementValidator certificateAttestationStatementValidator)
     {
         _algorithmValidator = algorithmAttestationStatementValidator;
@@ -45,7 +45,7 @@ internal class PackedAttestationStatementStrategy : IAttestationStatementStrateg
         var credentialPublicKey = attestationObjectData.AuthenticatorData!.AttestedCredentialData.CredentialPublicKey;
 
         // If x5c is present
-        if (_certificateProvider.IsCertificatePresent(attestationStatementDict))
+        if (_certificateProvider.AreCertificatesPresent(attestationStatementDict))
         {
             // Verify that sig is a valid signature over the concatenation of authenticatorData and clientDataHash
             // using the attestation public key in attestnCert with the algorithm specified in alg.

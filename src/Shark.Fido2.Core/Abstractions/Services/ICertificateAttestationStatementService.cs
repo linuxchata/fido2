@@ -1,10 +1,10 @@
 ﻿using System.Security.Cryptography.X509Certificates;
 
-namespace Shark.Fido2.Core.Abstractions.Helpers;
+namespace Shark.Fido2.Core.Abstractions.Services;
 
-public interface ICertificateAttestationStatementProvider
+public interface ICertificateAttestationStatementService
 {
-    bool IsCertificatePresent(Dictionary<string, object> attestationStatementDict);
+    bool AreCertificatesPresent(Dictionary<string, object> attestationStatementDict);
 
     List<X509Certificate2> GetCertificates(Dictionary<string, object> attestationStatementDict);
 

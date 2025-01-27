@@ -3,6 +3,7 @@ using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Handlers;
 using Shark.Fido2.Core.Helpers;
 using Shark.Fido2.Core.Results;
+using Shark.Fido2.Core.Services;
 using Shark.Fido2.Core.Validators;
 using Shark.Fido2.Core.Validators.AttestationStatementValidators;
 using Shark.Fido2.Domain;
@@ -15,7 +16,7 @@ public class TpmAttestationStatementStrategyTests
 {
     private Mock<IAttestationObjectValidator> _attestationObjectValidatorMock;
     private AttestationObjectHandler _attestationObjectHandler;
-    private AuthenticatorDataProvider _authenticatorDataProvider;
+    private AuthenticatorDataParserService _authenticatorDataProvider;
     private PublicKeyCredentialCreationOptions _creationOptions;
 
     private TpmAttestationStatementStrategy _sut = null!;
@@ -31,7 +32,7 @@ public class TpmAttestationStatementStrategyTests
                 It.IsAny<PublicKeyCredentialCreationOptions>()))
         .Returns(ValidatorInternalResult.Valid());
 
-        _authenticatorDataProvider = new AuthenticatorDataProvider();
+        _authenticatorDataProvider = new AuthenticatorDataParserService();
 
         _creationOptions = new PublicKeyCredentialCreationOptions();
 
@@ -45,11 +46,13 @@ public class TpmAttestationStatementStrategyTests
             new RsaCryptographyValidator(),
             new Ec2CryptographyValidator());
 
-        var certificateAttestationStatementProvider = new CertificateAttestationStatementProvider();
+        var certificateAttestationStatementProvider = new CertificateAttestationStatementService();
 
         var certificateAttestationStatementValidator = new CertificateAttestationStatementValidator();
 
-        _sut = new TpmAttestationStatementStrategy();
+        var tpmtPublicParserService = new TpmtPublicParserService();
+
+        _sut = new TpmAttestationStatementStrategy(tpmtPublicParserService);
     }
 
     [Test]

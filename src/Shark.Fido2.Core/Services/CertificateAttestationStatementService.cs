@@ -1,13 +1,13 @@
 ﻿using System.Security.Cryptography.X509Certificates;
-using Shark.Fido2.Core.Abstractions.Helpers;
+using Shark.Fido2.Core.Abstractions.Services;
 
-namespace Shark.Fido2.Core.Helpers;
+namespace Shark.Fido2.Core.Services;
 
-internal class CertificateAttestationStatementProvider : ICertificateAttestationStatementProvider
+internal class CertificateAttestationStatementService : ICertificateAttestationStatementService
 {
     private const string Certificate = "x5c";
 
-    public bool IsCertificatePresent(Dictionary<string, object> attestationStatementDict)
+    public bool AreCertificatesPresent(Dictionary<string, object> attestationStatementDict)
     {
         return attestationStatementDict.TryGetValue(Certificate, out _);
     }
