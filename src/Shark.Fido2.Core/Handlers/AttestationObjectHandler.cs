@@ -1,5 +1,5 @@
 ﻿using Shark.Fido2.Core.Abstractions.Handlers;
-using Shark.Fido2.Core.Abstractions.Helpers;
+using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Converters;
@@ -10,14 +10,14 @@ namespace Shark.Fido2.Core.Handlers;
 
 internal class AttestationObjectHandler : IAttestationObjectHandler
 {
-    private readonly IAuthenticatorDataProvider _authenticatorDataProvider;
+    private readonly IAuthenticatorDataParserService _authenticatorDataParserService;
     private readonly IAttestationObjectValidator _attestationObjectValidator;
 
     public AttestationObjectHandler(
-        IAuthenticatorDataProvider authenticatorDataProvider,
+        IAuthenticatorDataParserService authenticatorDataParserService,
         IAttestationObjectValidator attestationObjectValidator)
     {
-        _authenticatorDataProvider = authenticatorDataProvider;
+        _authenticatorDataParserService = authenticatorDataParserService;
         _attestationObjectValidator = attestationObjectValidator;
     }
 
@@ -52,7 +52,7 @@ internal class AttestationObjectHandler : IAttestationObjectHandler
         var decodedAttestationObject = CborConverter.Decode(attestationObject);
 
         var authenticatorDataArray = decodedAttestationObject[AttestationObjectKey.AuthData] as byte[];
-        var authenticatorData = _authenticatorDataProvider.Get(authenticatorDataArray);
+        var authenticatorData = _authenticatorDataParserService.Parse(authenticatorDataArray);
 
         var attestationObjectData = new AttestationObjectData
         {

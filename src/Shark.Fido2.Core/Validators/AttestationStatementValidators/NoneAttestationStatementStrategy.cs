@@ -6,7 +6,7 @@ using Shark.Fido2.Domain.Enums;
 namespace Shark.Fido2.Core.Validators.AttestationStatementValidators;
 
 /// <summary>
-/// None Attestation Statement Format
+/// 8.7. None Attestation Statement Format
 /// </summary>
 internal class NoneAttestationStatementStrategy : IAttestationStatementStrategy
 {
