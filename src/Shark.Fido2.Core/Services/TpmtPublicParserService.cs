@@ -14,29 +14,32 @@ public sealed class TpmtPublicParserService : ITpmtPublicParserService
         using var stream = new MemoryStream(pubArea);
         using var reader = new BinaryReader(stream);
 
-        // TPMT_PUBLIC
-        var tpmtPublic = new TpmtPublic();
-
         // TPMI_ALG_PUBLIC => TPM_ALG_ID; UINT16
-        tpmtPublic.Type = (TpmAlgorithmEnum)ReadUInt16(reader);
+        var type = (TpmAlgorithmEnum)ReadUInt16(reader);
 
         // TPMI_ALG_HASH => TPM_ALG_ID; UINT16
-        tpmtPublic.NameAlg = ReadUInt16(reader);
+        var nameAlg = ReadUInt16(reader);
 
         // TPMA_OBJECT; UINT32
-        tpmtPublic.ObjectAttributes = ReadUInt32(reader);
+        var objectAttributes = ReadUInt32(reader);
 
         // TPM2B_DIGEST; size is UINT16
         var authPolicySize = ReadUInt16(reader);
-        tpmtPublic.AuthPolicy = reader.ReadBytes(authPolicySize);
+        var authPolicy = reader.ReadBytes(authPolicySize);
 
-        if (tpmtPublic.Type == TpmAlgorithmEnum.TpmAlgorithmRsa)
+        /// TPMT_SYM_DEF_OBJECT
+        var symmetric = ReadUInt16(reader);
+
+        // TPMT_RSA_SCHEME or TPMT_ECC_SCHEME
+        var scheme = ReadUInt16(reader);
+
+        TpmtPublicRsaParameters tpmtPublicRsaParameters = null!;
+        TpmtPublicEccParameters tpmtPublicEccParameters = null!;
+        byte[]? unique = null;
+        if (type == TpmAlgorithmEnum.TpmAlgorithmRsa)
         {
-            var symmetric = ReadUInt16(reader);
-            var scheme = ReadUInt16(reader);
-
             // TPMI_RSA_KEY_BITS => TPM_KEY_BITS; UINT16
-            tpmtPublic.RsaParameters.KeyBits = ReadUInt16(reader);
+            var keyBits = ReadUInt16(reader);
 
             // TPMS_RSA_PARMS; UINT32
             var exponent = ReadUInt32(reader);
@@ -44,12 +47,54 @@ public sealed class TpmtPublicParserService : ITpmtPublicParserService
             {
                 exponent = (uint)(Math.Pow(2, 16) + 1);
             }
-            tpmtPublic.RsaParameters.Exponent = exponent;
 
-            // TPMU_PUBLIC_ID
+            tpmtPublicRsaParameters = new TpmtPublicRsaParameters
+            {
+                KeyBits = keyBits,
+                Exponent = exponent,
+            };
+
+            // TPMU_PUBLIC_ID => TPM2B_PUBLIC_KEY_RSA
             var size = ReadUInt16(reader);
-            tpmtPublic.Unique = reader.ReadBytes(size);
+            unique = reader.ReadBytes(size);
         }
+        else if (type == TpmAlgorithmEnum.TpmAlgorithmEcc)
+        {
+            // TPMI_ECC_CURVE => TPM_ECC_CURVE; UINT16
+            var curveId = ReadUInt16(reader);
+
+            // TPMT_KDF_SCHEME => TPMI_ALG_KDF => TPM_ALG_ID; UINT16
+            var kdf = ReadUInt16(reader);
+
+            tpmtPublicEccParameters = new TpmtPublicEccParameters
+            {
+                CurveId = curveId,
+                Kdf = kdf,
+            };
+
+            // TPMU_PUBLIC_ID => TPMS_ECC_POINT
+            // TPM2B_ECC_PARAMETER
+            var sizeX = ReadUInt16(reader);
+            var xCoordinate = reader.ReadBytes(sizeX);
+
+            // TPM2B_ECC_PARAMETER
+            var sizeY = ReadUInt16(reader);
+            var yCoordinate = reader.ReadBytes(sizeY);
+
+            unique = [.. xCoordinate, .. yCoordinate];
+        }
+
+        // TPMT_PUBLIC
+        var tpmtPublic = new TpmtPublic
+        {
+            Type = type,
+            NameAlg = nameAlg,
+            ObjectAttributes = objectAttributes,
+            AuthPolicy = authPolicy,
+            RsaParameters = tpmtPublicRsaParameters,
+            EccParameters = tpmtPublicEccParameters,
+            Unique = unique,
+        };
 
         return tpmtPublic;
     }

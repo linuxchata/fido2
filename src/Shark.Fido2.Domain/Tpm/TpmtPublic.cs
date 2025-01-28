@@ -8,38 +8,38 @@ namespace Shark.Fido2.Domain.Tpm;
 /// </summary>
 public sealed class TpmtPublic
 {
-    public TpmtPublic()
-    {
-        RsaParameters = new TpmtPublicRsaParameters();
-    }
-
     /// <summary>
     /// Type is TPMI_ALG_PUBLIC
     /// </summary>
-    public TpmAlgorithmEnum Type { get; set; }
+    public TpmAlgorithmEnum Type { get; init; }
 
     /// <summary>
     /// Type is TPMI_ALG_HASH
     /// </summary>
-    public ushort NameAlg { get; set; }
+    public ushort NameAlg { get; init; }
 
     /// <summary>
     /// Type is TPMA_OBJECT
     /// </summary>
-    public uint ObjectAttributes { get; set; }
+    public uint ObjectAttributes { get; init; }
 
     /// <summary>
     /// Type is TPM2B_DIGEST
     /// </summary>
-    public byte[]? AuthPolicy { get; set; }
+    public byte[]? AuthPolicy { get; init; }
 
     /// <summary>
     /// Type is TPMU_PUBLIC_PARMS
     /// </summary>
-    public TpmtPublicRsaParameters RsaParameters { get; set; }
+    public TpmtPublicRsaParameters? RsaParameters { get; init; }
+
+    /// <summary>
+    /// Type is TPMU_PUBLIC_PARMS
+    /// </summary>
+    public TpmtPublicEccParameters? EccParameters { get; init; }
 
     /// <summary>
     /// Type is TPMU_PUBLIC_ID
     /// </summary>
-    public byte[]? Unique { get; set; }
+    public byte[]? Unique { get; init; }
 }
