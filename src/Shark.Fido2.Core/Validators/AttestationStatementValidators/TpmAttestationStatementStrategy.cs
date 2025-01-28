@@ -13,11 +13,11 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
 {
     private const string PubArea = "pubArea";
 
-    private readonly ITpmtPublicParserService _tpmtPublicParserService;
+    private readonly ITpmtPublicAreaParserService _tpmtPublicAreaParserService;
 
-    public TpmAttestationStatementStrategy(ITpmtPublicParserService tpmtPublicParserService)
+    public TpmAttestationStatementStrategy(ITpmtPublicAreaParserService tpmtPublicAreaParserService)
     {
-        _tpmtPublicParserService = tpmtPublicParserService;
+        _tpmtPublicAreaParserService = tpmtPublicAreaParserService;
     }
 
     public ValidatorInternalResult Validate(
@@ -38,7 +38,7 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
             return ValidatorInternalResult.Invalid("Attestation statement pubArea cannot be read");
         }
 
-        var tpmtPublic = _tpmtPublicParserService.Parse((byte[])pubArea);
+        var tpmtPublic = _tpmtPublicAreaParserService.Parse((byte[])pubArea);
 
         return new AttestationStatementInternalResult(AttestationTypeEnum.AttCA);
     }

@@ -2,7 +2,7 @@
 
 namespace Shark.Fido2.Core.Abstractions.Services;
 
-public interface ITpmtPublicParserService
+public interface ITpmtPublicAreaParserService
 {
     TpmtPublic Parse(byte[] pubArea);
 }

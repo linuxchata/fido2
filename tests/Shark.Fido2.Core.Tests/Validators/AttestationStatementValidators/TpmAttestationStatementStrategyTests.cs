@@ -50,9 +50,9 @@ public class TpmAttestationStatementStrategyTests
 
         var certificateAttestationStatementValidator = new CertificateAttestationStatementValidator();
 
-        var tpmtPublicParserService = new TpmtPublicParserService();
+        var tpmtPublicAreaParserService = new TpmtPublicAreaParserService();
 
-        _sut = new TpmAttestationStatementStrategy(tpmtPublicParserService);
+        _sut = new TpmAttestationStatementStrategy(tpmtPublicAreaParserService);
     }
 
     [Test]
