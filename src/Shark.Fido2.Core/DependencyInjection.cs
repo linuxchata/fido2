@@ -36,6 +36,7 @@ public static class DependencyInjection
         services.AddTransient<ICertificateAttestationStatementValidator, CertificateAttestationStatementValidator>();
 
         services.AddTransient<ITpmtPublicAreaParserService, TpmtPublicAreaParserService>();
+        services.AddTransient<ITpmsAttestationParserService, TpmsAttestationParserService>();
 
         services.AddKeyedTransient<IAttestationStatementStrategy, PackedAttestationStatementStrategy>(
             AttestationStatementFormatIdentifier.Packed);

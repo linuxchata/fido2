@@ -26,7 +26,7 @@ public sealed class TpmtPublic
     /// <summary>
     /// Type is TPM2B_DIGEST
     /// </summary>
-    public byte[]? AuthPolicy { get; init; }
+    public required byte[] AuthPolicy { get; init; }
 
     /// <summary>
     /// Type is TPMU_PUBLIC_PARMS

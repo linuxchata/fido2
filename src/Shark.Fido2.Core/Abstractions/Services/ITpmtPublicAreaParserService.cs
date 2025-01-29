@@ -4,5 +4,5 @@ namespace Shark.Fido2.Core.Abstractions.Services;
 
 public interface ITpmtPublicAreaParserService
 {
-    TpmtPublic Parse(byte[] pubArea);
+    bool Parse(byte[] pubArea, out TpmtPublic tpmtPublic);
 }

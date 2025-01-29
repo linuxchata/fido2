@@ -1,5 +1,9 @@
 ﻿namespace Shark.Fido2.Domain.Tpm;
 
+/// <summary>
+/// 12.2.3.6 TPMS_ECC_PARMS
+/// Trusted Platform Module Library
+/// </summary>
 public class TpmtPublicEccParameters
 {
     /// <summary>
