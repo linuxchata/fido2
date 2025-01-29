@@ -19,13 +19,12 @@ internal sealed class Ec2CryptographyValidator : ICryptographyValidator
 
         var algorithm = EcdsaKeyTypeMapper.Get(credentialPublicKey.Algorithm.Value);
 
-        bool isValid;
         if (attestationCertificate != null)
         {
             using var ecdsa = attestationCertificate.GetECDsaPublicKey() ??
                 throw new ArgumentException("Certificate does not have an ECDsa public key");
 
-            isValid = ecdsa!.VerifyData(data, signature, algorithm.HashAlgorithmName, DSASignatureFormat.Rfc3279DerSequence);
+            return ecdsa!.VerifyData(data, signature, algorithm.HashAlgorithmName, DSASignatureFormat.Rfc3279DerSequence);
         }
         else
         {
@@ -43,10 +42,8 @@ internal sealed class Ec2CryptographyValidator : ICryptographyValidator
 
             var signatureIeeeP1363 = ConvertDerToIeeeP1363(signature, ecdsa.KeySize);
 
-            isValid = ecdsa.VerifyData(data, signature, algorithm.HashAlgorithmName, DSASignatureFormat.Rfc3279DerSequence);
+            return ecdsa.VerifyData(data, signature, algorithm.HashAlgorithmName, DSASignatureFormat.Rfc3279DerSequence);
         }
-
-        return isValid;
     }
 
     private static byte[] ConvertDerToIeeeP1363(byte[] derSignature, int keySize)

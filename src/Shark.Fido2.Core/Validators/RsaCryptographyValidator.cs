@@ -17,14 +17,24 @@ internal sealed class RsaCryptographyValidator : ICryptographyValidator
 
         var algorithm = RsaKeyTypeMapper.Get(credentialPublicKey.Algorithm.Value);
 
-        var parameters = new RSAParameters
+        if (attestationCertificate != null)
         {
-            Modulus = credentialPublicKey.Modulus,
-            Exponent = credentialPublicKey.Exponent,
-        };
+            using var rsa = attestationCertificate.GetRSAPublicKey() ??
+                throw new ArgumentException("Certificate does not have a RSA public key");
 
-        using var rsa = RSA.Create(parameters);
+            return rsa!.VerifyData(data, signature, algorithm.HashAlgorithmName, algorithm.Padding!);
+        }
+        else
+        {
+            var parameters = new RSAParameters
+            {
+                Modulus = credentialPublicKey.Modulus,
+                Exponent = credentialPublicKey.Exponent,
+            };
 
-        return rsa.VerifyData(data, signature, algorithm.HashAlgorithmName, algorithm.Padding!);
+            using var rsa = RSA.Create(parameters);
+
+            return rsa.VerifyData(data, signature, algorithm.HashAlgorithmName, algorithm.Padding!);
+        }
     }
 }

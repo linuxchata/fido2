@@ -83,7 +83,6 @@ internal class PackedAttestationStatementStrategy : IAttestationStatementStrateg
         // If x5c is not present, self attestation is in use.
         else
         {
-
             // Validate that alg matches the algorithm of the credentialPublicKey in authenticatorData.
             var result = _algorithmValidator.Validate(attestationStatementDict, credentialPublicKey);
             if (!result.IsValid)

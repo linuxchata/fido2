@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Enums;
+using Shark.Fido2.Core.Helpers;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain;
 
@@ -36,7 +37,7 @@ internal class SignatureAttestationStatementValidator : ISignatureAttestationSta
             return ValidatorInternalResult.Invalid("Attestation statement signature cannot be read");
         }
 
-        var concatenatedData = GetConcatenatedData(authenticatorRawData, clientDataHash);
+        var concatenatedData = BytesArrayHelper.Concatenate(authenticatorRawData, clientDataHash);
 
         bool isValid;
         if (credentialPublicKey.KeyType == (int)KeyTypeEnum.Rsa)
@@ -66,14 +67,5 @@ internal class SignatureAttestationStatementValidator : ISignatureAttestationSta
         }
 
         return ValidatorInternalResult.Valid();
-    }
-
-    private static byte[] GetConcatenatedData(byte[] authenticatorData, byte[] clientDataHash)
-    {
-        var concatenatedData = new byte[authenticatorData.Length + clientDataHash.Length];
-        Buffer.BlockCopy(authenticatorData, 0, concatenatedData, 0, authenticatorData.Length);
-        Buffer.BlockCopy(clientDataHash, 0, concatenatedData, authenticatorData.Length, clientDataHash.Length);
-
-        return concatenatedData;
     }
 }
