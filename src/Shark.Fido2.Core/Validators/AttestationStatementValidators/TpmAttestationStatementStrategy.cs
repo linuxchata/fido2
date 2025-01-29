@@ -1,5 +1,6 @@
 ﻿using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
+using Shark.Fido2.Core.Comparers;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain;
 using Shark.Fido2.Domain.Enums;
@@ -53,6 +54,26 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
             return ValidatorInternalResult.Invalid("Attestation statement certInfo cannot be read");
         }
 
+        // Verify that the public key specified by the parameters and unique fields of pubArea is identical
+        // to the credentialPublicKey in the attestedCredentialData in authenticatorData.
+        var credentialPublicKey = attestationObjectData.AuthenticatorData!.AttestedCredentialData.CredentialPublicKey;
+        if (!BytesArrayComparer.CompareNullable(credentialPublicKey.Modulus, tpmtPublic.Unique))
+        {
+            return ValidatorInternalResult.Invalid("Attestation statement public key mismatch");
+        }
+
+        if (GetExponentAsUInt32LittleEndian(credentialPublicKey.Exponent!) != tpmtPublic.RsaParameters!.Exponent)
+        {
+            return ValidatorInternalResult.Invalid("Attestation statement public key mismatch");
+        }
+
         return new AttestationStatementInternalResult(AttestationTypeEnum.AttCA);
+    }
+
+    private static uint GetExponentAsUInt32LittleEndian(byte[] exponent)
+    {
+        Array.Reverse(exponent);
+        Array.Resize(ref exponent, 4);
+        return BitConverter.ToUInt32(exponent, 0);
     }
 }

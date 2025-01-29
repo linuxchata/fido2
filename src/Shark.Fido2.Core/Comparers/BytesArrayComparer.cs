@@ -2,6 +2,21 @@
 
 public static class BytesArrayComparer
 {
+    public static bool CompareNullable(byte[]? expected, byte[]? actual)
+    {
+        if (expected == null && actual == null)
+        {
+            return true;
+        }
+
+        if (expected == null || actual == null)
+        {
+            return false;
+        }
+
+        return Compare(expected, actual);
+    }
+
     public static bool Compare(byte[] expected, byte[] actual)
     {
         if (expected == actual)
