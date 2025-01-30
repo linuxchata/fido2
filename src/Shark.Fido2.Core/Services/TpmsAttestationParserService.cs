@@ -63,7 +63,7 @@ public sealed class TpmsAttestationParserService : ITpmsAttestationParserService
                 Certify = certify,
             };
 
-            // TODO: Consier implementing the rest of the parsing logic
+            // TODO: Consider implementing the rest of the parsing logic
 
             tpmsAttestation = new TpmsAttestation
             {

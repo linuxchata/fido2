@@ -2,8 +2,8 @@
 using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Converters;
-using Shark.Fido2.Core.Enums;
 using Shark.Fido2.Domain;
+using Shark.Fido2.Domain.Enums;
 
 namespace Shark.Fido2.Core.Services;
 

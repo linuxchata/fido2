@@ -1,14 +1,13 @@
-﻿using System.Security.Cryptography;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Comparers;
-using Shark.Fido2.Core.Enums;
 using Shark.Fido2.Core.Helpers;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain;
 using Shark.Fido2.Domain.Enums;
+using Shark.Fido2.Domain.Mappers;
 using Shark.Fido2.Domain.Tpm;
 
 namespace Shark.Fido2.Core.Validators.AttestationStatementValidators;
@@ -96,39 +95,44 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
         }
 
         // Verify that extraData is set to the hash of attToBeSigned using the hash algorithm employed in "alg".
-        var attToBeSigned = BytesArrayHelper.Concatenate(
-            attestationObjectData.AuthenticatorRawData,
-            clientData.ClientDataHash);
-
         if (!attestationStatementDict.TryGetValue(Algorithm, out var algorithm) || algorithm is not int)
         {
             return ValidatorInternalResult.Invalid("Attestation statement algorithm cannot be read");
         }
 
-        var certificates = _certificateProvider.GetCertificates(attestationStatementDict);
-        var attestationCertificate = _certificateProvider.GetAttestationCertificate(certificates);
+        if (!Enum.IsDefined(typeof(PublicKeyAlgorithm), algorithm))
+        {
+            return ValidatorInternalResult.Invalid("Attestation statement algorithm is not supported");
+        };
 
-        bool isValid;
-        if (credentialPublicKey.KeyType == (int)KeyTypeEnum.Rsa)
+        var attToBeSigned = BytesArrayHelper.Concatenate(
+            attestationObjectData.AuthenticatorRawData,
+            clientData.ClientDataHash);
+        var hashAlgorithmName = GenericKeyTypeMapper.Get(credentialPublicKey.KeyType, (int)algorithm);
+        var attToBeSignedHash = HashProvider.GetHash(attToBeSigned, hashAlgorithmName);
+        if (!BytesArrayComparer.CompareNullable(attToBeSignedHash, tpmsAttestation.ExtraData))
         {
-            isValid = _rsaCryptographyValidator.IsValid(
-                attToBeSigned,
-                tpmsAttestation.ExtraData,
-                attestationCertificate,
-                credentialPublicKey);
+            return ValidatorInternalResult.Invalid("Attestation statement hash mismatch");
         }
-        else if (credentialPublicKey.KeyType == (int)KeyTypeEnum.Ec2)
+
+        // Verify that attested contains a TPMS_CERTIFY_INFO structure as specified in [TPMv2-Part2]
+        // section 10.12.3, whose name field contains a valid Name for pubArea, as computed using the algorithm
+        // in the nameAlg field of pubArea using the procedure specified in [TPMv2-Part1] section 16.
+        // TODO: Implement this check.
+
+        // Verify that x5c is present.
+        if (!_certificateProvider.AreCertificatesPresent(attestationStatementDict))
         {
-            isValid = _ec2CryptographyValidator.IsValid(
-                attToBeSigned,
-                tpmsAttestation.ExtraData,
-                attestationCertificate,
-                credentialPublicKey);
+            return ValidatorInternalResult.Invalid("Attestation statement certificates are not found");
         }
-        else
-        {
-            throw new NotSupportedException("Unsupported key type");
-        }
+
+        // Note that the remaining fields in the "Standard Attestation Structure" [TPMv2-Part1] section 31.2,
+        // i.e., qualifiedSigner, clockInfo and firmwareVersion are ignored. These fields MAY be used as an
+        // input to risk engines.
+
+        // Verify the sig is a valid signature over certInfo using the attestation public key in aikCert with
+        // the algorithm specified in alg.
+        // TODO: Implement this check.
 
         return new AttestationStatementInternalResult(AttestationTypeEnum.AttCA);
     }

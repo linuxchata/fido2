@@ -17,7 +17,7 @@ internal sealed class Ec2CryptographyValidator : ICryptographyValidator
             return false;
         }
 
-        var algorithm = EcdsaKeyTypeMapper.Get(credentialPublicKey.Algorithm.Value);
+        var algorithm = Ec2KeyTypeMapper.Get(credentialPublicKey.Algorithm.Value);
 
         if (attestationCertificate != null)
         {
