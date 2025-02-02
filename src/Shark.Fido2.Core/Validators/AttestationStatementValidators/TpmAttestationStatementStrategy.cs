@@ -26,19 +26,22 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
     private readonly ICertificateAttestationStatementService _certificateProvider;
     private readonly ICryptographyValidator _rsaCryptographyValidator;
     private readonly ICryptographyValidator _ec2CryptographyValidator;
+    private readonly ISignatureAttestationStatementValidator _signatureValidator;
 
     public TpmAttestationStatementStrategy(
         ITpmtPublicAreaParserService tpmtPublicAreaParserService,
         ITpmsAttestationParserService tpmsAttestationParserService,
         ICertificateAttestationStatementService certificateAttestationStatementProvider,
         [FromKeyedServices("rsa")] ICryptographyValidator rsaCryptographyValidator,
-        [FromKeyedServices("ec2")] ICryptographyValidator ec2CryptographyValidator)
+        [FromKeyedServices("ec2")] ICryptographyValidator ec2CryptographyValidator,
+        ISignatureAttestationStatementValidator signatureAttestationStatementValidator)
     {
         _tpmtPublicAreaParserService = tpmtPublicAreaParserService;
         _tpmsAttestationParserService = tpmsAttestationParserService;
         _certificateProvider = certificateAttestationStatementProvider;
         _rsaCryptographyValidator = rsaCryptographyValidator;
         _ec2CryptographyValidator = ec2CryptographyValidator;
+        _signatureValidator = signatureAttestationStatementValidator;
     }
 
     public ValidatorInternalResult Validate(
@@ -132,7 +135,18 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
 
         // Verify the sig is a valid signature over certInfo using the attestation public key in aikCert with
         // the algorithm specified in alg.
-        // TODO: Implement this check.
+        var certificates = _certificateProvider.GetCertificates(attestationStatementDict);
+        var attestationIdentityKeyCertificate = _certificateProvider.GetAttestationCertificate(certificates);
+        if (!attestationStatementDict.TryGetValue("sig", out var signature) || signature is not byte[])
+        {
+            return ValidatorInternalResult.Invalid("Attestation statement signature cannot be read");
+        }
+
+        var isValid = _rsaCryptographyValidator.IsValid(
+            (byte[])certInfo,
+            (byte[])signature,
+            attestationIdentityKeyCertificate,
+            (int)algorithm);
 
         return new AttestationStatementInternalResult(AttestationTypeEnum.AttCA);
     }

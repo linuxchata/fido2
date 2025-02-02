@@ -42,22 +42,23 @@ public class TpmAttestationStatementStrategyTests
 
         var algorithmAttestationStatementValidator = new AlgorithmAttestationStatementValidator();
 
-        var signatureAttestationStatementValidator = new SignatureAttestationStatementValidator(
-            new RsaCryptographyValidator(),
-            new Ec2CryptographyValidator());
-
         var tpmtPublicAreaParserService = new TpmtPublicAreaParserService();
         var tpmsAttestationParserService = new TpmsAttestationParserService();
         var certificateAttestationStatementProvider = new CertificateAttestationStatementService();
         var rsaCryptographyValidator = new RsaCryptographyValidator();
         var ec2CryptographyValidator = new Ec2CryptographyValidator();
 
+        var signatureAttestationStatementValidator = new SignatureAttestationStatementValidator(
+            new RsaCryptographyValidator(),
+            new Ec2CryptographyValidator());
+
         _sut = new TpmAttestationStatementStrategy(
             tpmtPublicAreaParserService,
             tpmsAttestationParserService,
             certificateAttestationStatementProvider,
             rsaCryptographyValidator,
-            ec2CryptographyValidator);
+            ec2CryptographyValidator,
+            signatureAttestationStatementValidator);
     }
 
     [Test]
