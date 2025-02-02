@@ -69,7 +69,7 @@ internal class PackedAttestationStatementStrategy : IAttestationStatementStrateg
             // Verify that attestnCert meets the requirements in 8.2.1 Packed Attestation Statement Certificate Requirements.
             // If attestnCert contains an extension with OID 1.3.6.1.4.1.45724.1.1.4 (id-fido-gen-ce-aaguid)
             // verify that the value of this extension matches the aaguid in authenticatorData.
-            result = _certificateValidator.Validate(attestationStatementDict, attestationCertificate, attestationObjectData);
+            result = _certificateValidator.ValidatePacked(attestationCertificate, attestationObjectData);
             if (!result.IsValid)
             {
                 return result;

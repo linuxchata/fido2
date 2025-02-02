@@ -45,20 +45,17 @@ public class TpmAttestationStatementStrategyTests
         var tpmtPublicAreaParserService = new TpmtPublicAreaParserService();
         var tpmsAttestationParserService = new TpmsAttestationParserService();
         var certificateAttestationStatementProvider = new CertificateAttestationStatementService();
-        var rsaCryptographyValidator = new RsaCryptographyValidator();
-        var ec2CryptographyValidator = new Ec2CryptographyValidator();
-
         var signatureAttestationStatementValidator = new SignatureAttestationStatementValidator(
             new RsaCryptographyValidator(),
             new Ec2CryptographyValidator());
+        var certificateAttestationStatementValidator = new CertificateAttestationStatementValidator();
 
         _sut = new TpmAttestationStatementStrategy(
             tpmtPublicAreaParserService,
             tpmsAttestationParserService,
             certificateAttestationStatementProvider,
-            rsaCryptographyValidator,
-            ec2CryptographyValidator,
-            signatureAttestationStatementValidator);
+            signatureAttestationStatementValidator,
+            certificateAttestationStatementValidator);
     }
 
     [Test]

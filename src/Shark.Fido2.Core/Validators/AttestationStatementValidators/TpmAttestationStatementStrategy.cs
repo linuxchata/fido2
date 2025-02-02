@@ -24,24 +24,21 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
     private readonly ITpmtPublicAreaParserService _tpmtPublicAreaParserService;
     private readonly ITpmsAttestationParserService _tpmsAttestationParserService;
     private readonly ICertificateAttestationStatementService _certificateProvider;
-    private readonly ICryptographyValidator _rsaCryptographyValidator;
-    private readonly ICryptographyValidator _ec2CryptographyValidator;
     private readonly ISignatureAttestationStatementValidator _signatureValidator;
+    private readonly ICertificateAttestationStatementValidator _certificateValidator;
 
     public TpmAttestationStatementStrategy(
         ITpmtPublicAreaParserService tpmtPublicAreaParserService,
         ITpmsAttestationParserService tpmsAttestationParserService,
         ICertificateAttestationStatementService certificateAttestationStatementProvider,
-        [FromKeyedServices("rsa")] ICryptographyValidator rsaCryptographyValidator,
-        [FromKeyedServices("ec2")] ICryptographyValidator ec2CryptographyValidator,
-        ISignatureAttestationStatementValidator signatureAttestationStatementValidator)
+        ISignatureAttestationStatementValidator signatureAttestationStatementValidator,
+        ICertificateAttestationStatementValidator certificateAttestationStatementValidator)
     {
         _tpmtPublicAreaParserService = tpmtPublicAreaParserService;
         _tpmsAttestationParserService = tpmsAttestationParserService;
         _certificateProvider = certificateAttestationStatementProvider;
-        _rsaCryptographyValidator = rsaCryptographyValidator;
-        _ec2CryptographyValidator = ec2CryptographyValidator;
         _signatureValidator = signatureAttestationStatementValidator;
+        _certificateValidator = certificateAttestationStatementValidator;
     }
 
     public ValidatorInternalResult Validate(
@@ -143,6 +140,13 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
             (KeyTypeEnum)credentialPublicKey.KeyType,
             (int)algorithm,
             attestationIdentityKeyCertificate);
+        if (!result.IsValid)
+        {
+            return result;
+        }
+
+        // Verify that aikCert meets the requirements in § 8.3.1 TPM Attestation Statement Certificate Requirements.
+        result = _certificateValidator.ValidateTpm(attestationIdentityKeyCertificate, attestationObjectData);
         if (!result.IsValid)
         {
             return result;
