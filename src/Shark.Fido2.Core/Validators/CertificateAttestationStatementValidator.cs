@@ -11,6 +11,7 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
     private const string JointIsoItuTExtension = "2.23.133.8.3";
     private const string BasicConstraintsExtension = "Basic Constraints";
     private const string EnhancedKeyUsageExtension = "Enhanced Key Usage";
+    private const string SubjectAlternativeNameExtension = "Subject Alternative Name";
     private const string SubjectCountry = "C";
     private const string SubjectOrganization = "O";
     private const string SubjectOrganizationalUnit = "OU";
@@ -103,6 +104,13 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
 
         // The Subject Alternative Name extension MUST be set as defined in [TPMv2-EK-Profile] section 3.2.9.
         // TODO: Implement this check
+        var subjectAlternativeNameExtension = attestationCertificate.Extensions?
+            .FirstOrDefault(e => string.Equals(e.Oid?.FriendlyName, SubjectAlternativeNameExtension, StringComparison.Ordinal))
+            as X509SubjectAlternativeNameExtension;
+        if (subjectAlternativeNameExtension == null)
+        {
+            return ValidatorInternalResult.Invalid("Attestation statement certificate subject alternative name is invalid");
+        }
 
         // The Extended Key Usage extension MUST contain the OID 2.23.133.8.3
         // ("joint-iso-itu-t(2) internationalorganizations(23) 133 tcg-kp(8) tcg-kp-AIKCertificate(3)").
