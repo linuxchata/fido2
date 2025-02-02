@@ -137,16 +137,16 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
         // the algorithm specified in alg.
         var certificates = _certificateProvider.GetCertificates(attestationStatementDict);
         var attestationIdentityKeyCertificate = _certificateProvider.GetAttestationCertificate(certificates);
-        if (!attestationStatementDict.TryGetValue("sig", out var signature) || signature is not byte[])
-        {
-            return ValidatorInternalResult.Invalid("Attestation statement signature cannot be read");
-        }
-
-        var isValid = _rsaCryptographyValidator.IsValid(
+        var result = _signatureValidator.Validate(
             (byte[])certInfo,
-            (byte[])signature,
-            attestationIdentityKeyCertificate,
-            (int)algorithm);
+            attestationStatementDict,
+            (KeyTypeEnum)credentialPublicKey.KeyType,
+            (int)algorithm,
+            attestationIdentityKeyCertificate);
+        if (!result.IsValid)
+        {
+            return result;
+        }
 
         return new AttestationStatementInternalResult(AttestationTypeEnum.AttCA);
     }

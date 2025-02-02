@@ -5,7 +5,11 @@ namespace Shark.Fido2.Core.Abstractions.Validators;
 
 public interface ICryptographyValidator
 {
-    bool IsValid(byte[] data, byte[] signature, X509Certificate2 attestationCertificate, CredentialPublicKey credentialPublicKey);
+    bool IsValid(
+        byte[] data,
+        byte[] signature,
+        CredentialPublicKey credentialPublicKey,
+        X509Certificate2? attestationCertificate = null);
 
-    bool IsValid(byte[] data, byte[] signature, X509Certificate2 attestationCertificate, int algorithm);
+    bool IsValid(byte[] data, byte[] signature, int algorithm, X509Certificate2 attestationCertificate);
 }

@@ -11,15 +11,10 @@ internal sealed class Ec2CryptographyValidator : ICryptographyValidator
     public bool IsValid(
         byte[] data,
         byte[] signature,
-        X509Certificate2 attestationCertificate,
-        CredentialPublicKey credentialPublicKey)
+        CredentialPublicKey credentialPublicKey,
+        X509Certificate2? attestationCertificate = null)
     {
-        if (!credentialPublicKey.Algorithm.HasValue)
-        {
-            return false;
-        }
-
-        var algorithm = Ec2KeyTypeMapper.Get(credentialPublicKey.Algorithm.Value);
+        var algorithm = Ec2KeyTypeMapper.Get(credentialPublicKey.Algorithm);
 
         if (attestationCertificate != null)
         {
@@ -46,7 +41,7 @@ internal sealed class Ec2CryptographyValidator : ICryptographyValidator
         }
     }
 
-    public bool IsValid(byte[] data, byte[] signature, X509Certificate2 attestationCertificate, int algorithm)
+    public bool IsValid(byte[] data, byte[] signature, int algorithm, X509Certificate2 attestationCertificate)
     {
         if (attestationCertificate == null)
         {
@@ -55,6 +50,9 @@ internal sealed class Ec2CryptographyValidator : ICryptographyValidator
 
         var ec2Algorithm = Ec2KeyTypeMapper.Get(algorithm);
 
-        throw new NotImplementedException();
+        using var ecdsa = attestationCertificate.GetECDsaPublicKey() ??
+            throw new ArgumentException("Certificate does not have an ECDsa public key");
+
+        return ecdsa!.VerifyData(data, signature, ec2Algorithm.HashAlgorithmName, DSASignatureFormat.Rfc3279DerSequence);
     }
 }

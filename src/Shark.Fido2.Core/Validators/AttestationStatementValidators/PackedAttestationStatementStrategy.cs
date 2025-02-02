@@ -1,6 +1,7 @@
 ﻿using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
+using Shark.Fido2.Core.Helpers;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain;
 using Shark.Fido2.Domain.Enums;
@@ -44,6 +45,10 @@ internal class PackedAttestationStatementStrategy : IAttestationStatementStrateg
 
         var credentialPublicKey = attestationObjectData.AuthenticatorData!.AttestedCredentialData.CredentialPublicKey;
 
+        var concatenatedData = BytesArrayHelper.Concatenate(
+            attestationObjectData.AuthenticatorRawData,
+            clientData.ClientDataHash);
+
         // If x5c is present
         if (_certificateProvider.AreCertificatesPresent(attestationStatementDict))
         {
@@ -52,11 +57,10 @@ internal class PackedAttestationStatementStrategy : IAttestationStatementStrateg
             var certificates = _certificateProvider.GetCertificates(attestationStatementDict);
             var attestationCertificate = _certificateProvider.GetAttestationCertificate(certificates);
             var result = _signatureValidator.Validate(
+                concatenatedData,
                 attestationStatementDict,
                 credentialPublicKey,
-                attestationCertificate,
-                attestationObjectData.AuthenticatorRawData,
-                clientData.ClientDataHash);
+                attestationCertificate);
             if (!result.IsValid)
             {
                 return result;
@@ -92,12 +96,7 @@ internal class PackedAttestationStatementStrategy : IAttestationStatementStrateg
 
             // Verify that sig is a valid signature over the concatenation of authenticatorData and clientDataHash
             // using the credential public key with alg.
-            result = _signatureValidator.Validate(
-                attestationStatementDict,
-                credentialPublicKey,
-                null!,
-                attestationObjectData.AuthenticatorRawData,
-                clientData.ClientDataHash);
+            result = _signatureValidator.Validate(concatenatedData, attestationStatementDict, credentialPublicKey);
             if (!result.IsValid)
             {
                 return result;

@@ -89,13 +89,13 @@ internal class AuthenticatorDataParserService : IAuthenticatorDataParserService
         if (credentialPublicKey.KeyType == (int)KeyTypeEnum.Okp)
         {
             // https://datatracker.ietf.org/doc/html/rfc8152#section-13.2
-            credentialPublicKey.Curve = GetCredentialPublicKeyIntParameter(coseKeyFormat, CoseKeyIndex.Curve);
+            credentialPublicKey.Curve = GetCredentialPublicKeyIntNullableParameter(coseKeyFormat, CoseKeyIndex.Curve);
             credentialPublicKey.XCoordinate = GetCredentialPublicKeyParameter(coseKeyFormat, CoseKeyIndex.XCoordinate);
         }
         else if (credentialPublicKey.KeyType == (int)KeyTypeEnum.Ec2)
         {
             // https://datatracker.ietf.org/doc/html/rfc8152#section-13.1
-            credentialPublicKey.Curve = GetCredentialPublicKeyIntParameter(coseKeyFormat, CoseKeyIndex.Curve);
+            credentialPublicKey.Curve = GetCredentialPublicKeyIntNullableParameter(coseKeyFormat, CoseKeyIndex.Curve);
             credentialPublicKey.XCoordinate = GetCredentialPublicKeyParameter(coseKeyFormat, CoseKeyIndex.XCoordinate);
             credentialPublicKey.YCoordinate = GetCredentialPublicKeyParameter(coseKeyFormat, CoseKeyIndex.YCoordinate);
         }
@@ -118,11 +118,19 @@ internal class AuthenticatorDataParserService : IAuthenticatorDataParserService
         return credentialPublicKey;
     }
 
-    private int? GetCredentialPublicKeyIntParameter(
-        Dictionary<int, object> coseKeyFormat,
-        int coseKeyAlgorithmIndex)
+    private static int GetCredentialPublicKeyIntParameter(Dictionary<int, object> coseKeyFormat, int coseKeyIndex)
     {
-        if (coseKeyFormat.TryGetValue(coseKeyAlgorithmIndex, out var value))
+        if (coseKeyFormat.TryGetValue(coseKeyIndex, out var value))
+        {
+            return Convert.ToInt32(value);
+        };
+
+        throw new ArgumentException(nameof(coseKeyFormat));
+    }
+
+    private static int? GetCredentialPublicKeyIntNullableParameter(Dictionary<int, object> coseKeyFormat, int coseKeyIndex)
+    {
+        if (coseKeyFormat.TryGetValue(coseKeyIndex, out var value))
         {
             return Convert.ToInt32(value);
         };
@@ -130,11 +138,9 @@ internal class AuthenticatorDataParserService : IAuthenticatorDataParserService
         return null;
     }
 
-    private byte[]? GetCredentialPublicKeyParameter(
-        Dictionary<int, object> coseKeyFormat,
-        int coseKeyAlgorithmIndex)
+    private static byte[]? GetCredentialPublicKeyParameter(Dictionary<int, object> coseKeyFormat, int coseKeyIndex)
     {
-        if (coseKeyFormat.TryGetValue(coseKeyAlgorithmIndex, out var value))
+        if (coseKeyFormat.TryGetValue(coseKeyIndex, out var value))
         {
             return (byte[])value;
         };

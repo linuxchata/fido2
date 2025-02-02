@@ -11,19 +11,14 @@ internal sealed class RsaCryptographyValidator : ICryptographyValidator
     public bool IsValid(
         byte[] data,
         byte[] signature,
-        X509Certificate2 attestationCertificate,
-        CredentialPublicKey credentialPublicKey)
+        CredentialPublicKey credentialPublicKey,
+        X509Certificate2? attestationCertificate = null)
     {
-        if (!credentialPublicKey.Algorithm.HasValue)
-        {
-            return false;
-        }
-
-        var rs256Algorithm = RsaKeyTypeMapper.Get(credentialPublicKey.Algorithm.Value);
+        var rs256Algorithm = RsaKeyTypeMapper.Get(credentialPublicKey.Algorithm);
 
         if (attestationCertificate != null)
         {
-            return IsValidAttestationCertificate(data, signature, attestationCertificate, rs256Algorithm);
+            return IsValidAttestationCertificate(data, signature, rs256Algorithm, attestationCertificate);
         }
         else
         {
@@ -39,7 +34,7 @@ internal sealed class RsaCryptographyValidator : ICryptographyValidator
         }
     }
 
-    public bool IsValid(byte[] data, byte[] signature, X509Certificate2 attestationCertificate, int algorithm)
+    public bool IsValid(byte[] data, byte[] signature, int algorithm, X509Certificate2 attestationCertificate)
     {
         if (attestationCertificate == null)
         {
@@ -48,14 +43,14 @@ internal sealed class RsaCryptographyValidator : ICryptographyValidator
 
         var rs256Algorithm = RsaKeyTypeMapper.Get(algorithm);
 
-        return IsValidAttestationCertificate(data, signature, attestationCertificate, rs256Algorithm);
+        return IsValidAttestationCertificate(data, signature, rs256Algorithm, attestationCertificate);
     }
 
     private static bool IsValidAttestationCertificate(
         byte[] data,
         byte[] signature,
-        X509Certificate2 attestationCertificate,
-        Rs256Algorithm algorithm)
+        Rs256Algorithm algorithm,
+        X509Certificate2 attestationCertificate)
     {
         using var rsa = attestationCertificate.GetRSAPublicKey() ??
             throw new ArgumentException("Certificate does not have a RSA public key");

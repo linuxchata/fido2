@@ -1,7 +1,6 @@
 ﻿using System.Security.Cryptography.X509Certificates;
 using Microsoft.Extensions.DependencyInjection;
 using Shark.Fido2.Core.Abstractions.Validators;
-using Shark.Fido2.Core.Helpers;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain;
 using Shark.Fido2.Domain.Enums;
@@ -11,6 +10,8 @@ namespace Shark.Fido2.Core.Validators;
 internal class SignatureAttestationStatementValidator : ISignatureAttestationStatementValidator
 {
     private const string Signature = "sig";
+    private const string SignatureCannotBeReadErrorMessage = "Attestation statement signature cannot be read";
+    private const string SignatureIsNotValid = "Attestation statement signature is not valid";
 
     private readonly ICryptographyValidator _rsaCryptographyValidator;
     private readonly ICryptographyValidator _ec2CryptographyValidator;
@@ -24,46 +25,91 @@ internal class SignatureAttestationStatementValidator : ISignatureAttestationSta
     }
 
     public ValidatorInternalResult Validate(
+        byte[] data,
         Dictionary<string, object> attestationStatementDict,
         CredentialPublicKey credentialPublicKey,
-        X509Certificate2 attestationCertificate,
-        byte[] authenticatorRawData,
-        byte[] clientDataHash)
+        X509Certificate2? attestationCertificate = null)
     {
-        // Verify that sig is a valid signature over the concatenation of authenticatorData and
-        // clientDataHash using the credential public key with alg.
+        ArgumentNullException.ThrowIfNull(data);
+        ArgumentNullException.ThrowIfNull(attestationStatementDict);
+        ArgumentNullException.ThrowIfNull(credentialPublicKey);
+
         if (!attestationStatementDict.TryGetValue(Signature, out var signature) || signature is not byte[])
         {
-            return ValidatorInternalResult.Invalid("Attestation statement signature cannot be read");
+            return ValidatorInternalResult.Invalid(SignatureCannotBeReadErrorMessage);
         }
-
-        var concatenatedData = BytesArrayHelper.Concatenate(authenticatorRawData, clientDataHash);
 
         bool isValid;
         if (credentialPublicKey.KeyType == (int)KeyTypeEnum.Rsa)
         {
             isValid = _rsaCryptographyValidator.IsValid(
-                concatenatedData,
+                data,
                 (byte[])signature,
-                attestationCertificate,
-                credentialPublicKey);
+                credentialPublicKey,
+                attestationCertificate);
         }
         else if (credentialPublicKey.KeyType == (int)KeyTypeEnum.Ec2)
         {
             isValid = _ec2CryptographyValidator.IsValid(
-                concatenatedData,
+                data,
                 (byte[])signature,
-                attestationCertificate,
-                credentialPublicKey);
+                credentialPublicKey,
+                attestationCertificate);
         }
         else
         {
-            throw new NotSupportedException("Unsupported key type");
+            throw new NotSupportedException($"Unsupported key type {credentialPublicKey.KeyType}");
         }
 
         if (!isValid)
         {
-            return ValidatorInternalResult.Invalid("Attestation statement signature is not valid");
+            return ValidatorInternalResult.Invalid(SignatureIsNotValid);
+        }
+
+        return ValidatorInternalResult.Valid();
+    }
+
+    public ValidatorInternalResult Validate(
+        byte[] data,
+        Dictionary<string, object> attestationStatementDict,
+        KeyTypeEnum keyType,
+        int algorithm,
+        X509Certificate2 attestationCertificate)
+    {
+        ArgumentNullException.ThrowIfNull(data);
+        ArgumentNullException.ThrowIfNull(attestationStatementDict);
+        ArgumentNullException.ThrowIfNull(attestationCertificate);
+
+        if (!attestationStatementDict.TryGetValue(Signature, out var signature) || signature is not byte[])
+        {
+            return ValidatorInternalResult.Invalid(SignatureCannotBeReadErrorMessage);
+        }
+
+        bool isValid;
+        if (keyType == KeyTypeEnum.Rsa)
+        {
+            isValid = _rsaCryptographyValidator.IsValid(
+                data,
+                (byte[])signature,
+                algorithm,
+                attestationCertificate);
+        }
+        else if (keyType == KeyTypeEnum.Ec2)
+        {
+            isValid = _ec2CryptographyValidator.IsValid(
+                data,
+                (byte[])signature,
+                algorithm,
+                attestationCertificate);
+        }
+        else
+        {
+            throw new NotSupportedException($"Unsupported key type {keyType}");
+        }
+
+        if (!isValid)
+        {
+            return ValidatorInternalResult.Invalid(SignatureIsNotValid);
         }
 
         return ValidatorInternalResult.Valid();
