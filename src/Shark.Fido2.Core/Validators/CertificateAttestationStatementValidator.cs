@@ -1,5 +1,7 @@
 ﻿using System.Security.Cryptography.X509Certificates;
+using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Abstractions.Validators;
+using Shark.Fido2.Core.Dictionaries;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain;
 
@@ -17,6 +19,14 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
     private const string SubjectOrganizationalUnit = "OU";
     private const string SubjectCommonName = "CN";
     private const string OrganizationalUnitAuthenticatorAttestation = "Authenticator Attestation";
+
+    private readonly ISubjectAlternativeNameParserService _subjectAlternativeNameParserService;
+
+    public CertificateAttestationStatementValidator(
+        ISubjectAlternativeNameParserService subjectAlternativeNameParserService)
+    {
+        _subjectAlternativeNameParserService = subjectAlternativeNameParserService;
+    }
 
     public ValidatorInternalResult ValidatePacked(
         X509Certificate2 attestationCertificate,
@@ -103,11 +113,30 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
         }
 
         // The Subject Alternative Name extension MUST be set as defined in [TPMv2-EK-Profile] section 3.2.9.
-        // TODO: Implement this check
         var subjectAlternativeNameExtension = attestationCertificate.Extensions?
             .FirstOrDefault(e => string.Equals(e.Oid?.FriendlyName, SubjectAlternativeNameExtension, StringComparison.Ordinal))
             as X509SubjectAlternativeNameExtension;
         if (subjectAlternativeNameExtension == null)
+        {
+            return ValidatorInternalResult.Invalid("Attestation statement certificate subject alternative name is invalid");
+        }
+
+        if (!subjectAlternativeNameExtension.Critical)
+        {
+            return ValidatorInternalResult.Invalid(
+                $"Attestation statement certificate subject alternative name extenstion is not marked as critical");
+        }
+
+        var tpmIssuer = _subjectAlternativeNameParserService.Parse(subjectAlternativeNameExtension);
+
+        // The TPM manufacturer MUST be the vendor ID defined in the TCG Vendor ID Registry
+        if (!TpmCapabilitiesVendors.Exists(tpmIssuer.ManufacturerValue))
+        {
+            return ValidatorInternalResult.Invalid("Attestation statement certificate subject alternative name has invalid TMP manufacturer");
+        }
+
+        if (string.IsNullOrWhiteSpace(tpmIssuer.Model) ||
+            string.IsNullOrWhiteSpace(tpmIssuer.Version))
         {
             return ValidatorInternalResult.Invalid("Attestation statement certificate subject alternative name is invalid");
         }

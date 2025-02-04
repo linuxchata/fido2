@@ -11,8 +11,4 @@
     <ProjectReference Include="..\Shark.Fido2.Domain\Shark.Fido2.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Enums\" />
-  </ItemGroup>
-
 </Project>

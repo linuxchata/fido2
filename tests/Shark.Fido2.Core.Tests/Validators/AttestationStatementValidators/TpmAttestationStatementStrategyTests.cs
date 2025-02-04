@@ -48,7 +48,8 @@ public class TpmAttestationStatementStrategyTests
         var signatureAttestationStatementValidator = new SignatureAttestationStatementValidator(
             new RsaCryptographyValidator(),
             new Ec2CryptographyValidator());
-        var certificateAttestationStatementValidator = new CertificateAttestationStatementValidator();
+        var certificateAttestationStatementValidator = new CertificateAttestationStatementValidator(
+            new SubjectAlternativeNameParserService());
 
         _sut = new TpmAttestationStatementStrategy(
             tpmtPublicAreaParserService,

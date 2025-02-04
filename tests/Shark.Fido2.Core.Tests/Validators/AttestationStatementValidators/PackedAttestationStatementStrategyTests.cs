@@ -48,7 +48,9 @@ public class PackedAttestationStatementStrategyTests
 
         var certificateAttestationStatementProvider = new CertificateAttestationStatementService();
 
-        var certificateAttestationStatementValidator = new CertificateAttestationStatementValidator();
+        var subjectAlternativeNameParserService = new SubjectAlternativeNameParserService();
+        var certificateAttestationStatementValidator = new CertificateAttestationStatementValidator(
+            subjectAlternativeNameParserService);
 
         _sut = new PackedAttestationStatementStrategy(
             algorithmAttestationStatementValidator,
