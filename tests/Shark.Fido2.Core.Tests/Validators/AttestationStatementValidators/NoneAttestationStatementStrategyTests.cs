@@ -11,7 +11,7 @@ using Shark.Fido2.Domain.Enums;
 namespace Shark.Fido2.Core.Tests.Validators.AttestationStatementValidators;
 
 [TestFixture]
-public class NoneAttestationStatementStrategyTests
+internal class NoneAttestationStatementStrategyTests
 {
     private Mock<IAttestationObjectValidator> _attestationObjectValidatorMock;
     private AuthenticatorDataParserService _provider;

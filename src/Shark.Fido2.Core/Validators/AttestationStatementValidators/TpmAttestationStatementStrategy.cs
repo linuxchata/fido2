@@ -119,7 +119,7 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
         // Verify that attested contains a TPMS_CERTIFY_INFO structure as specified in [TPMv2-Part2]
         // section 10.12.3, whose name field contains a valid Name for pubArea, as computed using the algorithm
         // in the nameAlg field of pubArea using the procedure specified in [TPMv2-Part1] section 16.
-        var pubAreaHash = HashProvider.GetHash((byte[])pubArea, GenericTmpHashAlgorithmMapper.Get(tpmtPublic.NameAlg));
+        var pubAreaHash = HashProvider.GetHash((byte[])pubArea, TmpHashAlgorithmMapper.Get(tpmtPublic.NameAlg));
         if (!BytesArrayComparer.CompareNullable(pubAreaHash, tpmsAttestation.Attested.Name))
         {
             return ValidatorInternalResult.Invalid("Attestation statement hash mismatch");

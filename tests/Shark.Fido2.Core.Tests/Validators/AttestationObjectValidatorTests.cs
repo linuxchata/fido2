@@ -3,7 +3,6 @@ using Moq;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Configurations;
 using Shark.Fido2.Core.Constants;
-using Shark.Fido2.Core.Helpers;
 using Shark.Fido2.Core.Services;
 using Shark.Fido2.Core.Validators;
 using Shark.Fido2.Domain;
@@ -12,7 +11,7 @@ using Shark.Fido2.Domain.Enums;
 namespace Shark.Fido2.Core.Tests.Validators;
 
 [TestFixture]
-public class AttestationObjectValidatorTests
+internal class AttestationObjectValidatorTests
 {
     private AttestationObjectValidator _sut = null!;
 

@@ -7,7 +7,7 @@ using Shark.Fido2.Domain;
 namespace Shark.Fido2.Core.Tests.Validators;
 
 [TestFixture]
-public class ClientDataValidatorTests
+internal class ClientDataValidatorTests
 {
     private ClientDataValidator _sut = null!;
 
