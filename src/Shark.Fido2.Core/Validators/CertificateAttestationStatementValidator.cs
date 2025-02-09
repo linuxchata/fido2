@@ -1,5 +1,7 @@
 ﻿using System.Security.Cryptography.X509Certificates;
+using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Abstractions.Validators;
+using Shark.Fido2.Core.Dictionaries;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain;
 
@@ -7,25 +9,35 @@ namespace Shark.Fido2.Core.Validators;
 
 internal class CertificateAttestationStatementValidator : ICertificateAttestationStatementValidator
 {
-    private const string Certificate = "x5c";
     private const string IdFidoGenCeAaguidExtension = "1.3.6.1.4.1.45724.1.1.4";
-    private const string BasicConstraintsExtension = "Basic Constraints";
+    private const string JointIsoItuTExtension = "2.23.133.8.3";
+    private const string BasicConstraintsExtension = "2.5.29.19";
+    private const string EnhancedKeyUsageExtension = "2.5.29.37";
+    private const string SubjectAlternativeNameExtension = "2.5.29.17";
+
     private const string SubjectCountry = "C";
     private const string SubjectOrganization = "O";
     private const string SubjectOrganizationalUnit = "OU";
     private const string SubjectCommonName = "CN";
+
     private const string OrganizationalUnitAuthenticatorAttestation = "Authenticator Attestation";
 
-    public ValidatorInternalResult Validate(
-        Dictionary<string, object> attestationStatementDict,
+    private readonly ISubjectAlternativeNameParserService _subjectAlternativeNameParserService;
+
+    public CertificateAttestationStatementValidator(
+        ISubjectAlternativeNameParserService subjectAlternativeNameParserService)
+    {
+        _subjectAlternativeNameParserService = subjectAlternativeNameParserService;
+    }
+
+    public ValidatorInternalResult ValidatePacked(
         X509Certificate2 attestationCertificate,
         AttestationObjectData attestationObjectData)
     {
+        ArgumentNullException.ThrowIfNull(attestationCertificate);
+        ArgumentNullException.ThrowIfNull(attestationObjectData);
+
         // Verify that attestnCert meets the requirements in § 8.2.1 Packed Attestation Statement Certificate Requirements.
-        if (!attestationStatementDict.TryGetValue(Certificate, out var x5c) || x5c is not List<object>)
-        {
-            return ValidatorInternalResult.Invalid("Attestation certificates x5c cannot be read");
-        }
 
         // Version MUST be set to 3 (which is indicated by an ASN.1 INTEGER with value 2).
         if (attestationCertificate.Version != 3)
@@ -57,10 +69,8 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
         }
 
         // The Basic Constraints extension MUST have the CA component set to false.
-        var basicConstraints = attestationCertificate.Extensions?
-            .FirstOrDefault(e => string.Equals(e.Oid?.FriendlyName, BasicConstraintsExtension, StringComparison.Ordinal))
-            as X509BasicConstraintsExtension;
-        if (basicConstraints != null && basicConstraints.CertificateAuthority)
+        var basicConstraints = GetBasicConstraints(attestationCertificate);
+        if (basicConstraints == null || basicConstraints.CertificateAuthority)
         {
             return ValidatorInternalResult.Invalid("Attestation statement certificate authority is invalid");
         }
@@ -83,8 +93,106 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
         return ValidatorInternalResult.Valid();
     }
 
+    public ValidatorInternalResult ValidateTpm(
+        X509Certificate2 attestationCertificate,
+        AttestationObjectData attestationObjectData)
+    {
+        ArgumentNullException.ThrowIfNull(attestationCertificate);
+        ArgumentNullException.ThrowIfNull(attestationObjectData);
+
+        // Verify that aikCert meets the requirements in § 8.3.1 TPM Attestation Statement Certificate Requirements.
+
+        // Version MUST be set to 3.
+        if (attestationCertificate.Version != 3)
+        {
+            return ValidatorInternalResult.Invalid("Attestation statement certificate has unexpected version");
+        }
+
+        // Subject field MUST be set to empty.
+        if (!string.IsNullOrWhiteSpace(attestationCertificate.SubjectName?.Name))
+        {
+            return ValidatorInternalResult.Invalid("Attestation statement certificate has not empty subject");
+        }
+
+        // The Subject Alternative Name extension MUST be set as defined in [TPMv2-EK-Profile] section 3.2.9.
+        var subjectAlternativeNameExtension = attestationCertificate.Extensions?
+            .FirstOrDefault(e => string.Equals(e.Oid?.Value, SubjectAlternativeNameExtension, StringComparison.Ordinal))
+            as X509SubjectAlternativeNameExtension;
+        if (subjectAlternativeNameExtension == null)
+        {
+            return ValidatorInternalResult.Invalid("Attestation statement certificate subject alternative name is invalid");
+        }
+
+        if (!subjectAlternativeNameExtension.Critical)
+        {
+            return ValidatorInternalResult.Invalid(
+                $"Attestation statement certificate subject alternative name extenstion is not marked as critical");
+        }
+
+        var tpmIssuer = _subjectAlternativeNameParserService.Parse(subjectAlternativeNameExtension);
+
+        // The TPM manufacturer MUST be the vendor ID defined in the TCG Vendor ID Registry
+        if (!TpmCapabilitiesVendors.Exists(tpmIssuer!.ManufacturerValue))
+        {
+            return ValidatorInternalResult.Invalid($"Attestation statement certificate subject alternative name has invalid TMP manufacturer {tpmIssuer.ManufacturerValue}");
+        }
+
+        if (string.IsNullOrWhiteSpace(tpmIssuer.Model) ||
+            string.IsNullOrWhiteSpace(tpmIssuer.Version))
+        {
+            return ValidatorInternalResult.Invalid("Attestation statement certificate subject alternative name is invalid");
+        }
+
+        // The Extended Key Usage extension MUST contain the OID 2.23.133.8.3
+        // ("joint-iso-itu-t(2) internationalorganizations(23) 133 tcg-kp(8) tcg-kp-AIKCertificate(3)").
+        var enhancedKeyUsageExtension = attestationCertificate.Extensions?
+            .FirstOrDefault(e => string.Equals(e.Oid?.Value, EnhancedKeyUsageExtension, StringComparison.Ordinal))
+            as X509EnhancedKeyUsageExtension;
+        if (enhancedKeyUsageExtension == null)
+        {
+            return ValidatorInternalResult.Invalid("Attestation statement certificate enhanced key usage is invalid");
+        }
+
+        var jointIsoItuTExtension = enhancedKeyUsageExtension.EnhancedKeyUsages[JointIsoItuTExtension];
+        if (jointIsoItuTExtension == null)
+        {
+            return ValidatorInternalResult.Invalid("Attestation statement certificate enhanced key usage is invalid");
+        }
+
+        // The Basic Constraints extension MUST have the CA component set to false.
+        var basicConstraints = GetBasicConstraints(attestationCertificate);
+        if (basicConstraints == null || basicConstraints.CertificateAuthority)
+        {
+            return ValidatorInternalResult.Invalid("Attestation statement certificate authority is invalid");
+        }
+
+        // TODO: An Authority Information Access (AIA) extension with entry id-ad-ocsp and a CRL Distribution Point
+        // extension [RFC5280] are both OPTIONAL as the status of many attestation certificates is available through
+        // metadata services. See, for example, the FIDO Metadata Service [FIDOMetadataService].
+
+        // If aikCert contains an extension with OID 1.3.6.1.4.1.45724.1.1.4 (id-fido-gen-ce-aaguid) verify that
+        // the value of this extension matches the aaguid in authenticatorData.
+        var idFidoGenCeAaguid = attestationCertificate.Extensions?.FirstOrDefault(
+            e => string.Equals(e.Oid?.Value, IdFidoGenCeAaguidExtension, StringComparison.Ordinal));
+        if (idFidoGenCeAaguid != null)
+        {
+            var aaGuid = ParseGuidFromOctetString(idFidoGenCeAaguid.RawData);
+            if (aaGuid != attestationObjectData.AuthenticatorData!.AttestedCredentialData.AaGuid)
+            {
+                return ValidatorInternalResult.Invalid("Attestation statement AAGUID mismatch");
+            }
+        }
+
+        return ValidatorInternalResult.Valid();
+    }
+
     private static bool VerifyCertificateSubject(X509Certificate2 certificate)
     {
+        if (certificate.Subject == null)
+        {
+            return false;
+        }
+
         var distinguishedNames = certificate.SubjectName.EnumerateRelativeDistinguishedNames();
         var distinguishedNamesMap = new Dictionary<string, string?>();
         foreach (var distinguishedName in distinguishedNames)
@@ -132,8 +240,20 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
         return true;
     }
 
+    private static X509BasicConstraintsExtension? GetBasicConstraints(X509Certificate2 attestationCertificate)
+    {
+        return attestationCertificate.Extensions?
+            .FirstOrDefault(e => string.Equals(e.Oid?.Value, BasicConstraintsExtension, StringComparison.Ordinal))
+            as X509BasicConstraintsExtension;
+    }
+
     private static Guid ParseGuidFromOctetString(byte[] data)
     {
+        if (data == null || data.Length < 2)
+        {
+            throw new ArgumentException("Invalid certificate extension value (unexpected length)");
+        }
+
         // Check whether octet string tag is 0x04
         if (data[0] != 0x04)
         {

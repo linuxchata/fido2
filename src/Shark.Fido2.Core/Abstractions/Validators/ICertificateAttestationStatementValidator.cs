@@ -6,8 +6,11 @@ namespace Shark.Fido2.Core.Abstractions.Validators;
 
 public interface ICertificateAttestationStatementValidator
 {
-    ValidatorInternalResult Validate(
-        Dictionary<string, object> attestationStatementDict,
+    ValidatorInternalResult ValidatePacked(
+        X509Certificate2 attestationCertificate,
+        AttestationObjectData attestationObjectData);
+
+    ValidatorInternalResult ValidateTpm(
         X509Certificate2 attestationCertificate,
         AttestationObjectData attestationObjectData);
 }

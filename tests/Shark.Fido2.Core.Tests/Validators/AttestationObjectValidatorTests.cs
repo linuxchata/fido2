@@ -4,6 +4,7 @@ using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Configurations;
 using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Helpers;
+using Shark.Fido2.Core.Services;
 using Shark.Fido2.Core.Validators;
 using Shark.Fido2.Domain;
 using Shark.Fido2.Domain.Enums;
@@ -38,9 +39,9 @@ public class AttestationObjectValidatorTests
         var authenticatorDataString = "SZYN5YgOjGh0NBcPZHZgW4/krrmihjLHmVzzuoMdl2NdAAAAAAAAAAAAAAAAAAAAAAAAAAAAFNIOIaOVgJRyI6ffE8tNV4tHvGJVpQECAyYgASFYIEgIOe/+LSvpyPB010CZ4+ox3EAG6dp611nzoff5QH15IlggC/DWA8k1rogu86PSgVzEjD9ObamYaO2dbj710ogx1dw=";
         var authenticatorDataArray = Convert.FromBase64String(authenticatorDataString);
 
-        // Temporary simplification of tests is to use instance of AuthenticatorDataProvider
-        var provider = new AuthenticatorDataProvider();
-        var authenticatorData = provider.Get(authenticatorDataArray);
+        // Temporary simplification of tests is to use instance of AuthenticatorDataParserService
+        var parserService = new AuthenticatorDataParserService();
+        var authenticatorData = parserService.Parse(authenticatorDataArray);
 
         var attestationObjectData = new AttestationObjectData
         {
@@ -74,8 +75,8 @@ public class AttestationObjectValidatorTests
         var authenticatorDataArray = Convert.FromBase64String(authenticatorDataString);
 
         // Temporary simplification of tests is to use instance of AuthenticatorDataProvider
-        var provider = new AuthenticatorDataProvider();
-        var authenticatorData = provider.Get(authenticatorDataArray);
+        var parserService = new AuthenticatorDataParserService();
+        var authenticatorData = parserService.Parse(authenticatorDataArray);
 
         var attestationObjectData = new AttestationObjectData
         {

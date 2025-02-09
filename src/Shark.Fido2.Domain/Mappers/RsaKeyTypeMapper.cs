@@ -39,7 +39,15 @@ public static class RsaKeyTypeMapper
                 Padding = RSASignaturePadding.Pkcs1,
             };
         }
+        else if (publicKeyAlgorithm == (int)PublicKeyAlgorithm.RS1)
+        {
+            return new Rs256Algorithm
+            {
+                HashAlgorithmName = HashAlgorithmName.SHA1,
+                Padding = RSASignaturePadding.Pkcs1,
+            };
+        }
 
-        throw new ArgumentException();
+        throw new NotSupportedException();
     }
 }

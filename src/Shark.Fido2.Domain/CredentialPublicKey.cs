@@ -8,12 +8,12 @@ public sealed class CredentialPublicKey
     /// <summary>
     /// The identification of the key type (kty)
     /// </summary>
-    public int? KeyType { get; set; }
+    public int KeyType { get; set; }
 
     /// <summary>
     /// The cryptographic signature algorithm (alg)
     /// </summary>
-    public int? Algorithm { get; set; }
+    public int Algorithm { get; set; }
 
     /// <summary>
     /// The RSA modulus n

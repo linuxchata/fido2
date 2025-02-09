@@ -2,7 +2,7 @@
 
 namespace Shark.Fido2.Domain;
 
-public class EcdsaAlgorithm
+public class Ec2Algorithm
 {
     public ECCurve Curve { get; set; }
 

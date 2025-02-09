@@ -8,23 +8,53 @@ namespace Shark.Fido2.Core.Validators;
 
 internal sealed class RsaCryptographyValidator : ICryptographyValidator
 {
-    public bool IsValid(byte[] data, byte[] signature, X509Certificate2 attestationCertificate, CredentialPublicKey credentialPublicKey)
+    public bool IsValid(
+        byte[] data,
+        byte[] signature,
+        CredentialPublicKey credentialPublicKey,
+        X509Certificate2? attestationCertificate = null)
     {
-        if (!credentialPublicKey.Algorithm.HasValue)
+        var rs256Algorithm = RsaKeyTypeMapper.Get(credentialPublicKey.Algorithm);
+
+        if (attestationCertificate != null)
+        {
+            return IsValidAttestationCertificate(data, signature, rs256Algorithm, attestationCertificate);
+        }
+        else
+        {
+            var parameters = new RSAParameters
+            {
+                Modulus = credentialPublicKey.Modulus,
+                Exponent = credentialPublicKey.Exponent,
+            };
+
+            using var rsa = RSA.Create(parameters);
+
+            return rsa.VerifyData(data, signature, rs256Algorithm.HashAlgorithmName, rs256Algorithm.Padding!);
+        }
+    }
+
+    public bool IsValid(byte[] data, byte[] signature, int algorithm, X509Certificate2 attestationCertificate)
+    {
+        if (attestationCertificate == null)
         {
             return false;
         }
 
-        var algorithm = RsaKeyTypeMapper.Get(credentialPublicKey.Algorithm.Value);
+        var rs256Algorithm = RsaKeyTypeMapper.Get(algorithm);
 
-        var parameters = new RSAParameters
-        {
-            Modulus = credentialPublicKey.Modulus,
-            Exponent = credentialPublicKey.Exponent,
-        };
+        return IsValidAttestationCertificate(data, signature, rs256Algorithm, attestationCertificate);
+    }
 
-        using var rsa = RSA.Create(parameters);
+    private static bool IsValidAttestationCertificate(
+        byte[] data,
+        byte[] signature,
+        Rs256Algorithm algorithm,
+        X509Certificate2 attestationCertificate)
+    {
+        using var rsa = attestationCertificate.GetRSAPublicKey() ??
+            throw new ArgumentException("Certificate does not have a RSA public key");
 
-        return rsa.VerifyData(data, signature, algorithm.HashAlgorithmName, algorithm.Padding!);
+        return rsa!.VerifyData(data, signature, algorithm.HashAlgorithmName, algorithm.Padding!);
     }
 }

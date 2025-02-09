@@ -3,6 +3,7 @@ using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Handlers;
 using Shark.Fido2.Core.Helpers;
 using Shark.Fido2.Core.Results;
+using Shark.Fido2.Core.Services;
 using Shark.Fido2.Core.Validators.AttestationStatementValidators;
 using Shark.Fido2.Domain;
 using Shark.Fido2.Domain.Enums;
@@ -13,7 +14,7 @@ namespace Shark.Fido2.Core.Tests.Validators.AttestationStatementValidators;
 public class NoneAttestationStatementStrategyTests
 {
     private Mock<IAttestationObjectValidator> _attestationObjectValidatorMock;
-    private AuthenticatorDataProvider _provider;
+    private AuthenticatorDataParserService _provider;
     private PublicKeyCredentialCreationOptions _creationOptions;
 
     private NoneAttestationStatementStrategy _sut = null!;
@@ -29,7 +30,7 @@ public class NoneAttestationStatementStrategyTests
                 It.IsAny<PublicKeyCredentialCreationOptions>()))
             .Returns(ValidatorInternalResult.Valid());
 
-        _provider = new AuthenticatorDataProvider();
+        _provider = new AuthenticatorDataParserService();
 
         _creationOptions = new PublicKeyCredentialCreationOptions();
 
@@ -37,7 +38,7 @@ public class NoneAttestationStatementStrategyTests
     }
 
     [Test]
-    public void Validate_WheniPhoneAtenticatorWithRs256Algorithm_ShouldValidate()
+    public void ValidateNone_WheniPhoneAuthenticatorWithRs256Algorithm_ShouldValidate()
     {
         // Arrange
         var attestationObject = "o2NmbXRkbm9uZWdhdHRTdG10oGhhdXRoRGF0YViYSZYN5YgOjGh0NBcPZHZgW4/krrmihjLHmVzzuoMdl2NdAAAAAPv8MAcVTk7MjAtuAgVX170AFNt4yVHcZrA8zXOCoeW/OoBFGVaEpQECAyYgASFYICclgDbB2uu5zJ9LZkzRVLMWWoR4Q/BYRC7lvqgO8VCtIlggoWadCDIqNEHAe73eeZaRJ3QLv+J1UgNnd96R8r0T6E4=";

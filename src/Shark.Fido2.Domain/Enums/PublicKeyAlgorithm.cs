@@ -21,7 +21,9 @@ public enum PublicKeyAlgorithm
     /// </summary>
     Es384 = -35,
 
-    // ECDSA w/ SHA-512
+    /// <summary>
+    /// ECDSA w/ SHA-512
+    /// </summary>
     Es512 = -36,
 
     /// <summary>
@@ -43,4 +45,9 @@ public enum PublicKeyAlgorithm
     /// RSASSA-PKCS1-v1_5 using SHA-256
     /// </summary>
     Rs256 = -257,
+
+    /// <summary>
+    /// RSASSA-PKCS1-v1_5 using SHA-1
+    /// </summary>
+    RS1 = -65535,
 }

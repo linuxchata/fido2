@@ -1,11 +1,11 @@
-﻿namespace Shark.Fido2.Core.Enums;
+﻿namespace Shark.Fido2.Domain.Enums;
 
 /// <summary>
 /// COSE Key Types
 /// https://www.iana.org/assignments/cose/cose.xhtml#key-type
 /// https://www.rfc-editor.org/rfc/rfc9053.html#initial-kty-caps
 /// </summary>
-internal enum KeyTypeEnum
+public enum KeyTypeEnum
 {
     /// <summary>
     /// Octet Key Pair
