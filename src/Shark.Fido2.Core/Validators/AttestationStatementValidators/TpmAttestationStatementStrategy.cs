@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Shark.Fido2.Core.Abstractions.Services;
+﻿using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Comparers;
@@ -46,10 +45,12 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
         ClientData clientData,
         PublicKeyCredentialCreationOptions creationOptions)
     {
-        var attestationStatement = attestationObjectData.AttestationStatement ??
-            throw new ArgumentNullException(nameof(attestationObjectData));
+        ArgumentNullException.ThrowIfNull(attestationObjectData);
+        ArgumentNullException.ThrowIfNull(attestationObjectData.AttestationStatement);
+        ArgumentNullException.ThrowIfNull(clientData);
+        ArgumentNullException.ThrowIfNull(creationOptions);
 
-        if (attestationStatement is not Dictionary<string, object> attestationStatementDict)
+        if (attestationObjectData.AttestationStatement is not Dictionary<string, object> attestationStatementDict)
         {
             throw new ArgumentException("Attestation statement cannot be read", nameof(attestationObjectData));
         }
@@ -118,7 +119,11 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
         // Verify that attested contains a TPMS_CERTIFY_INFO structure as specified in [TPMv2-Part2]
         // section 10.12.3, whose name field contains a valid Name for pubArea, as computed using the algorithm
         // in the nameAlg field of pubArea using the procedure specified in [TPMv2-Part1] section 16.
-        // TODO: Implement this check.
+        var pubAreaHash = HashProvider.GetHash((byte[])pubArea, GenericTmpHashAlgorithmMapper.Get(tpmtPublic.NameAlg));
+        if (!BytesArrayComparer.CompareNullable(pubAreaHash, tpmsAttestation.Attested.Name))
+        {
+            return ValidatorInternalResult.Invalid("Attestation statement hash mismatch");
+        }
 
         // Verify that x5c is present.
         if (!_certificateProvider.AreCertificatesPresent(attestationStatementDict))
@@ -146,6 +151,8 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
         }
 
         // Verify that aikCert meets the requirements in § 8.3.1 TPM Attestation Statement Certificate Requirements.
+        // If aikCert contains an extension with OID 1.3.6.1.4.1.45724.1.1.4 (id-fido-gen-ce-aaguid) verify that
+        // the value of this extension matches the aaguid in authenticatorData.
         result = _certificateValidator.ValidateTpm(attestationIdentityKeyCertificate, attestationObjectData);
         if (!result.IsValid)
         {

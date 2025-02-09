@@ -38,7 +38,7 @@ public class NoneAttestationStatementStrategyTests
     }
 
     [Test]
-    public void Validate_WheniPhoneAtenticatorWithRs256Algorithm_ShouldValidate()
+    public void ValidateNone_WheniPhoneAuthenticatorWithRs256Algorithm_ShouldValidate()
     {
         // Arrange
         var attestationObject = "o2NmbXRkbm9uZWdhdHRTdG10oGhhdXRoRGF0YViYSZYN5YgOjGh0NBcPZHZgW4/krrmihjLHmVzzuoMdl2NdAAAAAPv8MAcVTk7MjAtuAgVX170AFNt4yVHcZrA8zXOCoeW/OoBFGVaEpQECAyYgASFYICclgDbB2uu5zJ9LZkzRVLMWWoR4Q/BYRC7lvqgO8VCtIlggoWadCDIqNEHAe73eeZaRJ3QLv+J1UgNnd96R8r0T6E4=";

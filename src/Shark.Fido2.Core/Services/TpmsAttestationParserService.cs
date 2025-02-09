@@ -55,15 +55,32 @@ public sealed class TpmsAttestationParserService : ITpmsAttestationParserService
 
             // TPMU_ATTEST
             // TPMS_CERTIFY_INFO => TPM2B_NAME; size is UINT16
-            var certifySize = ReadUInt16(reader);
-            var certify = reader.ReadBytes(certifySize);
+            var certifyNameSize = ReadUInt16(reader);
+            byte[]? certifyName = null;
+            if (certifyNameSize > 0)
+            {
+                var certifyNamAlg = ReadUInt16(reader); // 2 bytes for TPM_ALG_ID
+                certifyName = reader.ReadBytes(certifyNameSize - 2);
+            }
+
+            var certifyQualifiedNameSize = ReadUInt16(reader);
+            byte[]? certifyQualifiedName = null;
+            if (certifyQualifiedNameSize > 0)
+            {
+                var certifyQualifiedNameAlg = ReadUInt16(reader); // 2 bytes for TPM_ALG_ID
+                certifyQualifiedName = reader.ReadBytes(certifyQualifiedNameSize - 2);
+            }
 
             var tpmuAttestation = new TpmuAttestation
             {
-                Certify = certify,
+                Name = certifyName ?? [],
+                QualifiedName = certifyQualifiedName ?? [],
             };
 
-            // TODO: Consider implementing the rest of the parsing logic
+            if (reader.BaseStream.Position != reader.BaseStream.Length)
+            {
+                throw new InvalidOperationException("Error reading certInfo byte array");
+            }
 
             tpmsAttestation = new TpmsAttestation
             {

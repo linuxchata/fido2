@@ -1,5 +1,6 @@
 ﻿using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
+using System.Text.RegularExpressions;
 using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Domain.Tpm;
 
@@ -7,35 +8,54 @@ namespace Shark.Fido2.Core.Services;
 
 internal sealed class SubjectAlternativeNameParserService : ISubjectAlternativeNameParserService
 {
-    private const string TpmManufacturerName = "TPMManufacturer=";
-    private const string TpmModelName = "TPMModel=";
-    private const string TpmVersionName = "TPMVersion=";
+    private readonly Regex RegexNumericNotation = new Regex(@"(?<key>\d+(\.\d+)+)=(?<value>[\w:]+)");
+    private readonly Regex RegexNameNotation = new Regex(@"(?<key>\w+)=(?<value>[\w:]+)");
+    private readonly Regex RegexManufacturer = new Regex(@"id:([A-F0-9]+)");
+
+    private const string TpmManufacturerName = "TPMManufacturer";
+    private const string TpmManufacturerId = "2.23.133.2.1";
+    private const string TpmModelName = "TPMModel";
+    private const string TpmModelId = "2.23.133.2.2";
+    private const string TpmVersionName = "TPMVersion";
+    private const string TpmVersionId = "2.23.133.2.3";
 
     public TpmIssuer Parse(X509SubjectAlternativeNameExtension subjectAlternativeNameExtension)
     {
-        var asndata = new AsnEncodedData(subjectAlternativeNameExtension.Oid, subjectAlternativeNameExtension.RawData);
-        var subjectAlternativeName = asndata.Format(true);
+        var encodedData = new AsnEncodedData(subjectAlternativeNameExtension.Oid, subjectAlternativeNameExtension.RawData);
+        var subjectAlternativeName = encodedData.Format(false);
 
-        var subjectAlternativeNameSplit = subjectAlternativeName.Split(
-            [Environment.NewLine, "\n"],
-            StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        return Parse(subjectAlternativeName);
+    }
+
+    internal TpmIssuer Parse(string subjectAlternativeName)
+    {
+        var matchesNumericNotation = RegexNumericNotation.Matches(subjectAlternativeName);
+        var matchesNameNotation = RegexNameNotation.Matches(subjectAlternativeName);
+
+        var matches = matchesNumericNotation.Count != 0 ? matchesNumericNotation : matchesNameNotation;
 
         var tpmManufacturer = string.Empty;
         var tpmModel = string.Empty;
         var tpmVersion = string.Empty;
-        foreach (var item in subjectAlternativeNameSplit)
+
+        foreach (Match match in matches)
         {
-            if (item.StartsWith(TpmManufacturerName, StringComparison.OrdinalIgnoreCase))
+            var key = match.Groups["key"].Value;
+            var value = match.Groups["value"].Value;
+            if (string.Equals(key, TpmVersionId, StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(key, TpmVersionName, StringComparison.OrdinalIgnoreCase))
             {
-                tpmManufacturer = item[TpmManufacturerName.Length..];
+                tpmVersion = value;
             }
-            else if (item.StartsWith(TpmModelName, StringComparison.OrdinalIgnoreCase))
+            else if (string.Equals(key, TpmModelId, StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(key, TpmModelName, StringComparison.OrdinalIgnoreCase))
             {
-                tpmModel = item[TpmModelName.Length..];
+                tpmModel = value;
             }
-            else if (item.StartsWith(TpmVersionName, StringComparison.OrdinalIgnoreCase))
+            else if (string.Equals(key, TpmManufacturerId, StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(key, TpmManufacturerName, StringComparison.OrdinalIgnoreCase))
             {
-                tpmVersion = item[TpmVersionName.Length..];
+                tpmManufacturer = value;
             }
         }
 
@@ -50,15 +70,14 @@ internal sealed class SubjectAlternativeNameParserService : ISubjectAlternativeN
         };
     }
 
-    private static string GetManufacturerValue(ReadOnlySpan<char> input)
+    private string GetManufacturerValue(string input)
     {
-        if (input.IsEmpty)
+        var match = RegexManufacturer.Match(input);
+        if (match.Success)
         {
-            return string.Empty;
+            return match.Groups[1].Value;
         }
 
-        var startIndex = input.IndexOf(':') + 1;
-        var endIndex = input[startIndex..].IndexOfAny(' ', '(');
-        return endIndex == -1 ? input[startIndex..].ToString() : input[startIndex..(startIndex + endIndex)].ToString();
+        return string.Empty;
     }
 }

@@ -17,10 +17,12 @@ public sealed class TpmtPublicAreaParserService : ITpmtPublicAreaParserService
             using var reader = new BinaryReader(stream);
 
             // TPMI_ALG_PUBLIC => TPM_ALG_ID; UINT16
-            var type = (TpmAlgorithmEnum)ReadUInt16(reader);
+            var typeRaw = ReadUInt16(reader);
+            var type = (TpmAlgorithmEnum)typeRaw;
 
             // TPMI_ALG_HASH => TPM_ALG_ID; UINT16
-            var nameAlg = ReadUInt16(reader);
+            var nameAlgRaw = ReadUInt16(reader);
+            var nameAlg = (TpmAlgorithmEnum)nameAlgRaw;
 
             // TPMA_OBJECT; UINT32
             var objectAttributes = ReadUInt32(reader);
@@ -90,7 +92,9 @@ public sealed class TpmtPublicAreaParserService : ITpmtPublicAreaParserService
             tpmtPublic = new TpmtPublic
             {
                 Type = type,
+                TypeRaw = typeRaw,
                 NameAlg = nameAlg,
+                NameAlgRaw = nameAlgRaw,
                 ObjectAttributes = objectAttributes,
                 AuthPolicy = authPolicy,
                 RsaParameters = tpmtPublicRsaParameters,

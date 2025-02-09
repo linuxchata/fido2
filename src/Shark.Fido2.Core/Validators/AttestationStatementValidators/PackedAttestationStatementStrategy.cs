@@ -35,10 +35,12 @@ internal class PackedAttestationStatementStrategy : IAttestationStatementStrateg
         ClientData clientData,
         PublicKeyCredentialCreationOptions creationOptions)
     {
-        var attestationStatement = attestationObjectData.AttestationStatement ??
-            throw new ArgumentNullException(nameof(attestationObjectData));
+        ArgumentNullException.ThrowIfNull(attestationObjectData);
+        ArgumentNullException.ThrowIfNull(attestationObjectData.AttestationStatement);
+        ArgumentNullException.ThrowIfNull(clientData);
+        ArgumentNullException.ThrowIfNull(creationOptions);
 
-        if (attestationStatement is not Dictionary<string, object> attestationStatementDict)
+        if (attestationObjectData.AttestationStatement is not Dictionary<string, object> attestationStatementDict)
         {
             throw new ArgumentException("Attestation statement cannot be read", nameof(attestationObjectData));
         }

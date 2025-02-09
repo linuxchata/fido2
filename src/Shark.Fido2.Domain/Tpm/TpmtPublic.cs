@@ -11,12 +11,22 @@ public sealed class TpmtPublic
     /// <summary>
     /// Type is TPMI_ALG_PUBLIC
     /// </summary>
+    public ushort TypeRaw { get; init; }
+
+    /// <summary>
+    /// Type is TPMI_ALG_PUBLIC
+    /// </summary>
     public TpmAlgorithmEnum Type { get; init; }
 
     /// <summary>
     /// Type is TPMI_ALG_HASH
     /// </summary>
-    public ushort NameAlg { get; init; }
+    public TpmAlgorithmEnum NameAlg { get; init; }
+
+    /// <summary>
+    /// Type is TPMI_ALG_HASH
+    /// </summary>
+    public ushort NameAlgRaw { get; init; }
 
     /// <summary>
     /// Type is TPMA_OBJECT

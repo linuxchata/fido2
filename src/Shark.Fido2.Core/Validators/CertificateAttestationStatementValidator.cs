@@ -11,13 +11,15 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
 {
     private const string IdFidoGenCeAaguidExtension = "1.3.6.1.4.1.45724.1.1.4";
     private const string JointIsoItuTExtension = "2.23.133.8.3";
-    private const string BasicConstraintsExtension = "Basic Constraints";
-    private const string EnhancedKeyUsageExtension = "Enhanced Key Usage";
-    private const string SubjectAlternativeNameExtension = "Subject Alternative Name";
+    private const string BasicConstraintsExtension = "2.5.29.19";
+    private const string EnhancedKeyUsageExtension = "2.5.29.37";
+    private const string SubjectAlternativeNameExtension = "2.5.29.17";
+
     private const string SubjectCountry = "C";
     private const string SubjectOrganization = "O";
     private const string SubjectOrganizationalUnit = "OU";
     private const string SubjectCommonName = "CN";
+
     private const string OrganizationalUnitAuthenticatorAttestation = "Authenticator Attestation";
 
     private readonly ISubjectAlternativeNameParserService _subjectAlternativeNameParserService;
@@ -107,14 +109,14 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
         }
 
         // Subject field MUST be set to empty.
-        if (!string.IsNullOrWhiteSpace(attestationCertificate.SubjectName.Name))
+        if (!string.IsNullOrWhiteSpace(attestationCertificate.SubjectName?.Name))
         {
             return ValidatorInternalResult.Invalid("Attestation statement certificate has not empty subject");
         }
 
         // The Subject Alternative Name extension MUST be set as defined in [TPMv2-EK-Profile] section 3.2.9.
         var subjectAlternativeNameExtension = attestationCertificate.Extensions?
-            .FirstOrDefault(e => string.Equals(e.Oid?.FriendlyName, SubjectAlternativeNameExtension, StringComparison.Ordinal))
+            .FirstOrDefault(e => string.Equals(e.Oid?.Value, SubjectAlternativeNameExtension, StringComparison.Ordinal))
             as X509SubjectAlternativeNameExtension;
         if (subjectAlternativeNameExtension == null)
         {
@@ -130,9 +132,9 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
         var tpmIssuer = _subjectAlternativeNameParserService.Parse(subjectAlternativeNameExtension);
 
         // The TPM manufacturer MUST be the vendor ID defined in the TCG Vendor ID Registry
-        if (!TpmCapabilitiesVendors.Exists(tpmIssuer.ManufacturerValue))
+        if (!TpmCapabilitiesVendors.Exists(tpmIssuer!.ManufacturerValue))
         {
-            return ValidatorInternalResult.Invalid("Attestation statement certificate subject alternative name has invalid TMP manufacturer");
+            return ValidatorInternalResult.Invalid($"Attestation statement certificate subject alternative name has invalid TMP manufacturer {tpmIssuer.ManufacturerValue}");
         }
 
         if (string.IsNullOrWhiteSpace(tpmIssuer.Model) ||
@@ -144,7 +146,7 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
         // The Extended Key Usage extension MUST contain the OID 2.23.133.8.3
         // ("joint-iso-itu-t(2) internationalorganizations(23) 133 tcg-kp(8) tcg-kp-AIKCertificate(3)").
         var enhancedKeyUsageExtension = attestationCertificate.Extensions?
-            .FirstOrDefault(e => string.Equals(e.Oid?.FriendlyName, EnhancedKeyUsageExtension, StringComparison.Ordinal))
+            .FirstOrDefault(e => string.Equals(e.Oid?.Value, EnhancedKeyUsageExtension, StringComparison.Ordinal))
             as X509EnhancedKeyUsageExtension;
         if (enhancedKeyUsageExtension == null)
         {
@@ -168,11 +170,29 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
         // extension [RFC5280] are both OPTIONAL as the status of many attestation certificates is available through
         // metadata services. See, for example, the FIDO Metadata Service [FIDOMetadataService].
 
+        // If aikCert contains an extension with OID 1.3.6.1.4.1.45724.1.1.4 (id-fido-gen-ce-aaguid) verify that
+        // the value of this extension matches the aaguid in authenticatorData.
+        var idFidoGenCeAaguid = attestationCertificate.Extensions?.FirstOrDefault(
+            e => string.Equals(e.Oid?.Value, IdFidoGenCeAaguidExtension, StringComparison.Ordinal));
+        if (idFidoGenCeAaguid != null)
+        {
+            var aaGuid = ParseGuidFromOctetString(idFidoGenCeAaguid.RawData);
+            if (aaGuid != attestationObjectData.AuthenticatorData!.AttestedCredentialData.AaGuid)
+            {
+                return ValidatorInternalResult.Invalid("Attestation statement AAGUID mismatch");
+            }
+        }
+
         return ValidatorInternalResult.Valid();
     }
 
     private static bool VerifyCertificateSubject(X509Certificate2 certificate)
     {
+        if (certificate.Subject == null)
+        {
+            return false;
+        }
+
         var distinguishedNames = certificate.SubjectName.EnumerateRelativeDistinguishedNames();
         var distinguishedNamesMap = new Dictionary<string, string?>();
         foreach (var distinguishedName in distinguishedNames)
@@ -223,12 +243,17 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
     private static X509BasicConstraintsExtension? GetBasicConstraints(X509Certificate2 attestationCertificate)
     {
         return attestationCertificate.Extensions?
-            .FirstOrDefault(e => string.Equals(e.Oid?.FriendlyName, BasicConstraintsExtension, StringComparison.Ordinal))
+            .FirstOrDefault(e => string.Equals(e.Oid?.Value, BasicConstraintsExtension, StringComparison.Ordinal))
             as X509BasicConstraintsExtension;
     }
 
     private static Guid ParseGuidFromOctetString(byte[] data)
     {
+        if (data == null || data.Length < 2)
+        {
+            throw new ArgumentException("Invalid certificate extension value (unexpected length)");
+        }
+
         // Check whether octet string tag is 0x04
         if (data[0] != 0x04)
         {
