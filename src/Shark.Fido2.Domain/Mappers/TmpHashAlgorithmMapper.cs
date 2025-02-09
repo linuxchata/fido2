@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 
 namespace Shark.Fido2.Domain.Mappers;
 
-public sealed class GenericTmpHashAlgorithmMapper
+public sealed class TmpHashAlgorithmMapper
 {
     public static HashAlgorithmName Get(TpmAlgorithmEnum tpmAlgorithm)
     {
@@ -25,7 +25,7 @@ public sealed class GenericTmpHashAlgorithmMapper
         }
         else
         {
-            throw new NotSupportedException("Unsupported TPM algorithm");
+            throw new NotSupportedException($"Unsupported TPM algorithm {tpmAlgorithm}");
         }
     }
 }

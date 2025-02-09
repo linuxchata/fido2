@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.Models", "Shark
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.Models.Tests", "Shark.Fido2.Models.Tests\Shark.Fido2.Models.Tests.csproj", "{16F8ADC7-8CA5-4303-BE4D-F75EA22A2B26}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.Domain.Tests", "Shark.Fido2.Domain.Tests\Shark.Fido2.Domain.Tests.csproj", "{E9004CA1-EBAB-4B87-960D-5F017A6204E9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +55,10 @@ Global
 		{16F8ADC7-8CA5-4303-BE4D-F75EA22A2B26}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{16F8ADC7-8CA5-4303-BE4D-F75EA22A2B26}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{16F8ADC7-8CA5-4303-BE4D-F75EA22A2B26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9004CA1-EBAB-4B87-960D-5F017A6204E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9004CA1-EBAB-4B87-960D-5F017A6204E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9004CA1-EBAB-4B87-960D-5F017A6204E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9004CA1-EBAB-4B87-960D-5F017A6204E9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -60,5 +66,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{41DB6C7C-A63E-4654-A32C-D1E551218693} = {0DBAB265-1DF6-444B-BC5F-7A47857979BB}
 		{16F8ADC7-8CA5-4303-BE4D-F75EA22A2B26} = {0DBAB265-1DF6-444B-BC5F-7A47857979BB}
+		{E9004CA1-EBAB-4B87-960D-5F017A6204E9} = {0DBAB265-1DF6-444B-BC5F-7A47857979BB}
 	EndGlobalSection
 EndGlobal
