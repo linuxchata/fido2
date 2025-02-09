@@ -17,9 +17,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.Repositories.In
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.Models", "Shark.Fido2.Models\Shark.Fido2.Models.csproj", "{DD27C759-32C7-4A09-BD6C-9CB1F1F47110}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.Models.Tests", "Shark.Fido2.Models.Tests\Shark.Fido2.Models.Tests.csproj", "{16F8ADC7-8CA5-4303-BE4D-F75EA22A2B26}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.Models.Tests", "..\tests\Shark.Fido2.Models.Tests\Shark.Fido2.Models.Tests.csproj", "{16F8ADC7-8CA5-4303-BE4D-F75EA22A2B26}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.Domain.Tests", "Shark.Fido2.Domain.Tests\Shark.Fido2.Domain.Tests.csproj", "{E9004CA1-EBAB-4B87-960D-5F017A6204E9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.Domain.Tests", "..\tests\Shark.Fido2.Domain.Tests\Shark.Fido2.Domain.Tests.csproj", "{E9004CA1-EBAB-4B87-960D-5F017A6204E9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
