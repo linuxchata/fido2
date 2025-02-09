@@ -5,7 +5,7 @@ using Shark.Fido2.Domain.Mappers;
 namespace Shark.Fido2.Domain.Tests.Mappers;
 
 [TestFixture]
-public class GenericKeyTypeMapperTests
+internal class GenericKeyTypeMapperTests
 {
     [Test]
     public void Get_WhenKeyTypeIsRsa_ThenReturnsCorrectHashAlgorithm()

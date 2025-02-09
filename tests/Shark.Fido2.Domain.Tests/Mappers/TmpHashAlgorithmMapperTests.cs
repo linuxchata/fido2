@@ -5,7 +5,7 @@ using Shark.Fido2.Domain.Mappers;
 namespace Shark.Fido2.Domain.Tests.Mappers;
 
 [TestFixture]
-public class TmpHashAlgorithmMapperTests
+internal class TmpHashAlgorithmMapperTests
 {
     [Test]
     public void Get_WhenUnsupportedAlgorithm_ThrowsNotSupportedException()

@@ -3,7 +3,7 @@
 namespace Shark.Fido2.Core.Tests.Helpers;
 
 [TestFixture]
-public class AuthenticatorDataProviderTests
+internal class AuthenticatorDataProviderTests
 {
     private AuthenticatorDataParserService _sut = null!;
 

@@ -11,7 +11,7 @@ using Shark.Fido2.Domain.Enums;
 namespace Shark.Fido2.Core.Tests.Validators;
 
 [TestFixture]
-public class AttestationObjectValidatorTests
+internal class AttestationObjectValidatorTests
 {
     private AttestationObjectValidator _sut = null!;
 

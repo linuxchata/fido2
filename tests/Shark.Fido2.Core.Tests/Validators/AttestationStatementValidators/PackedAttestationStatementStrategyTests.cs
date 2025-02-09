@@ -13,7 +13,7 @@ using Shark.Fido2.Domain.Enums;
 namespace Shark.Fido2.Core.Tests.Validators.AttestationStatementValidators;
 
 [TestFixture]
-public class PackedAttestationStatementStrategyTests
+internal class PackedAttestationStatementStrategyTests
 {
     private Mock<IAttestationObjectValidator> _attestationObjectValidatorMock;
     private AttestationObjectHandler _attestationObjectHandler;

@@ -4,7 +4,7 @@ using Shark.Fido2.Domain.Enums;
 namespace Shark.Fido2.Core.Tests.Services;
 
 [TestFixture]
-public class TpmtPublicAreaParserServiceTests
+internal class TpmtPublicAreaParserServiceTests
 {
     private TpmtPublicAreaParserService _sut;
 
@@ -22,9 +22,10 @@ public class TpmtPublicAreaParserServiceTests
         var pubArea = Convert.FromBase64String(pubAreaBase64);
 
         // Act
-        _sut.Parse(pubArea, out var tpmtPublic);
+        var result = _sut.Parse(pubArea, out var tpmtPublic);
 
         // Assert
+        Assert.That(result, Is.True);
         Assert.That(tpmtPublic.Type, Is.EqualTo(TpmAlgorithmEnum.TpmAlgorithmRsa));
         Assert.That(tpmtPublic.NameAlg, Is.EqualTo(TpmAlgorithmEnum.TpmAlgorithmSha256));
         Assert.That(tpmtPublic.Unique, Is.Not.Null);
