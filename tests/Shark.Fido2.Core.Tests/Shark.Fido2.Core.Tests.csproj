@@ -6,10 +6,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Data\NoneAttestationAuthenticatorWithRs256.json" />
+    <None Remove="Data\TpmAttestationAuthenticatorWithRs256.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Data\NoneAttestationAuthenticatorWithRs256.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Data\PackedAttestationAuthenticatorWithEs256.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Data\PackedAttestationWindowsAuthenticatorWithRs256.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\TpmAttestationAuthenticatorWithRs256.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

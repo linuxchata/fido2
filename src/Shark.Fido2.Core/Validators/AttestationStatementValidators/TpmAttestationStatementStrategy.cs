@@ -2,6 +2,7 @@
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Comparers;
+using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Helpers;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain;
@@ -16,10 +17,6 @@ namespace Shark.Fido2.Core.Validators.AttestationStatementValidators;
 /// </summary>
 internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
 {
-    private const string PubArea = "pubArea";
-    private const string CertInfo = "certInfo";
-    private const string Algorithm = "alg";
-
     private readonly ITpmtPublicAreaParserService _tpmtPublicAreaParserService;
     private readonly ITpmsAttestationParserService _tpmsAttestationParserService;
     private readonly ICertificateAttestationStatementService _certificateProvider;
@@ -40,29 +37,25 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
         _certificateValidator = certificateAttestationStatementValidator;
     }
 
-    public ValidatorInternalResult Validate(
-        AttestationObjectData attestationObjectData,
-        ClientData clientData,
-        PublicKeyCredentialCreationOptions creationOptions)
+    public ValidatorInternalResult Validate(AttestationObjectData attestationObjectData, ClientData clientData)
     {
         ArgumentNullException.ThrowIfNull(attestationObjectData);
         ArgumentNullException.ThrowIfNull(attestationObjectData.AttestationStatement);
         ArgumentNullException.ThrowIfNull(clientData);
-        ArgumentNullException.ThrowIfNull(creationOptions);
 
         if (attestationObjectData.AttestationStatement is not Dictionary<string, object> attestationStatementDict)
         {
             throw new ArgumentException("Attestation statement cannot be read", nameof(attestationObjectData));
         }
 
-        if (!attestationStatementDict.TryGetValue(PubArea, out var pubArea) ||
+        if (!attestationStatementDict.TryGetValue(AttestationStatement.PubArea, out var pubArea) ||
             pubArea is not byte[] ||
             !_tpmtPublicAreaParserService.Parse((byte[])pubArea, out TpmtPublic tpmtPublic))
         {
             return ValidatorInternalResult.Invalid("Attestation statement pubArea cannot be read");
         }
 
-        if (!attestationStatementDict.TryGetValue(CertInfo, out var certInfo) ||
+        if (!attestationStatementDict.TryGetValue(AttestationStatement.CertInfo, out var certInfo) ||
             certInfo is not byte[] ||
             !_tpmsAttestationParserService.Parse((byte[])certInfo, out TpmsAttestation tpmsAttestation))
         {
@@ -74,12 +67,14 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
         var credentialPublicKey = attestationObjectData.AuthenticatorData!.AttestedCredentialData.CredentialPublicKey;
         if (!BytesArrayComparer.CompareNullable(credentialPublicKey.Modulus, tpmtPublic.Unique))
         {
-            return ValidatorInternalResult.Invalid("Attestation statement public key mismatch");
+            return ValidatorInternalResult.Invalid("Attestation statement public key mismatch (modulus)");
         }
+
+        // TODO: How to validate EccParameters?
 
         if (GetExponentAsUInt32LittleEndian(credentialPublicKey.Exponent!) != tpmtPublic.RsaParameters!.Exponent)
         {
-            return ValidatorInternalResult.Invalid("Attestation statement public key mismatch");
+            return ValidatorInternalResult.Invalid("Attestation statement public key mismatch (exponent)");
         }
 
         // Validate that certInfo is valid
@@ -96,7 +91,8 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
         }
 
         // Verify that extraData is set to the hash of attToBeSigned using the hash algorithm employed in "alg".
-        if (!attestationStatementDict.TryGetValue(Algorithm, out var algorithm) || algorithm is not int)
+        if (!attestationStatementDict.TryGetValue(AttestationStatement.Algorithm, out var algorithm) ||
+            algorithm is not int)
         {
             return ValidatorInternalResult.Invalid("Attestation statement algorithm cannot be read");
         }
@@ -106,6 +102,7 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
             return ValidatorInternalResult.Invalid("Attestation statement algorithm is not supported");
         };
 
+        // Concatenate authenticatorData and clientDataHash to form attToBeSigned.
         var attToBeSigned = BytesArrayHelper.Concatenate(
             attestationObjectData.AuthenticatorRawData,
             clientData.ClientDataHash);
@@ -113,7 +110,7 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
         var attToBeSignedHash = HashProvider.GetHash(attToBeSigned, hashAlgorithmName);
         if (!BytesArrayComparer.CompareNullable(attToBeSignedHash, tpmsAttestation.ExtraData))
         {
-            return ValidatorInternalResult.Invalid("Attestation statement hash mismatch");
+            return ValidatorInternalResult.Invalid("Attestation statement extraData hash mismatch");
         }
 
         // Verify that attested contains a TPMS_CERTIFY_INFO structure as specified in [TPMv2-Part2]
@@ -122,7 +119,7 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
         var pubAreaHash = HashProvider.GetHash((byte[])pubArea, TmpHashAlgorithmMapper.Get(tpmtPublic.NameAlg));
         if (!BytesArrayComparer.CompareNullable(pubAreaHash, tpmsAttestation.Attested.Name))
         {
-            return ValidatorInternalResult.Invalid("Attestation statement hash mismatch");
+            return ValidatorInternalResult.Invalid("Attestation statement pubArea hash mismatch");
         }
 
         // Verify that x5c is present.
@@ -159,7 +156,9 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
             return result;
         }
 
-        return new AttestationStatementInternalResult(AttestationTypeEnum.AttCA);
+        // If successful, return implementation-specific values representing attestation type AttCA and attestation
+        // trust path x5c.
+        return new AttestationStatementInternalResult(AttestationTypeEnum.AttCA, [.. certificates]);
     }
 
     private static uint GetExponentAsUInt32LittleEndian(byte[] exponent)

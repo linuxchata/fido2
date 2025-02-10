@@ -1,20 +1,20 @@
 ﻿using System.Security.Cryptography.X509Certificates;
 using Shark.Fido2.Core.Abstractions.Services;
+using Shark.Fido2.Core.Constants;
 
 namespace Shark.Fido2.Core.Services;
 
 internal class CertificateAttestationStatementService : ICertificateAttestationStatementService
 {
-    private const string Certificate = "x5c";
-
     public bool AreCertificatesPresent(Dictionary<string, object> attestationStatementDict)
     {
-        return attestationStatementDict.TryGetValue(Certificate, out _);
+        return attestationStatementDict.TryGetValue(AttestationStatement.Certificate, out _);
     }
 
     public List<X509Certificate2> GetCertificates(Dictionary<string, object> attestationStatementDict)
     {
-        if (!attestationStatementDict.TryGetValue(Certificate, out var x5c) || x5c is not List<object>)
+        if (!attestationStatementDict.TryGetValue(AttestationStatement.Certificate, out var x5c) ||
+            x5c is not List<object>)
         {
             return [];
         }

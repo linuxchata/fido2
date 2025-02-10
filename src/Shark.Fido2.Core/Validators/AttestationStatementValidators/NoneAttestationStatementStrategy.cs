@@ -10,10 +10,7 @@ namespace Shark.Fido2.Core.Validators.AttestationStatementValidators;
 /// </summary>
 internal class NoneAttestationStatementStrategy : IAttestationStatementStrategy
 {
-    public ValidatorInternalResult Validate(
-        AttestationObjectData attestationObjectData,
-        ClientData clientData,
-        PublicKeyCredentialCreationOptions creationOptions)
+    public ValidatorInternalResult Validate(AttestationObjectData attestationObjectData, ClientData clientData)
     {
         return new AttestationStatementInternalResult(AttestationTypeEnum.None);
     }

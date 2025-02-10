@@ -5,7 +5,7 @@ using Shark.Fido2.Core.Dictionaries;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain;
 
-namespace Shark.Fido2.Core.Validators;
+namespace Shark.Fido2.Core.Validators.AttestationStatementValidators;
 
 internal class CertificateAttestationStatementValidator : ICertificateAttestationStatementValidator
 {
@@ -120,7 +120,8 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
             as X509SubjectAlternativeNameExtension;
         if (subjectAlternativeNameExtension == null)
         {
-            return ValidatorInternalResult.Invalid("Attestation statement certificate subject alternative name is invalid");
+            return ValidatorInternalResult.Invalid(
+                "Attestation statement certificate subject alternative name is not found");
         }
 
         if (!subjectAlternativeNameExtension.Critical)
@@ -134,13 +135,20 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
         // The TPM manufacturer MUST be the vendor ID defined in the TCG Vendor ID Registry
         if (!TpmCapabilitiesVendors.Exists(tpmIssuer!.ManufacturerValue))
         {
-            return ValidatorInternalResult.Invalid($"Attestation statement certificate subject alternative name has invalid TMP manufacturer {tpmIssuer.ManufacturerValue}");
+            return ValidatorInternalResult.Invalid(
+                $"Attestation statement certificate subject alternative name has invalid TMP manufacturer {tpmIssuer.ManufacturerValue}");
         }
 
-        if (string.IsNullOrWhiteSpace(tpmIssuer.Model) ||
-            string.IsNullOrWhiteSpace(tpmIssuer.Version))
+        if (string.IsNullOrWhiteSpace(tpmIssuer.Model))
         {
-            return ValidatorInternalResult.Invalid("Attestation statement certificate subject alternative name is invalid");
+            return ValidatorInternalResult.Invalid(
+                "Attestation statement certificate subject alternative name has invalid model");
+        }
+
+        if (string.IsNullOrWhiteSpace(tpmIssuer.Version))
+        {
+            return ValidatorInternalResult.Invalid(
+                "Attestation statement certificate subject alternative name has invalid version");
         }
 
         // The Extended Key Usage extension MUST contain the OID 2.23.133.8.3
@@ -150,7 +158,7 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
             as X509EnhancedKeyUsageExtension;
         if (enhancedKeyUsageExtension == null)
         {
-            return ValidatorInternalResult.Invalid("Attestation statement certificate enhanced key usage is invalid");
+            return ValidatorInternalResult.Invalid("Attestation statement certificate enhanced key usage is not found");
         }
 
         var jointIsoItuTExtension = enhancedKeyUsageExtension.EnhancedKeyUsages[JointIsoItuTExtension];

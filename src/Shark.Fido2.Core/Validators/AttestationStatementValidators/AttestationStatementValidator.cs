@@ -7,25 +7,22 @@ namespace Shark.Fido2.Core.Validators.AttestationStatementValidators;
 
 internal class AttestationStatementValidator : IAttestationStatementValidator
 {
-    private readonly IAttestationStatementStrategy _packedAttestationStatementStategy;
-    private readonly IAttestationStatementStrategy _tmpAttestationStatementStrategy;
-    private readonly IAttestationStatementStrategy _noneAttestationStatementStategy;
+    private readonly Dictionary<string, IAttestationStatementStrategy> _strategiesMap;
 
     public AttestationStatementValidator(
         [FromKeyedServices("packed")] IAttestationStatementStrategy packedAttestationStatementStategy,
-        [FromKeyedServices("tpm")] IAttestationStatementStrategy tmpAttestationStatementStrategy,
+        [FromKeyedServices("tpm")] IAttestationStatementStrategy tpmAttestationStatementStrategy,
         [FromKeyedServices("none")] IAttestationStatementStrategy noneAttestationStatementStategy)
     {
-        _packedAttestationStatementStategy = packedAttestationStatementStategy;
-        _tmpAttestationStatementStrategy = tmpAttestationStatementStrategy;
-        _noneAttestationStatementStategy = noneAttestationStatementStategy;
+        _strategiesMap = new Dictionary<string, IAttestationStatementStrategy>
+        {
+            { AttestationStatementFormatIdentifier.Packed, packedAttestationStatementStategy },
+            { AttestationStatementFormatIdentifier.Tpm, tpmAttestationStatementStrategy },
+            { AttestationStatementFormatIdentifier.None, noneAttestationStatementStategy },
+        };
     }
 
-    public void Validate(
-        AttestationObjectData attestationObjectData,
-        AuthenticatorData authenticatorData,
-        ClientData clientData,
-        PublicKeyCredentialCreationOptions creationOptions)
+    public void Validate(AttestationObjectData attestationObjectData, ClientData clientData)
     {
         ArgumentNullException.ThrowIfNull(attestationObjectData);
 
@@ -36,17 +33,11 @@ internal class AttestationStatementValidator : IAttestationStatementValidator
             throw new ArgumentNullException(nameof(attestationObjectData));
         }
 
-        var strategyMap = new Dictionary<string, IAttestationStatementStrategy>
+        if (_strategiesMap.TryGetValue(attestationStatementFormat, out IAttestationStatementStrategy? strategy))
         {
-            { AttestationStatementFormatIdentifier.Packed, _packedAttestationStatementStategy },
-            { AttestationStatementFormatIdentifier.Tpm, _tmpAttestationStatementStrategy },
-            { AttestationStatementFormatIdentifier.None, _noneAttestationStatementStategy },
-        };
+            strategy.Validate(attestationObjectData, clientData);
+        }
 
-        var strategy = strategyMap.ContainsKey(attestationStatementFormat) ?
-            strategyMap[attestationStatementFormat] :
-            throw new ArgumentException($"{attestationStatementFormat} is not supported");
-
-        strategy.Validate(attestationObjectData, clientData, creationOptions);
+        throw new ArgumentException($"{attestationStatementFormat} is not supported");
     }
 }
