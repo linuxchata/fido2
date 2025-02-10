@@ -67,12 +67,14 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
         var credentialPublicKey = attestationObjectData.AuthenticatorData!.AttestedCredentialData.CredentialPublicKey;
         if (!BytesArrayComparer.CompareNullable(credentialPublicKey.Modulus, tpmtPublic.Unique))
         {
-            return ValidatorInternalResult.Invalid("Attestation statement public key mismatch");
+            return ValidatorInternalResult.Invalid("Attestation statement public key mismatch (modulus)");
         }
+
+        // TODO: How to validate EccParameters?
 
         if (GetExponentAsUInt32LittleEndian(credentialPublicKey.Exponent!) != tpmtPublic.RsaParameters!.Exponent)
         {
-            return ValidatorInternalResult.Invalid("Attestation statement public key mismatch");
+            return ValidatorInternalResult.Invalid("Attestation statement public key mismatch (exponent)");
         }
 
         // Validate that certInfo is valid
@@ -100,6 +102,7 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
             return ValidatorInternalResult.Invalid("Attestation statement algorithm is not supported");
         };
 
+        // Concatenate authenticatorData and clientDataHash to form attToBeSigned.
         var attToBeSigned = BytesArrayHelper.Concatenate(
             attestationObjectData.AuthenticatorRawData,
             clientData.ClientDataHash);
@@ -107,7 +110,7 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
         var attToBeSignedHash = HashProvider.GetHash(attToBeSigned, hashAlgorithmName);
         if (!BytesArrayComparer.CompareNullable(attToBeSignedHash, tpmsAttestation.ExtraData))
         {
-            return ValidatorInternalResult.Invalid("Attestation statement hash mismatch");
+            return ValidatorInternalResult.Invalid("Attestation statement extraData hash mismatch");
         }
 
         // Verify that attested contains a TPMS_CERTIFY_INFO structure as specified in [TPMv2-Part2]
@@ -116,7 +119,7 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
         var pubAreaHash = HashProvider.GetHash((byte[])pubArea, TmpHashAlgorithmMapper.Get(tpmtPublic.NameAlg));
         if (!BytesArrayComparer.CompareNullable(pubAreaHash, tpmsAttestation.Attested.Name))
         {
-            return ValidatorInternalResult.Invalid("Attestation statement hash mismatch");
+            return ValidatorInternalResult.Invalid("Attestation statement pubArea hash mismatch");
         }
 
         // Verify that x5c is present.
@@ -153,7 +156,9 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
             return result;
         }
 
-        return new AttestationStatementInternalResult(AttestationTypeEnum.AttCA);
+        // If successful, return implementation-specific values representing attestation type AttCA and attestation
+        // trust path x5c.
+        return new AttestationStatementInternalResult(AttestationTypeEnum.AttCA, [.. certificates]);
     }
 
     private static uint GetExponentAsUInt32LittleEndian(byte[] exponent)

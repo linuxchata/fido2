@@ -9,4 +9,6 @@ internal static class AttestationStatement
     internal const string Algorithm = "alg";
 
     internal const string Signature = "sig";
+
+    internal const string Certificate = "x5c";
 }
