@@ -6,7 +6,7 @@ using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain;
 using Shark.Fido2.Domain.Enums;
 
-namespace Shark.Fido2.Core.Validators;
+namespace Shark.Fido2.Core.Validators.AttestationStatementValidators;
 
 internal class SignatureAttestationStatementValidator : ISignatureAttestationStatementValidator
 {

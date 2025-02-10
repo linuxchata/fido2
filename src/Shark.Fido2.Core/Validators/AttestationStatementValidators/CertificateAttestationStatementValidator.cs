@@ -5,7 +5,7 @@ using Shark.Fido2.Core.Dictionaries;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain;
 
-namespace Shark.Fido2.Core.Validators;
+namespace Shark.Fido2.Core.Validators.AttestationStatementValidators;
 
 internal class CertificateAttestationStatementValidator : ICertificateAttestationStatementValidator
 {

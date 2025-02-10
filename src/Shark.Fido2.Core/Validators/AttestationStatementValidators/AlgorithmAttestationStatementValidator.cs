@@ -3,7 +3,7 @@ using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain;
 
-namespace Shark.Fido2.Core.Validators;
+namespace Shark.Fido2.Core.Validators.AttestationStatementValidators;
 
 internal class AlgorithmAttestationStatementValidator : IAlgorithmAttestationStatementValidator
 {
