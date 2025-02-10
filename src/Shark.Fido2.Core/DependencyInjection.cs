@@ -43,6 +43,8 @@ public static class DependencyInjection
             AttestationStatementFormatIdentifier.Packed);
         services.AddKeyedTransient<IAttestationStatementStrategy, TpmAttestationStatementStrategy>(
             AttestationStatementFormatIdentifier.Tpm);
+        services.AddKeyedTransient<IAttestationStatementStrategy, AndroidSafetyNetAttestationStatementStrategy>(
+            AttestationStatementFormatIdentifier.AndroidSafetyNet);
         services.AddKeyedTransient<IAttestationStatementStrategy, NoneAttestationStatementStrategy>(
             AttestationStatementFormatIdentifier.None);
 
