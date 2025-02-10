@@ -24,7 +24,22 @@ internal class CertificateAttestationStatementService : ICertificateAttestationS
 
         foreach (var certificate in certificates)
         {
+            var certificateByteArray = (byte[])certificate;
             var x509Certificate = new X509Certificate2((byte[])certificate);
+            attestationTrustPath.Add(x509Certificate);
+        }
+
+        return attestationTrustPath;
+    }
+
+    public List<X509Certificate2> GetCertificates(List<object> certificates)
+    {
+        var attestationTrustPath = new List<X509Certificate2>();
+
+        foreach (var certificate in certificates)
+        {
+            var certificateByteArray = Convert.FromBase64String((string)certificate);
+            var x509Certificate = new X509Certificate2(certificateByteArray);
             attestationTrustPath.Add(x509Certificate);
         }
 

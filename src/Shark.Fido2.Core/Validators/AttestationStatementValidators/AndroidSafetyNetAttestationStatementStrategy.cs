@@ -1,5 +1,4 @@
-﻿using System.Text;
-using Shark.Fido2.Core.Abstractions.Services;
+﻿using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Helpers;
@@ -14,11 +13,14 @@ namespace Shark.Fido2.Core.Validators.AttestationStatementValidators;
 /// </summary>
 internal class AndroidSafetyNetAttestationStatementStrategy : IAttestationStatementStrategy
 {
+    private readonly IJwsResponseParserService _jwsParserService;
     private readonly ICertificateAttestationStatementService _certificateProvider;
 
     public AndroidSafetyNetAttestationStatementStrategy(
+        IJwsResponseParserService jwsParserService,
         ICertificateAttestationStatementService certificateAttestationStatementProvider)
     {
+        _jwsParserService = jwsParserService;
         _certificateProvider = certificateAttestationStatementProvider;
     }
 
@@ -45,13 +47,17 @@ internal class AndroidSafetyNetAttestationStatementStrategy : IAttestationStatem
             return ValidatorInternalResult.Invalid("Attestation statement response cannot be read");
         }
 
-        var jwsResponse = Encoding.UTF8.GetString((byte[])response);
+        var jwsResposne = _jwsParserService.Parse((byte[])response);
+        if (jwsResposne == null || jwsResposne.Certificates == null)
+        {
+            return ValidatorInternalResult.Invalid("Attestation statement JWS response cannot be read");
+        }
 
         var concatenatedData = BytesArrayHelper.Concatenate(
             attestationObjectData.AuthenticatorRawData,
             clientData.ClientDataHash);
 
-        var certificates = _certificateProvider.GetCertificates(attestationStatementDict);
+        var certificates = _certificateProvider.GetCertificates(jwsResposne.Certificates);
 
         return new AttestationStatementInternalResult(AttestationTypeEnum.Basic, [.. certificates]);
     }
