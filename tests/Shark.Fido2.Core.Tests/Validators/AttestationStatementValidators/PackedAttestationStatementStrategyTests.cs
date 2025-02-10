@@ -71,7 +71,7 @@ internal class PackedAttestationStatementStrategyTests
             attestationData!.AttestationObject, clientData, _creationOptions);
 
         // Act
-        var result = _sut.Validate(internalResult.Value!, clientData, _creationOptions);
+        var result = _sut.Validate(internalResult.Value!, clientData);
 
         // Assert
         var attestationStatementInternalResult = result as AttestationStatementInternalResult;
@@ -92,7 +92,7 @@ internal class PackedAttestationStatementStrategyTests
             attestationData!.AttestationObject, clientData, _creationOptions);
 
         // Act
-        var result = _sut.Validate(internalResult.Value!, clientData, _creationOptions!);
+        var result = _sut.Validate(internalResult.Value!, clientData);
 
         // Assert
         var attestationStatementInternalResult = result as AttestationStatementInternalResult;

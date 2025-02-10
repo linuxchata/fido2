@@ -2,6 +2,7 @@
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Comparers;
+using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Helpers;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain;
@@ -16,10 +17,6 @@ namespace Shark.Fido2.Core.Validators.AttestationStatementValidators;
 /// </summary>
 internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
 {
-    private const string PubArea = "pubArea";
-    private const string CertInfo = "certInfo";
-    private const string Algorithm = "alg";
-
     private readonly ITpmtPublicAreaParserService _tpmtPublicAreaParserService;
     private readonly ITpmsAttestationParserService _tpmsAttestationParserService;
     private readonly ICertificateAttestationStatementService _certificateProvider;
@@ -40,29 +37,25 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
         _certificateValidator = certificateAttestationStatementValidator;
     }
 
-    public ValidatorInternalResult Validate(
-        AttestationObjectData attestationObjectData,
-        ClientData clientData,
-        PublicKeyCredentialCreationOptions creationOptions)
+    public ValidatorInternalResult Validate(AttestationObjectData attestationObjectData, ClientData clientData)
     {
         ArgumentNullException.ThrowIfNull(attestationObjectData);
         ArgumentNullException.ThrowIfNull(attestationObjectData.AttestationStatement);
         ArgumentNullException.ThrowIfNull(clientData);
-        ArgumentNullException.ThrowIfNull(creationOptions);
 
         if (attestationObjectData.AttestationStatement is not Dictionary<string, object> attestationStatementDict)
         {
             throw new ArgumentException("Attestation statement cannot be read", nameof(attestationObjectData));
         }
 
-        if (!attestationStatementDict.TryGetValue(PubArea, out var pubArea) ||
+        if (!attestationStatementDict.TryGetValue(AttestationStatement.PubArea, out var pubArea) ||
             pubArea is not byte[] ||
             !_tpmtPublicAreaParserService.Parse((byte[])pubArea, out TpmtPublic tpmtPublic))
         {
             return ValidatorInternalResult.Invalid("Attestation statement pubArea cannot be read");
         }
 
-        if (!attestationStatementDict.TryGetValue(CertInfo, out var certInfo) ||
+        if (!attestationStatementDict.TryGetValue(AttestationStatement.CertInfo, out var certInfo) ||
             certInfo is not byte[] ||
             !_tpmsAttestationParserService.Parse((byte[])certInfo, out TpmsAttestation tpmsAttestation))
         {
@@ -96,7 +89,8 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
         }
 
         // Verify that extraData is set to the hash of attToBeSigned using the hash algorithm employed in "alg".
-        if (!attestationStatementDict.TryGetValue(Algorithm, out var algorithm) || algorithm is not int)
+        if (!attestationStatementDict.TryGetValue(AttestationStatement.Algorithm, out var algorithm) ||
+            algorithm is not int)
         {
             return ValidatorInternalResult.Invalid("Attestation statement algorithm cannot be read");
         }

@@ -54,7 +54,7 @@ internal class NoneAttestationStatementStrategyTests
         var internalResult = handler.Handle(attestationObject, clientData, _creationOptions);
 
         // Act
-        var result = _sut.Validate(internalResult.Value!, clientData, _creationOptions);
+        var result = _sut.Validate(internalResult.Value!, clientData);
 
         // Assert
         var attestationStatementInternalResult = result as AttestationStatementInternalResult;

@@ -98,11 +98,7 @@ internal class AttestationObjectValidator : IAttestationObjectValidator
         // #19 Verify that attStmt is a correct attestation statement, conveying a valid attestation
         // signature, by using the attestation statement format fmt’s verification procedure given
         // attStmt, authData and hash.
-        _attestationStatementValidator.Validate(
-            attestationObjectData,
-            authenticatorData,
-            clientData,
-            creationOptions);
+        _attestationStatementValidator.Validate(attestationObjectData, clientData);
 
         return ValidatorInternalResult.Valid();
     }

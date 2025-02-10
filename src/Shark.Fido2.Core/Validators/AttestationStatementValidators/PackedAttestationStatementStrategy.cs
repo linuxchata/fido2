@@ -30,15 +30,11 @@ internal class PackedAttestationStatementStrategy : IAttestationStatementStrateg
         _certificateValidator = certificateAttestationStatementValidator;
     }
 
-    public ValidatorInternalResult Validate(
-        AttestationObjectData attestationObjectData,
-        ClientData clientData,
-        PublicKeyCredentialCreationOptions creationOptions)
+    public ValidatorInternalResult Validate(AttestationObjectData attestationObjectData, ClientData clientData)
     {
         ArgumentNullException.ThrowIfNull(attestationObjectData);
         ArgumentNullException.ThrowIfNull(attestationObjectData.AttestationStatement);
         ArgumentNullException.ThrowIfNull(clientData);
-        ArgumentNullException.ThrowIfNull(creationOptions);
 
         if (attestationObjectData.AttestationStatement is not Dictionary<string, object> attestationStatementDict)
         {
