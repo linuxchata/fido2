@@ -39,8 +39,6 @@ internal class PackedAttestationStatementStrategyTests
             _authenticatorDataProvider,
             _attestationObjectValidatorMock.Object);
 
-        var algorithmAttestationStatementValidator = new AlgorithmAttestationStatementValidator();
-
         var signatureAttestationStatementValidator = new SignatureAttestationStatementValidator(
             new RsaCryptographyValidator(),
             new Ec2CryptographyValidator());
@@ -51,7 +49,6 @@ internal class PackedAttestationStatementStrategyTests
             new SubjectAlternativeNameParserService());
 
         _sut = new PackedAttestationStatementStrategy(
-            algorithmAttestationStatementValidator,
             signatureAttestationStatementValidator,
             certificateAttestationStatementProvider,
             certificateAttestationStatementValidator);
