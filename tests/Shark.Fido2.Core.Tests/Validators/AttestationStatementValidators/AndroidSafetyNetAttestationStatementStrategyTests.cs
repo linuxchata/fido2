@@ -1,4 +1,5 @@
 ﻿using Moq;
+using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Handlers;
 using Shark.Fido2.Core.Results;
@@ -38,10 +39,13 @@ internal class AndroidSafetyNetAttestationStatementStrategyTests
 
         var jwsParserService = new JwsResponseParserService();
         var certificateAttestationStatementProvider = new CertificateAttestationStatementService();
+        var certificateAttestationStatementValidator = new CertificateAttestationStatementValidator(
+            new SubjectAlternativeNameParserService());
 
         _sut = new AndroidSafetyNetAttestationStatementStrategy(
             jwsParserService, 
-            certificateAttestationStatementProvider);
+            certificateAttestationStatementProvider,
+            certificateAttestationStatementValidator);
     }
 
     [Test]

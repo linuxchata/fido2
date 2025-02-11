@@ -194,24 +194,53 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
         return ValidatorInternalResult.Valid();
     }
 
-    private static bool VerifyCertificateSubject(X509Certificate2 certificate)
+    public ValidatorInternalResult ValidateAndroidSafetyNet(X509Certificate2 attestationCertificate)
     {
-        if (certificate.Subject == null)
+        ArgumentNullException.ThrowIfNull(attestationCertificate);
+
+        var isCertificateHostnameValid = VerifyCertificateHostname(attestationCertificate);
+        if (!isCertificateHostnameValid)
         {
-            return false;
+            return ValidatorInternalResult.Invalid("Attestation statement certificate hostname is invalid");
         }
 
-        var distinguishedNames = certificate.SubjectName.EnumerateRelativeDistinguishedNames();
-        var distinguishedNamesMap = new Dictionary<string, string?>();
-        foreach (var distinguishedName in distinguishedNames)
+        return ValidatorInternalResult.Valid();
+    }
+
+    public ValidatorInternalResult ValidateChainOfTrustWithSystemCa(List<X509Certificate2> certificates)
+    {
+        ArgumentNullException.ThrowIfNull(certificates);
+
+        if (certificates.Count < 2)
         {
-            var type = distinguishedName.GetSingleElementType();
-            var value = distinguishedName.GetSingleElementValue();
-            if (!string.IsNullOrWhiteSpace(type.FriendlyName))
-            {
-                distinguishedNamesMap.Add(type.FriendlyName, value);
-            }
+            return ValidatorInternalResult.Invalid("Attestation statement self-signed certificate is not supported");
         }
+
+        using var chain = new X509Chain();
+        chain.ChainPolicy.RevocationMode = X509RevocationMode.NoCheck;
+        chain.ChainPolicy.VerificationFlags = X509VerificationFlags.NoFlag;
+        chain.ChainPolicy.VerificationTime = DateTime.Now;
+
+        var leafCertificate = certificates.First();
+        var intermediateCertificates = certificates.Skip(1).Take(certificates.Count - 2);
+
+        foreach (var intermediateCertificate in intermediateCertificates)
+        {
+            chain.ChainPolicy.ExtraStore.Add(intermediateCertificate);
+        }
+
+        var isValid = chain.Build(leafCertificate);
+        if (!isValid)
+        {
+            return ValidatorInternalResult.Invalid("Attestation statement certificates are invalid");
+        }
+
+        return ValidatorInternalResult.Valid();
+    }
+
+    private static bool VerifyCertificateSubject(X509Certificate2 certificate)
+    {
+        var distinguishedNamesMap = GetDistinguishedNames(certificate);
 
         // Subject-C
         // ISO 3166 code specifying the country where the Authenticator vendor is incorporated (PrintableString)
@@ -246,6 +275,37 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
         }
 
         return true;
+    }
+
+    private static bool VerifyCertificateHostname(X509Certificate2 certificate)
+    {
+        var distinguishedNamesMap = GetDistinguishedNames(certificate);
+
+        // Subject-CN
+        if (!distinguishedNamesMap.TryGetValue(SubjectCommonName, out var commonName) ||
+            !string.Equals(commonName, "attest.android.com", StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    private static Dictionary<string, string?> GetDistinguishedNames(X509Certificate2 certificate)
+    {
+        var distinguishedNames = certificate.SubjectName.EnumerateRelativeDistinguishedNames();
+        var distinguishedNamesMap = new Dictionary<string, string?>();
+        foreach (var distinguishedName in distinguishedNames)
+        {
+            var type = distinguishedName.GetSingleElementType();
+            var value = distinguishedName.GetSingleElementValue();
+            if (!string.IsNullOrWhiteSpace(type.FriendlyName))
+            {
+                distinguishedNamesMap.Add(type.FriendlyName, value);
+            }
+        }
+
+        return distinguishedNamesMap;
     }
 
     private static X509BasicConstraintsExtension? GetBasicConstraints(X509Certificate2 attestationCertificate)
