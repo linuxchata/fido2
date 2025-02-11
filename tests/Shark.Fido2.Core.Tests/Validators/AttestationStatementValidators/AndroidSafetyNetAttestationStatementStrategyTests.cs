@@ -1,5 +1,4 @@
 ﻿using Moq;
-using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Handlers;
 using Shark.Fido2.Core.Results;
@@ -10,6 +9,7 @@ using Shark.Fido2.Domain.Enums;
 
 namespace Shark.Fido2.Core.Tests.Validators.AttestationStatementValidators;
 
+[TestFixture]
 internal class AndroidSafetyNetAttestationStatementStrategyTests
 {
     private Mock<IAttestationObjectValidator> _attestationObjectValidatorMock;
