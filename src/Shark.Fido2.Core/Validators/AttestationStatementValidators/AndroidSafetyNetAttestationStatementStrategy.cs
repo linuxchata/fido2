@@ -123,7 +123,9 @@ internal class AndroidSafetyNetAttestationStatementStrategy : IAttestationStatem
             return result;
         }
 
-        // TODO: Skip result of JWS response validation, since provided certificate is not valid.
+        // Use the certificate to verify the signature of the JWS message.
+        // Check the data of the JWS message to make sure it matches the data within your original request.
+        // TODO: Skip result of the validation, since provided certificate is not valid and JWS response has expired.
         _jwsResponseValidator.Validate(jwsResponse, attestationCertificate);
 
         // If successful, return implementation-specific values representing attestation type Basic and attestation

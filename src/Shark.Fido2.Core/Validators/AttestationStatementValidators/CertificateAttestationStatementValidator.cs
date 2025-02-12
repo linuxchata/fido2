@@ -22,6 +22,8 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
 
     private const string OrganizationalUnitAuthenticatorAttestation = "Authenticator Attestation";
 
+    private const string AndroidCommonName = "attest.android.com";
+
     private readonly ISubjectAlternativeNameParserService _subjectAlternativeNameParserService;
 
     public CertificateAttestationStatementValidator(
@@ -283,7 +285,7 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
 
         // Subject-CN
         if (!distinguishedNamesMap.TryGetValue(SubjectCommonName, out var commonName) ||
-            !string.Equals(commonName, "attest.android.com", StringComparison.OrdinalIgnoreCase))
+            !string.Equals(commonName, AndroidCommonName, StringComparison.OrdinalIgnoreCase))
         {
             return false;
         }

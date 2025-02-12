@@ -7,6 +7,10 @@ using Shark.Fido2.Domain;
 
 namespace Shark.Fido2.Core.Services;
 
+/// <summary>
+/// Gode sample from Google:
+/// https://github.com/googlesamples/android-play-safetynet/tree/master/server/csharp
+/// </summary>
 internal sealed class AndroidSafetyNetJwsResponseParserService : IAndroidSafetyNetJwsResponseParserService
 {
     private const string ClaimTypeNonce = "nonce";
@@ -15,6 +19,7 @@ internal sealed class AndroidSafetyNetJwsResponseParserService : IAndroidSafetyN
     private const string ClaimTypeApkPackageName = "apkPackageName";
     private const string ClaimTypeApkCertificateDigestSha256 = "apkCertificateDigestSha256";
     private const string ClaimTypeApkDigestSha256 = "apkDigestSha256";
+    private const string ClaimTypeTimestampMs = "timestampMs";
 
     public JwsResponse? Parse(byte[] response)
     {
@@ -48,6 +53,7 @@ internal sealed class AndroidSafetyNetJwsResponseParserService : IAndroidSafetyN
         var apkPackageNameClaim = GetClaim(jwtToken.Claims, ClaimTypeApkPackageName);
         var apkCertificateDigestSha256Claim = GetClaim(jwtToken.Claims, ClaimTypeApkCertificateDigestSha256);
         var apkDigestSha256Claim = GetClaim(jwtToken.Claims, ClaimTypeApkDigestSha256);
+        var timestampMsClaim = GetClaim(jwtToken.Claims, ClaimTypeTimestampMs);
 
         return new JwsResponse
         {
@@ -60,6 +66,7 @@ internal sealed class AndroidSafetyNetJwsResponseParserService : IAndroidSafetyN
             ApkPackageName = apkPackageNameClaim?.Value,
             ApkCertificateDigestSha256 = apkCertificateDigestSha256Claim?.Value,
             ApkDigestSha256 = apkDigestSha256Claim?.Value,
+            TimestampMs = timestampMsClaim?.Value
         };
     }
 
