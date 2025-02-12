@@ -3,7 +3,7 @@ using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain;
 using Shark.Fido2.Domain.Enums;
 
-namespace Shark.Fido2.Core.Abstractions.Validators;
+namespace Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 
 public interface ISignatureAttestationStatementValidator
 {

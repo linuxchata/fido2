@@ -1,6 +1,5 @@
 ﻿using System.Security.Cryptography;
 using Shark.Fido2.Core.Abstractions.Services;
-using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Comparers;
 using Shark.Fido2.Core.Constants;
@@ -16,16 +15,19 @@ namespace Shark.Fido2.Core.Validators.AttestationStatementValidators;
 /// </summary>
 internal class AndroidSafetyNetAttestationStatementStrategy : IAttestationStatementStrategy
 {
-    private readonly IJwsResponseParserService _jwsParserService;
+    private readonly IAndroidSafetyNetJwsResponseParserService _jwsResponseParserService;
+    private readonly IAndroidSafetyNetJwsResponseValidator _jwsResponseValidator;
     private readonly ICertificateAttestationStatementService _certificateProvider;
     private readonly ICertificateAttestationStatementValidator _certificateValidator;
 
     public AndroidSafetyNetAttestationStatementStrategy(
-        IJwsResponseParserService jwsParserService,
+        IAndroidSafetyNetJwsResponseParserService androidSafetyNetJwsResponseParserService,
+        IAndroidSafetyNetJwsResponseValidator androidSafetyNetJwsResponseValidator,
         ICertificateAttestationStatementService certificateAttestationStatementProvider,
         ICertificateAttestationStatementValidator certificateAttestationStatementValidator)
     {
-        _jwsParserService = jwsParserService;
+        _jwsResponseParserService = androidSafetyNetJwsResponseParserService;
+        _jwsResponseValidator = androidSafetyNetJwsResponseValidator;
         _certificateProvider = certificateAttestationStatementProvider;
         _certificateValidator = certificateAttestationStatementValidator;
     }
@@ -56,15 +58,15 @@ internal class AndroidSafetyNetAttestationStatementStrategy : IAttestationStatem
             return ValidatorInternalResult.Invalid("Attestation statement response cannot be read");
         }
 
-        var jwsResposne = _jwsParserService.Parse((byte[])response);
-        if (jwsResposne == null)
+        var jwsResponse = _jwsResponseParserService.Parse((byte[])response);
+        if (jwsResponse == null)
         {
             return ValidatorInternalResult.Invalid("Attestation statement JWS response cannot be read");
         }
 
         // Verify that the nonce attribute in the payload of response is identical to the Base64 encoding of the
         // SHA-256 hash of the concatenation of authenticatorData and clientDataHash.
-        if (jwsResposne.Nonce == null)
+        if (jwsResponse.Nonce == null)
         {
             return ValidatorInternalResult.Invalid("Attestation statement JWS response nonce is not found");
         }
@@ -74,7 +76,7 @@ internal class AndroidSafetyNetAttestationStatementStrategy : IAttestationStatem
             clientData.ClientDataHash);
         var concatenatedDataHash = HashProvider.GetHash(concatenatedData, HashAlgorithmName.SHA256);
 
-        var nonceHash = HashProvider.GetHash(Convert.FromBase64String(jwsResposne.Nonce), HashAlgorithmName.SHA256);
+        var nonceHash = HashProvider.GetHash(Convert.FromBase64String(jwsResponse.Nonce), HashAlgorithmName.SHA256);
 
         if (!BytesArrayComparer.CompareNullable(nonceHash, concatenatedDataHash))
         {
@@ -85,34 +87,32 @@ internal class AndroidSafetyNetAttestationStatementStrategy : IAttestationStatem
         // Verify that the SafetyNet response actually came from the SafetyNet service by following the steps in the
         // SafetyNet online documentation.
         // https://web.archive.org/web/20180710064905/https://developer.android.com/training/safetynet/attestation#verify-compat-check
-        if (jwsResposne.CtsProfileMatch == null)
+        if (jwsResponse.CtsProfileMatch == null)
         {
             return ValidatorInternalResult.Invalid("Attestation statement JWS response ctsProfileMatch is not found");
         }
 
-        if (jwsResposne.BasicIntegrity == null)
+        if (jwsResponse.BasicIntegrity == null)
         {
             return ValidatorInternalResult.Invalid("Attestation statement JWS response basicIntegrity is not found");
         }
 
-        if (string.IsNullOrWhiteSpace(jwsResposne.ApkPackageName) ||
-            string.IsNullOrWhiteSpace(jwsResposne.ApkCertificateDigestSha256) ||
-            string.IsNullOrWhiteSpace(jwsResposne.ApkDigestSha256))
+        if (string.IsNullOrWhiteSpace(jwsResponse.ApkPackageName) ||
+            string.IsNullOrWhiteSpace(jwsResponse.ApkCertificateDigestSha256) ||
+            string.IsNullOrWhiteSpace(jwsResponse.ApkDigestSha256))
         {
             return ValidatorInternalResult.Invalid("Attestation statement JWS response APK information is not found");
         }
 
-        // If successful, return implementation-specific values representing attestation type Basic and attestation
-        // trust path x5c.
-        if (jwsResposne.Certificates == null)
+        if (jwsResponse.Certificates == null)
         {
             return ValidatorInternalResult.Invalid("Attestation statement JWS response certificates are not found");
         }
 
-        var certificates = _certificateProvider.GetCertificates(jwsResposne.Certificates);
+        var certificates = _certificateProvider.GetCertificates(jwsResponse.Certificates);
 
         // Validate the SSL certificate chain
-        // TODO: Skip result of SSL certificate chain validation, since provided certificates are not valid. 
+        // TODO: Skip result of SSL certificate chain validation, since provided certificates are not valid.
         _certificateValidator.ValidateChainOfTrustWithSystemCa(certificates);
 
         // Use SSL hostname matching to verify that the leaf certificate was issued to the hostname attest.android.com
@@ -123,6 +123,11 @@ internal class AndroidSafetyNetAttestationStatementStrategy : IAttestationStatem
             return result;
         }
 
+        // TODO: Skip result of JWS response validation, since provided certificate is not valid.
+        _jwsResponseValidator.Validate(jwsResponse, attestationCertificate);
+
+        // If successful, return implementation-specific values representing attestation type Basic and attestation
+        // trust path x5c.
         return new AttestationStatementInternalResult(AttestationTypeEnum.Basic, [.. certificates]);
     }
 }

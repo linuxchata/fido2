@@ -2,7 +2,7 @@
 
 namespace Shark.Fido2.Core.Abstractions.Services;
 
-public interface IJwsResponseParserService
+public interface IAndroidSafetyNetJwsResponseParserService
 {
     JwsResponse? Parse(byte[] response);
 }

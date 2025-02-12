@@ -1,5 +1,4 @@
 ﻿using Shark.Fido2.Core.Abstractions.Services;
-using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Comparers;
 using Shark.Fido2.Core.Constants;

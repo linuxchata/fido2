@@ -7,7 +7,7 @@ using Shark.Fido2.Domain;
 
 namespace Shark.Fido2.Core.Services;
 
-internal sealed class JwsResponseParserService : IJwsResponseParserService
+internal sealed class AndroidSafetyNetJwsResponseParserService : IAndroidSafetyNetJwsResponseParserService
 {
     private const string ClaimTypeNonce = "nonce";
     private const string ClaimTypeCtsProfileMatch = "ctsProfileMatch";
