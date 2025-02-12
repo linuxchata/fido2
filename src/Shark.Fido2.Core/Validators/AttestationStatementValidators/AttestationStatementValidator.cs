@@ -12,12 +12,14 @@ internal class AttestationStatementValidator : IAttestationStatementValidator
     public AttestationStatementValidator(
         [FromKeyedServices("packed")] IAttestationStatementStrategy packedAttestationStatementStategy,
         [FromKeyedServices("tpm")] IAttestationStatementStrategy tpmAttestationStatementStrategy,
+        [FromKeyedServices("android-safetynet")] IAttestationStatementStrategy androidSafetyNetAttestationStatementStrategy,
         [FromKeyedServices("none")] IAttestationStatementStrategy noneAttestationStatementStategy)
     {
         _strategiesMap = new Dictionary<string, IAttestationStatementStrategy>
         {
             { AttestationStatementFormatIdentifier.Packed, packedAttestationStatementStategy },
             { AttestationStatementFormatIdentifier.Tpm, tpmAttestationStatementStrategy },
+            { AttestationStatementFormatIdentifier.AndroidSafetyNet, androidSafetyNetAttestationStatementStrategy },
             { AttestationStatementFormatIdentifier.None, noneAttestationStatementStategy },
         };
     }

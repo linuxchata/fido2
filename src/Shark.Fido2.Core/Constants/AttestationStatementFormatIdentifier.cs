@@ -12,7 +12,7 @@ internal static class AttestationStatementFormatIdentifier
 
     public const string AndroidKey = "android-key";
 
-    public const string AndroidSafetynet = "android-safetynet";
+    public const string AndroidSafetyNet = "android-safetynet";
 
     public const string FidoU2f = "fido-u2f";
 
@@ -22,6 +22,6 @@ internal static class AttestationStatementFormatIdentifier
 
     public readonly static HashSet<string> Supported = new HashSet<string>
     {
-        Packed, Tpm, AndroidKey, AndroidSafetynet, FidoU2f, Apple, None
+        Packed, Tpm, AndroidKey, AndroidSafetyNet, FidoU2f, Apple, None
     };
 }
