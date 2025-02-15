@@ -44,14 +44,14 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
         // Version MUST be set to 3 (which is indicated by an ASN.1 INTEGER with value 2).
         if (attestationCertificate.Version != 3)
         {
-            return ValidatorInternalResult.Invalid("Attestation statement certificate has unexpected version");
+            return ValidatorInternalResult.Invalid("Packed attestation statement certificate has unexpected version");
         }
 
         // Subject field MUST be set.
         var isCertificateSubjectValid = VerifyCertificateSubject(attestationCertificate);
         if (!isCertificateSubjectValid)
         {
-            return ValidatorInternalResult.Invalid("Attestation statement certificate subject is invalid");
+            return ValidatorInternalResult.Invalid("Packed attestation statement certificate subject is invalid");
         }
 
         // If the related attestation root certificate is used for multiple authenticator models, the Extension OID
@@ -66,7 +66,7 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
             if (idFidoGenCeAaguid.Critical)
             {
                 return ValidatorInternalResult.Invalid(
-                    $"Attestation statement certificate extenstion {IdFidoGenCeAaguidExtension} is marked as critical");
+                    $"Packed attestation statement certificate extenstion {IdFidoGenCeAaguidExtension} is marked as critical");
             }
         }
 
@@ -74,7 +74,7 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
         var basicConstraints = GetBasicConstraints(attestationCertificate);
         if (basicConstraints == null || basicConstraints.CertificateAuthority)
         {
-            return ValidatorInternalResult.Invalid("Attestation statement certificate authority is invalid");
+            return ValidatorInternalResult.Invalid("Packed attestation statement certificate authority is invalid");
         }
 
         // TODO: An Authority Information Access (AIA) extension with entry id-ad-ocsp and a CRL Distribution Point
@@ -88,7 +88,7 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
             var aaGuid = ParseGuidFromOctetString(idFidoGenCeAaguid.RawData);
             if (aaGuid != attestationObjectData.AuthenticatorData!.AttestedCredentialData.AaGuid)
             {
-                return ValidatorInternalResult.Invalid("Attestation statement AAGUID mismatch");
+                return ValidatorInternalResult.Invalid("Packed attestation statement AAGUID mismatch");
             }
         }
 
@@ -107,13 +107,13 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
         // Version MUST be set to 3.
         if (attestationCertificate.Version != 3)
         {
-            return ValidatorInternalResult.Invalid("Attestation statement certificate has unexpected version");
+            return ValidatorInternalResult.Invalid("TPM attestation statement certificate has unexpected version");
         }
 
         // Subject field MUST be set to empty.
         if (!string.IsNullOrWhiteSpace(attestationCertificate.SubjectName?.Name))
         {
-            return ValidatorInternalResult.Invalid("Attestation statement certificate has not empty subject");
+            return ValidatorInternalResult.Invalid("TPM attestation statement certificate has not empty subject");
         }
 
         // The Subject Alternative Name extension MUST be set as defined in [TPMv2-EK-Profile] section 3.2.9.
@@ -123,13 +123,13 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
         if (subjectAlternativeNameExtension == null)
         {
             return ValidatorInternalResult.Invalid(
-                "Attestation statement certificate subject alternative name is not found");
+                "TPM attestation statement certificate subject alternative name is not found");
         }
 
         if (!subjectAlternativeNameExtension.Critical)
         {
             return ValidatorInternalResult.Invalid(
-                $"Attestation statement certificate subject alternative name extenstion is not marked as critical");
+                $"TPM attestation statement certificate subject alternative name extenstion is not marked as critical");
         }
 
         var tpmIssuer = _subjectAlternativeNameParserService.Parse(subjectAlternativeNameExtension);
@@ -138,19 +138,19 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
         if (!TpmCapabilitiesVendors.Exists(tpmIssuer!.ManufacturerValue))
         {
             return ValidatorInternalResult.Invalid(
-                $"Attestation statement certificate subject alternative name has invalid TMP manufacturer {tpmIssuer.ManufacturerValue}");
+                $"TPM attestation statement certificate subject alternative name has invalid TMP manufacturer {tpmIssuer.ManufacturerValue}");
         }
 
         if (string.IsNullOrWhiteSpace(tpmIssuer.Model))
         {
             return ValidatorInternalResult.Invalid(
-                "Attestation statement certificate subject alternative name has invalid model");
+                "TPM attestation statement certificate subject alternative name has invalid model");
         }
 
         if (string.IsNullOrWhiteSpace(tpmIssuer.Version))
         {
             return ValidatorInternalResult.Invalid(
-                "Attestation statement certificate subject alternative name has invalid version");
+                "TPM attestation statement certificate subject alternative name has invalid version");
         }
 
         // The Extended Key Usage extension MUST contain the OID 2.23.133.8.3
@@ -160,20 +160,22 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
             as X509EnhancedKeyUsageExtension;
         if (enhancedKeyUsageExtension == null)
         {
-            return ValidatorInternalResult.Invalid("Attestation statement certificate enhanced key usage is not found");
+            return ValidatorInternalResult.Invalid(
+                "TPM attestation statement certificate enhanced key usage is not found");
         }
 
         var jointIsoItuTExtension = enhancedKeyUsageExtension.EnhancedKeyUsages[JointIsoItuTExtension];
         if (jointIsoItuTExtension == null)
         {
-            return ValidatorInternalResult.Invalid("Attestation statement certificate enhanced key usage is invalid");
+            return ValidatorInternalResult.Invalid(
+                "TPM attestation statement certificate enhanced key usage is invalid");
         }
 
         // The Basic Constraints extension MUST have the CA component set to false.
         var basicConstraints = GetBasicConstraints(attestationCertificate);
         if (basicConstraints == null || basicConstraints.CertificateAuthority)
         {
-            return ValidatorInternalResult.Invalid("Attestation statement certificate authority is invalid");
+            return ValidatorInternalResult.Invalid("TPM attestation statement certificate authority is invalid");
         }
 
         // TODO: An Authority Information Access (AIA) extension with entry id-ad-ocsp and a CRL Distribution Point
@@ -189,7 +191,7 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
             var aaGuid = ParseGuidFromOctetString(idFidoGenCeAaguid.RawData);
             if (aaGuid != attestationObjectData.AuthenticatorData!.AttestedCredentialData.AaGuid)
             {
-                return ValidatorInternalResult.Invalid("Attestation statement AAGUID mismatch");
+                return ValidatorInternalResult.Invalid("TPM attestation statement AAGUID mismatch");
             }
         }
 
@@ -203,7 +205,8 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
         var isCertificateHostnameValid = VerifyCertificateHostname(attestationCertificate);
         if (!isCertificateHostnameValid)
         {
-            return ValidatorInternalResult.Invalid("Attestation statement certificate hostname is invalid");
+            return ValidatorInternalResult.Invalid(
+                "Android SafetyNet attestation statement certificate hostname is invalid");
         }
 
         return ValidatorInternalResult.Valid();
@@ -215,7 +218,8 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
 
         if (certificates.Count < 2)
         {
-            return ValidatorInternalResult.Invalid("Attestation statement self-signed certificate is not supported");
+            return ValidatorInternalResult.Invalid(
+                "Android SafetyNet attestation statement self-signed certificate is not supported");
         }
 
         using var chain = new X509Chain();
@@ -234,7 +238,7 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
         var isValid = chain.Build(leafCertificate);
         if (!isValid)
         {
-            return ValidatorInternalResult.Invalid("Attestation statement certificates are invalid");
+            return ValidatorInternalResult.Invalid("Android SafetyNet attestation statement certificates are invalid");
         }
 
         return ValidatorInternalResult.Valid();

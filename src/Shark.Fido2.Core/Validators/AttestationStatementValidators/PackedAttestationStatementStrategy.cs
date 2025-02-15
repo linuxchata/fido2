@@ -1,4 +1,4 @@
-﻿using Shark.Fido2.Core.Abstractions.Services;
+﻿﻿using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Helpers;
@@ -9,7 +9,9 @@ using Shark.Fido2.Domain.Enums;
 namespace Shark.Fido2.Core.Validators.AttestationStatementValidators;
 
 /// <summary>
-/// 8.2. Packed Attestation Statement Format
+/// Implementation of the Packed attestation statement validation strategy.
+/// This validates attestation statements according to the FIDO2 specification section 8.2.
+/// See: https://www.w3.org/TR/webauthn/#sctn-packed-attestation
 /// </summary>
 internal class PackedAttestationStatementStrategy : IAttestationStatementStrategy
 {
@@ -27,6 +29,14 @@ internal class PackedAttestationStatementStrategy : IAttestationStatementStrateg
         _certificateValidator = certificateAttestationStatementValidator;
     }
 
+    /// <summary>
+    /// Validates a Packed attestation statement.
+    /// </summary>
+    /// <param name="attestationObjectData">The attestation object data containing the statement to validate</param>
+    /// <param name="clientData">The client data associated with the attestation</param>
+    /// <returns>A ValidatorInternalResult indicating whether the attestation statement is valid</returns>
+    /// <exception cref="ArgumentNullException">Thrown when attestationObjectData or clientData is null</exception>
+    /// <exception cref="ArgumentException">Thrown when attestation statement cannot be read</exception>
     public ValidatorInternalResult Validate(AttestationObjectData attestationObjectData, ClientData clientData)
     {
         ArgumentNullException.ThrowIfNull(attestationObjectData);
@@ -35,7 +45,7 @@ internal class PackedAttestationStatementStrategy : IAttestationStatementStrateg
 
         if (attestationObjectData.AttestationStatement is not Dictionary<string, object> attestationStatementDict)
         {
-            throw new ArgumentException("Attestation statement cannot be read", nameof(attestationObjectData));
+            throw new ArgumentException("Packed attestation statement cannot be read", nameof(attestationObjectData));
         }
 
         var credentialPublicKey = attestationObjectData.AuthenticatorData!.AttestedCredentialData.CredentialPublicKey;
@@ -86,12 +96,12 @@ internal class PackedAttestationStatementStrategy : IAttestationStatementStrateg
             if (!attestationStatementDict.TryGetValue(AttestationStatement.Algorithm, out var algorithm) ||
                 algorithm is not int)
             {
-                return ValidatorInternalResult.Invalid("Attestation statement algorithm cannot be read");
+                return ValidatorInternalResult.Invalid("Packed attestation statement algorithm cannot be read");
             }
 
             if (credentialPublicKey.Algorithm != (int)algorithm)
             {
-                return ValidatorInternalResult.Invalid("Attestation statement algorithm mismatch");
+                return ValidatorInternalResult.Invalid($"Packed attestation statement algorithm ({algorithm}) does not match credential public key algorithm ({credentialPublicKey.Algorithm})");
             }
 
             // Verify that sig is a valid signature over the concatenation of authenticatorData and clientDataHash

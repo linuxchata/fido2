@@ -11,7 +11,9 @@ using Shark.Fido2.Domain.Enums;
 namespace Shark.Fido2.Core.Validators.AttestationStatementValidators;
 
 /// <summary>
-/// 8.5. Android SafetyNet Attestation Statement Format
+/// Implementation of the Android SafetyNet attestation statement validation strategy.
+/// This validates attestation statements according to the FIDO2 specification section 8.5.
+/// See: https://www.w3.org/TR/webauthn/#sctn-android-safetynet-attestation
 /// </summary>
 internal class AndroidSafetyNetAttestationStatementStrategy : IAttestationStatementStrategy
 {
@@ -32,6 +34,14 @@ internal class AndroidSafetyNetAttestationStatementStrategy : IAttestationStatem
         _certificateValidator = certificateAttestationStatementValidator;
     }
 
+    /// <summary>
+    /// Validates an Android SafetyNet attestation statement.
+    /// </summary>
+    /// <param name="attestationObjectData">The attestation object data containing the statement to validate</param>
+    /// <param name="clientData">The client data associated with the attestation</param>
+    /// <returns>A ValidatorInternalResult indicating whether the attestation statement is valid</returns>
+    /// <exception cref="ArgumentNullException">Thrown when attestationObjectData or clientData is null</exception>
+    /// <exception cref="ArgumentException">Thrown when attestation statement cannot be read</exception>
     public ValidatorInternalResult Validate(AttestationObjectData attestationObjectData, ClientData clientData)
     {
         ArgumentNullException.ThrowIfNull(attestationObjectData);
@@ -40,7 +50,9 @@ internal class AndroidSafetyNetAttestationStatementStrategy : IAttestationStatem
 
         if (attestationObjectData.AttestationStatement is not Dictionary<string, object> attestationStatementDict)
         {
-            throw new ArgumentException("Attestation statement cannot be read", nameof(attestationObjectData));
+            throw new ArgumentException(
+                "Android SafetyNet attestation statement cannot be read",
+                nameof(attestationObjectData));
         }
 
         // Verify that response is a valid SafetyNet response of version ver by following the steps indicated by the
@@ -49,26 +61,30 @@ internal class AndroidSafetyNetAttestationStatementStrategy : IAttestationStatem
         if (!attestationStatementDict.TryGetValue(AttestationStatement.Version, out var version) ||
             version is not string)
         {
-            return ValidatorInternalResult.Invalid("Attestation statement ver cannot be read");
+            return ValidatorInternalResult.Invalid(
+                "Android SafetyNet attestation statement version is missing or invalid");
         }
 
         if (!attestationStatementDict.TryGetValue(AttestationStatement.Response, out var response) ||
             response is not byte[])
         {
-            return ValidatorInternalResult.Invalid("Attestation statement response cannot be read");
+            return ValidatorInternalResult.Invalid(
+                "Android SafetyNet attestation statement response is missing or invalid");
         }
 
         var jwsResponse = _jwsResponseParserService.Parse((byte[])response);
         if (jwsResponse == null)
         {
-            return ValidatorInternalResult.Invalid("Attestation statement JWS response cannot be read");
+            return ValidatorInternalResult.Invalid(
+                "Android SafetyNet attestation statement JWS response could not be parsed");
         }
 
         // Verify that the nonce attribute in the payload of response is identical to the Base64 encoding of the
         // SHA-256 hash of the concatenation of authenticatorData and clientDataHash.
         if (jwsResponse.Nonce == null)
         {
-            return ValidatorInternalResult.Invalid("Attestation statement JWS response nonce is not found");
+            return ValidatorInternalResult.Invalid(
+                "Android SafetyNet attestation statement JWS response is missing required nonce field");
         }
 
         var concatenatedData = BytesArrayHelper.Concatenate(
@@ -81,7 +97,7 @@ internal class AndroidSafetyNetAttestationStatementStrategy : IAttestationStatem
         if (!BytesArrayComparer.CompareNullable(nonceHash, concatenatedDataHash))
         {
             return ValidatorInternalResult.Invalid(
-                "Attestation statement JWS response nonce is not identical to the concatenation of authenticatorData and clientDataHash");
+                "Android SafetyNet attestation statement response's nonce is not identical to the concatenation of authenticatorData and clientDataHash");
         }
 
         // Verify that the SafetyNet response actually came from the SafetyNet service by following the steps in the
@@ -89,24 +105,28 @@ internal class AndroidSafetyNetAttestationStatementStrategy : IAttestationStatem
         // https://web.archive.org/web/20180710064905/https://developer.android.com/training/safetynet/attestation#verify-compat-check
         if (jwsResponse.CtsProfileMatch == null)
         {
-            return ValidatorInternalResult.Invalid("Attestation statement JWS response ctsProfileMatch is not found");
+            return ValidatorInternalResult.Invalid(
+                "Android SafetyNet attestation statement JWS response ctsProfileMatch is not found");
         }
 
         if (jwsResponse.BasicIntegrity == null)
         {
-            return ValidatorInternalResult.Invalid("Attestation statement JWS response basicIntegrity is not found");
+            return ValidatorInternalResult.Invalid(
+                "Android SafetyNet attestation statement JWS response basicIntegrity is not found");
         }
 
         if (string.IsNullOrWhiteSpace(jwsResponse.ApkPackageName) ||
             string.IsNullOrWhiteSpace(jwsResponse.ApkCertificateDigestSha256) ||
             string.IsNullOrWhiteSpace(jwsResponse.ApkDigestSha256))
         {
-            return ValidatorInternalResult.Invalid("Attestation statement JWS response APK information is not found");
+            return ValidatorInternalResult.Invalid(
+                "Android SafetyNet attestation statement JWS response APK information is not found");
         }
 
         if (jwsResponse.Certificates == null)
         {
-            return ValidatorInternalResult.Invalid("Attestation statement JWS response certificates are not found");
+            return ValidatorInternalResult.Invalid(
+                "Android SafetyNet attestation statement JWS response certificates are not found");
         }
 
         var certificates = _certificateProvider.GetCertificates(jwsResponse.Certificates);

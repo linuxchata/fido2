@@ -68,4 +68,35 @@ internal class AndroidSafetyNetAttestationStatementStrategyTests
         var attestationStatementInternalResult = result as AttestationStatementInternalResult;
         Assert.That(attestationStatementInternalResult!.AttestationType, Is.EqualTo(AttestationTypeEnum.Basic));
     }
+
+    [Test]
+    public void Validate_WhenAttestationObjectDataIsNull_ThrowsArgumentNullException()
+    {
+        // Arrange
+        var clientData = new ClientData();
+
+        // Act & Assert
+        Assert.Throws<ArgumentNullException>(() => _sut.Validate(null!, clientData));
+    }
+
+    [Test]
+    public void Validate_WhenClientDataIsNull_ThrowsArgumentNullException()
+    {
+        // Arrange
+        var attestationObjectData = new AttestationObjectData();
+
+        // Act & Assert
+        Assert.Throws<ArgumentNullException>(() => _sut.Validate(attestationObjectData, null!));
+    }
+
+    [Test]
+    public void Validate_WhenAttestationStatementIsNotDictionary_ThrowsArgumentException()
+    {
+        // Arrange
+        var attestationObjectData = new AttestationObjectData { AttestationStatement = "not a dictionary" };
+        var clientData = new ClientData();
+
+        // Act & Assert
+        Assert.Throws<ArgumentException>(() => _sut.Validate(attestationObjectData, clientData));
+    }
 }
