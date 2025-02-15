@@ -101,7 +101,8 @@ internal class PackedAttestationStatementStrategy : IAttestationStatementStrateg
 
             if (credentialPublicKey.Algorithm != (int)algorithm)
             {
-                return ValidatorInternalResult.Invalid($"Packed attestation statement algorithm ({algorithm}) does not match credential public key algorithm ({credentialPublicKey.Algorithm})");
+                return ValidatorInternalResult.Invalid(
+                    $"Packed attestation statement algorithm ({algorithm}) does not match credential public key algorithm ({credentialPublicKey.Algorithm})");
             }
 
             // Verify that sig is a valid signature over the concatenation of authenticatorData and clientDataHash
