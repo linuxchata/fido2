@@ -170,28 +170,15 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
         return new AttestationStatementInternalResult(AttestationTypeEnum.AttCA, [.. certificates]);
     }
 
-    /// <summary>
-    /// Converts a big-endian byte array representing an RSA exponent to a uint32 in little-endian format.
-    /// </summary>
-    /// <param name="exponent">The RSA exponent as a big-endian byte array.</param>
-    /// <returns>The exponent as a uint32 in little-endian format.</returns>
-    /// <exception cref="ArgumentNullException">Thrown when exponent is null.</exception>
-    /// <exception cref="ArgumentException">Thrown when exponent is empty or larger than 4 bytes.</exception>
     private static uint GetExponentAsUInt32LittleEndian(byte[] exponent)
     {
-        ArgumentNullException.ThrowIfNull(exponent);
-        if (exponent.Length == 0)
+        if (exponent == null || exponent.Length == 0)
         {
-            throw new ArgumentException("Exponent cannot be empty", nameof(exponent));
-        }
-        if (exponent.Length > 4)
-        {
-            throw new ArgumentException("Exponent cannot be larger than 4 bytes", nameof(exponent));
+            return uint.MinValue;
         }
 
-        var paddedExponent = new byte[4];
-        Array.Copy(exponent, 0, paddedExponent, 0, exponent.Length);
-        Array.Reverse(paddedExponent);
-        return BitConverter.ToUInt32(paddedExponent, 0);
+        Array.Reverse(exponent);
+        Array.Resize(ref exponent, 4);
+        return BitConverter.ToUInt32(exponent, 0);
     }
 }

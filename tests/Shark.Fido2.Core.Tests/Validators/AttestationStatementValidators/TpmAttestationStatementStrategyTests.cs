@@ -57,7 +57,7 @@ internal class TpmAttestationStatementStrategyTests
     }
 
     [Test]
-    public void ValidateTpm_WhenWindowsAuthenticatorWithRs256Algorithm_ShouldValidate()
+    public void Validate_WhenWindowsAuthenticatorWithRs256Algorithm_ShouldValidate()
     {
         // Arrange
         var fileName = "TpmAttestationAuthenticatorWithRs256.json";
