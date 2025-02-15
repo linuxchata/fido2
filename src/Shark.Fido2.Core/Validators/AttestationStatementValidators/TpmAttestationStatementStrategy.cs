@@ -1,4 +1,4 @@
-﻿using Shark.Fido2.Core.Abstractions.Services;
+﻿﻿using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Comparers;
 using Shark.Fido2.Core.Constants;
@@ -38,6 +38,14 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
         _certificateValidator = certificateAttestationStatementValidator;
     }
 
+    /// <summary>
+    /// Validates a TPM attestation statement.
+    /// </summary>
+    /// <param name="attestationObjectData">The attestation object data containing the statement to validate</param>
+    /// <param name="clientData">The client data associated with the attestation</param>
+    /// <returns>A ValidatorInternalResult indicating whether the attestation statement is valid</returns>
+    /// <exception cref="ArgumentNullException">Thrown when attestationObjectData or clientData is null</exception>
+    /// <exception cref="ArgumentException">Thrown when attestation statement cannot be read</exception>
     public ValidatorInternalResult Validate(AttestationObjectData attestationObjectData, ClientData clientData)
     {
         ArgumentNullException.ThrowIfNull(attestationObjectData);
