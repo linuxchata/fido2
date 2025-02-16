@@ -25,12 +25,12 @@ internal sealed class AndroidKeyAttestationExtensionParserService : IAndroidKeyA
 
             if (sequence.HasData)
             {
-                throw new ArgumentException("Android Key attestation extension has extra data");
+                throw new ArgumentException("Android Key attestation statement certificate's extension has extra sequence data");
             }
 
             if (asnReader.HasData)
             {
-                throw new ArgumentException("Android Key attestation extension has extra sequence data");
+                throw new ArgumentException("Android Key attestation statement certificate's extension has extra data");
             }
 
             return new AndroidKeyAttestation
