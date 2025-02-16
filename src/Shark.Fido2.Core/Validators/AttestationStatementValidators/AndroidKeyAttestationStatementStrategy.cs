@@ -1,4 +1,5 @@
-﻿using Shark.Fido2.Core.Abstractions.Services;
+﻿using System.Security.Cryptography.X509Certificates;
+using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Helpers;
 using Shark.Fido2.Core.Results;
@@ -16,16 +17,19 @@ internal class AndroidKeyAttestationStatementStrategy : IAttestationStatementStr
 {
     private readonly ISignatureAttestationStatementValidator _signatureValidator;
     private readonly ICertificateAttestationStatementService _certificateProvider;
-    private readonly ICertificateAttestationStatementValidator _certificateValidator;
+    private readonly ICertificateAttestationStatementValidator _certificateAttestationStatementValidator;
+    private readonly ICertificatePublicKeyValidator _certificatePublicKeyValidator;
 
     public AndroidKeyAttestationStatementStrategy(
         ISignatureAttestationStatementValidator signatureAttestationStatementValidator,
         ICertificateAttestationStatementService certificateAttestationStatementProvider,
-        ICertificateAttestationStatementValidator certificateAttestationStatementValidator)
+        ICertificateAttestationStatementValidator certificateAttestationStatementValidator,
+        ICertificatePublicKeyValidator certificatePublicKeyValidator)
     {
         _signatureValidator = signatureAttestationStatementValidator;
         _certificateProvider = certificateAttestationStatementProvider;
-        _certificateValidator = certificateAttestationStatementValidator;
+        _certificateAttestationStatementValidator = certificateAttestationStatementValidator;
+        _certificatePublicKeyValidator = certificatePublicKeyValidator;
     }
 
     public ValidatorInternalResult Validate(AttestationObjectData attestationObjectData, ClientData clientData)
@@ -63,8 +67,18 @@ internal class AndroidKeyAttestationStatementStrategy : IAttestationStatementStr
 
         // Verify that the public key in the first certificate in x5c matches the credentialPublicKey in the
         // attestedCredentialData in authenticatorData.
+        result = _certificatePublicKeyValidator.Validate(attestationCertificate, credentialPublicKey);
+        if (!result.IsValid)
+        {
+            return result;
+        }
+
+        // Verify that the attestationChallenge field in the attestation certificate extension data is identical
+        // to clientDataHash.
         // TODO: Implement this check.
-        result = _certificateValidator.ValidateAndroidKey(attestationCertificate, attestationObjectData);
+
+        // Verify using the appropriate authorization list from the attestation certificate extension data.
+        result = _certificateAttestationStatementValidator.ValidateAndroidKey(attestationCertificate, attestationObjectData);
         if (!result.IsValid)
         {
             return result;

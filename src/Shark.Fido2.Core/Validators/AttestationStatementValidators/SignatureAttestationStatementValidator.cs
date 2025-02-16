@@ -63,12 +63,7 @@ internal class SignatureAttestationStatementValidator : ISignatureAttestationSta
             throw new NotSupportedException($"Unsupported key type {credentialPublicKey.KeyType}");
         }
 
-        if (!isValid)
-        {
-            return ValidatorInternalResult.Invalid(SignatureIsNotValid);
-        }
-
-        return ValidatorInternalResult.Valid();
+        return isValid ? ValidatorInternalResult.Valid() : ValidatorInternalResult.Invalid(SignatureIsNotValid);
     }
 
     public ValidatorInternalResult Validate(
@@ -110,11 +105,6 @@ internal class SignatureAttestationStatementValidator : ISignatureAttestationSta
             throw new NotSupportedException($"Unsupported key type {keyType}");
         }
 
-        if (!isValid)
-        {
-            return ValidatorInternalResult.Invalid(SignatureIsNotValid);
-        }
-
-        return ValidatorInternalResult.Valid();
+        return isValid ? ValidatorInternalResult.Valid() : ValidatorInternalResult.Invalid(SignatureIsNotValid);
     }
 }

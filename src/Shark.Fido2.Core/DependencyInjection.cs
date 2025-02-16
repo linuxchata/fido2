@@ -33,6 +33,7 @@ public static class DependencyInjection
         services.AddTransient<ISignatureAttestationStatementValidator, SignatureAttestationStatementValidator>();
         services.AddTransient<ICertificateAttestationStatementService, CertificateAttestationStatementService>();
         services.AddTransient<ICertificateAttestationStatementValidator, CertificateAttestationStatementValidator>();
+        services.AddTransient<ICertificatePublicKeyValidator, CertificatePublicKeyValidator>();
         services.AddTransient<ISubjectAlternativeNameParserService, SubjectAlternativeNameParserService>();
         services.AddTransient<IAndroidSafetyNetJwsResponseParserService, AndroidSafetyNetJwsResponseParserService>();
         services.AddTransient<IAndroidSafetyNetJwsResponseValidator, AndroidSafetyNetJwsResponseValidator>();

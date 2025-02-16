@@ -48,10 +48,13 @@ internal class AndroidKeyAttestationStatementStrategyTests
             new SubjectAlternativeNameParserService(),
             new AndroidKeyAttestationExtensionParserService());
 
+        var certificatePublicKeyValidator = new CertificatePublicKeyValidator();
+
         _sut = new AndroidKeyAttestationStatementStrategy(
             signatureAttestationStatementValidator,
             certificateAttestationStatementProvider,
-            certificateAttestationStatementValidator);
+            certificateAttestationStatementValidator,
+            certificatePublicKeyValidator);
     }
 
     [Ignore("Android Key to be generated")]

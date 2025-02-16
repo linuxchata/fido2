@@ -226,8 +226,8 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
                 $"Android Key attestation statement certificate's {AndroidAttestationExtension} extension is invalid");
         }
 
-        // The AuthorizationList.allApplications field is not present on either authorization list
-        // (softwareEnforced nor teeEnforced), since PublicKeyCredential MUST be scoped to the RP ID.
+        // The AuthorizationList.allApplications field is not present on either authorization list (softwareEnforced
+        // nor teeEnforced), since PublicKeyCredential MUST be scoped to the RP ID.
         if (androidKeyAttestation.SoftwareEnforced.IsAllApplicationsPresent == true ||
             androidKeyAttestation.HardwareEnforced.IsAllApplicationsPresent == true)
         {
