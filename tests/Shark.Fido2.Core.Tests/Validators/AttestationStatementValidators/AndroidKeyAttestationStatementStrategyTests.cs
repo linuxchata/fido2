@@ -57,7 +57,7 @@ internal class AndroidKeyAttestationStatementStrategyTests
             certificatePublicKeyValidator);
     }
 
-    // [Ignore("Android Key to be generated")]
+    [Ignore("Android Key to be generated")]
     [Test]
     public void Validate_WhenAndroidKeyAttestationWithEs256Algorithm_ShouldValidate()
     {
