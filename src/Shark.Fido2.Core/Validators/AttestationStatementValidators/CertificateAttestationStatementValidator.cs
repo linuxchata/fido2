@@ -215,8 +215,8 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
                 $"Android Key attestation statement certificate's {AndroidAttestationExtension} extension is not found");
         }
 
-        var attestation = _androidKeyAttestationExtensionParserService.Parse(androidAttestation.RawData);
-        if (attestation == null)
+        var androidKeyAttestation = _androidKeyAttestationExtensionParserService.Parse(androidAttestation.RawData);
+        if (androidKeyAttestation == null)
         {
             return ValidatorInternalResult.Invalid(
                 $"Android Key attestation statement certificate's {AndroidAttestationExtension} extension is invalid");

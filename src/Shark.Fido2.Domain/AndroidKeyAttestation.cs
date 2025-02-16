@@ -16,7 +16,7 @@ public sealed class AndroidKeyAttestation
 
     public byte[] UniqueId { get; init; } = [];
 
-    public byte[] SoftwareEnforced { get; init; } = [];
+    public required AndroidKeyAuthorizationList SoftwareEnforced { get; init; }
 
-    public byte[] HardwareEnforced { get; init; } = [];
+    public required AndroidKeyAuthorizationList HardwareEnforced { get; init; }
 }
