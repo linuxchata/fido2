@@ -25,6 +25,10 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
 
     private const string AndroidCommonName = "attest.android.com";
 
+    // https://android.googlesource.com/platform/hardware/libhardware/+/refs/heads/main/include_all/hardware/keymaster_defs.h
+    private const int KmOriginGenerated = 0;
+    private const int KmPurposeSign = 2;
+
     private readonly ISubjectAlternativeNameParserService _subjectAlternativeNameParserService;
     private readonly IAndroidKeyAttestationExtensionParserService _androidKeyAttestationExtensionParserService;
 
@@ -220,6 +224,33 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
         {
             return ValidatorInternalResult.Invalid(
                 $"Android Key attestation statement certificate's {AndroidAttestationExtension} extension is invalid");
+        }
+
+        // The AuthorizationList.allApplications field is not present on either authorization list
+        // (softwareEnforced nor teeEnforced), since PublicKeyCredential MUST be scoped to the RP ID.
+        if (androidKeyAttestation.SoftwareEnforced.IsAllApplicationsPresent == true ||
+            androidKeyAttestation.HardwareEnforced.IsAllApplicationsPresent == true)
+        {
+            return ValidatorInternalResult.Invalid(
+                $"Android Key attestation statement certificate's allApplications field is present");
+        }
+
+        // For the following, use only the teeEnforced authorization list if the RP wants to accept only keys from
+        // a trusted execution environment, otherwise use the union of teeEnforced and softwareEnforced.
+        // The value in the AuthorizationList.origin field is equal to KM_ORIGIN_GENERATED.
+        if (androidKeyAttestation.SoftwareEnforced.Origin != KmOriginGenerated ||
+            androidKeyAttestation.HardwareEnforced.Origin != KmOriginGenerated)
+        {
+            return ValidatorInternalResult.Invalid(
+                $"Android Key attestation statement certificate's origin field has unexpected value");
+        }
+
+        // The value in the AuthorizationList.purpose field is equal to KM_PURPOSE_SIGN.
+        if (androidKeyAttestation.SoftwareEnforced.Purpose != KmPurposeSign ||
+            androidKeyAttestation.HardwareEnforced.Purpose != KmPurposeSign)
+        {
+            return ValidatorInternalResult.Invalid(
+                $"Android Key attestation statement certificate's purpose field has unexpected value");
         }
 
         return ValidatorInternalResult.Valid();

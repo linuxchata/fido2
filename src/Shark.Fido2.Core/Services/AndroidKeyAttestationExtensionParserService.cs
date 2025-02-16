@@ -13,6 +13,8 @@ internal sealed class AndroidKeyAttestationExtensionParserService : IAndroidKeyA
 {
     public AndroidKeyAttestation? Parse(byte[] rawData)
     {
+        ArgumentNullException.ThrowIfNull(rawData);
+
         try
         {
             var reader = new AsnReader(rawData, AsnEncodingRules.BER);
@@ -27,11 +29,20 @@ internal sealed class AndroidKeyAttestationExtensionParserService : IAndroidKeyA
             var softwareEnforced = sequence.ReadEncodedValue().ToArray();
             var hardwareEnforced = sequence.ReadEncodedValue().ToArray();
 
-            var softwareEnforcedAuthorizationList = ReadAuthorizationList(softwareEnforced);
-            var hardwareEnforcedAuthorizationList = ReadAuthorizationList(hardwareEnforced);
+            var softwareEnforcedAuthorizationList = ReadAuthorizationList(softwareEnforced, "software");
+            var hardwareEnforcedAuthorizationList = ReadAuthorizationList(hardwareEnforced, "hardware (TEE)");
 
-            sequence.ThrowIfNotEmpty();
-            reader.ThrowIfNotEmpty();
+            if (sequence.HasData)
+            {
+                throw new ArgumentException(
+                    "Android Key attestation statement certificate's extension has extra sequence data");
+            }
+
+            if (reader.HasData)
+            {
+                throw new ArgumentException(
+                    "Android Key attestation statement certificate's extension has extra data");
+            }
 
             return new AndroidKeyAttestation
             {
@@ -51,7 +62,7 @@ internal sealed class AndroidKeyAttestationExtensionParserService : IAndroidKeyA
         }
     }
 
-    private static AndroidKeyAuthorizationList ReadAuthorizationList(byte[] authorizationList)
+    private static AndroidKeyAuthorizationList ReadAuthorizationList(byte[] authorizationList, string authListType)
     {
         var authorizationListReader = new AsnReader(authorizationList, AsnEncodingRules.BER);
         var authorizationListSequence = authorizationListReader.ReadSequence();
@@ -64,20 +75,24 @@ internal sealed class AndroidKeyAttestationExtensionParserService : IAndroidKeyA
         var isAllApplicationsPresent = false;
         var origin = 0;
 
+        Asn1Tag currentTag;
         while (authorizationListSequence.HasData)
         {
-            if (authorizationListSequence.PeekTag().HasSameClassAndValue(purposeTag))
+            currentTag = authorizationListSequence.PeekTag();
+
+            if (currentTag.HasSameClassAndValue(purposeTag))
             {
                 var sequence = authorizationListSequence.ReadSequence(purposeTag);
                 var purposeSetReader = sequence.ReadSetOf();
                 purpose = (int)purposeSetReader.ReadInteger();
                 sequence.ThrowIfNotEmpty();
             }
-            else if (authorizationListSequence.PeekTag().HasSameClassAndValue(allApplicationsTag))
+            else if (currentTag.HasSameClassAndValue(allApplicationsTag))
             {
+                authorizationListSequence.ReadNull();
                 isAllApplicationsPresent = true;
             }
-            else if (authorizationListSequence.PeekTag().HasSameClassAndValue(originTag))
+            else if (currentTag.HasSameClassAndValue(originTag))
             {
                 var sequence = authorizationListSequence.ReadSequence(originTag);
                 origin = (int)sequence.ReadInteger();
@@ -89,7 +104,11 @@ internal sealed class AndroidKeyAttestationExtensionParserService : IAndroidKeyA
             }
         }
 
-        authorizationListSequence.ThrowIfNotEmpty();
+        if (authorizationListReader.HasData)
+        {
+            throw new ArgumentException(
+                $"Android Key attestation {authListType} authorization list has extra data");
+        }
 
         return new AndroidKeyAuthorizationList
         {
