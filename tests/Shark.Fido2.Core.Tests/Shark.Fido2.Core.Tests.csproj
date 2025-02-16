@@ -6,25 +6,22 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Data\AndroidSafetyNetAttestationAuthenticatorWithRs256.json" />
-    <None Remove="Data\NoneAttestationAuthenticatorWithRs256.json" />
-    <None Remove="Data\TpmAttestationAuthenticatorWithRs256.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Data\AndroidSafetyNetAttestationAuthenticatorWithRs256.json">
+    <Content Include="Data\AndroidKeyAttestationAuthenticatorWithEs256Algorithm.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\NoneAttestationAuthenticatorWithRs256.json">
+    <Content Include="Data\AndroidSafetyNetAttestationWithRs256Algorithm.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\PackedAttestationAuthenticatorWithEs256.json">
+    <Content Include="Data\NoneAttestation.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\PackedAttestationWindowsAuthenticatorWithRs256.json">
+    <Content Include="Data\PackedAttestationWithEs256Algorithm.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\TpmAttestationAuthenticatorWithRs256.json">
+    <Content Include="Data\PackedAttestationWithRs256Algorithm.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\TpmAttestationWithRs256Algorithm.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

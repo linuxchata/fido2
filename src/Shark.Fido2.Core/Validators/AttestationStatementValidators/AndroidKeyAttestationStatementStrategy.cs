@@ -1,6 +1,5 @@
 ﻿using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
-using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Helpers;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain;
@@ -44,69 +43,35 @@ internal class AndroidKeyAttestationStatementStrategy : IAttestationStatementStr
 
         var credentialPublicKey = attestationObjectData.AuthenticatorData!.AttestedCredentialData.CredentialPublicKey;
 
+        // Verify that sig is a valid signature over the concatenation of authenticatorData and clientDataHash
+        // using the public key in the first certificate in x5c with the algorithm specified in alg.
         var concatenatedData = BytesArrayHelper.Concatenate(
             attestationObjectData.AuthenticatorRawData,
             clientData.ClientDataHash);
 
-        // If x5c is present
-        if (_certificateProvider.AreCertificatesPresent(attestationStatementDict))
+        var certificates = _certificateProvider.GetCertificates(attestationStatementDict);
+        var attestationCertificate = _certificateProvider.GetAttestationCertificate(certificates);
+        var result = _signatureValidator.Validate(
+            concatenatedData,
+            attestationStatementDict,
+            credentialPublicKey,
+            attestationCertificate);
+        if (!result.IsValid)
         {
-            // Verify that sig is a valid signature over the concatenation of authenticatorData and clientDataHash
-            // using the attestation public key in attestnCert with the algorithm specified in alg.
-            var certificates = _certificateProvider.GetCertificates(attestationStatementDict);
-            var attestationCertificate = _certificateProvider.GetAttestationCertificate(certificates);
-            var result = _signatureValidator.Validate(
-                concatenatedData,
-                attestationStatementDict,
-                credentialPublicKey,
-                attestationCertificate);
-            if (!result.IsValid)
-            {
-                return result;
-            }
-
-            // Verify that attestnCert meets the requirements in § 8.2.1 Packed Attestation Statement Certificate
-            // Requirements.
-            // If attestnCert contains an extension with OID 1.3.6.1.4.1.45724.1.1.4 (id-fido-gen-ce-aaguid) verify
-            // that the value of this extension matches the aaguid in authenticatorData.
-            // TODO: Implement this validation.
-
-            // Optionally, inspect x5c and consult externally provided knowledge to determine whether attStmt conveys
-            // a Basic or AttCA attestation.
-            var attestationType = (attestationCertificate.Subject == attestationCertificate.Issuer) ?
-                AttestationTypeEnum.Basic : AttestationTypeEnum.AttCA;
-
-            // If successful, return implementation-specific values representing attestation type Basic, AttCA or
-            // uncertainty, and attestation trust path x5c.
-            return new AttestationStatementInternalResult(attestationType, [.. certificates]);
+            return result;
         }
-        // If x5c is not present, self attestation is in use.
-        else
+
+        // Verify that the public key in the first certificate in x5c matches the credentialPublicKey in the
+        // attestedCredentialData in authenticatorData.
+        // TODO: Implement this check.
+        result = _certificateValidator.ValidateAndroidKey(attestationCertificate, attestationObjectData);
+        if (!result.IsValid)
         {
-            // Validate that alg matches the algorithm of the credentialPublicKey in authenticatorData.
-            if (!attestationStatementDict.TryGetValue(AttestationStatement.Algorithm, out var algorithm) ||
-                algorithm is not int)
-            {
-                return ValidatorInternalResult.Invalid("Android Key attestation statement algorithm cannot be read");
-            }
-
-            if (credentialPublicKey.Algorithm != (int)algorithm)
-            {
-                return ValidatorInternalResult.Invalid(
-                    $"Android Key attestation statement algorithm ({algorithm}) does not match credential public key algorithm ({credentialPublicKey.Algorithm})");
-            }
-
-            // Verify that sig is a valid signature over the concatenation of authenticatorData and clientDataHash
-            // using the credential public key with alg.
-            var result = _signatureValidator.Validate(concatenatedData, attestationStatementDict, credentialPublicKey);
-            if (!result.IsValid)
-            {
-                return result;
-            }
-
-            // If successful, return implementation-specific values representing attestation type Self and an empty
-            // attestation trust path.
-            return new AttestationStatementInternalResult(AttestationTypeEnum.Self);
+            return result;
         }
+
+        // If successful, return implementation-specific values representing attestation type Basic and attestation
+        // trust path x5c.
+        return new AttestationStatementInternalResult(AttestationTypeEnum.Basic, [.. certificates]);
     }
 }

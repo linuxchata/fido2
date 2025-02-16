@@ -11,14 +11,14 @@ using Shark.Fido2.Domain.Enums;
 namespace Shark.Fido2.Core.Tests.Validators.AttestationStatementValidators;
 
 [TestFixture]
-internal class PackedAttestationStatementStrategyTests
+internal class AndroidKeyAttestationStatementStrategyTests
 {
     private Mock<IAttestationObjectValidator> _attestationObjectValidatorMock;
     private AttestationObjectHandler _attestationObjectHandler;
-    private AuthenticatorDataParserService _authenticatorDataProvider;
+    private AuthenticatorDataParserService _provider;
     private PublicKeyCredentialCreationOptions _creationOptions;
 
-    private PackedAttestationStatementStrategy _sut = null!;
+    private AndroidKeyAttestationStatementStrategy _sut = null!;
 
     [SetUp]
     public void Setup()
@@ -29,15 +29,14 @@ internal class PackedAttestationStatementStrategyTests
                 It.IsAny<AttestationObjectData>(),
                 It.IsAny<ClientData>(),
                 It.IsAny<PublicKeyCredentialCreationOptions>()))
-        .Returns(ValidatorInternalResult.Valid());
+            .Returns(ValidatorInternalResult.Valid());
 
-        _authenticatorDataProvider = new AuthenticatorDataParserService();
+        _provider = new AuthenticatorDataParserService();
 
         _creationOptions = new PublicKeyCredentialCreationOptions();
 
         _attestationObjectHandler = new AttestationObjectHandler(
-            _authenticatorDataProvider,
-            _attestationObjectValidatorMock.Object);
+            _provider, _attestationObjectValidatorMock.Object);
 
         var signatureAttestationStatementValidator = new SignatureAttestationStatementValidator(
             new RsaCryptographyValidator(),
@@ -48,17 +47,18 @@ internal class PackedAttestationStatementStrategyTests
         var certificateAttestationStatementValidator = new CertificateAttestationStatementValidator(
             new SubjectAlternativeNameParserService());
 
-        _sut = new PackedAttestationStatementStrategy(
+        _sut = new AndroidKeyAttestationStatementStrategy(
             signatureAttestationStatementValidator,
             certificateAttestationStatementProvider,
             certificateAttestationStatementValidator);
     }
 
+    [Ignore("Android Key to be generated")]
     [Test]
-    public void Validate_WhenPackedAttestationWithRs256Algorithm_ShouldValidate()
+    public void Validate_WhenAndroidKeyAttestationWithEs256Algorithm_ShouldValidate()
     {
         // Arrange
-        var fileName = "PackedAttestationWithRs256Algorithm.json";
+        var fileName = "AndroidKeyAttestationWithEs256Algorithm.json";
         var attestationData = AttestationDataReader.Read(fileName);
         var clientData = ClientDataBuilder.Build(attestationData!.ClientDataJson);
 
@@ -70,29 +70,7 @@ internal class PackedAttestationStatementStrategyTests
 
         // Assert
         var attestationStatementInternalResult = result as AttestationStatementInternalResult;
-        Assert.That(attestationStatementInternalResult, Is.Not.Null, result.Message);
-        Assert.That(attestationStatementInternalResult!.AttestationType, Is.EqualTo(AttestationTypeEnum.Self));
-    }
-
-    [Test]
-    public void Validate_WhenPackedAttestationWithEs256Algorithm_ShouldValidate()
-    {
-        // Arrange
-        // Source https://fidoalliance.org/specs/fido-v2.0-rd-20180702/fido-server-v2.0-rd-20180702.html#packed-attestation
-        var fileName = "PackedAttestationWithEs256Algorithm.json";
-        var attestationData = AttestationDataReader.Read(fileName);
-        var clientData = ClientDataBuilder.Build(attestationData!.ClientDataJson);
-
-        var internalResult = _attestationObjectHandler.Handle(
-            attestationData!.AttestationObject, clientData, _creationOptions);
-
-        // Act
-        var result = _sut.Validate(internalResult.Value!, clientData);
-
-        // Assert
-        var attestationStatementInternalResult = result as AttestationStatementInternalResult;
-        Assert.That(attestationStatementInternalResult, Is.Not.Null, result.Message);
-        Assert.That(attestationStatementInternalResult!.AttestationType, Is.EqualTo(AttestationTypeEnum.AttCA));
+        Assert.That(attestationStatementInternalResult!.AttestationType, Is.EqualTo(AttestationTypeEnum.Basic));
     }
 
     [Test]
@@ -113,17 +91,6 @@ internal class PackedAttestationStatementStrategyTests
 
         // Act & Assert
         Assert.Throws<ArgumentNullException>(() => _sut.Validate(attestationObjectData, null!));
-    }
-
-    [Test]
-    public void Validate_WhenAttestationStatementIsNull_ThrowsArgumentNullException()
-    {
-        // Arrange
-        var attestationObjectData = new AttestationObjectData { AttestationStatement = null };
-        var clientData = new ClientData();
-
-        // Act & Assert
-        Assert.Throws<ArgumentNullException>(() => _sut.Validate(attestationObjectData, clientData));
     }
 
     [Test]

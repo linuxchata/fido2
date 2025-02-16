@@ -51,10 +51,10 @@ internal class AndroidSafetyNetAttestationStatementStrategyTests
     }
 
     [Test]
-    public void ValidateNone_WhenAndroidSafetyNetAttestationAuthenticatorWithRs256_ShouldValidate()
+    public void Validate_WhenAndroidSafetyNetAttestationWithRs256Algorithm_ShouldValidate()
     {
         // Arrange
-        var fileName = "AndroidSafetyNetAttestationAuthenticatorWithRs256.json";
+        var fileName = "AndroidSafetyNetAttestationWithRs256Algorithm.json";
         var attestationData = AttestationDataReader.Read(fileName);
         var clientData = ClientDataBuilder.Build(attestationData!.ClientDataJson);
 

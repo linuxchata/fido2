@@ -14,6 +14,7 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
     private const string BasicConstraintsExtension = "2.5.29.19";
     private const string EnhancedKeyUsageExtension = "2.5.29.37";
     private const string SubjectAlternativeNameExtension = "2.5.29.17";
+    private const string AndroidAttestationExtension = "1.3.6.1.4.1.11129.2.1.17";
 
     private const string SubjectCountry = "C";
     private const string SubjectOrganization = "O";
@@ -194,6 +195,16 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
                 return ValidatorInternalResult.Invalid("TPM attestation statement AAGUID mismatch");
             }
         }
+
+        return ValidatorInternalResult.Valid();
+    }
+
+    public ValidatorInternalResult ValidateAndroidKey(
+        X509Certificate2 attestationCertificate,
+        AttestationObjectData attestationObjectData)
+    {
+        var androidAttestation = attestationCertificate.Extensions?.FirstOrDefault(
+            e => string.Equals(e.Oid?.Value, AndroidAttestationExtension, StringComparison.Ordinal));
 
         return ValidatorInternalResult.Valid();
     }
