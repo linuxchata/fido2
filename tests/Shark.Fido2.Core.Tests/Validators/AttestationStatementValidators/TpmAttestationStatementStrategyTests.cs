@@ -46,7 +46,8 @@ internal class TpmAttestationStatementStrategyTests
             new RsaCryptographyValidator(),
             new Ec2CryptographyValidator());
         var certificateAttestationStatementValidator = new CertificateAttestationStatementValidator(
-            new SubjectAlternativeNameParserService());
+            new SubjectAlternativeNameParserService(),
+            new AndroidKeyAttestationExtensionParserService());
 
         _sut = new TpmAttestationStatementStrategy(
             tpmtPublicAreaParserService,

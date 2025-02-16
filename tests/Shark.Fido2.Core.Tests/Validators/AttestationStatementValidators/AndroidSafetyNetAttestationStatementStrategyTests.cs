@@ -41,7 +41,8 @@ internal class AndroidSafetyNetAttestationStatementStrategyTests
         var jwsResponseValidator = new AndroidSafetyNetJwsResponseValidator();
         var certificateAttestationStatementProvider = new CertificateAttestationStatementService();
         var certificateAttestationStatementValidator = new CertificateAttestationStatementValidator(
-            new SubjectAlternativeNameParserService());
+            new SubjectAlternativeNameParserService(),
+            new AndroidKeyAttestationExtensionParserService());
 
         _sut = new AndroidSafetyNetAttestationStatementStrategy(
             jwsResponseParserService,

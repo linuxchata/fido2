@@ -36,6 +36,7 @@ public static class DependencyInjection
         services.AddTransient<ISubjectAlternativeNameParserService, SubjectAlternativeNameParserService>();
         services.AddTransient<IAndroidSafetyNetJwsResponseParserService, AndroidSafetyNetJwsResponseParserService>();
         services.AddTransient<IAndroidSafetyNetJwsResponseValidator, AndroidSafetyNetJwsResponseValidator>();
+        services.AddTransient<IAndroidKeyAttestationExtensionParserService, AndroidKeyAttestationExtensionParserService>();
 
         services.AddTransient<ITpmtPublicAreaParserService, TpmtPublicAreaParserService>();
         services.AddTransient<ITpmsAttestationParserService, TpmsAttestationParserService>();

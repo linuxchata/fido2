@@ -397,3 +397,4 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 /tests/Shark.Fido2.Core.Tests/Data/AndroidKeyAttestationAuthenticatorWithEs256Algorithm.json
+/tests/Shark.Fido2.Core.Tests/Data/AndroidKeyAttestationWithEs256Algorithm.json

@@ -45,7 +45,8 @@ internal class AndroidKeyAttestationStatementStrategyTests
         var certificateAttestationStatementProvider = new CertificateAttestationStatementService();
 
         var certificateAttestationStatementValidator = new CertificateAttestationStatementValidator(
-            new SubjectAlternativeNameParserService());
+            new SubjectAlternativeNameParserService(),
+            new AndroidKeyAttestationExtensionParserService());
 
         _sut = new AndroidKeyAttestationStatementStrategy(
             signatureAttestationStatementValidator,
@@ -53,7 +54,7 @@ internal class AndroidKeyAttestationStatementStrategyTests
             certificateAttestationStatementValidator);
     }
 
-    [Ignore("Android Key to be generated")]
+    // [Ignore("Android Key to be generated")]
     [Test]
     public void Validate_WhenAndroidKeyAttestationWithEs256Algorithm_ShouldValidate()
     {

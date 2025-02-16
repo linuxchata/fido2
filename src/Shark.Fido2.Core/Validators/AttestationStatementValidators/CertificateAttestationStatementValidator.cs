@@ -26,11 +26,14 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
     private const string AndroidCommonName = "attest.android.com";
 
     private readonly ISubjectAlternativeNameParserService _subjectAlternativeNameParserService;
+    private readonly IAndroidKeyAttestationExtensionParserService _androidKeyAttestationExtensionParserService;
 
     public CertificateAttestationStatementValidator(
-        ISubjectAlternativeNameParserService subjectAlternativeNameParserService)
+        ISubjectAlternativeNameParserService subjectAlternativeNameParserService,
+        IAndroidKeyAttestationExtensionParserService androidKeyAttestationExtensionParserService)
     {
         _subjectAlternativeNameParserService = subjectAlternativeNameParserService;
+        _androidKeyAttestationExtensionParserService = androidKeyAttestationExtensionParserService;
     }
 
     public ValidatorInternalResult ValidatePacked(
@@ -124,13 +127,13 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
         if (subjectAlternativeNameExtension == null)
         {
             return ValidatorInternalResult.Invalid(
-                "TPM attestation statement certificate subject alternative name is not found");
+                "TPM attestation statement certificate's subject alternative name is not found");
         }
 
         if (!subjectAlternativeNameExtension.Critical)
         {
             return ValidatorInternalResult.Invalid(
-                $"TPM attestation statement certificate subject alternative name extenstion is not marked as critical");
+                $"TPM attestation statement certificate's subject alternative name extenstion is not marked as critical");
         }
 
         var tpmIssuer = _subjectAlternativeNameParserService.Parse(subjectAlternativeNameExtension);
@@ -139,19 +142,19 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
         if (!TpmCapabilitiesVendors.Exists(tpmIssuer!.ManufacturerValue))
         {
             return ValidatorInternalResult.Invalid(
-                $"TPM attestation statement certificate subject alternative name has invalid TMP manufacturer {tpmIssuer.ManufacturerValue}");
+                $"TPM attestation statement certificate's subject alternative name has invalid TMP manufacturer {tpmIssuer.ManufacturerValue}");
         }
 
         if (string.IsNullOrWhiteSpace(tpmIssuer.Model))
         {
             return ValidatorInternalResult.Invalid(
-                "TPM attestation statement certificate subject alternative name has invalid model");
+                "TPM attestation statement certificate's subject alternative name has invalid model");
         }
 
         if (string.IsNullOrWhiteSpace(tpmIssuer.Version))
         {
             return ValidatorInternalResult.Invalid(
-                "TPM attestation statement certificate subject alternative name has invalid version");
+                "TPM attestation statement certificate's subject alternative name has invalid version");
         }
 
         // The Extended Key Usage extension MUST contain the OID 2.23.133.8.3
@@ -162,21 +165,21 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
         if (enhancedKeyUsageExtension == null)
         {
             return ValidatorInternalResult.Invalid(
-                "TPM attestation statement certificate enhanced key usage is not found");
+                "TPM attestation statement certificate's enhanced key usage is not found");
         }
 
         var jointIsoItuTExtension = enhancedKeyUsageExtension.EnhancedKeyUsages[JointIsoItuTExtension];
         if (jointIsoItuTExtension == null)
         {
             return ValidatorInternalResult.Invalid(
-                "TPM attestation statement certificate enhanced key usage is invalid");
+                "TPM attestation statement certificate's enhanced key usage is invalid");
         }
 
         // The Basic Constraints extension MUST have the CA component set to false.
         var basicConstraints = GetBasicConstraints(attestationCertificate);
         if (basicConstraints == null || basicConstraints.CertificateAuthority)
         {
-            return ValidatorInternalResult.Invalid("TPM attestation statement certificate authority is invalid");
+            return ValidatorInternalResult.Invalid("TPM attestation statement certificate's authority is invalid");
         }
 
         // TODO: An Authority Information Access (AIA) extension with entry id-ad-ocsp and a CRL Distribution Point
@@ -205,6 +208,19 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
     {
         var androidAttestation = attestationCertificate.Extensions?.FirstOrDefault(
             e => string.Equals(e.Oid?.Value, AndroidAttestationExtension, StringComparison.Ordinal));
+
+        if (androidAttestation == null)
+        {
+            return ValidatorInternalResult.Invalid(
+                $"Android Key attestation statement certificate's {AndroidAttestationExtension} extension is not found");
+        }
+
+        var attestation = _androidKeyAttestationExtensionParserService.Parse(androidAttestation.RawData);
+        if (attestation == null)
+        {
+            return ValidatorInternalResult.Invalid(
+                $"Android Key attestation statement certificate's {AndroidAttestationExtension} extension is invalid");
+        }
 
         return ValidatorInternalResult.Valid();
     }

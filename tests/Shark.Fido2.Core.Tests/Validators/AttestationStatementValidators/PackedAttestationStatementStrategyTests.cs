@@ -46,7 +46,8 @@ internal class PackedAttestationStatementStrategyTests
         var certificateAttestationStatementProvider = new CertificateAttestationStatementService();
 
         var certificateAttestationStatementValidator = new CertificateAttestationStatementValidator(
-            new SubjectAlternativeNameParserService());
+            new SubjectAlternativeNameParserService(),
+            new AndroidKeyAttestationExtensionParserService());
 
         _sut = new PackedAttestationStatementStrategy(
             signatureAttestationStatementValidator,
