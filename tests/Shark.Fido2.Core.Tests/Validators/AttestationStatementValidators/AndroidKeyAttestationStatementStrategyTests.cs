@@ -54,7 +54,7 @@ internal class AndroidKeyAttestationStatementStrategyTests
             certificateAttestationStatementValidator);
     }
 
-    // [Ignore("Android Key to be generated")]
+    [Ignore("Android Key to be generated")]
     [Test]
     public void Validate_WhenAndroidKeyAttestationWithEs256Algorithm_ShouldValidate()
     {
@@ -99,7 +99,7 @@ internal class AndroidKeyAttestationStatementStrategyTests
     public void Validate_WhenAttestationStatementIsNotDictionary_ThrowsArgumentException()
     {
         // Arrange
-        var attestationObjectData = new AttestationObjectData { AttestationStatement = "not a dictionary" };
+        var attestationObjectData = new AttestationObjectData { AttestationStatement = "Not a dictionary" };
         var clientData = new ClientData();
 
         // Act & Assert
