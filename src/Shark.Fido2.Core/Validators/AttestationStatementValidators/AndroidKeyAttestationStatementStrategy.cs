@@ -1,5 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
-using Shark.Fido2.Core.Abstractions.Services;
+﻿using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Helpers;
 using Shark.Fido2.Core.Results;
@@ -75,10 +74,8 @@ internal class AndroidKeyAttestationStatementStrategy : IAttestationStatementStr
 
         // Verify that the attestationChallenge field in the attestation certificate extension data is identical
         // to clientDataHash.
-        // TODO: Implement this check.
-
         // Verify using the appropriate authorization list from the attestation certificate extension data.
-        result = _certificateAttestationStatementValidator.ValidateAndroidKey(attestationCertificate, attestationObjectData);
+        result = _certificateAttestationStatementValidator.ValidateAndroidKey(attestationCertificate, clientData);
         if (!result.IsValid)
         {
             return result;

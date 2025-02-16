@@ -16,7 +16,7 @@ public interface ICertificateAttestationStatementValidator
 
     ValidatorInternalResult ValidateAndroidKey(
         X509Certificate2 attestationCertificate,
-        AttestationObjectData attestationObjectData);
+        ClientData clientData);
 
     ValidatorInternalResult ValidateAndroidSafetyNet(X509Certificate2 attestationCertificate);
 

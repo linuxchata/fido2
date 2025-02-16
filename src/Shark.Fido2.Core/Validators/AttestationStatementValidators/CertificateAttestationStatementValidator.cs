@@ -1,6 +1,7 @@
 ﻿using System.Security.Cryptography.X509Certificates;
 using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
+using Shark.Fido2.Core.Comparers;
 using Shark.Fido2.Core.Dictionaries;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain;
@@ -206,24 +207,29 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
         return ValidatorInternalResult.Valid();
     }
 
-    public ValidatorInternalResult ValidateAndroidKey(
-        X509Certificate2 attestationCertificate,
-        AttestationObjectData attestationObjectData)
+    public ValidatorInternalResult ValidateAndroidKey(X509Certificate2 attestationCertificate, ClientData clientData)
     {
+        const string Prefix = "Android Key attestation statement certificate's";
+
         var androidAttestation = attestationCertificate.Extensions?.FirstOrDefault(
             e => string.Equals(e.Oid?.Value, AndroidAttestationExtension, StringComparison.Ordinal));
 
         if (androidAttestation == null)
         {
-            return ValidatorInternalResult.Invalid(
-                $"Android Key attestation statement certificate's {AndroidAttestationExtension} extension is not found");
+            return ValidatorInternalResult.Invalid($"{Prefix} {AndroidAttestationExtension} extension is not found");
         }
 
         var androidKeyAttestation = _androidKeyAttestationExtensionParserService.Parse(androidAttestation.RawData);
         if (androidKeyAttestation == null)
         {
-            return ValidatorInternalResult.Invalid(
-                $"Android Key attestation statement certificate's {AndroidAttestationExtension} extension is invalid");
+            return ValidatorInternalResult.Invalid($"{Prefix} {AndroidAttestationExtension} extension is invalid");
+        }
+
+        // Verify that the attestationChallenge field in the attestation certificate extension data is identical
+        // to clientDataHash.
+        if (!BytesArrayComparer.CompareNullable(androidKeyAttestation.AttestationChallenge, clientData.ClientDataHash))
+        {
+            return ValidatorInternalResult.Invalid($"{Prefix} attestationChallenge has unexpected value");
         }
 
         // The AuthorizationList.allApplications field is not present on either authorization list (softwareEnforced
@@ -231,8 +237,7 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
         if (androidKeyAttestation.SoftwareEnforced.IsAllApplicationsPresent == true ||
             androidKeyAttestation.HardwareEnforced.IsAllApplicationsPresent == true)
         {
-            return ValidatorInternalResult.Invalid(
-                $"Android Key attestation statement certificate's allApplications field is present");
+            return ValidatorInternalResult.Invalid($"{Prefix} allApplications field is present");
         }
 
         // For the following, use only the teeEnforced authorization list if the RP wants to accept only keys from
@@ -241,16 +246,14 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
         if (androidKeyAttestation.SoftwareEnforced.Origin != KmOriginGenerated ||
             androidKeyAttestation.HardwareEnforced.Origin != KmOriginGenerated)
         {
-            return ValidatorInternalResult.Invalid(
-                $"Android Key attestation statement certificate's origin field has unexpected value");
+            return ValidatorInternalResult.Invalid($"{Prefix} origin field has unexpected value");
         }
 
         // The value in the AuthorizationList.purpose field is equal to KM_PURPOSE_SIGN.
         if (androidKeyAttestation.SoftwareEnforced.Purpose != KmPurposeSign ||
             androidKeyAttestation.HardwareEnforced.Purpose != KmPurposeSign)
         {
-            return ValidatorInternalResult.Invalid(
-                $"Android Key attestation statement certificate's purpose field has unexpected value");
+            return ValidatorInternalResult.Invalid($"{Prefix} purpose field has unexpected value");
         }
 
         return ValidatorInternalResult.Valid();
