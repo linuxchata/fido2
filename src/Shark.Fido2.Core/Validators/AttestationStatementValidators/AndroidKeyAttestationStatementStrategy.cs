@@ -31,6 +31,14 @@ internal class AndroidKeyAttestationStatementStrategy : IAttestationStatementStr
         _certificatePublicKeyValidator = certificatePublicKeyValidator;
     }
 
+    /// <summary>
+    /// Validates an Android Key attestation statement.
+    /// </summary>
+    /// <param name="attestationObjectData">The attestation object data containing the statement to validate</param>
+    /// <param name="clientData">The client data associated with the attestation</param>
+    /// <returns>A ValidatorInternalResult indicating whether the attestation statement is valid</returns>
+    /// <exception cref="ArgumentNullException">Thrown when attestationObjectData or clientData is null</exception>
+    /// <exception cref="ArgumentException">Thrown when attestation statement cannot be read</exception>
     public ValidatorInternalResult Validate(AttestationObjectData attestationObjectData, ClientData clientData)
     {
         ArgumentNullException.ThrowIfNull(attestationObjectData);

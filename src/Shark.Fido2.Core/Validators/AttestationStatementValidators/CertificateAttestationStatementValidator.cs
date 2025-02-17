@@ -209,6 +209,9 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
 
     public ValidatorInternalResult ValidateAndroidKey(X509Certificate2 attestationCertificate, ClientData clientData)
     {
+        ArgumentNullException.ThrowIfNull(attestationCertificate);
+        ArgumentNullException.ThrowIfNull(clientData);
+
         const string Prefix = "Android Key attestation statement certificate's";
 
         var androidAttestation = attestationCertificate.Extensions?.FirstOrDefault(
