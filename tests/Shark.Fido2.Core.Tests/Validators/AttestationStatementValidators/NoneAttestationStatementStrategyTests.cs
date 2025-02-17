@@ -41,10 +41,10 @@ internal class NoneAttestationStatementStrategyTests
     }
 
     [Test]
-    public void ValidateNone_WheniPhoneAuthenticatorWithRs256Algorithm_ShouldValidate()
+    public void Validate_WhenNoneAttestation_ShouldValidate()
     {
         // Arrange
-        var fileName = "NoneAttestationAuthenticatorWithRs256.json";
+        var fileName = "NoneAttestation.json";
         var attestationData = AttestationDataReader.Read(fileName);
         var clientData = ClientDataBuilder.Build(attestationData!.ClientDataJson);
 
@@ -56,6 +56,7 @@ internal class NoneAttestationStatementStrategyTests
 
         // Assert
         var attestationStatementInternalResult = result as AttestationStatementInternalResult;
+        Assert.That(attestationStatementInternalResult, Is.Not.Null, result.Message);
         Assert.That(attestationStatementInternalResult!.AttestationType, Is.EqualTo(AttestationTypeEnum.None));
     }
 }

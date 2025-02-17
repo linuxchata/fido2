@@ -41,7 +41,8 @@ internal class AndroidSafetyNetAttestationStatementStrategyTests
         var jwsResponseValidator = new AndroidSafetyNetJwsResponseValidator();
         var certificateAttestationStatementProvider = new CertificateAttestationStatementService();
         var certificateAttestationStatementValidator = new CertificateAttestationStatementValidator(
-            new SubjectAlternativeNameParserService());
+            new SubjectAlternativeNameParserService(),
+            new AndroidKeyAttestationExtensionParserService());
 
         _sut = new AndroidSafetyNetAttestationStatementStrategy(
             jwsResponseParserService,
@@ -51,10 +52,10 @@ internal class AndroidSafetyNetAttestationStatementStrategyTests
     }
 
     [Test]
-    public void ValidateNone_WhenAndroidSafetyNetAttestationAuthenticatorWithRs256_ShouldValidate()
+    public void Validate_WhenAndroidSafetyNetAttestationWithRs256Algorithm_ShouldValidate()
     {
         // Arrange
-        var fileName = "AndroidSafetyNetAttestationAuthenticatorWithRs256.json";
+        var fileName = "AndroidSafetyNetAttestationWithRs256Algorithm.json";
         var attestationData = AttestationDataReader.Read(fileName);
         var clientData = ClientDataBuilder.Build(attestationData!.ClientDataJson);
 
@@ -66,6 +67,7 @@ internal class AndroidSafetyNetAttestationStatementStrategyTests
 
         // Assert
         var attestationStatementInternalResult = result as AttestationStatementInternalResult;
+        Assert.That(attestationStatementInternalResult, Is.Not.Null, result.Message);
         Assert.That(attestationStatementInternalResult!.AttestationType, Is.EqualTo(AttestationTypeEnum.Basic));
     }
 

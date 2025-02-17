@@ -1,6 +1,7 @@
 ﻿using System.Security.Cryptography.X509Certificates;
 using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
+using Shark.Fido2.Core.Comparers;
 using Shark.Fido2.Core.Dictionaries;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain;
@@ -14,6 +15,7 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
     private const string BasicConstraintsExtension = "2.5.29.19";
     private const string EnhancedKeyUsageExtension = "2.5.29.37";
     private const string SubjectAlternativeNameExtension = "2.5.29.17";
+    private const string AndroidAttestationExtension = "1.3.6.1.4.1.11129.2.1.17";
 
     private const string SubjectCountry = "C";
     private const string SubjectOrganization = "O";
@@ -24,12 +26,19 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
 
     private const string AndroidCommonName = "attest.android.com";
 
+    // https://android.googlesource.com/platform/hardware/libhardware/+/refs/heads/main/include_all/hardware/keymaster_defs.h
+    private const int KmOriginGenerated = 0;
+    private const int KmPurposeSign = 2;
+
     private readonly ISubjectAlternativeNameParserService _subjectAlternativeNameParserService;
+    private readonly IAndroidKeyAttestationExtensionParserService _androidKeyAttestationExtensionParserService;
 
     public CertificateAttestationStatementValidator(
-        ISubjectAlternativeNameParserService subjectAlternativeNameParserService)
+        ISubjectAlternativeNameParserService subjectAlternativeNameParserService,
+        IAndroidKeyAttestationExtensionParserService androidKeyAttestationExtensionParserService)
     {
         _subjectAlternativeNameParserService = subjectAlternativeNameParserService;
+        _androidKeyAttestationExtensionParserService = androidKeyAttestationExtensionParserService;
     }
 
     public ValidatorInternalResult ValidatePacked(
@@ -123,13 +132,13 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
         if (subjectAlternativeNameExtension == null)
         {
             return ValidatorInternalResult.Invalid(
-                "TPM attestation statement certificate subject alternative name is not found");
+                "TPM attestation statement certificate's subject alternative name is not found");
         }
 
         if (!subjectAlternativeNameExtension.Critical)
         {
             return ValidatorInternalResult.Invalid(
-                $"TPM attestation statement certificate subject alternative name extenstion is not marked as critical");
+                $"TPM attestation statement certificate's subject alternative name extenstion is not marked as critical");
         }
 
         var tpmIssuer = _subjectAlternativeNameParserService.Parse(subjectAlternativeNameExtension);
@@ -138,19 +147,19 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
         if (!TpmCapabilitiesVendors.Exists(tpmIssuer!.ManufacturerValue))
         {
             return ValidatorInternalResult.Invalid(
-                $"TPM attestation statement certificate subject alternative name has invalid TMP manufacturer {tpmIssuer.ManufacturerValue}");
+                $"TPM attestation statement certificate's subject alternative name has invalid TMP manufacturer {tpmIssuer.ManufacturerValue}");
         }
 
         if (string.IsNullOrWhiteSpace(tpmIssuer.Model))
         {
             return ValidatorInternalResult.Invalid(
-                "TPM attestation statement certificate subject alternative name has invalid model");
+                "TPM attestation statement certificate's subject alternative name has invalid model");
         }
 
         if (string.IsNullOrWhiteSpace(tpmIssuer.Version))
         {
             return ValidatorInternalResult.Invalid(
-                "TPM attestation statement certificate subject alternative name has invalid version");
+                "TPM attestation statement certificate's subject alternative name has invalid version");
         }
 
         // The Extended Key Usage extension MUST contain the OID 2.23.133.8.3
@@ -161,21 +170,21 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
         if (enhancedKeyUsageExtension == null)
         {
             return ValidatorInternalResult.Invalid(
-                "TPM attestation statement certificate enhanced key usage is not found");
+                "TPM attestation statement certificate's enhanced key usage is not found");
         }
 
         var jointIsoItuTExtension = enhancedKeyUsageExtension.EnhancedKeyUsages[JointIsoItuTExtension];
         if (jointIsoItuTExtension == null)
         {
             return ValidatorInternalResult.Invalid(
-                "TPM attestation statement certificate enhanced key usage is invalid");
+                "TPM attestation statement certificate's enhanced key usage is invalid");
         }
 
         // The Basic Constraints extension MUST have the CA component set to false.
         var basicConstraints = GetBasicConstraints(attestationCertificate);
         if (basicConstraints == null || basicConstraints.CertificateAuthority)
         {
-            return ValidatorInternalResult.Invalid("TPM attestation statement certificate authority is invalid");
+            return ValidatorInternalResult.Invalid("TPM attestation statement certificate's authority is invalid");
         }
 
         // TODO: An Authority Information Access (AIA) extension with entry id-ad-ocsp and a CRL Distribution Point
@@ -193,6 +202,61 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
             {
                 return ValidatorInternalResult.Invalid("TPM attestation statement AAGUID mismatch");
             }
+        }
+
+        return ValidatorInternalResult.Valid();
+    }
+
+    public ValidatorInternalResult ValidateAndroidKey(X509Certificate2 attestationCertificate, ClientData clientData)
+    {
+        ArgumentNullException.ThrowIfNull(attestationCertificate);
+        ArgumentNullException.ThrowIfNull(clientData);
+
+        const string Prefix = "Android Key attestation statement certificate's";
+
+        var androidAttestation = attestationCertificate.Extensions?.FirstOrDefault(
+            e => string.Equals(e.Oid?.Value, AndroidAttestationExtension, StringComparison.Ordinal));
+
+        if (androidAttestation == null)
+        {
+            return ValidatorInternalResult.Invalid($"{Prefix} {AndroidAttestationExtension} extension is not found");
+        }
+
+        var androidKeyAttestation = _androidKeyAttestationExtensionParserService.Parse(androidAttestation.RawData);
+        if (androidKeyAttestation == null)
+        {
+            return ValidatorInternalResult.Invalid($"{Prefix} {AndroidAttestationExtension} extension is invalid");
+        }
+
+        // Verify that the attestationChallenge field in the attestation certificate extension data is identical
+        // to clientDataHash.
+        if (!BytesArrayComparer.CompareNullable(androidKeyAttestation.AttestationChallenge, clientData.ClientDataHash))
+        {
+            return ValidatorInternalResult.Invalid($"{Prefix} attestationChallenge has unexpected value");
+        }
+
+        // The AuthorizationList.allApplications field is not present on either authorization list (softwareEnforced
+        // nor teeEnforced), since PublicKeyCredential MUST be scoped to the RP ID.
+        if (androidKeyAttestation.SoftwareEnforced.IsAllApplicationsPresent == true ||
+            androidKeyAttestation.HardwareEnforced.IsAllApplicationsPresent == true)
+        {
+            return ValidatorInternalResult.Invalid($"{Prefix} allApplications field is present");
+        }
+
+        // For the following, use only the teeEnforced authorization list if the RP wants to accept only keys from
+        // a trusted execution environment, otherwise use the union of teeEnforced and softwareEnforced.
+        // The value in the AuthorizationList.origin field is equal to KM_ORIGIN_GENERATED.
+        if (androidKeyAttestation.SoftwareEnforced.Origin != KmOriginGenerated ||
+            androidKeyAttestation.HardwareEnforced.Origin != KmOriginGenerated)
+        {
+            return ValidatorInternalResult.Invalid($"{Prefix} origin field has unexpected value");
+        }
+
+        // The value in the AuthorizationList.purpose field is equal to KM_PURPOSE_SIGN.
+        if (androidKeyAttestation.SoftwareEnforced.Purpose != KmPurposeSign ||
+            androidKeyAttestation.HardwareEnforced.Purpose != KmPurposeSign)
+        {
+            return ValidatorInternalResult.Invalid($"{Prefix} purpose field has unexpected value");
         }
 
         return ValidatorInternalResult.Valid();

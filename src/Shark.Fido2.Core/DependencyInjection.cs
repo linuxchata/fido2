@@ -33,9 +33,11 @@ public static class DependencyInjection
         services.AddTransient<ISignatureAttestationStatementValidator, SignatureAttestationStatementValidator>();
         services.AddTransient<ICertificateAttestationStatementService, CertificateAttestationStatementService>();
         services.AddTransient<ICertificateAttestationStatementValidator, CertificateAttestationStatementValidator>();
+        services.AddTransient<ICertificatePublicKeyValidator, CertificatePublicKeyValidator>();
         services.AddTransient<ISubjectAlternativeNameParserService, SubjectAlternativeNameParserService>();
         services.AddTransient<IAndroidSafetyNetJwsResponseParserService, AndroidSafetyNetJwsResponseParserService>();
         services.AddTransient<IAndroidSafetyNetJwsResponseValidator, AndroidSafetyNetJwsResponseValidator>();
+        services.AddTransient<IAndroidKeyAttestationExtensionParserService, AndroidKeyAttestationExtensionParserService>();
 
         services.AddTransient<ITpmtPublicAreaParserService, TpmtPublicAreaParserService>();
         services.AddTransient<ITpmsAttestationParserService, TpmsAttestationParserService>();
@@ -44,6 +46,8 @@ public static class DependencyInjection
             AttestationStatementFormatIdentifier.Packed);
         services.AddKeyedTransient<IAttestationStatementStrategy, TpmAttestationStatementStrategy>(
             AttestationStatementFormatIdentifier.Tpm);
+        services.AddKeyedTransient<IAttestationStatementStrategy, AndroidKeyAttestationStatementStrategy>(
+            AttestationStatementFormatIdentifier.AndroidKey);
         services.AddKeyedTransient<IAttestationStatementStrategy, AndroidSafetyNetAttestationStatementStrategy>(
             AttestationStatementFormatIdentifier.AndroidSafetyNet);
         services.AddKeyedTransient<IAttestationStatementStrategy, NoneAttestationStatementStrategy>(

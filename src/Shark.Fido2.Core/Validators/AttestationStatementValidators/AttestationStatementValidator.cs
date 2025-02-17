@@ -10,15 +10,17 @@ internal class AttestationStatementValidator : IAttestationStatementValidator
     private readonly Dictionary<string, IAttestationStatementStrategy> _strategiesMap;
 
     public AttestationStatementValidator(
-        [FromKeyedServices("packed")] IAttestationStatementStrategy packedAttestationStatementStategy,
-        [FromKeyedServices("tpm")] IAttestationStatementStrategy tpmAttestationStatementStrategy,
-        [FromKeyedServices("android-safetynet")] IAttestationStatementStrategy androidSafetyNetAttestationStatementStrategy,
-        [FromKeyedServices("none")] IAttestationStatementStrategy noneAttestationStatementStategy)
+        [FromKeyedServices(AttestationStatementFormatIdentifier.Packed)] IAttestationStatementStrategy packedAttestationStatementStategy,
+        [FromKeyedServices(AttestationStatementFormatIdentifier.Tpm)] IAttestationStatementStrategy tpmAttestationStatementStrategy,
+        [FromKeyedServices(AttestationStatementFormatIdentifier.AndroidKey)] IAttestationStatementStrategy androidKeyAttestationStatementStrategy,
+        [FromKeyedServices(AttestationStatementFormatIdentifier.AndroidSafetyNet)] IAttestationStatementStrategy androidSafetyNetAttestationStatementStrategy,
+        [FromKeyedServices(AttestationStatementFormatIdentifier.None)] IAttestationStatementStrategy noneAttestationStatementStategy)
     {
         _strategiesMap = new Dictionary<string, IAttestationStatementStrategy>
         {
             { AttestationStatementFormatIdentifier.Packed, packedAttestationStatementStategy },
             { AttestationStatementFormatIdentifier.Tpm, tpmAttestationStatementStrategy },
+            { AttestationStatementFormatIdentifier.AndroidKey, androidKeyAttestationStatementStrategy },
             { AttestationStatementFormatIdentifier.AndroidSafetyNet, androidSafetyNetAttestationStatementStrategy },
             { AttestationStatementFormatIdentifier.None, noneAttestationStatementStategy },
         };

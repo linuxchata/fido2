@@ -46,7 +46,8 @@ internal class PackedAttestationStatementStrategyTests
         var certificateAttestationStatementProvider = new CertificateAttestationStatementService();
 
         var certificateAttestationStatementValidator = new CertificateAttestationStatementValidator(
-            new SubjectAlternativeNameParserService());
+            new SubjectAlternativeNameParserService(),
+            new AndroidKeyAttestationExtensionParserService());
 
         _sut = new PackedAttestationStatementStrategy(
             signatureAttestationStatementValidator,
@@ -55,10 +56,10 @@ internal class PackedAttestationStatementStrategyTests
     }
 
     [Test]
-    public void ValidatePacked_WhenWindowsAuthenticatorWithRs256Algorithm_ShouldValidate()
+    public void Validate_WhenPackedAttestationWithRs256Algorithm_ShouldValidate()
     {
         // Arrange
-        var fileName = "PackedAttestationWindowsAuthenticatorWithRs256.json";
+        var fileName = "PackedAttestationWithRs256Algorithm.json";
         var attestationData = AttestationDataReader.Read(fileName);
         var clientData = ClientDataBuilder.Build(attestationData!.ClientDataJson);
 
@@ -75,11 +76,11 @@ internal class PackedAttestationStatementStrategyTests
     }
 
     [Test]
-    public void ValidatePacked_WhenAuthenticatorWithEs256Algorithm_ShouldValidate()
+    public void Validate_WhenPackedAttestationWithEs256Algorithm_ShouldValidate()
     {
         // Arrange
         // Source https://fidoalliance.org/specs/fido-v2.0-rd-20180702/fido-server-v2.0-rd-20180702.html#packed-attestation
-        var fileName = "PackedAttestationAuthenticatorWithEs256.json";
+        var fileName = "PackedAttestationWithEs256Algorithm.json";
         var attestationData = AttestationDataReader.Read(fileName);
         var clientData = ClientDataBuilder.Build(attestationData!.ClientDataJson);
 
