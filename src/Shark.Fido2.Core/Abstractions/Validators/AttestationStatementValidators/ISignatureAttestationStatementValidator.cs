@@ -13,10 +13,16 @@ public interface ISignatureAttestationStatementValidator
         CredentialPublicKey credentialPublicKey,
         X509Certificate2? attestationCertificate = null);
 
-    ValidatorInternalResult Validate(
+    ValidatorInternalResult ValidateTpm(
         byte[] data,
         Dictionary<string, object> attestationStatementDict,
         KeyTypeEnum keyType,
         int algorithm,
+        X509Certificate2 attestationCertificate);
+
+    ValidatorInternalResult ValidateFido2U2f(
+        byte[] data,
+        Dictionary<string, object> attestationStatementDict,
+        CredentialPublicKey credentialPublicKey,
         X509Certificate2 attestationCertificate);
 }

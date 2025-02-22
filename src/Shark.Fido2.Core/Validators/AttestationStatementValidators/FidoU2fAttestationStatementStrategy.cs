@@ -1,7 +1,5 @@
-using Microsoft.IdentityModel.Tokens;
 using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
-using Shark.Fido2.Core.Comparers;
 using Shark.Fido2.Core.Helpers;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain;
@@ -97,7 +95,7 @@ internal class FidoU2fAttestationStatementStrategy : IAttestationStatementStrate
 
         // Verify the sig using verificationData and the certificate public key per section 4.1.4 of [SEC1] with
         // SHA-256 as the hash function used in step two.
-        result = _signatureValidator.Validate(verificationData, attestationStatementDict, credentialPublicKey);
+        result = _signatureValidator.ValidateFido2U2f(verificationData, attestationStatementDict, credentialPublicKey, attestationCertificate);
         if (!result.IsValid)
         {
             return result;
