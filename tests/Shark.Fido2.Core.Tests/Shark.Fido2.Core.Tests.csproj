@@ -9,6 +9,9 @@
     <Content Include="Data\AndroidKeyAttestationWithEs256Algorithm.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Data\FidoU2fAttestationWithEs256Algorithm.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Data\AndroidSafetyNetAttestationWithRs256Algorithm.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

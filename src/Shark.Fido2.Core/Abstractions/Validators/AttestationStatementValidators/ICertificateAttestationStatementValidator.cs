@@ -21,4 +21,6 @@ public interface ICertificateAttestationStatementValidator
     ValidatorInternalResult ValidateAndroidSafetyNet(X509Certificate2 attestationCertificate);
 
     ValidatorInternalResult ValidateChainOfTrustWithSystemCa(List<X509Certificate2> certificates);
+
+    ValidatorInternalResult ValidateFidoU2f(X509Certificate2 attestationCertificate);
 }

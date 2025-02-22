@@ -10,11 +10,18 @@ internal class AttestationStatementValidator : IAttestationStatementValidator
     private readonly Dictionary<string, IAttestationStatementStrategy> _strategiesMap;
 
     public AttestationStatementValidator(
-        [FromKeyedServices(AttestationStatementFormatIdentifier.Packed)] IAttestationStatementStrategy packedAttestationStatementStategy,
-        [FromKeyedServices(AttestationStatementFormatIdentifier.Tpm)] IAttestationStatementStrategy tpmAttestationStatementStrategy,
-        [FromKeyedServices(AttestationStatementFormatIdentifier.AndroidKey)] IAttestationStatementStrategy androidKeyAttestationStatementStrategy,
-        [FromKeyedServices(AttestationStatementFormatIdentifier.AndroidSafetyNet)] IAttestationStatementStrategy androidSafetyNetAttestationStatementStrategy,
-        [FromKeyedServices(AttestationStatementFormatIdentifier.None)] IAttestationStatementStrategy noneAttestationStatementStategy)
+        [FromKeyedServices(AttestationStatementFormatIdentifier.Packed)]
+        IAttestationStatementStrategy packedAttestationStatementStategy,
+        [FromKeyedServices(AttestationStatementFormatIdentifier.Tpm)]
+        IAttestationStatementStrategy tpmAttestationStatementStrategy,
+        [FromKeyedServices(AttestationStatementFormatIdentifier.AndroidKey)]
+        IAttestationStatementStrategy androidKeyAttestationStatementStrategy,
+        [FromKeyedServices(AttestationStatementFormatIdentifier.AndroidSafetyNet)]
+        IAttestationStatementStrategy androidSafetyNetAttestationStatementStrategy,
+        [FromKeyedServices(AttestationStatementFormatIdentifier.FidoU2f)]
+        IAttestationStatementStrategy fidoU2fAttestationStatementStrategy,
+        [FromKeyedServices(AttestationStatementFormatIdentifier.None)]
+        IAttestationStatementStrategy noneAttestationStatementStategy)
     {
         _strategiesMap = new Dictionary<string, IAttestationStatementStrategy>
         {
@@ -22,6 +29,7 @@ internal class AttestationStatementValidator : IAttestationStatementValidator
             { AttestationStatementFormatIdentifier.Tpm, tpmAttestationStatementStrategy },
             { AttestationStatementFormatIdentifier.AndroidKey, androidKeyAttestationStatementStrategy },
             { AttestationStatementFormatIdentifier.AndroidSafetyNet, androidSafetyNetAttestationStatementStrategy },
+            { AttestationStatementFormatIdentifier.FidoU2f, fidoU2fAttestationStatementStrategy },
             { AttestationStatementFormatIdentifier.None, noneAttestationStatementStategy },
         };
     }
@@ -37,11 +45,11 @@ internal class AttestationStatementValidator : IAttestationStatementValidator
             throw new ArgumentNullException(nameof(attestationObjectData));
         }
 
-        if (_strategiesMap.TryGetValue(attestationStatementFormat, out IAttestationStatementStrategy? strategy))
+        if (!_strategiesMap.TryGetValue(attestationStatementFormat, out IAttestationStatementStrategy? strategy))
         {
-            strategy.Validate(attestationObjectData, clientData);
+            throw new ArgumentException($"{attestationStatementFormat} is not supported");
         }
 
-        throw new ArgumentException($"{attestationStatementFormat} is not supported");
+        strategy.Validate(attestationObjectData, clientData);
     }
 }

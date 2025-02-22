@@ -145,7 +145,7 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
         // the algorithm specified in alg.
         var certificates = _certificateProvider.GetCertificates(attestationStatementDict);
         var attestationIdentityKeyCertificate = _certificateProvider.GetAttestationCertificate(certificates);
-        var result = _signatureValidator.Validate(
+        var result = _signatureValidator.ValidateTpm(
             (byte[])certInfo,
             attestationStatementDict,
             (KeyTypeEnum)credentialPublicKey.KeyType,

@@ -66,7 +66,7 @@ internal class SignatureAttestationStatementValidator : ISignatureAttestationSta
         return isValid ? ValidatorInternalResult.Valid() : ValidatorInternalResult.Invalid(SignatureIsNotValid);
     }
 
-    public ValidatorInternalResult Validate(
+    public ValidatorInternalResult ValidateTpm(
         byte[] data,
         Dictionary<string, object> attestationStatementDict,
         KeyTypeEnum keyType,
@@ -103,6 +103,39 @@ internal class SignatureAttestationStatementValidator : ISignatureAttestationSta
         else
         {
             throw new NotSupportedException($"Unsupported key type {keyType}");
+        }
+
+        return isValid ? ValidatorInternalResult.Valid() : ValidatorInternalResult.Invalid(SignatureIsNotValid);
+    }
+
+    public ValidatorInternalResult ValidateFido2U2f(
+        byte[] data,
+        Dictionary<string, object> attestationStatementDict,
+        CredentialPublicKey credentialPublicKey,
+        X509Certificate2 attestationCertificate)
+    {
+        ArgumentNullException.ThrowIfNull(data);
+        ArgumentNullException.ThrowIfNull(attestationStatementDict);
+        ArgumentNullException.ThrowIfNull(credentialPublicKey);
+
+        if (!attestationStatementDict.TryGetValue(AttestationStatement.Signature, out var signature) ||
+            signature is not byte[])
+        {
+            return ValidatorInternalResult.Invalid(SignatureCannotBeReadErrorMessage);
+        }
+
+        bool isValid;
+        if (credentialPublicKey.KeyType == (int)KeyTypeEnum.Ec2)
+        {
+            isValid = _ec2CryptographyValidator.IsValid(
+                data,
+                (byte[])signature,
+                credentialPublicKey,
+                attestationCertificate);
+        }
+        else
+        {
+            throw new NotSupportedException($"Unsupported key type {credentialPublicKey.KeyType}");
         }
 
         return isValid ? ValidatorInternalResult.Valid() : ValidatorInternalResult.Invalid(SignatureIsNotValid);

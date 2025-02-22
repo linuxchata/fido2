@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿﻿using Microsoft.Extensions.DependencyInjection;
 using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Core.Abstractions.Handlers;
 using Shark.Fido2.Core.Abstractions.Services;
@@ -52,6 +52,8 @@ public static class DependencyInjection
             AttestationStatementFormatIdentifier.AndroidSafetyNet);
         services.AddKeyedTransient<IAttestationStatementStrategy, NoneAttestationStatementStrategy>(
             AttestationStatementFormatIdentifier.None);
+        services.AddKeyedTransient<IAttestationStatementStrategy, FidoU2fAttestationStatementStrategy>(
+            AttestationStatementFormatIdentifier.FidoU2f);
 
         services.AddTransient<IAttestation, Attestation>();
         services.AddTransient<IAssertion, Assertion>();
