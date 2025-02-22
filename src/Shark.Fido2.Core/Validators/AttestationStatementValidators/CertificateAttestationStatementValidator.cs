@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography.X509Certificates;
+﻿using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Comparers;
@@ -16,6 +17,7 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
     private const string EnhancedKeyUsageExtension = "2.5.29.37";
     private const string SubjectAlternativeNameExtension = "2.5.29.17";
     private const string AndroidAttestationExtension = "1.3.6.1.4.1.11129.2.1.17";
+    private const string NistP256Extension = "1.2.840.10045.3.1.7";
 
     private const string SubjectCountry = "C";
     private const string SubjectOrganization = "O";
@@ -303,6 +305,31 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
         if (!isValid)
         {
             return ValidatorInternalResult.Invalid("Android SafetyNet attestation statement certificates are invalid");
+        }
+
+        return ValidatorInternalResult.Valid();
+    }
+
+    public ValidatorInternalResult ValidateFidoU2f(X509Certificate2 attestationCertificate)
+    {
+        ArgumentNullException.ThrowIfNull(attestationCertificate);
+
+        // If certificate public key is not an Elliptic Curve (EC) public key over the P-256 curve, terminate
+        // this algorithm and return an appropriate error.
+
+        using var ecdsaPublicKey = attestationCertificate.GetECDsaPublicKey();
+
+        if (ecdsaPublicKey == null)
+        {
+            return ValidatorInternalResult.Invalid(
+                "FIDO U2F attestation statement certificate public key is not an Elliptic Curve (EC) public key");
+        }
+
+        var parameters = ecdsaPublicKey.ExportParameters(false);
+        if (!string.Equals(parameters.Curve.Oid.Value, NistP256Extension, StringComparison.OrdinalIgnoreCase))
+        {
+            return ValidatorInternalResult.Invalid(
+                "FIDO U2F attestation statement certificate public key is not over the P-256 curve");
         }
 
         return ValidatorInternalResult.Valid();
