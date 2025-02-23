@@ -1,5 +1,5 @@
-﻿using Shark.Fido2.Domain.Enums;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
+using Shark.Fido2.Domain.Enums;
 
 namespace Shark.Fido2.Domain.Mappers;
 

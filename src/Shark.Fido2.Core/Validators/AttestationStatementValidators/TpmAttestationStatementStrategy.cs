@@ -1,4 +1,4 @@
-﻿﻿using Shark.Fido2.Core.Abstractions.Services;
+﻿using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Comparers;
 using Shark.Fido2.Core.Constants;
@@ -109,7 +109,7 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
         if (!Enum.IsDefined(typeof(PublicKeyAlgorithm), algorithm))
         {
             return ValidatorInternalResult.Invalid("TPM attestation statement algorithm is not supported");
-        };
+        }
 
         // Concatenate authenticatorData and clientDataHash to form attToBeSigned.
         var attToBeSigned = BytesArrayHelper.Concatenate(

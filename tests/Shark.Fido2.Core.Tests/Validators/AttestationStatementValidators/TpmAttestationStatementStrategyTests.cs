@@ -1,4 +1,4 @@
-﻿﻿using Moq;
+﻿using Moq;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Handlers;
 using Shark.Fido2.Core.Results;

@@ -123,7 +123,7 @@ internal class AuthenticatorDataParserService : IAuthenticatorDataParserService
         if (coseKeyFormat.TryGetValue(coseKeyIndex, out var value))
         {
             return Convert.ToInt32(value);
-        };
+        }
 
         throw new ArgumentException(nameof(coseKeyFormat));
     }
@@ -133,7 +133,7 @@ internal class AuthenticatorDataParserService : IAuthenticatorDataParserService
         if (coseKeyFormat.TryGetValue(coseKeyIndex, out var value))
         {
             return Convert.ToInt32(value);
-        };
+        }
 
         return null;
     }
@@ -143,7 +143,7 @@ internal class AuthenticatorDataParserService : IAuthenticatorDataParserService
         if (coseKeyFormat.TryGetValue(coseKeyIndex, out var value))
         {
             return (byte[])value;
-        };
+        }
 
         return null;
     }
