@@ -1,6 +1,4 @@
-﻿using System.Formats.Asn1;
-using System.Security.Cryptography;
-using System.Security.Cryptography.X509Certificates;
+﻿using System.Security.Cryptography.X509Certificates;
 using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Comparers;
@@ -10,7 +8,7 @@ using Shark.Fido2.Domain;
 
 namespace Shark.Fido2.Core.Validators.AttestationStatementValidators;
 
-internal class CertificateAttestationStatementValidator : ICertificateAttestationStatementValidator
+internal class AttestationCertificateValidator : IAttestationCertificateValidator
 {
     private const string IdFidoGenCeAaguidExtension = "1.3.6.1.4.1.45724.1.1.4";
     private const string JointIsoItuTExtension = "2.23.133.8.3";
@@ -38,7 +36,7 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
     private readonly IAndroidKeyAttestationExtensionParserService _androidKeyAttestationExtensionParserService;
     private readonly IAppleAnonymousExtensionParserService _appleAnonymousExtensionParserService;
 
-    public CertificateAttestationStatementValidator(
+    public AttestationCertificateValidator(
         ISubjectAlternativeNameParserService subjectAlternativeNameParserService,
         IAndroidKeyAttestationExtensionParserService androidKeyAttestationExtensionParserService,
         IAppleAnonymousExtensionParserService appleAnonymousExtensionParserService)

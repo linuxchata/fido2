@@ -20,22 +20,22 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
 {
     private readonly ITpmtPublicAreaParserService _tpmtPublicAreaParserService;
     private readonly ITpmsAttestationParserService _tpmsAttestationParserService;
-    private readonly ICertificateAttestationStatementService _certificateProvider;
+    private readonly IAttestationCertificateProviderService _attestationCertificateProviderService;
     private readonly ISignatureAttestationStatementValidator _signatureValidator;
-    private readonly ICertificateAttestationStatementValidator _certificateValidator;
+    private readonly IAttestationCertificateValidator _attestationCertificateValidator;
 
     public TpmAttestationStatementStrategy(
         ITpmtPublicAreaParserService tpmtPublicAreaParserService,
         ITpmsAttestationParserService tpmsAttestationParserService,
-        ICertificateAttestationStatementService certificateAttestationStatementProvider,
+        IAttestationCertificateProviderService certificateAttestationStatementProvider,
         ISignatureAttestationStatementValidator signatureAttestationStatementValidator,
-        ICertificateAttestationStatementValidator certificateAttestationStatementValidator)
+        IAttestationCertificateValidator certificateAttestationStatementValidator)
     {
         _tpmtPublicAreaParserService = tpmtPublicAreaParserService;
         _tpmsAttestationParserService = tpmsAttestationParserService;
-        _certificateProvider = certificateAttestationStatementProvider;
+        _attestationCertificateProviderService = certificateAttestationStatementProvider;
         _signatureValidator = signatureAttestationStatementValidator;
-        _certificateValidator = certificateAttestationStatementValidator;
+        _attestationCertificateValidator = certificateAttestationStatementValidator;
     }
 
     /// <summary>
@@ -132,7 +132,7 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
         }
 
         // Verify that x5c is present.
-        if (!_certificateProvider.AreCertificatesPresent(attestationStatementDict))
+        if (!_attestationCertificateProviderService.AreCertificatesPresent(attestationStatementDict))
         {
             return ValidatorInternalResult.Invalid("TPM attestation statement certificates are not found");
         }
@@ -143,8 +143,8 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
 
         // Verify the sig is a valid signature over certInfo using the attestation public key in aikCert with
         // the algorithm specified in alg.
-        var certificates = _certificateProvider.GetCertificates(attestationStatementDict);
-        var attestationIdentityKeyCertificate = _certificateProvider.GetAttestationCertificate(certificates);
+        var certificates = _attestationCertificateProviderService.GetCertificates(attestationStatementDict);
+        var attestationIdentityKeyCertificate = _attestationCertificateProviderService.GetAttestationCertificate(certificates);
         var result = _signatureValidator.ValidateTpm(
             (byte[])certInfo,
             attestationStatementDict,
@@ -159,7 +159,7 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
         // Verify that aikCert meets the requirements in § 8.3.1 TPM Attestation Statement Certificate Requirements.
         // If aikCert contains an extension with OID 1.3.6.1.4.1.45724.1.1.4 (id-fido-gen-ce-aaguid) verify that
         // the value of this extension matches the aaguid in authenticatorData.
-        result = _certificateValidator.ValidateTpm(attestationIdentityKeyCertificate, attestationObjectData);
+        result = _attestationCertificateValidator.ValidateTpm(attestationIdentityKeyCertificate, attestationObjectData);
         if (!result.IsValid)
         {
             return result;

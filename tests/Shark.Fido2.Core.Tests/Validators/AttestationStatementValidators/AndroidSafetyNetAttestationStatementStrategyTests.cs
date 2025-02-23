@@ -41,9 +41,9 @@ internal class AndroidSafetyNetAttestationStatementStrategyTests
 
         var jwsResponseValidator = new AndroidSafetyNetJwsResponseValidator();
 
-        var certificateAttestationStatementProvider = new CertificateAttestationStatementService();
+        var attestationCertificateProviderService = new AttestationCertificateProviderService();
 
-        var certificateAttestationStatementValidator = new CertificateAttestationStatementValidator(
+        var attestationCertificateValidator = new AttestationCertificateValidator(
             new SubjectAlternativeNameParserService(),
             new AndroidKeyAttestationExtensionParserService(),
             new AppleAnonymousExtensionParserService());
@@ -51,8 +51,8 @@ internal class AndroidSafetyNetAttestationStatementStrategyTests
         _sut = new AndroidSafetyNetAttestationStatementStrategy(
             jwsResponseParserService,
             jwsResponseValidator,
-            certificateAttestationStatementProvider,
-            certificateAttestationStatementValidator);
+            attestationCertificateProviderService,
+            attestationCertificateValidator);
     }
 
     [Test]

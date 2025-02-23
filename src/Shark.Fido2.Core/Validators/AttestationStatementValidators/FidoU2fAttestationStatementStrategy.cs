@@ -16,17 +16,17 @@ internal class FidoU2fAttestationStatementStrategy : IAttestationStatementStrate
 {
     private const int CoordinateSize = 32;
 
-    private readonly ICertificateAttestationStatementService _certificateProvider;
-    private readonly ICertificateAttestationStatementValidator _certificateAttestationStatementValidator;
+    private readonly IAttestationCertificateProviderService _attestationCertificateProviderService;
+    private readonly IAttestationCertificateValidator _attestationCertificateValidator;
     private readonly ISignatureAttestationStatementValidator _signatureValidator;
 
     public FidoU2fAttestationStatementStrategy(
-        ICertificateAttestationStatementService certificateAttestationStatementProvider,
-        ICertificateAttestationStatementValidator certificateAttestationStatementValidator,
+        IAttestationCertificateProviderService attestationCertificateProviderService,
+        IAttestationCertificateValidator attestationCertificateValidator,
         ISignatureAttestationStatementValidator signatureAttestationStatementValidator)
     {
-        _certificateProvider = certificateAttestationStatementProvider;
-        _certificateAttestationStatementValidator = certificateAttestationStatementValidator;
+        _attestationCertificateProviderService = attestationCertificateProviderService;
+        _attestationCertificateValidator = attestationCertificateValidator;
         _signatureValidator = signatureAttestationStatementValidator;
     }
 
@@ -54,14 +54,14 @@ internal class FidoU2fAttestationStatementStrategy : IAttestationStatementStrate
         // Check that x5c has exactly one element and let attCert be that element. Let certificate public key be
         // the public key conveyed by attCert. If certificate public key is not an Elliptic Curve (EC) public key
         // over the P-256 curve, terminate this algorithm and return an appropriate error.
-        var certificates = _certificateProvider.GetCertificates(attestationStatementDict);
+        var certificates = _attestationCertificateProviderService.GetCertificates(attestationStatementDict);
         if (certificates.Count != 1)
         {
             return ValidatorInternalResult.Invalid("FIDO U2F attestation statement must have exactly one certificate");
         }
 
-        var attestationCertificate = _certificateProvider.GetAttestationCertificate(certificates);
-        var result = _certificateAttestationStatementValidator.ValidateFidoU2f(attestationCertificate);
+        var attestationCertificate = _attestationCertificateProviderService.GetAttestationCertificate(certificates);
+        var result = _attestationCertificateValidator.ValidateFidoU2f(attestationCertificate);
         if (!result.IsValid)
         {
             return result;

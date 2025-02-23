@@ -4,7 +4,7 @@ using Shark.Fido2.Domain;
 
 namespace Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 
-public interface ICertificateAttestationStatementValidator
+public interface IAttestationCertificateValidator
 {
     ValidatorInternalResult ValidatePacked(
         X509Certificate2 attestationCertificate,

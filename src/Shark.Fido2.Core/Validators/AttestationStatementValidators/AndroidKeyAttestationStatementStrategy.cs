@@ -15,19 +15,19 @@ namespace Shark.Fido2.Core.Validators.AttestationStatementValidators;
 internal class AndroidKeyAttestationStatementStrategy : IAttestationStatementStrategy
 {
     private readonly ISignatureAttestationStatementValidator _signatureValidator;
-    private readonly ICertificateAttestationStatementService _certificateProvider;
-    private readonly ICertificateAttestationStatementValidator _certificateAttestationStatementValidator;
+    private readonly IAttestationCertificateProviderService _attestationCertificateProviderService;
+    private readonly IAttestationCertificateValidator _attestationCertificateValidator;
     private readonly ICertificatePublicKeyValidator _certificatePublicKeyValidator;
 
     public AndroidKeyAttestationStatementStrategy(
         ISignatureAttestationStatementValidator signatureAttestationStatementValidator,
-        ICertificateAttestationStatementService certificateAttestationStatementProvider,
-        ICertificateAttestationStatementValidator certificateAttestationStatementValidator,
+        IAttestationCertificateProviderService attestationCertificateProviderService,
+        IAttestationCertificateValidator attestationCertificateValidator,
         ICertificatePublicKeyValidator certificatePublicKeyValidator)
     {
         _signatureValidator = signatureAttestationStatementValidator;
-        _certificateProvider = certificateAttestationStatementProvider;
-        _certificateAttestationStatementValidator = certificateAttestationStatementValidator;
+        _attestationCertificateProviderService = attestationCertificateProviderService;
+        _attestationCertificateValidator = attestationCertificateValidator;
         _certificatePublicKeyValidator = certificatePublicKeyValidator;
     }
 
@@ -60,8 +60,8 @@ internal class AndroidKeyAttestationStatementStrategy : IAttestationStatementStr
             attestationObjectData.AuthenticatorRawData,
             clientData.ClientDataHash);
 
-        var certificates = _certificateProvider.GetCertificates(attestationStatementDict);
-        var attestationCertificate = _certificateProvider.GetAttestationCertificate(certificates);
+        var certificates = _attestationCertificateProviderService.GetCertificates(attestationStatementDict);
+        var attestationCertificate = _attestationCertificateProviderService.GetAttestationCertificate(certificates);
         var result = _signatureValidator.Validate(
             concatenatedData,
             attestationStatementDict,
@@ -83,7 +83,7 @@ internal class AndroidKeyAttestationStatementStrategy : IAttestationStatementStr
         // Verify that the attestationChallenge field in the attestation certificate extension data is identical
         // to clientDataHash.
         // Verify using the appropriate authorization list from the attestation certificate extension data.
-        result = _certificateAttestationStatementValidator.ValidateAndroidKey(attestationCertificate, clientData);
+        result = _attestationCertificateValidator.ValidateAndroidKey(attestationCertificate, clientData);
         if (!result.IsValid)
         {
             return result;

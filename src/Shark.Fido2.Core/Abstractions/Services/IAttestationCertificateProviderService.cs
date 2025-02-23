@@ -2,7 +2,7 @@
 
 namespace Shark.Fido2.Core.Abstractions.Services;
 
-public interface ICertificateAttestationStatementService
+public interface IAttestationCertificateProviderService
 {
     bool AreCertificatesPresent(Dictionary<string, object> attestationStatementDict);
 

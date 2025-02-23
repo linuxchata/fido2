@@ -31,8 +31,8 @@ public static class DependencyInjection
         services.AddKeyedTransient<ICryptographyValidator, Ec2CryptographyValidator>("ec2");
 
         services.AddTransient<ISignatureAttestationStatementValidator, SignatureAttestationStatementValidator>();
-        services.AddTransient<ICertificateAttestationStatementService, CertificateAttestationStatementService>();
-        services.AddTransient<ICertificateAttestationStatementValidator, CertificateAttestationStatementValidator>();
+        services.AddTransient<IAttestationCertificateProviderService, AttestationCertificateProviderService>();
+        services.AddTransient<IAttestationCertificateValidator, AttestationCertificateValidator>();
         services.AddTransient<ICertificatePublicKeyValidator, CertificatePublicKeyValidator>();
         services.AddTransient<ISubjectAlternativeNameParserService, SubjectAlternativeNameParserService>();
         services.AddTransient<IAndroidSafetyNetJwsResponseParserService, AndroidSafetyNetJwsResponseParserService>();

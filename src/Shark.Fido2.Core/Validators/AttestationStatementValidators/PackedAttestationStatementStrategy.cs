@@ -16,17 +16,17 @@ namespace Shark.Fido2.Core.Validators.AttestationStatementValidators;
 internal class PackedAttestationStatementStrategy : IAttestationStatementStrategy
 {
     private readonly ISignatureAttestationStatementValidator _signatureValidator;
-    private readonly ICertificateAttestationStatementService _certificateProvider;
-    private readonly ICertificateAttestationStatementValidator _certificateValidator;
+    private readonly IAttestationCertificateProviderService _attestationCertificateProviderService;
+    private readonly IAttestationCertificateValidator _attestationCertificateValidator;
 
     public PackedAttestationStatementStrategy(
         ISignatureAttestationStatementValidator signatureAttestationStatementValidator,
-        ICertificateAttestationStatementService certificateAttestationStatementProvider,
-        ICertificateAttestationStatementValidator certificateAttestationStatementValidator)
+        IAttestationCertificateProviderService certificateAttestationStatementProvider,
+        IAttestationCertificateValidator certificateAttestationStatementValidator)
     {
         _signatureValidator = signatureAttestationStatementValidator;
-        _certificateProvider = certificateAttestationStatementProvider;
-        _certificateValidator = certificateAttestationStatementValidator;
+        _attestationCertificateProviderService = certificateAttestationStatementProvider;
+        _attestationCertificateValidator = certificateAttestationStatementValidator;
     }
 
     /// <summary>
@@ -55,12 +55,12 @@ internal class PackedAttestationStatementStrategy : IAttestationStatementStrateg
             clientData.ClientDataHash);
 
         // If x5c is present
-        if (_certificateProvider.AreCertificatesPresent(attestationStatementDict))
+        if (_attestationCertificateProviderService.AreCertificatesPresent(attestationStatementDict))
         {
             // Verify that sig is a valid signature over the concatenation of authenticatorData and clientDataHash
             // using the attestation public key in attestnCert with the algorithm specified in alg.
-            var certificates = _certificateProvider.GetCertificates(attestationStatementDict);
-            var attestationCertificate = _certificateProvider.GetAttestationCertificate(certificates);
+            var certificates = _attestationCertificateProviderService.GetCertificates(attestationStatementDict);
+            var attestationCertificate = _attestationCertificateProviderService.GetAttestationCertificate(certificates);
             var result = _signatureValidator.Validate(
                 concatenatedData,
                 attestationStatementDict,
@@ -74,7 +74,7 @@ internal class PackedAttestationStatementStrategy : IAttestationStatementStrateg
             // Verify that attestnCert meets the requirements in 8.2.1 Packed Attestation Statement Certificate Requirements.
             // If attestnCert contains an extension with OID 1.3.6.1.4.1.45724.1.1.4 (id-fido-gen-ce-aaguid)
             // verify that the value of this extension matches the aaguid in authenticatorData.
-            result = _certificateValidator.ValidatePacked(attestationCertificate, attestationObjectData);
+            result = _attestationCertificateValidator.ValidatePacked(attestationCertificate, attestationObjectData);
             if (!result.IsValid)
             {
                 return result;

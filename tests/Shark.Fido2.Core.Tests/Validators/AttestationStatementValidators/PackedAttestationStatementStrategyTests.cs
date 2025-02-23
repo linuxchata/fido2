@@ -43,17 +43,17 @@ internal class PackedAttestationStatementStrategyTests
             new RsaCryptographyValidator(),
             new Ec2CryptographyValidator());
 
-        var certificateAttestationStatementProvider = new CertificateAttestationStatementService();
+        var attestationCertificateProviderService = new AttestationCertificateProviderService();
 
-        var certificateAttestationStatementValidator = new CertificateAttestationStatementValidator(
+        var attestationCertificateValidator = new AttestationCertificateValidator(
             new SubjectAlternativeNameParserService(),
             new AndroidKeyAttestationExtensionParserService(),
             new AppleAnonymousExtensionParserService());
 
         _sut = new PackedAttestationStatementStrategy(
             signatureAttestationStatementValidator,
-            certificateAttestationStatementProvider,
-            certificateAttestationStatementValidator);
+            attestationCertificateProviderService,
+            attestationCertificateValidator);
     }
 
     [Test]
