@@ -54,7 +54,7 @@ internal class AppleAnonymousAttestationStatementStrategyTests
 
     [Ignore("Apple Anonymous attestation to be generated")]
     [Test]
-    public void Validate_WhenAppleAnonymousAttestationWithEs256Algorithm_ShouldReturnAnonymizationCaAttestationType()
+    public void Validate_WhenAppleAnonymousAttestationWithEs256Algorithm_ShouldValidate()
     {
         // Arrange
         var fileName = "AppleAnonymousAttestationWithEs256Algorithm.json";

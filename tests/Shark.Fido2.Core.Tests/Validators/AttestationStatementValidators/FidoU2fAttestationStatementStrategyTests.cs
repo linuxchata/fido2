@@ -56,7 +56,7 @@ internal class FidoU2fAttestationStatementStrategyTests
     }
 
     [Test]
-    public void Validate_WhenFidoU2fAttestationWithEs256Algorithm_ShouldReturnAttestationAttestationType()
+    public void Validate_WhenFidoU2fAttestationWithEs256Algorithm_ShouldValidate()
     {
         // Arrange
         var fileName = "FidoU2fAttestationWithEs256Algorithm.json";
