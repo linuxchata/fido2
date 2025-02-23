@@ -1,6 +1,7 @@
 ﻿﻿using Microsoft.Extensions.DependencyInjection;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Constants;
+using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain;
 
 namespace Shark.Fido2.Core.Validators.AttestationStatementValidators;
@@ -37,7 +38,7 @@ internal class AttestationStatementValidator : IAttestationStatementValidator
         };
     }
 
-    public void Validate(AttestationObjectData attestationObjectData, ClientData clientData)
+    public ValidatorInternalResult Validate(AttestationObjectData attestationObjectData, ClientData clientData)
     {
         ArgumentNullException.ThrowIfNull(attestationObjectData);
         ArgumentNullException.ThrowIfNull(clientData);
@@ -54,6 +55,6 @@ internal class AttestationStatementValidator : IAttestationStatementValidator
             throw new ArgumentException($"{attestationStatementFormat} is not supported");
         }
 
-        strategy.Validate(attestationObjectData, clientData);
+        return strategy.Validate(attestationObjectData, clientData);
     }
 }
