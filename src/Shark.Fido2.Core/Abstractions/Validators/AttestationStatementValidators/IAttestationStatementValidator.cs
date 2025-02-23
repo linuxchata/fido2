@@ -1,18 +1,20 @@
-﻿﻿using Shark.Fido2.Domain;
+﻿﻿using Shark.Fido2.Core.Results;
+using Shark.Fido2.Domain;
 
 namespace Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 
 /// <summary>
-/// Validates attestation statements in FIDO2 authentication process.
+/// Defines the contract for validating attestation statements in FIDO2 WebAuthn responses.
+/// An attestation statement is a specific type of signed data object that provides cryptographic proof about the authenticator
+/// and the credentials it creates.
 /// </summary>
 public interface IAttestationStatementValidator
 {
     /// <summary>
-    /// Validates the attestation statement using the appropriate validation strategy based on the format.
+    /// Validates the attestation statement within an attestation object against the client data.
     /// </summary>
-    /// <param name="attestationObjectData">The attestation object data containing the statement to validate.</param>
-    /// <param name="clientData">The client data associated with the attestation.</param>
-    /// <exception cref="ArgumentNullException">Thrown when attestationObjectData is null or attestation statement format is empty.</exception>
-    /// <exception cref="ArgumentException">Thrown when attestation statement format is not supported.</exception>
-    void Validate(AttestationObjectData attestationObjectData, ClientData clientData);
+    /// <param name="attestationObjectData">The attestation object data containing the attestation statement to validate.</param>
+    /// <param name="clientData">The client data associated with the attestation, used for verification.</param>
+    /// <returns>A <see cref="ValidatorInternalResult"/> indicating whether the attestation statement is valid and any associated validation details.</returns>
+    ValidatorInternalResult Validate(AttestationObjectData attestationObjectData, ClientData clientData);
 }
