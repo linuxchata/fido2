@@ -11,7 +11,7 @@ namespace Shark.Fido2.Core.Services;
 /// Authenticator Data provider
 /// See 6.1. Authenticator Data of Web Authentication: An API for accessing Public Key Credentials Level 2
 /// </summary>
-internal class AuthenticatorDataParserService : IAuthenticatorDataParserService
+internal sealed class AuthenticatorDataParserService : IAuthenticatorDataParserService
 {
     private const int RpIdHashLength = 32;
     private const int FlagsLength = 1;
@@ -123,7 +123,7 @@ internal class AuthenticatorDataParserService : IAuthenticatorDataParserService
         if (coseKeyFormat.TryGetValue(coseKeyIndex, out var value))
         {
             return Convert.ToInt32(value);
-        };
+        }
 
         throw new ArgumentException(nameof(coseKeyFormat));
     }
@@ -133,7 +133,7 @@ internal class AuthenticatorDataParserService : IAuthenticatorDataParserService
         if (coseKeyFormat.TryGetValue(coseKeyIndex, out var value))
         {
             return Convert.ToInt32(value);
-        };
+        }
 
         return null;
     }
@@ -143,7 +143,7 @@ internal class AuthenticatorDataParserService : IAuthenticatorDataParserService
         if (coseKeyFormat.TryGetValue(coseKeyIndex, out var value))
         {
             return (byte[])value;
-        };
+        }
 
         return null;
     }

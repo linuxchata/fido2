@@ -4,7 +4,7 @@ using Shark.Fido2.Core.Constants;
 
 namespace Shark.Fido2.Core.Services;
 
-internal class CertificateAttestationStatementService : ICertificateAttestationStatementService
+internal sealed class AttestationCertificateProviderService : IAttestationCertificateProviderService
 {
     public bool AreCertificatesPresent(Dictionary<string, object> attestationStatementDict)
     {

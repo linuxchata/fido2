@@ -37,9 +37,9 @@ internal class AppleAnonymousAttestationStatementStrategyTests
         _attestationObjectHandler = new AttestationObjectHandler(
             _provider, _attestationObjectValidatorMock.Object);
 
-        var certificateAttestationStatementService = new CertificateAttestationStatementService();
+        var attestationCertificateProviderService = new AttestationCertificateProviderService();
 
-        var certificateAttestationStatementValidator = new CertificateAttestationStatementValidator(
+        var attestationCertificateValidator = new AttestationCertificateValidator(
             new SubjectAlternativeNameParserService(),
             new AndroidKeyAttestationExtensionParserService(),
             new AppleAnonymousExtensionParserService());
@@ -47,8 +47,8 @@ internal class AppleAnonymousAttestationStatementStrategyTests
         var certificatePublicKeyValidator = new CertificatePublicKeyValidator();
 
         _sut = new AppleAnonymousAttestationStatementStrategy(
-            certificateAttestationStatementService,
-            certificateAttestationStatementValidator,
+            attestationCertificateProviderService,
+            attestationCertificateValidator,
             certificatePublicKeyValidator);
     }
 

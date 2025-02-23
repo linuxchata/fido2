@@ -42,9 +42,9 @@ internal class AndroidKeyAttestationStatementStrategyTests
             new RsaCryptographyValidator(),
             new Ec2CryptographyValidator());
 
-        var certificateAttestationStatementProvider = new CertificateAttestationStatementService();
+        var attestationCertificateProviderService = new AttestationCertificateProviderService();
 
-        var certificateAttestationStatementValidator = new CertificateAttestationStatementValidator(
+        var attestationCertificateValidator = new AttestationCertificateValidator(
             new SubjectAlternativeNameParserService(),
             new AndroidKeyAttestationExtensionParserService(),
             new AppleAnonymousExtensionParserService());
@@ -53,8 +53,8 @@ internal class AndroidKeyAttestationStatementStrategyTests
 
         _sut = new AndroidKeyAttestationStatementStrategy(
             signatureAttestationStatementValidator,
-            certificateAttestationStatementProvider,
-            certificateAttestationStatementValidator,
+            attestationCertificateProviderService,
+            attestationCertificateValidator,
             certificatePublicKeyValidator);
     }
 

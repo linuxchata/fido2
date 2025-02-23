@@ -15,17 +15,17 @@ namespace Shark.Fido2.Core.Validators.AttestationStatementValidators;
 /// </summary>
 internal class AppleAnonymousAttestationStatementStrategy : IAttestationStatementStrategy
 {
-    private readonly ICertificateAttestationStatementService _certificateProvider;
-    private readonly ICertificateAttestationStatementValidator _certificateAttestationStatementValidator;
+    private readonly IAttestationCertificateProviderService _attestationCertificateProviderService;
+    private readonly IAttestationCertificateValidator _attestationCertificateValidator;
     private readonly ICertificatePublicKeyValidator _certificatePublicKeyValidator;
 
     public AppleAnonymousAttestationStatementStrategy(
-        ICertificateAttestationStatementService certificateAttestationStatementProvider,
-        ICertificateAttestationStatementValidator certificateAttestationStatementValidator,
+        IAttestationCertificateProviderService attestationCertificateProviderService,
+        IAttestationCertificateValidator attestationCertificateValidator,
         ICertificatePublicKeyValidator certificatePublicKeyValidator)
     {
-        _certificateProvider = certificateAttestationStatementProvider;
-        _certificateAttestationStatementValidator = certificateAttestationStatementValidator;
+        _attestationCertificateProviderService = attestationCertificateProviderService;
+        _attestationCertificateValidator = attestationCertificateValidator;
         _certificatePublicKeyValidator = certificatePublicKeyValidator;
     }
 
@@ -59,10 +59,10 @@ internal class AppleAnonymousAttestationStatementStrategy : IAttestationStatemen
         var nonce = HashProvider.GetHash(nonceToHash, HashAlgorithmName.SHA256);
 
         // Verify that nonce equals the value of the extension with OID 1.2.840.113635.100.8.2 in credCert.
-        var certificates = _certificateProvider.GetCertificates(attestationStatementDict);
-        var attestationCertificate = _certificateProvider.GetAttestationCertificate(certificates);
+        var certificates = _attestationCertificateProviderService.GetCertificates(attestationStatementDict);
+        var attestationCertificate = _attestationCertificateProviderService.GetAttestationCertificate(certificates);
 
-        var result = _certificateAttestationStatementValidator.ValidateAppleAnonymous(attestationCertificate, nonce);
+        var result = _attestationCertificateValidator.ValidateAppleAnonymous(attestationCertificate, nonce);
         if (!result.IsValid)
         {
             return result;

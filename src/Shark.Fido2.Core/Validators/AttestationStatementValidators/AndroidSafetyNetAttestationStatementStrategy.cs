@@ -19,19 +19,19 @@ internal class AndroidSafetyNetAttestationStatementStrategy : IAttestationStatem
 {
     private readonly IAndroidSafetyNetJwsResponseParserService _jwsResponseParserService;
     private readonly IAndroidSafetyNetJwsResponseValidator _jwsResponseValidator;
-    private readonly ICertificateAttestationStatementService _certificateProvider;
-    private readonly ICertificateAttestationStatementValidator _certificateValidator;
+    private readonly IAttestationCertificateProviderService _attestationCertificateProviderService;
+    private readonly IAttestationCertificateValidator _attestationCertificateValidator;
 
     public AndroidSafetyNetAttestationStatementStrategy(
         IAndroidSafetyNetJwsResponseParserService androidSafetyNetJwsResponseParserService,
         IAndroidSafetyNetJwsResponseValidator androidSafetyNetJwsResponseValidator,
-        ICertificateAttestationStatementService certificateAttestationStatementProvider,
-        ICertificateAttestationStatementValidator certificateAttestationStatementValidator)
+        IAttestationCertificateProviderService attestationCertificateProviderService,
+        IAttestationCertificateValidator attestationCertificateValidator)
     {
         _jwsResponseParserService = androidSafetyNetJwsResponseParserService;
         _jwsResponseValidator = androidSafetyNetJwsResponseValidator;
-        _certificateProvider = certificateAttestationStatementProvider;
-        _certificateValidator = certificateAttestationStatementValidator;
+        _attestationCertificateProviderService = attestationCertificateProviderService;
+        _attestationCertificateValidator = attestationCertificateValidator;
     }
 
     /// <summary>
@@ -129,15 +129,15 @@ internal class AndroidSafetyNetAttestationStatementStrategy : IAttestationStatem
                 "Android SafetyNet attestation statement JWS response certificates are not found");
         }
 
-        var certificates = _certificateProvider.GetCertificates(jwsResponse.Certificates);
+        var certificates = _attestationCertificateProviderService.GetCertificates(jwsResponse.Certificates);
 
         // Validate the SSL certificate chain
         // TODO: Skip result of SSL certificate chain validation, since provided certificates are not valid.
-        _certificateValidator.ValidateChainOfTrustWithSystemCa(certificates);
+        _attestationCertificateValidator.ValidateChainOfTrustWithSystemCa(certificates);
 
         // Use SSL hostname matching to verify that the leaf certificate was issued to the hostname attest.android.com
-        var attestationCertificate = _certificateProvider.GetAttestationCertificate(certificates);
-        var result = _certificateValidator.ValidateAndroidSafetyNet(attestationCertificate);
+        var attestationCertificate = _attestationCertificateProviderService.GetAttestationCertificate(certificates);
+        var result = _attestationCertificateValidator.ValidateAndroidSafetyNet(attestationCertificate);
         if (!result.IsValid)
         {
             return result;

@@ -1,4 +1,4 @@
-﻿﻿using Moq;
+﻿using Moq;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Handlers;
 using Shark.Fido2.Core.Results;
@@ -43,13 +43,13 @@ internal class TpmAttestationStatementStrategyTests
 
         var tpmsAttestationParserService = new TpmsAttestationParserService();
 
-        var certificateAttestationStatementProvider = new CertificateAttestationStatementService();
+        var attestationCertificateProviderService = new AttestationCertificateProviderService();
 
         var signatureAttestationStatementValidator = new SignatureAttestationStatementValidator(
             new RsaCryptographyValidator(),
             new Ec2CryptographyValidator());
 
-        var certificateAttestationStatementValidator = new CertificateAttestationStatementValidator(
+        var attestationCertificateValidator = new AttestationCertificateValidator(
             new SubjectAlternativeNameParserService(),
             new AndroidKeyAttestationExtensionParserService(),
             new AppleAnonymousExtensionParserService());
@@ -57,9 +57,9 @@ internal class TpmAttestationStatementStrategyTests
         _sut = new TpmAttestationStatementStrategy(
             tpmtPublicAreaParserService,
             tpmsAttestationParserService,
-            certificateAttestationStatementProvider,
+            attestationCertificateProviderService,
             signatureAttestationStatementValidator,
-            certificateAttestationStatementValidator);
+            attestationCertificateValidator);
     }
 
     [Test]

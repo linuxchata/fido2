@@ -38,9 +38,9 @@ internal class FidoU2fAttestationStatementStrategyTests
         _attestationObjectHandler = new AttestationObjectHandler(
             _provider, _attestationObjectValidatorMock.Object);
 
-        var certificateAttestationStatementService = new CertificateAttestationStatementService();
+        var attestationCertificateProviderService = new AttestationCertificateProviderService();
 
-        var certificateAttestationStatementValidator = new CertificateAttestationStatementValidator(
+        var attestationCertificateValidator = new AttestationCertificateValidator(
             new SubjectAlternativeNameParserService(),
             new AndroidKeyAttestationExtensionParserService(),
             new AppleAnonymousExtensionParserService());
@@ -50,8 +50,8 @@ internal class FidoU2fAttestationStatementStrategyTests
             new Ec2CryptographyValidator());
 
         _sut = new FidoU2fAttestationStatementStrategy(
-            certificateAttestationStatementService,
-            certificateAttestationStatementValidator,
+            attestationCertificateProviderService,
+            attestationCertificateValidator,
             signatureAttestationStatementValidator);
     }
 

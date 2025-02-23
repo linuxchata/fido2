@@ -117,6 +117,7 @@ internal class SignatureAttestationStatementValidator : ISignatureAttestationSta
         ArgumentNullException.ThrowIfNull(data);
         ArgumentNullException.ThrowIfNull(attestationStatementDict);
         ArgumentNullException.ThrowIfNull(credentialPublicKey);
+        ArgumentNullException.ThrowIfNull(attestationCertificate);
 
         if (!attestationStatementDict.TryGetValue(AttestationStatement.Signature, out var signature) ||
             signature is not byte[])

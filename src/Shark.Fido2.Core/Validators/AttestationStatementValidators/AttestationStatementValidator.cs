@@ -40,6 +40,7 @@ internal class AttestationStatementValidator : IAttestationStatementValidator
     public void Validate(AttestationObjectData attestationObjectData, ClientData clientData)
     {
         ArgumentNullException.ThrowIfNull(attestationObjectData);
+        ArgumentNullException.ThrowIfNull(clientData);
 
         var attestationStatementFormat = attestationObjectData.AttestationStatementFormat;
 
