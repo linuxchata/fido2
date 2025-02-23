@@ -23,4 +23,6 @@ public interface ICertificateAttestationStatementValidator
     ValidatorInternalResult ValidateChainOfTrustWithSystemCa(List<X509Certificate2> certificates);
 
     ValidatorInternalResult ValidateFidoU2f(X509Certificate2 attestationCertificate);
+
+    ValidatorInternalResult ValidateAppleAnonymous(X509Certificate2 attestationCertificate, byte[] nonce);
 }

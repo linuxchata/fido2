@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿﻿using Microsoft.Extensions.DependencyInjection;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Domain;
@@ -21,7 +21,9 @@ internal class AttestationStatementValidator : IAttestationStatementValidator
         [FromKeyedServices(AttestationStatementFormatIdentifier.FidoU2f)]
         IAttestationStatementStrategy fidoU2fAttestationStatementStrategy,
         [FromKeyedServices(AttestationStatementFormatIdentifier.None)]
-        IAttestationStatementStrategy noneAttestationStatementStategy)
+        IAttestationStatementStrategy noneAttestationStatementStategy,
+        [FromKeyedServices(AttestationStatementFormatIdentifier.Apple)]
+        IAttestationStatementStrategy appleAnonymousAttestationStatementStrategy)
     {
         _strategiesMap = new Dictionary<string, IAttestationStatementStrategy>
         {
@@ -31,6 +33,7 @@ internal class AttestationStatementValidator : IAttestationStatementValidator
             { AttestationStatementFormatIdentifier.AndroidSafetyNet, androidSafetyNetAttestationStatementStrategy },
             { AttestationStatementFormatIdentifier.FidoU2f, fidoU2fAttestationStatementStrategy },
             { AttestationStatementFormatIdentifier.None, noneAttestationStatementStategy },
+            { AttestationStatementFormatIdentifier.Apple, appleAnonymousAttestationStatementStrategy },
         };
     }
 

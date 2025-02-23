@@ -42,7 +42,8 @@ internal class FidoU2fAttestationStatementStrategyTests
 
         var certificateAttestationStatementValidator = new CertificateAttestationStatementValidator(
             new SubjectAlternativeNameParserService(),
-            new AndroidKeyAttestationExtensionParserService());
+            new AndroidKeyAttestationExtensionParserService(),
+            new AppleAnonymousExtensionParserService());
 
         var signatureAttestationStatementValidator = new SignatureAttestationStatementValidator(
             new RsaCryptographyValidator(),
@@ -55,7 +56,7 @@ internal class FidoU2fAttestationStatementStrategyTests
     }
 
     [Test]
-    public void Validate_WhenFidoU2fAttestationWithEs256Algorithm_ShouldReturnBasicAttestationType()
+    public void Validate_WhenFidoU2fAttestationWithEs256Algorithm_ShouldValidate()
     {
         // Arrange
         var fileName = "FidoU2fAttestationWithEs256Algorithm.json";

@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using System.Formats.Asn1;
+using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
@@ -18,6 +19,7 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
     private const string SubjectAlternativeNameExtension = "2.5.29.17";
     private const string AndroidAttestationExtension = "1.3.6.1.4.1.11129.2.1.17";
     private const string NistP256Extension = "1.2.840.10045.3.1.7";
+    private const string AppleAnonymousAttestationExtension = "1.2.840.113635.100.8.2";
 
     private const string SubjectCountry = "C";
     private const string SubjectOrganization = "O";
@@ -34,13 +36,16 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
 
     private readonly ISubjectAlternativeNameParserService _subjectAlternativeNameParserService;
     private readonly IAndroidKeyAttestationExtensionParserService _androidKeyAttestationExtensionParserService;
+    private readonly IAppleAnonymousExtensionParserService _appleAnonymousExtensionParserService;
 
     public CertificateAttestationStatementValidator(
         ISubjectAlternativeNameParserService subjectAlternativeNameParserService,
-        IAndroidKeyAttestationExtensionParserService androidKeyAttestationExtensionParserService)
+        IAndroidKeyAttestationExtensionParserService androidKeyAttestationExtensionParserService,
+        IAppleAnonymousExtensionParserService appleAnonymousExtensionParserService)
     {
         _subjectAlternativeNameParserService = subjectAlternativeNameParserService;
         _androidKeyAttestationExtensionParserService = androidKeyAttestationExtensionParserService;
+        _appleAnonymousExtensionParserService = appleAnonymousExtensionParserService;
     }
 
     public ValidatorInternalResult ValidatePacked(
@@ -50,19 +55,21 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
         ArgumentNullException.ThrowIfNull(attestationCertificate);
         ArgumentNullException.ThrowIfNull(attestationObjectData);
 
+        const string Prefix = "Packed attestation statement certificate";
+
         // Verify that attestnCert meets the requirements in § 8.2.1 Packed Attestation Statement Certificate Requirements.
 
         // Version MUST be set to 3 (which is indicated by an ASN.1 INTEGER with value 2).
         if (attestationCertificate.Version != 3)
         {
-            return ValidatorInternalResult.Invalid("Packed attestation statement certificate has unexpected version");
+            return ValidatorInternalResult.Invalid($"{Prefix} has unexpected version");
         }
 
         // Subject field MUST be set.
         var isCertificateSubjectValid = VerifyCertificateSubject(attestationCertificate);
         if (!isCertificateSubjectValid)
         {
-            return ValidatorInternalResult.Invalid("Packed attestation statement certificate subject is invalid");
+            return ValidatorInternalResult.Invalid($"{Prefix} subject is invalid");
         }
 
         // If the related attestation root certificate is used for multiple authenticator models, the Extension OID
@@ -77,7 +84,7 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
             if (idFidoGenCeAaguid.Critical)
             {
                 return ValidatorInternalResult.Invalid(
-                    $"Packed attestation statement certificate extenstion {IdFidoGenCeAaguidExtension} is marked as critical");
+                    $"{Prefix} extenstion {IdFidoGenCeAaguidExtension} is marked as critical");
             }
         }
 
@@ -85,7 +92,7 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
         var basicConstraints = GetBasicConstraints(attestationCertificate);
         if (basicConstraints == null || basicConstraints.CertificateAuthority)
         {
-            return ValidatorInternalResult.Invalid("Packed attestation statement certificate authority is invalid");
+            return ValidatorInternalResult.Invalid($"{Prefix} authority is invalid");
         }
 
         // TODO: An Authority Information Access (AIA) extension with entry id-ad-ocsp and a CRL Distribution Point
@@ -113,18 +120,20 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
         ArgumentNullException.ThrowIfNull(attestationCertificate);
         ArgumentNullException.ThrowIfNull(attestationObjectData);
 
+        const string Prefix = "TPM attestation statement certificate";
+
         // Verify that aikCert meets the requirements in § 8.3.1 TPM Attestation Statement Certificate Requirements.
 
         // Version MUST be set to 3.
         if (attestationCertificate.Version != 3)
         {
-            return ValidatorInternalResult.Invalid("TPM attestation statement certificate has unexpected version");
+            return ValidatorInternalResult.Invalid($"{Prefix} has unexpected version");
         }
 
         // Subject field MUST be set to empty.
         if (!string.IsNullOrWhiteSpace(attestationCertificate.SubjectName?.Name))
         {
-            return ValidatorInternalResult.Invalid("TPM attestation statement certificate has not empty subject");
+            return ValidatorInternalResult.Invalid($"{Prefix} has not empty subject");
         }
 
         // The Subject Alternative Name extension MUST be set as defined in [TPMv2-EK-Profile] section 3.2.9.
@@ -133,14 +142,13 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
             as X509SubjectAlternativeNameExtension;
         if (subjectAlternativeNameExtension == null)
         {
-            return ValidatorInternalResult.Invalid(
-                "TPM attestation statement certificate's subject alternative name is not found");
+            return ValidatorInternalResult.Invalid($"{Prefix} subject alternative name is not found");
         }
 
         if (!subjectAlternativeNameExtension.Critical)
         {
             return ValidatorInternalResult.Invalid(
-                $"TPM attestation statement certificate's subject alternative name extenstion is not marked as critical");
+                $"{Prefix} subject alternative name extenstion is not marked as critical");
         }
 
         var tpmIssuer = _subjectAlternativeNameParserService.Parse(subjectAlternativeNameExtension);
@@ -149,19 +157,17 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
         if (!TpmCapabilitiesVendors.Exists(tpmIssuer!.ManufacturerValue))
         {
             return ValidatorInternalResult.Invalid(
-                $"TPM attestation statement certificate's subject alternative name has invalid TMP manufacturer {tpmIssuer.ManufacturerValue}");
+                $"{Prefix} subject alternative name has invalid TMP manufacturer {tpmIssuer.ManufacturerValue}");
         }
 
         if (string.IsNullOrWhiteSpace(tpmIssuer.Model))
         {
-            return ValidatorInternalResult.Invalid(
-                "TPM attestation statement certificate's subject alternative name has invalid model");
+            return ValidatorInternalResult.Invalid($"{Prefix} subject alternative name has invalid model");
         }
 
         if (string.IsNullOrWhiteSpace(tpmIssuer.Version))
         {
-            return ValidatorInternalResult.Invalid(
-                "TPM attestation statement certificate's subject alternative name has invalid version");
+            return ValidatorInternalResult.Invalid($"{Prefix} subject alternative name has invalid version");
         }
 
         // The Extended Key Usage extension MUST contain the OID 2.23.133.8.3
@@ -171,22 +177,20 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
             as X509EnhancedKeyUsageExtension;
         if (enhancedKeyUsageExtension == null)
         {
-            return ValidatorInternalResult.Invalid(
-                "TPM attestation statement certificate's enhanced key usage is not found");
+            return ValidatorInternalResult.Invalid($"{Prefix} enhanced key usage is not found");
         }
 
         var jointIsoItuTExtension = enhancedKeyUsageExtension.EnhancedKeyUsages[JointIsoItuTExtension];
         if (jointIsoItuTExtension == null)
         {
-            return ValidatorInternalResult.Invalid(
-                "TPM attestation statement certificate's enhanced key usage is invalid");
+            return ValidatorInternalResult.Invalid($"{Prefix} enhanced key usage is invalid");
         }
 
         // The Basic Constraints extension MUST have the CA component set to false.
         var basicConstraints = GetBasicConstraints(attestationCertificate);
         if (basicConstraints == null || basicConstraints.CertificateAuthority)
         {
-            return ValidatorInternalResult.Invalid("TPM attestation statement certificate's authority is invalid");
+            return ValidatorInternalResult.Invalid($"{Prefix} authority is invalid");
         }
 
         // TODO: An Authority Information Access (AIA) extension with entry id-ad-ocsp and a CRL Distribution Point
@@ -214,7 +218,7 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
         ArgumentNullException.ThrowIfNull(attestationCertificate);
         ArgumentNullException.ThrowIfNull(clientData);
 
-        const string Prefix = "Android Key attestation statement certificate's";
+        const string Prefix = "Android Key attestation statement certificate";
 
         var androidAttestation = attestationCertificate.Extensions?.FirstOrDefault(
             e => string.Equals(e.Oid?.Value, AndroidAttestationExtension, StringComparison.Ordinal));
@@ -268,11 +272,12 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
     {
         ArgumentNullException.ThrowIfNull(attestationCertificate);
 
+        const string Prefix = "Android SafetyNet attestation statement certificate";
+
         var isCertificateHostnameValid = VerifyCertificateHostname(attestationCertificate);
         if (!isCertificateHostnameValid)
         {
-            return ValidatorInternalResult.Invalid(
-                "Android SafetyNet attestation statement certificate hostname is invalid");
+            return ValidatorInternalResult.Invalid($"{Prefix} hostname is invalid");
         }
 
         return ValidatorInternalResult.Valid();
@@ -314,6 +319,8 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
     {
         ArgumentNullException.ThrowIfNull(attestationCertificate);
 
+        const string Prefix = "FIDO U2F attestation statement certificate";
+
         // If certificate public key is not an Elliptic Curve (EC) public key over the P-256 curve, terminate
         // this algorithm and return an appropriate error.
 
@@ -321,15 +328,39 @@ internal class CertificateAttestationStatementValidator : ICertificateAttestatio
 
         if (ecdsaPublicKey == null)
         {
-            return ValidatorInternalResult.Invalid(
-                "FIDO U2F attestation statement certificate public key is not an Elliptic Curve (EC) public key");
+            return ValidatorInternalResult.Invalid($"{Prefix} public key is not an Elliptic Curve (EC) public key");
         }
 
         var parameters = ecdsaPublicKey.ExportParameters(false);
         if (!string.Equals(parameters.Curve.Oid.Value, NistP256Extension, StringComparison.OrdinalIgnoreCase))
         {
+            return ValidatorInternalResult.Invalid($"{Prefix} public key is not over the P-256 curve");
+        }
+
+        return ValidatorInternalResult.Valid();
+    }
+
+    public ValidatorInternalResult ValidateAppleAnonymous(X509Certificate2 attestationCertificate, byte[] nonce)
+    {
+        ArgumentNullException.ThrowIfNull(attestationCertificate);
+
+        const string Prefix = "Apple Anonymous attestation statement certificate";
+
+        // Verify that nonce equals the value of the extension with OID 1.2.840.113635.100.8.2 in credCert.
+        var appleAnonymousAttestationExtension = attestationCertificate.Extensions?
+            .FirstOrDefault(e => string.Equals(e.Oid?.Value, AppleAnonymousAttestationExtension, StringComparison.Ordinal));
+        if (appleAnonymousAttestationExtension == null)
+        {
             return ValidatorInternalResult.Invalid(
-                "FIDO U2F attestation statement certificate public key is not over the P-256 curve");
+                $"{Prefix} {AppleAnonymousAttestationExtension} extension is not found");
+        }
+
+        var nonceFromCertificate = _appleAnonymousExtensionParserService.Parse(appleAnonymousAttestationExtension.RawData);
+
+        if (!BytesArrayComparer.CompareNullable(nonce, nonceFromCertificate))
+        {
+            return ValidatorInternalResult.Invalid(
+                $"{Prefix} {AppleAnonymousAttestationExtension} extension mismatch");
         }
 
         return ValidatorInternalResult.Valid();
