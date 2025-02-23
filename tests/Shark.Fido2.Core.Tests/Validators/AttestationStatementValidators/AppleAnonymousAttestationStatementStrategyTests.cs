@@ -3,7 +3,6 @@ using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Handlers;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Core.Services;
-using Shark.Fido2.Core.Validators;
 using Shark.Fido2.Core.Validators.AttestationStatementValidators;
 using Shark.Fido2.Domain;
 using Shark.Fido2.Domain.Enums;
@@ -11,14 +10,14 @@ using Shark.Fido2.Domain.Enums;
 namespace Shark.Fido2.Core.Tests.Validators.AttestationStatementValidators;
 
 [TestFixture]
-internal class FidoU2fAttestationStatementStrategyTests
+internal class AppleAnonymousAttestationStatementStrategyTests
 {
     private Mock<IAttestationObjectValidator> _attestationObjectValidatorMock;
     private AttestationObjectHandler _attestationObjectHandler;
     private AuthenticatorDataParserService _provider;
     private PublicKeyCredentialCreationOptions _creationOptions;
 
-    private FidoU2fAttestationStatementStrategy _sut = null!;
+    private AppleAnonymousAttestationStatementStrategy _sut = null!;
 
     [SetUp]
     public void Setup()
@@ -45,21 +44,20 @@ internal class FidoU2fAttestationStatementStrategyTests
             new AndroidKeyAttestationExtensionParserService(),
             new AppleAnonymousExtensionParserService());
 
-        var signatureAttestationStatementValidator = new SignatureAttestationStatementValidator(
-            new RsaCryptographyValidator(),
-            new Ec2CryptographyValidator());
+        var certificatePublicKeyValidator = new CertificatePublicKeyValidator();
 
-        _sut = new FidoU2fAttestationStatementStrategy(
+        _sut = new AppleAnonymousAttestationStatementStrategy(
             certificateAttestationStatementService,
             certificateAttestationStatementValidator,
-            signatureAttestationStatementValidator);
+            certificatePublicKeyValidator);
     }
 
+    [Ignore("Apple Anonymous attestation to be generated")]
     [Test]
-    public void Validate_WhenFidoU2fAttestationWithEs256Algorithm_ShouldReturnAttestationAttestationType()
+    public void Validate_WhenAppleAnonymousAttestationWithEs256Algorithm_ShouldReturnAnonymizationCaAttestationType()
     {
         // Arrange
-        var fileName = "FidoU2fAttestationWithEs256Algorithm.json";
+        var fileName = "AppleAnonymousAttestationWithEs256Algorithm.json";
         var attestationData = AttestationDataReader.Read(fileName);
         var clientData = ClientDataBuilder.Build(attestationData!.ClientDataJson);
 
@@ -72,7 +70,7 @@ internal class FidoU2fAttestationStatementStrategyTests
         // Assert
         var attestationStatementInternalResult = result as AttestationStatementInternalResult;
         Assert.That(attestationStatementInternalResult, Is.Not.Null);
-        Assert.That(attestationStatementInternalResult!.AttestationType, Is.EqualTo(AttestationTypeEnum.AttCA));
+        Assert.That(attestationStatementInternalResult!.AttestationType, Is.EqualTo(AttestationTypeEnum.AnonCA));
     }
 
     [Test]

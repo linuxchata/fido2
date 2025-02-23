@@ -38,11 +38,15 @@ internal class AndroidSafetyNetAttestationStatementStrategyTests
             _provider, _attestationObjectValidatorMock.Object);
 
         var jwsResponseParserService = new AndroidSafetyNetJwsResponseParserService();
+
         var jwsResponseValidator = new AndroidSafetyNetJwsResponseValidator();
+
         var certificateAttestationStatementProvider = new CertificateAttestationStatementService();
+
         var certificateAttestationStatementValidator = new CertificateAttestationStatementValidator(
             new SubjectAlternativeNameParserService(),
-            new AndroidKeyAttestationExtensionParserService());
+            new AndroidKeyAttestationExtensionParserService(),
+            new AppleAnonymousExtensionParserService());
 
         _sut = new AndroidSafetyNetAttestationStatementStrategy(
             jwsResponseParserService,

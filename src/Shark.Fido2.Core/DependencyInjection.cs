@@ -1,4 +1,4 @@
-﻿﻿using Microsoft.Extensions.DependencyInjection;
+﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿﻿using Microsoft.Extensions.DependencyInjection;
 using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Core.Abstractions.Handlers;
 using Shark.Fido2.Core.Abstractions.Services;
@@ -38,6 +38,7 @@ public static class DependencyInjection
         services.AddTransient<IAndroidSafetyNetJwsResponseParserService, AndroidSafetyNetJwsResponseParserService>();
         services.AddTransient<IAndroidSafetyNetJwsResponseValidator, AndroidSafetyNetJwsResponseValidator>();
         services.AddTransient<IAndroidKeyAttestationExtensionParserService, AndroidKeyAttestationExtensionParserService>();
+        services.AddTransient<IAppleAnonymousExtensionParserService, AppleAnonymousExtensionParserService>();
 
         services.AddTransient<ITpmtPublicAreaParserService, TpmtPublicAreaParserService>();
         services.AddTransient<ITpmsAttestationParserService, TpmsAttestationParserService>();
@@ -54,6 +55,8 @@ public static class DependencyInjection
             AttestationStatementFormatIdentifier.None);
         services.AddKeyedTransient<IAttestationStatementStrategy, FidoU2fAttestationStatementStrategy>(
             AttestationStatementFormatIdentifier.FidoU2f);
+        services.AddKeyedTransient<IAttestationStatementStrategy, AppleAnonymousAttestationStatementStrategy>(
+            AttestationStatementFormatIdentifier.Apple);
 
         services.AddTransient<IAttestation, Attestation>();
         services.AddTransient<IAssertion, Assertion>();

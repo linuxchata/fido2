@@ -11,6 +11,8 @@ namespace Shark.Fido2.Core.Services;
 /// </summary>
 internal sealed class AndroidKeyAttestationExtensionParserService : IAndroidKeyAttestationExtensionParserService
 {
+    private const string Prefix = "Android Key attestation statement certificate's";
+
     public AndroidKeyAttestation? Parse(byte[] rawData)
     {
         ArgumentNullException.ThrowIfNull(rawData);
@@ -34,14 +36,12 @@ internal sealed class AndroidKeyAttestationExtensionParserService : IAndroidKeyA
 
             if (sequence.HasData)
             {
-                throw new ArgumentException(
-                    "Android Key attestation statement certificate's extension has extra sequence data");
+                throw new ArgumentException($"{Prefix} extension has extra sequence data");
             }
 
             if (reader.HasData)
             {
-                throw new ArgumentException(
-                    "Android Key attestation statement certificate's extension has extra data");
+                throw new ArgumentException($"{Prefix} extension has extra data");
             }
 
             return new AndroidKeyAttestation
@@ -106,8 +106,7 @@ internal sealed class AndroidKeyAttestationExtensionParserService : IAndroidKeyA
 
         if (authorizationListReader.HasData)
         {
-            throw new ArgumentException(
-                $"Android Key attestation {authListType} authorization list has extra data");
+            throw new ArgumentException($"{Prefix} {authListType} authorization list has extra data");
         }
 
         return new AndroidKeyAuthorizationList

@@ -46,7 +46,8 @@ internal class AndroidKeyAttestationStatementStrategyTests
 
         var certificateAttestationStatementValidator = new CertificateAttestationStatementValidator(
             new SubjectAlternativeNameParserService(),
-            new AndroidKeyAttestationExtensionParserService());
+            new AndroidKeyAttestationExtensionParserService(),
+            new AppleAnonymousExtensionParserService());
 
         var certificatePublicKeyValidator = new CertificatePublicKeyValidator();
 
@@ -57,7 +58,7 @@ internal class AndroidKeyAttestationStatementStrategyTests
             certificatePublicKeyValidator);
     }
 
-    [Ignore("Android Key to be generated")]
+    [Ignore("Android Key attestation to be generated")]
     [Test]
     public void Validate_WhenAndroidKeyAttestationWithEs256Algorithm_ShouldValidate()
     {

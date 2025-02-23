@@ -40,14 +40,19 @@ internal class TpmAttestationStatementStrategyTests
             _attestationObjectValidatorMock.Object);
 
         var tpmtPublicAreaParserService = new TpmtPublicAreaParserService();
+
         var tpmsAttestationParserService = new TpmsAttestationParserService();
+
         var certificateAttestationStatementProvider = new CertificateAttestationStatementService();
+
         var signatureAttestationStatementValidator = new SignatureAttestationStatementValidator(
             new RsaCryptographyValidator(),
             new Ec2CryptographyValidator());
+
         var certificateAttestationStatementValidator = new CertificateAttestationStatementValidator(
             new SubjectAlternativeNameParserService(),
-            new AndroidKeyAttestationExtensionParserService());
+            new AndroidKeyAttestationExtensionParserService(),
+            new AppleAnonymousExtensionParserService());
 
         _sut = new TpmAttestationStatementStrategy(
             tpmtPublicAreaParserService,
