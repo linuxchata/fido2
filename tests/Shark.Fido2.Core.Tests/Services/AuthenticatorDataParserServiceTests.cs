@@ -1,9 +1,9 @@
 ﻿using Shark.Fido2.Core.Services;
 
-namespace Shark.Fido2.Core.Tests.Helpers;
+namespace Shark.Fido2.Core.Tests.Services;
 
 [TestFixture]
-internal class AuthenticatorDataProviderTests
+internal class AuthenticatorDataParserServiceTests
 {
     private AuthenticatorDataParserService _sut = null!;
 
