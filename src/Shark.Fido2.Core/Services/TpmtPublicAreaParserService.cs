@@ -5,7 +5,7 @@ using Shark.Fido2.Domain.Tpm;
 
 namespace Shark.Fido2.Core.Services;
 
-public sealed class TpmtPublicAreaParserService : ITpmtPublicAreaParserService
+internal sealed class TpmtPublicAreaParserService : ITpmtPublicAreaParserService
 {
     public bool Parse(byte[] pubArea, out TpmtPublic tpmtPublic)
     {

@@ -11,10 +11,11 @@ internal sealed class CertificatePublicKeyValidator : ICertificatePublicKeyValid
 {
     private const string CertificatePublicKeyIsNotValid = "Certificate public key is not valid";
 
-    public ValidatorInternalResult Validate(
-        X509Certificate2 attestationCertificate,
-        CredentialPublicKey credentialPublicKey)
+    public ValidatorInternalResult Validate(X509Certificate2 attestationCertificate, CredentialPublicKey credentialPublicKey)
     {
+        ArgumentNullException.ThrowIfNull(attestationCertificate);
+        ArgumentNullException.ThrowIfNull(credentialPublicKey);
+
         bool isValid;
         if (credentialPublicKey.KeyType == (int)KeyTypeEnum.Rsa)
         {

@@ -4,7 +4,7 @@ using Shark.Fido2.Domain.Tpm;
 
 namespace Shark.Fido2.Core.Services;
 
-public sealed class TpmsAttestationParserService : ITpmsAttestationParserService
+internal sealed class TpmsAttestationParserService : ITpmsAttestationParserService
 {
     public bool Parse(byte[] certInfo, out TpmsAttestation tpmsAttestation)
     {
