@@ -92,10 +92,13 @@ public sealed class Attestation : IAttestation
             throw new ArgumentNullException(nameof(creationOptions));
         }
 
+        // Step 3
+        // Let response be credential.response. If response is not an instance of AuthenticatorAttestationResponse,
+        // abort the ceremony with a user-visible error.
         var response = publicKeyCredential.Response;
         if (response == null)
         {
-            return AttestationCompleteResult.CreateFailure("Response cannot be null");
+            return AttestationCompleteResult.CreateFailure("Authenticator attestation response cannot be null");
         }
 
         // Steps 5 to 12
