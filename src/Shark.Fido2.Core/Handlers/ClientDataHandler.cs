@@ -37,11 +37,15 @@ internal class ClientDataHandler : IClientDataHandler
 
     private ClientData GetClientData(string clientDataJson)
     {
-        // 7.1. #5 Let JSONtext be the result of running UTF-8 decode on the value of response.clientDataJSON.
+        // 7.1. Registering a New Credential (Steps 5 to 6 and 10)
+
+        // Step 5
+        // Let JSONtext be the result of running UTF-8 decode on the value of response.clientDataJSON.
         var clientDataJsonArray = Convert.FromBase64String(clientDataJson);
         var decodedClientDataJson = Encoding.UTF8.GetString(clientDataJsonArray);
 
-        // 7.1. #6 Let C, the client data claimed as collected during the credential creation,
+        // Step 6
+        // Let C, the client data claimed as collected during the credential creation,
         // be the result of running an implementation-specific JSON parser on JSONtext.
         var clientData = JsonSerializer.Deserialize<ClientData>(decodedClientDataJson);
 
@@ -50,7 +54,8 @@ internal class ClientDataHandler : IClientDataHandler
             throw new ArgumentException("Client data cannot be read", nameof(clientData));
         }
 
-        // 7.1. #11 Let hash be the result of computing a hash over response.clientDataJSON using SHA-256.
+        // Step 11
+        // Let hash be the result of computing a hash over response.clientDataJSON using SHA-256.
         clientData.ClientDataHash = HashProvider.GetSha256Hash(clientDataJsonArray);
 
         return clientData;

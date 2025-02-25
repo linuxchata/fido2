@@ -45,30 +45,34 @@ internal class AttestationObjectValidator : IAttestationObjectValidator
             return ValidatorInternalResult.Invalid("Authenticator Data cannot be null");
         }
 
-        // 7.1. Registering a New Credential (#13 - #18)
+        // 7.1. Registering a New Credential (Steps 13 to 21)
 
-        // #13 Verify that the rpIdHash in authData is the SHA-256 hash of the RP ID expected by the Relying Party.
+        // Step 13
+        // Verify that the rpIdHash in authData is the SHA-256 hash of the RP ID expected by the Relying Party.
         var rpIdHash = HashProvider.GetSha256Hash(_configuration.RelyingPartyId);
         if (!BytesArrayComparer.CompareAsSpan(rpIdHash, authenticatorData.RpIdHash))
         {
-            return ValidatorInternalResult.Invalid("RP ID mismatch");
+            return ValidatorInternalResult.Invalid("RP ID hash mismatch");
         }
 
-        // #14 Verify that the User Present bit of the flags in authData is set.
+        // Step 14
+        // Verify that the User Present bit of the flags in authData is set.
         if (!authenticatorData.UserPresent)
         {
             return ValidatorInternalResult.Invalid("User Present bit is not set");
         }
 
-        // #15 If user verification is required for this registration, verify that the User Verified bit of the flags
+        // Step 15
+        // If user verification is required for this registration, verify that the User Verified bit of the flags
         // in authData is set.
         if (creationOptions.AuthenticatorSelection.UserVerification == UserVerificationRequirement.Required &&
             !authenticatorData.UserVerified)
         {
-            return ValidatorInternalResult.Invalid("User Verified bit is not set");
+            return ValidatorInternalResult.Invalid("User Verified bit is not set as user verification is required");
         }
 
-        // #16 Verify that the "alg" parameter in the credential public key in authData matches the alg attribute of
+        // Step 16
+        // Verify that the "alg" parameter in the credential public key in authData matches the alg attribute of
         // one of the items in options.pubKeyCredParams.
         var algorithm = authenticatorData.AttestedCredentialData.CredentialPublicKey.Algorithm;
         if (!creationOptions.PublicKeyCredentialParams.Any(p => (int)p.Algorithm == algorithm))
@@ -76,11 +80,13 @@ internal class AttestationObjectValidator : IAttestationObjectValidator
             return ValidatorInternalResult.Invalid("Credential public key algorithm mismatch");
         }
 
-        // #17 Verify that the values of the client extension outputs in clientExtensionResults and the authenticator
+        // Step 17
+        // Verify that the values of the client extension outputs in clientExtensionResults and the authenticator
         // extension outputs in the extensions in authData are as expected
         // TODO: Implement
 
-        // #18 Determine the attestation statement format by performing a USASCII case-sensitive match on fmt against
+        // Step 18
+        // Determine the attestation statement format by performing a USASCII case-sensitive match on fmt against
         // the set of supported WebAuthn Attestation Statement Format Identifier values.
         var attestationStatementFormat = attestationObjectData.AttestationStatementFormat;
         if (attestationStatementFormat == null)
@@ -94,9 +100,31 @@ internal class AttestationObjectValidator : IAttestationObjectValidator
                 $"Attestation statement format [{attestationStatementFormat}] is not supported");
         }
 
-        // #19 Verify that attStmt is a correct attestation statement, conveying a valid attestation signature, by
-        // using the attestation statement format fmt’s verification procedure given attStmt, authData and hash.
-        _attestationStatementValidator.Validate(attestationObjectData, clientData);
+        // Step 19
+        // Verify that attStmt is a correct attestation statement, conveying a valid attestation signature, by
+        // using the attestation statement format fmt's verification procedure given attStmt, authData and hash.
+        var result = _attestationStatementValidator.Validate(attestationObjectData, clientData);
+        if (!result.IsValid)
+        {
+            return result;
+        }
+
+        // Step 20
+        // If validation is successful, obtain a list of acceptable trust anchors (i.e. attestation root certificates)
+        // for that attestation type and attestation statement format fmt, from a trusted source or from policy.
+        // For example, the FIDO Metadata Service [FIDOMetadataService] provides one way to obtain such information,
+        // using the aaguid in the attestedCredentialData in authData.
+        // TODO: Implement
+
+        // Step 21
+        // Assess the attestation trustworthiness using the outputs of the verification procedure in step 19,
+        // as follows:
+        // If no attestation was provided, verify that None attestation is acceptable under Relying Party policy.
+        // If self attestation was used, verify that self attestation is acceptable under Relying Party policy.
+        // Otherwise, use the X.509 certificates returned as the attestation trust path from the verification
+        // procedure to verify that the attestation public key either correctly chains up to an acceptable root
+        // certificate, or is itself an acceptable certificate (i.e., it and the root certificate obtained in
+        // Step 20 may be the same).
 
         return ValidatorInternalResult.Valid();
     }
