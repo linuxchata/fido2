@@ -80,6 +80,8 @@ public sealed class Attestation : IAttestation
         PublicKeyCredentialAttestation publicKeyCredential,
         PublicKeyCredentialCreationOptions? creationOptions)
     {
+        // 7.1. Registering a New Credential
+
         if (publicKeyCredential == null)
         {
             throw new ArgumentNullException(nameof(publicKeyCredential));
@@ -96,6 +98,7 @@ public sealed class Attestation : IAttestation
             return AttestationCompleteResult.CreateFailure("Response cannot be null");
         }
 
+        // Steps 5 to 12
         var challengeString = Convert.ToBase64String(creationOptions.Challenge);
         var clientDataHandlerResult = _clientDataHandler.Handle(response.ClientDataJson, challengeString);
         if (clientDataHandlerResult.HasError)
@@ -103,6 +106,7 @@ public sealed class Attestation : IAttestation
             return AttestationCompleteResult.CreateFailure(clientDataHandlerResult.Message!);
         }
 
+        // Steps 13 to 21
         var attestationObjectHandlerResult = _attestationObjectHandler.Handle(
             response.AttestationObject,
             clientDataHandlerResult.Value!,
@@ -112,6 +116,10 @@ public sealed class Attestation : IAttestation
             return AttestationCompleteResult.CreateFailure(attestationObjectHandlerResult.Message!);
         }
 
+        // Step 22
+        // Check that the credentialId is not yet registered to any other user. If registration is requested for a
+        // credential that is already registered to a different user, the Relying Party SHOULD fail this registration
+        // ceremony, or it MAY decide to accept the registration, e.g. while deleting the older registration.
         var attestedCredentialData = attestationObjectHandlerResult.Value!.AuthenticatorData!.AttestedCredentialData;
         var credentialId = attestedCredentialData!.CredentialId;
         var credential = await _credentialRepository.Get(credentialId);
@@ -120,6 +128,13 @@ public sealed class Attestation : IAttestation
             return AttestationCompleteResult.CreateFailure("Credential has already been registered");
         }
 
+        // Step 23
+        // If the attestation statement attStmt verified successfully and is found to be trustworthy, then register
+        // the new credential with the account that was denoted in options.user:
+        // - Associate the user’s account with the credentialId and credentialPublicKey in
+        // authData.attestedCredentialData, as appropriate for the Relying Party's system.
+        // - Associate the credentialId with a new stored signature counter value initialized to the value of
+        // authData.signCount.
         credential = new Credential
         {
             CredentialId = credentialId!,

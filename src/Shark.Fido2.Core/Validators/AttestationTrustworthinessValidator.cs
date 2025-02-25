@@ -30,7 +30,7 @@ internal class AttestationTrustworthinessValidator : IAttestationTrustworthiness
                 : ValidatorInternalResult.Invalid("None attestation type is not allowed under current policy");
         }
 
-        // If self attestation was used, verify that self attestation is acceptable under Relying Party policy.
+        // If self attestation was used, verify that Self attestation is acceptable under Relying Party policy.
         if (attestationStatementResult.AttestationType == AttestationTypeEnum.Self)
         {
             return _configuration.AllowSelfAttestation
@@ -43,7 +43,8 @@ internal class AttestationTrustworthinessValidator : IAttestationTrustworthiness
         // certificate, or is itself an acceptable certificate.
         if (attestationStatementResult.TrustPath == null || !attestationStatementResult.TrustPath.Any())
         {
-            return ValidatorInternalResult.Invalid("Trust path is required for non-self attestation type");
+            return ValidatorInternalResult.Invalid(
+                $"Trust path is required for {attestationStatementResult.AttestationType} attestation type");
         }
 
         // TODO: Implement trust path verification against acceptable root certificates

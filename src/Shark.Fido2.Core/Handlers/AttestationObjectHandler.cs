@@ -49,6 +49,10 @@ internal class AttestationObjectHandler : IAttestationObjectHandler
 
     private AttestationObjectData GetAttestationObjectData(string attestationObject)
     {
+        // Step 12
+        // Perform CBOR decoding on the attestationObject field of the AuthenticatorAttestationResponse structure
+        // to obtain the attestation statement format fmt, the authenticator data authData, and the attestation
+        // statement attStmt.
         var decodedAttestationObject = CborConverter.Decode(attestationObject);
 
         var authenticatorDataArray = decodedAttestationObject[AttestationObjectKey.AuthData] as byte[];

@@ -13,12 +13,12 @@ public sealed class Fido2Configuration
     public ulong? Timeout { get; set; }
 
     /// <summary>
-    /// Gets or sets whether None attestation is acceptable under Relying Party policy
+    /// Gets or sets whether None attestation type is acceptable under Relying Party policy
     /// </summary>
     public bool AllowNoneAttestation { get; set; } = true;
 
     /// <summary>
-    /// Gets or sets whether Self attestation is acceptable under Relying Party policy
+    /// Gets or sets whether Self attestation type is acceptable under Relying Party policy
     /// </summary>
     public bool AllowSelfAttestation { get; set; } = true;
 }
