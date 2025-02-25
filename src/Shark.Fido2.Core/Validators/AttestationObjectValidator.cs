@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Options;
+﻿﻿using Microsoft.Extensions.Options;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Comparers;
@@ -14,13 +14,16 @@ namespace Shark.Fido2.Core.Validators;
 internal class AttestationObjectValidator : IAttestationObjectValidator
 {
     private readonly IAttestationStatementValidator _attestationStatementValidator;
+    private readonly IAttestationTrustworthinessValidator _attestationTrustworthinessValidator;
     private readonly Fido2Configuration _configuration;
 
     public AttestationObjectValidator(
         IAttestationStatementValidator attestationStatementValidator,
+        IAttestationTrustworthinessValidator attestationTrustworthinessValidator,
         IOptions<Fido2Configuration> options)
     {
         _attestationStatementValidator = attestationStatementValidator;
+        _attestationTrustworthinessValidator = attestationTrustworthinessValidator;
         _configuration = options.Value;
     }
 
@@ -104,7 +107,7 @@ internal class AttestationObjectValidator : IAttestationObjectValidator
         // Verify that attStmt is a correct attestation statement, conveying a valid attestation signature, by
         // using the attestation statement format fmt's verification procedure given attStmt, authData and hash.
         var result = _attestationStatementValidator.Validate(attestationObjectData, clientData);
-        if (!result.IsValid)
+        if (!result.IsValid || result is not AttestationStatementInternalResult)
         {
             return result;
         }
@@ -117,14 +120,13 @@ internal class AttestationObjectValidator : IAttestationObjectValidator
         // TODO: Implement
 
         // Step 21
-        // Assess the attestation trustworthiness using the outputs of the verification procedure in step 19,
-        // as follows:
-        // If no attestation was provided, verify that None attestation is acceptable under Relying Party policy.
-        // If self attestation was used, verify that self attestation is acceptable under Relying Party policy.
-        // Otherwise, use the X.509 certificates returned as the attestation trust path from the verification
-        // procedure to verify that the attestation public key either correctly chains up to an acceptable root
-        // certificate, or is itself an acceptable certificate (i.e., it and the root certificate obtained in
-        // Step 20 may be the same).
+        // Assess the attestation trustworthiness using the outputs of the verification procedure in step 19
+        var attestationStatementResult = (AttestationStatementInternalResult)result;
+        var trustworthinessResult = _attestationTrustworthinessValidator.Validate(attestationStatementResult);
+        if (!trustworthinessResult.IsValid)
+        {
+            return trustworthinessResult;
+        }
 
         return ValidatorInternalResult.Valid();
     }

@@ -17,10 +17,10 @@ public class AttestationStatementInternalResult : ValidatorInternalResult
         : base(true)
     {
         AttestationType = attestationType;
-        TrustedPath = trustedPath;
+        TrustPath = trustedPath;
     }
 
     public AttestationTypeEnum AttestationType { get; set; }
 
-    public X509Certificate2[]? TrustedPath { get; set; }
+    public X509Certificate2[]? TrustPath { get; set; }
 }
