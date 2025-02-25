@@ -1,4 +1,4 @@
-﻿namespace Shark.Fido2.Core.Configurations;
+﻿﻿namespace Shark.Fido2.Core.Configurations;
 
 public sealed class Fido2Configuration
 {
@@ -11,4 +11,14 @@ public sealed class Fido2Configuration
     public string RelyingPartyIdName { get; set; } = null!;
 
     public ulong? Timeout { get; set; }
+
+    /// <summary>
+    /// Gets or sets whether None attestation is acceptable under Relying Party policy
+    /// </summary>
+    public bool AllowNoneAttestation { get; set; } = true;
+
+    /// <summary>
+    /// Gets or sets whether Self attestation is acceptable under Relying Party policy
+    /// </summary>
+    public bool AllowSelfAttestation { get; set; } = true;
 }

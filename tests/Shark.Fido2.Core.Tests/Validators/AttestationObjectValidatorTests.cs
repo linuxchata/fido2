@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using Moq;
+using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Configurations;
 using Shark.Fido2.Core.Constants;
@@ -24,6 +25,11 @@ internal class AttestationObjectValidatorTests
             .Setup(a => a.Validate(It.IsAny<AttestationObjectData>(), It.IsAny<ClientData>()))
             .Returns(ValidatorInternalResult.Valid());
 
+        var attestationTrustworthinessValidatorMock = new Mock<IAttestationTrustworthinessValidator>();
+        attestationTrustworthinessValidatorMock
+            .Setup(a => a.Validate(It.IsAny<AttestationStatementInternalResult>()))
+            .Returns(ValidatorInternalResult.Valid());
+
         var fido2ConfigurationMock = new Fido2Configuration
         {
             Origin = "localhost",
@@ -32,6 +38,7 @@ internal class AttestationObjectValidatorTests
 
         _sut = new AttestationObjectValidator(
             attestationStatementValidatorMock.Object,
+            attestationTrustworthinessValidatorMock.Object,
             Options.Create(fido2ConfigurationMock));
     }
 
