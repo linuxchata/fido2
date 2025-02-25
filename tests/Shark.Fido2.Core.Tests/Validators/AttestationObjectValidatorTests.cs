@@ -3,6 +3,7 @@ using Moq;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Configurations;
 using Shark.Fido2.Core.Constants;
+using Shark.Fido2.Core.Results;
 using Shark.Fido2.Core.Services;
 using Shark.Fido2.Core.Validators;
 using Shark.Fido2.Domain;
@@ -19,6 +20,9 @@ internal class AttestationObjectValidatorTests
     public void Setup()
     {
         var attestationStatementValidatorMock = new Mock<IAttestationStatementValidator>();
+        attestationStatementValidatorMock
+            .Setup(a => a.Validate(It.IsAny<AttestationObjectData>(), It.IsAny<ClientData>()))
+            .Returns(ValidatorInternalResult.Valid());
 
         var fido2ConfigurationMock = new Fido2Configuration
         {
