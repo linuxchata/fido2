@@ -26,4 +26,18 @@ public static class BytesArrayHelper
 
         return concatenatedData;
     }
+
+    public static (byte[], byte[]) Split(byte[]? array)
+    {
+        if (array == null || array.Length == 0 || array.Length % 2 != 0)
+        {
+            return ([], []);
+        }
+
+        var mid = array.Length / 2;
+        var left = array.AsSpan(0, mid);
+        var right = array.AsSpan(mid);
+
+        return (left.ToArray(), right.ToArray());
+    }
 }
