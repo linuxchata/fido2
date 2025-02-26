@@ -1,3 +1,4 @@
+using System.Security.Cryptography.X509Certificates;
 using Microsoft.Extensions.Options;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Configurations;
@@ -47,7 +48,41 @@ internal class AttestationTrustworthinessValidator : IAttestationTrustworthiness
                 $"Trust path is required for {attestationStatementResult.AttestationType} attestation type");
         }
 
-        // TODO: Implement trust path verification against acceptable root certificates
+        var result = ValidateTrustPath(attestationStatementResult.TrustPath);
+
+        return result;
+    }
+
+    private ValidatorInternalResult ValidateTrustPath(X509Certificate2[] certificates)
+    {
+        using var chain = new X509Chain();
+        chain.ChainPolicy.RevocationMode = X509RevocationMode.NoCheck;
+        chain.ChainPolicy.VerificationFlags = X509VerificationFlags.AllowUnknownCertificateAuthority;
+        chain.ChainPolicy.VerificationTime = DateTime.Now;
+
+        var leafCertificate = certificates.First();
+
+        foreach (var certificate in certificates.Skip(1))
+        {
+            if (certificate.Subject == certificate.Issuer)
+            {
+                // Root certificate
+                chain.ChainPolicy.VerificationFlags = X509VerificationFlags.AllFlags;
+                chain.ChainPolicy.TrustMode = X509ChainTrustMode.CustomRootTrust;
+                chain.ChainPolicy.CustomTrustStore.Add(certificate);
+            }
+            else
+            {
+                // Intermediate certificate
+                chain.ChainPolicy.ExtraStore.Add(certificate);
+            }
+        }
+
+        var isValid = chain.Build(leafCertificate);
+        if (!isValid)
+        {
+            return ValidatorInternalResult.Invalid(string.Join('.', chain.ChainStatus));
+        }
 
         return ValidatorInternalResult.Valid();
     }

@@ -6,10 +6,24 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Data\Certificates\Packed.pem" />
+    <None Remove="Data\Certificates\tpm.pem" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="Data\AndroidKeyAttestationWithEs256Algorithm.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Data\AppleAnonymousAttestationWithEs256Algorithm.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Certificates\Packed.pem">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Certificates\FidoU2f.pem">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Certificates\Tpm.pem">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Data\FidoU2fAttestationWithEs256Algorithm.json">

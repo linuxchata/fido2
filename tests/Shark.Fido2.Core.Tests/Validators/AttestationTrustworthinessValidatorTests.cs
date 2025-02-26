@@ -88,9 +88,7 @@ public class AttestationTrustworthinessValidatorTests
     public void Validate_WhenBasicAttestationWithEmptyTrustPath_ThenReturnsInvalid()
     {
         // Arrange
-        var attestationResult = new AttestationStatementInternalResult(
-            AttestationTypeEnum.Basic,
-            Array.Empty<X509Certificate2>());
+        var attestationResult = new AttestationStatementInternalResult(AttestationTypeEnum.Basic, []);
 
         // Act
         var result = _sut.Validate(attestationResult);
@@ -101,12 +99,45 @@ public class AttestationTrustworthinessValidatorTests
     }
 
     [Test]
-    public void Validate_WhenBasicAttestationWithTrustPath_ThenReturnsValid()
+    public void Validate_WhenAttCaAttestationWithTrustPathWithTpmCertificates_ThenReturnsValid()
     {
         // Arrange
-        var attestationResult = new AttestationStatementInternalResult(
-            AttestationTypeEnum.Basic,
-            new[] { (X509Certificate2)null! });
+        var fileName = "Tpm.pem";
+        var certificateData = CertificateDataReader.Read(fileName);
+
+        var attestationResult = new AttestationStatementInternalResult(AttestationTypeEnum.AttCA, certificateData);
+
+        // Act
+        var result = _sut.Validate(attestationResult);
+
+        // Assert
+        Assert.That(result.IsValid, Is.True);
+    }
+
+    [Test]
+    public void Validate_WhenAttCaAttestationWithTrustPathWithPackedCertificates_ThenReturnsValid()
+    {
+        // Arrange
+        var fileName = "Packed.pem";
+        var certificateData = CertificateDataReader.Read(fileName);
+
+        var attestationResult = new AttestationStatementInternalResult(AttestationTypeEnum.AttCA, certificateData);
+
+        // Act
+        var result = _sut.Validate(attestationResult);
+
+        // Assert
+        Assert.That(result.IsValid, Is.True);
+    }
+
+    [Test]
+    public void Validate_WhenAttCaAttestationWithTrustPathWitFidoU2fCertificates_ThenReturnsValid()
+    {
+        // Arrange
+        var fileName = "FidoU2f.pem";
+        var certificateData = CertificateDataReader.Read(fileName);
+
+        var attestationResult = new AttestationStatementInternalResult(AttestationTypeEnum.AttCA, certificateData);
 
         // Act
         var result = _sut.Validate(attestationResult);
