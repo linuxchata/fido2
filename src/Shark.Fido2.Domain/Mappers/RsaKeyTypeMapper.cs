@@ -48,6 +48,6 @@ public static class RsaKeyTypeMapper
             };
         }
 
-        throw new NotSupportedException();
+        throw new NotSupportedException($"{publicKeyAlgorithm} algorithm is not supported");
     }
 }

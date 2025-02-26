@@ -32,6 +32,6 @@ public static class Ec2KeyTypeMapper
             };
         }
 
-        throw new NotSupportedException();
+        throw new NotSupportedException($"{publicKeyAlgorithm} algorithm is not supported");
     }
 }

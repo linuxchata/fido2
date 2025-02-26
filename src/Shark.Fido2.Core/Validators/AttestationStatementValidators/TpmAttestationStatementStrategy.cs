@@ -74,16 +74,30 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
         // Verify that the public key specified by the parameters and unique fields of pubArea is identical
         // to the credentialPublicKey in the attestedCredentialData in authenticatorData.
         var credentialPublicKey = attestationObjectData.AuthenticatorData!.AttestedCredentialData.CredentialPublicKey;
-        if (!BytesArrayComparer.CompareNullable(credentialPublicKey.Modulus, tpmtPublic.Unique))
+        if (tpmtPublic.EccParameters != null)
         {
-            return ValidatorInternalResult.Invalid("TPM attestation statement public key mismatch (modulus)");
+            (var xCoordinate, var yCoordinate) = BytesArrayHelper.Split(tpmtPublic.Unique);
+
+            if (!BytesArrayComparer.CompareNullable(credentialPublicKey.XCoordinate, xCoordinate))
+            {
+                return ValidatorInternalResult.Invalid("TPM attestation statement public key mismatch (X coordinate)");
+            }
+            if (!BytesArrayComparer.CompareNullable(credentialPublicKey.YCoordinate, yCoordinate))
+            {
+                return ValidatorInternalResult.Invalid("TPM attestation statement public key mismatch (Y coordinate)");
+            }
         }
-
-        // TODO: How to validate EccParameters?
-
-        if (GetExponentAsUInt32LittleEndian(credentialPublicKey.Exponent!) != tpmtPublic.RsaParameters!.Exponent)
+        else if (tpmtPublic.RsaParameters != null)
         {
-            return ValidatorInternalResult.Invalid("TPM attestation statement public key mismatch (exponent)");
+            if (!BytesArrayComparer.CompareNullable(credentialPublicKey.Modulus, tpmtPublic.Unique))
+            {
+                return ValidatorInternalResult.Invalid("TPM attestation statement public key mismatch (modulus)");
+            }
+
+            if (GetExponentAsUInt32LittleEndian(credentialPublicKey.Exponent!) != tpmtPublic.RsaParameters!.Exponent)
+            {
+                return ValidatorInternalResult.Invalid("TPM attestation statement public key mismatch (exponent)");
+            }
         }
 
         // Validate that certInfo is valid
