@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Microsoft.Extensions.Options;
+using Shark.Fido2.Common.Extensions;
 using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Core.Abstractions.Handlers;
 using Shark.Fido2.Core.Abstractions.Repositories;
@@ -36,10 +37,7 @@ public sealed class Attestation : IAttestation
 
     public PublicKeyCredentialCreationOptions GetOptions(PublicKeyCredentialCreationOptionsRequest request)
     {
-        if (request == null)
-        {
-            throw new ArgumentNullException(nameof(request));
-        }
+        ArgumentNullException.ThrowIfNull(request);
 
         var credentialCreationOptions = new PublicKeyCredentialCreationOptions
         {
@@ -78,19 +76,12 @@ public sealed class Attestation : IAttestation
 
     public async Task<AttestationCompleteResult> Complete(
         PublicKeyCredentialAttestation publicKeyCredential,
-        PublicKeyCredentialCreationOptions? creationOptions)
+        PublicKeyCredentialCreationOptions creationOptions)
     {
+        ArgumentNullException.ThrowIfNull(publicKeyCredential);
+        ArgumentNullException.ThrowIfNull(creationOptions);
+
         // 7.1. Registering a New Credential
-
-        if (publicKeyCredential == null)
-        {
-            throw new ArgumentNullException(nameof(publicKeyCredential));
-        }
-
-        if (creationOptions == null)
-        {
-            throw new ArgumentNullException(nameof(creationOptions));
-        }
 
         // Step 3
         // Let response be credential.response. If response is not an instance of AuthenticatorAttestationResponse,
@@ -116,6 +107,9 @@ public sealed class Attestation : IAttestation
             creationOptions);
         if (attestationObjectHandlerResult.HasError)
         {
+            // Step 24
+            // If the attestation statement attStmt successfully verified but is not trustworthy per step 21 above,
+            // the Relying Party SHOULD fail the registration ceremony.
             return AttestationCompleteResult.CreateFailure(attestationObjectHandlerResult.Message!);
         }
 
@@ -134,15 +128,20 @@ public sealed class Attestation : IAttestation
         // Step 23
         // If the attestation statement attStmt verified successfully and is found to be trustworthy, then register
         // the new credential with the account that was denoted in options.user:
-        // - Associate the user’s account with the credentialId and credentialPublicKey in
+        // - Associate the user's account with the credentialId and credentialPublicKey in
         // authData.attestedCredentialData, as appropriate for the Relying Party's system.
         // - Associate the credentialId with a new stored signature counter value initialized to the value of
         // authData.signCount.
+        // Associate the credentialId with the transport hints returned by calling credential.response.getTransports().
+        // This value SHOULD NOT be modified before or after storing it. It is RECOMMENDED to use this value to
+        // populate the transports of the allowCredentials option in future get() calls to help the client know how
+        // to find a suitable authenticator.
         credential = new Credential
         {
             CredentialId = credentialId!,
             CredentialPublicKey = attestedCredentialData.CredentialPublicKey,
             SignCount = attestationObjectHandlerResult.Value.AuthenticatorData!.SignCount,
+            Transports = publicKeyCredential.Response.Transports?.Select(t => t.GetValue()).ToArray() ?? [],
         };
 
         await _credentialRepository.Add(credential);

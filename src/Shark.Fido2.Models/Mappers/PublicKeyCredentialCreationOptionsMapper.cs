@@ -1,5 +1,5 @@
-﻿using Shark.Fido2.Domain;
-using Shark.Fido2.Models.Extensions;
+﻿using Shark.Fido2.Common.Extensions;
+using Shark.Fido2.Domain;
 using Shark.Fido2.Models.Responses;
 
 namespace Shark.Fido2.Models.Mappers;
@@ -68,14 +68,14 @@ public static class PublicKeyCredentialCreationOptionsMapper
         }).ToArray() ?? [];
     }
 
-    private static Responses.ServerAuthenticatorSelectionCriteria Map(Domain.AuthenticatorSelectionCriteria authenticatorSelection)
+    private static ServerAuthenticatorSelectionCriteria Map(AuthenticatorSelectionCriteria authenticatorSelection)
     {
         if (authenticatorSelection == null)
         {
-            return new Responses.ServerAuthenticatorSelectionCriteria();
+            return new ServerAuthenticatorSelectionCriteria();
         }
 
-        return new Responses.ServerAuthenticatorSelectionCriteria
+        return new ServerAuthenticatorSelectionCriteria
         {
             AuthenticatorAttachment = authenticatorSelection.AuthenticatorAttachment.GetValue(),
             ResidentKey = authenticatorSelection.ResidentKey.GetValue(),

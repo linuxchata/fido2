@@ -7,15 +7,8 @@ public static class PublicKeyCredentialAssertionMapper
 {
     public static PublicKeyCredentialAssertion Map(this ServerPublicKeyCredentialAssertion assertion)
     {
-        if (assertion == null)
-        {
-            throw new ArgumentNullException(nameof(assertion));
-        }
-
-        if (assertion.Response == null)
-        {
-            throw new ArgumentNullException(nameof(assertion));
-        }
+        ArgumentNullException.ThrowIfNull(assertion);
+        ArgumentNullException.ThrowIfNull(assertion.Response);
 
         return new PublicKeyCredentialAssertion
         {

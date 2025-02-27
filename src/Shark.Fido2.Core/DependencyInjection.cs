@@ -1,10 +1,9 @@
-﻿﻿﻿﻿﻿﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Core.Abstractions.Handlers;
 using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
-using Shark.Fido2.Core.Results;
 using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Handlers;
 using Shark.Fido2.Core.Helpers;
@@ -33,9 +32,32 @@ public static class DependencyInjection
         services.AddKeyedTransient<ICryptographyValidator, Ec2CryptographyValidator>("ec2");
 
         services.AddTransient<ISignatureAttestationStatementValidator, SignatureAttestationStatementValidator>();
+        services.AddTransient<IAttestationCertificateProviderService, AttestationCertificateProviderService>();
+        services.AddTransient<IAttestationCertificateValidator, AttestationCertificateValidator>();
+        services.AddTransient<ICertificatePublicKeyValidator, CertificatePublicKeyValidator>();
+        services.AddTransient<ISubjectAlternativeNameParserService, SubjectAlternativeNameParserService>();
+        services.AddTransient<IAndroidSafetyNetJwsResponseParserService, AndroidSafetyNetJwsResponseParserService>();
+        services.AddTransient<IAndroidSafetyNetJwsResponseValidator, AndroidSafetyNetJwsResponseValidator>();
+        services.AddTransient<IAndroidKeyAttestationExtensionParserService, AndroidKeyAttestationExtensionParserService>();
+        services.AddTransient<IAppleAnonymousExtensionParserService, AppleAnonymousExtensionParserService>();
 
+        services.AddTransient<ITpmtPublicAreaParserService, TpmtPublicAreaParserService>();
+        services.AddTransient<ITpmsAttestationParserService, TpmsAttestationParserService>();
+
+        services.AddKeyedTransient<IAttestationStatementStrategy, PackedAttestationStatementStrategy>(
+            AttestationStatementFormatIdentifier.Packed);
+        services.AddKeyedTransient<IAttestationStatementStrategy, TpmAttestationStatementStrategy>(
+            AttestationStatementFormatIdentifier.Tpm);
+        services.AddKeyedTransient<IAttestationStatementStrategy, AndroidKeyAttestationStatementStrategy>(
+            AttestationStatementFormatIdentifier.AndroidKey);
+        services.AddKeyedTransient<IAttestationStatementStrategy, AndroidSafetyNetAttestationStatementStrategy>(
+            AttestationStatementFormatIdentifier.AndroidSafetyNet);
         services.AddKeyedTransient<IAttestationStatementStrategy, NoneAttestationStatementStrategy>(
             AttestationStatementFormatIdentifier.None);
+        services.AddKeyedTransient<IAttestationStatementStrategy, FidoU2fAttestationStatementStrategy>(
+            AttestationStatementFormatIdentifier.FidoU2f);
+        services.AddKeyedTransient<IAttestationStatementStrategy, AppleAnonymousAttestationStatementStrategy>(
+            AttestationStatementFormatIdentifier.Apple);
 
         services.AddTransient<IAttestation, Attestation>();
         services.AddTransient<IAssertion, Assertion>();

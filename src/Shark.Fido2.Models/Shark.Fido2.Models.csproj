@@ -5,6 +5,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Shark.Fido2.Common\Shark.Fido2.Common.csproj" />
     <ProjectReference Include="..\Shark.Fido2.Domain\Shark.Fido2.Domain.csproj" />
   </ItemGroup>
 

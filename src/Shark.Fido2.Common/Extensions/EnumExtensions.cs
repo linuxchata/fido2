@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using System.Runtime.Serialization;
 
-namespace Shark.Fido2.Models.Extensions;
+namespace Shark.Fido2.Common.Extensions;
 
 public static class EnumExtensions
 {

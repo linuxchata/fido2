@@ -8,5 +8,5 @@ public interface IAttestation
 
     Task<AttestationCompleteResult> Complete(
         PublicKeyCredentialAttestation publicKeyCredential,
-        PublicKeyCredentialCreationOptions? creationOptions);
+        PublicKeyCredentialCreationOptions creationOptions);
 }

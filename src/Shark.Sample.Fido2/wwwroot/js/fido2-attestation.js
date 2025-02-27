@@ -90,8 +90,7 @@ async function credentialCreate(options) {
         response: {
             attestationObject: toBase64(attestation.response.attestationObject),
             clientDataJson: toBase64(attestation.response.clientDataJSON),
-            signature: toBase64(attestation.response.signature),
-            userHandler: toBase64(attestation.response.userHandler),
+            transports: attestation.response.getTransports(),
         },
         type: attestation.type,
     };

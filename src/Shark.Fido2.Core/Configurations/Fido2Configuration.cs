@@ -1,4 +1,4 @@
-﻿﻿namespace Shark.Fido2.Core.Configurations;
+﻿namespace Shark.Fido2.Core.Configurations;
 
 public sealed class Fido2Configuration
 {
