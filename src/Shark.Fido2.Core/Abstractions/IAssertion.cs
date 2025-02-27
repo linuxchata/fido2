@@ -8,5 +8,5 @@ public interface IAssertion
 
     Task<AssertionCompleteResult> Complete(
         PublicKeyCredentialAssertion publicKeyCredential,
-        PublicKeyCredentialRequestOptions? requestOptions);
+        PublicKeyCredentialRequestOptions requestOptions);
 }

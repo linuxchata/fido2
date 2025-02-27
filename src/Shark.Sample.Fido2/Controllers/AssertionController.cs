@@ -61,7 +61,7 @@ public class AssertionController(IAssertion assertion) : ControllerBase
 
         var requestOptions = JsonSerializer.Deserialize<PublicKeyCredentialRequestOptions>(requestOptionsString!);
 
-        await _assertion.Complete(request.Map(), requestOptions);
+        await _assertion.Complete(request.Map(), requestOptions!);
 
         return Ok();
     }

@@ -21,10 +21,7 @@ public sealed class Assertion : IAssertion
 
     public PublicKeyCredentialRequestOptions RequestOptions(PublicKeyCredentialRequestOptionsRequest request)
     {
-        if (request == null)
-        {
-            throw new ArgumentNullException(nameof(request));
-        }
+        ArgumentNullException.ThrowIfNull(request);
 
         return new PublicKeyCredentialRequestOptions
         {
@@ -37,17 +34,10 @@ public sealed class Assertion : IAssertion
 
     public Task<AssertionCompleteResult> Complete(
         PublicKeyCredentialAssertion publicKeyCredential,
-        PublicKeyCredentialRequestOptions? requestOptions)
+        PublicKeyCredentialRequestOptions requestOptions)
     {
-        if (publicKeyCredential == null)
-        {
-            throw new ArgumentNullException(nameof(publicKeyCredential));
-        }
-
-        if (requestOptions == null)
-        {
-            throw new ArgumentNullException(nameof(requestOptions));
-        }
+        ArgumentNullException.ThrowIfNull(publicKeyCredential);
+        ArgumentNullException.ThrowIfNull(requestOptions);
 
         var response = publicKeyCredential.Response;
         if (response == null)

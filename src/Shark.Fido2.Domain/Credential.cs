@@ -2,15 +2,17 @@
 
 public class Credential
 {
-    public byte[] CredentialId { get; set; } = null!;
+    public required byte[] CredentialId { get; set; }
 
     /// <summary>
     /// Credential Public Key
     /// </summary>
-    public CredentialPublicKey CredentialPublicKey { get; set; } = null!;
+    public required CredentialPublicKey CredentialPublicKey { get; set; }
 
     /// <summary>
     /// Signature Counter
     /// </summary>
     public uint SignCount { get; set; }
+
+    public string[]? Transports { get; set; }
 }

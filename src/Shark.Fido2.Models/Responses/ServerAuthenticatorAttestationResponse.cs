@@ -4,18 +4,16 @@ namespace Shark.Fido2.Models.Responses;
 
 /// <summary>
 /// 7.3.3.3. ServerAuthenticatorAttestationResponse
+/// See: https://fidoalliance.org/specs/fido-v2.0-rd-20180702/fido-server-v2.0-rd-20180702.html#serverauthenticatorattestationresponse
 /// </summary>
 public sealed class ServerAuthenticatorAttestationResponse : ServerAuthenticatorResponse
 {
     [JsonPropertyName("clientDataJSON")]
-    public string ClientDataJson { get; set; } = null!;
+    public required string ClientDataJson { get; set; }
 
     [JsonPropertyName("attestationObject")]
-    public string AttestationObject { get; set; } = null!;
+    public required string AttestationObject { get; set; }
 
-    [JsonPropertyName("signature")]
-    public string? Signature { get; set; }
-
-    [JsonPropertyName("userHandler")]
-    public string? UserHandler { get; set; }
+    [JsonPropertyName("transports")]
+    public string[]? Transports { get; set; }
 }

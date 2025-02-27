@@ -1,4 +1,4 @@
-﻿﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Comparers;

@@ -38,9 +38,8 @@ public class PublicKeyCredentialAttestationMapperTests
             {
                 ClientDataJson = "ClientDataJson",
                 AttestationObject = "AttestationObject",
-                Signature = "Signature",
-                UserHandler = "UserHandler",
-            }
+            },
+            Type = "public-key",
         };
 
         // Act
@@ -52,7 +51,6 @@ public class PublicKeyCredentialAttestationMapperTests
         Assert.That(result.RawId, Is.EqualTo(attestation.RawId));
         Assert.That(result.Response.ClientDataJson, Is.EqualTo(attestation.Response.ClientDataJson));
         Assert.That(result.Response.AttestationObject, Is.EqualTo(attestation.Response.AttestationObject));
-        Assert.That(result.Response.Signature, Is.EqualTo(attestation.Response.Signature));
-        Assert.That(result.Response.UserHandler, Is.EqualTo(attestation.Response.UserHandler));
+        Assert.That(result.Type, Is.EqualTo(attestation.Type));
     }
 }
