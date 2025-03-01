@@ -15,13 +15,19 @@ namespace Shark.Fido2.Core.Tests;
 [TestFixture]
 public class AttestationTests
 {
-    private Attestation _sut = null!;
+    private const string UserName = "testuser";
+    private const string DisplayName = "Test User";
+    private const string AttestationId = "AttestationId";
+    private const string AttestationRawId = "AttestationRawId";
+
     private Mock<IClientDataHandler> _clientDataHandlerMock = null!;
     private Mock<IAttestationObjectHandler> _attestationObjectHandlerMock = null!;
     private Mock<IChallengeGenerator> _challengeGeneratorMock = null!;
     private Mock<ICredentialRepository> _credentialRepositoryMock = null!;
     private Fido2Configuration _fido2Configuration = null!;
     private PublicKeyCredentialCreationOptions _publicKeyCredentialCreationOptions = null!;
+
+    private Attestation _sut = null!;
 
     [SetUp]
     public void Setup()
@@ -106,8 +112,8 @@ public class AttestationTests
         // Arrange
         var request = new PublicKeyCredentialCreationOptionsRequest
         {
-            Username = "testuser",
-            DisplayName = "Test User",
+            Username = UserName,
+            DisplayName = DisplayName,
             AuthenticatorSelection = null,
             Attestation = AttestationConveyancePreference.Direct
         };
@@ -129,8 +135,8 @@ public class AttestationTests
         // Arrange
         var request = new PublicKeyCredentialCreationOptionsRequest
         {
-            Username = "testuser",
-            DisplayName = "Test User",
+            Username = UserName,
+            DisplayName = DisplayName,
             AuthenticatorSelection = null,
             Attestation = null
         };
@@ -149,8 +155,8 @@ public class AttestationTests
         // Arrange
         var request = new PublicKeyCredentialCreationOptionsRequest
         {
-            Username = "testuser",
-            DisplayName = "Test User",
+            Username = UserName,
+            DisplayName = DisplayName,
             AuthenticatorSelection = new AuthenticatorSelectionCriteria
             {
                 AuthenticatorAttachment = AuthenticatorAttachment.Platform,
@@ -204,8 +210,8 @@ public class AttestationTests
         // Arrange
         var publicKeyCredentialAttestation = new PublicKeyCredentialAttestation
         {
-            Id = "test-id",
-            RawId = "test-raw-id",
+            Id = AttestationId,
+            RawId = AttestationRawId,
             Type = PublicKeyCredentialType.PublicKey,
             Response = new AuthenticatorAttestationResponse
             {
@@ -227,8 +233,8 @@ public class AttestationTests
         // Arrange
         var publicKeyCredentialAttestation = new PublicKeyCredentialAttestation
         {
-            Id = "test-id",
-            RawId = "test-raw-id",
+            Id = AttestationId,
+            RawId = AttestationRawId,
             Type = PublicKeyCredentialType.PublicKey,
             Response = null!,
         };
@@ -249,8 +255,8 @@ public class AttestationTests
         // Arrange
         var publicKeyCredentialAttestation = new PublicKeyCredentialAttestation
         {
-            Id = "test-id",
-            RawId = "test-raw-id",
+            Id = AttestationId,
+            RawId = AttestationRawId,
             Type = PublicKeyCredentialType.PublicKey,
             Response = new AuthenticatorAttestationResponse
             {
@@ -279,8 +285,8 @@ public class AttestationTests
         // Arrange
         var publicKeyCredentialAttestation = new PublicKeyCredentialAttestation
         {
-            Id = "test-id",
-            RawId = "test-raw-id",
+            Id = AttestationId,
+            RawId = AttestationRawId,
             Type = PublicKeyCredentialType.PublicKey,
             Response = new AuthenticatorAttestationResponse
             {
@@ -312,8 +318,8 @@ public class AttestationTests
         // Arrange
         var publicKeyCredential = new PublicKeyCredentialAttestation
         {
-            Id = "test-id",
-            RawId = "test-raw-id",
+            Id = AttestationId,
+            RawId = AttestationRawId,
             Type = PublicKeyCredentialType.PublicKey,
             Response = new AuthenticatorAttestationResponse
             {
@@ -350,8 +356,8 @@ public class AttestationTests
         // Arrange
         var publicKeyCredentialAttestation = new PublicKeyCredentialAttestation
         {
-            Id = "test-id",
-            RawId = "test-raw-id",
+            Id = AttestationId,
+            RawId = AttestationRawId,
             Type = PublicKeyCredentialType.PublicKey,
             Response = new AuthenticatorAttestationResponse
             {
