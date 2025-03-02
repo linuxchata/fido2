@@ -19,7 +19,7 @@ internal class ClientDataValidator : IClientDataValidator
         _configuration = options.Value;
     }
 
-    public ValidatorInternalResult Validate(ClientData clientData, string expectedChallenge)
+    public ValidatorInternalResult ValidateForAttestation(ClientData clientData, string expectedChallenge)
     {
         // 7.1. Registering a New Credential (Steps 7 to 10)
 
@@ -41,6 +41,68 @@ internal class ClientDataValidator : IClientDataValidator
 
         // Step 9
         // Verify that the value of C.origin matches the Relying Party's origin.
+        var result = ValidateOrigin(clientData);
+        if (!result.IsValid)
+        {
+            return result;
+        }
+
+        // Step 10
+        // Verify that the value of C.tokenBinding.status matches the state of Token Binding for the TLS connection
+        // over which the assertion was obtained. If Token Binding was used on that TLS connection, also verify that
+        // C.tokenBinding.id matches the base64url encoding of the Token Binding ID for the connection.
+        result = ValidateTokenBinding(clientData);
+        if (!result.IsValid)
+        {
+            return result;
+        }
+
+        return ValidatorInternalResult.Valid();
+    }
+
+    public ValidatorInternalResult ValidateForAssertion(ClientData clientData, string expectedChallenge)
+    {
+        // 7.2. Verifying an Authentication Assertion
+
+        // Step 11
+        // Verify that the value of C.type is the string webauthn.get.
+        if (!string.Equals(clientData.Type, WebAuthnType.Get, StringComparison.OrdinalIgnoreCase))
+        {
+            return ValidatorInternalResult.Invalid(
+                $"Client data type mismatch. Expected type is {WebAuthnType.Get}");
+        }
+
+        // Step 12
+        // Verify that the value of C.challenge equals the base64url encoding of options.challenge.
+        var base64StringChallenge = Base64UrlConverter.ToBase64(clientData.Challenge!);
+        if (!Base64Comparer.Compare(expectedChallenge!, base64StringChallenge))
+        {
+            return ValidatorInternalResult.Invalid("Challenge mismatch");
+        }
+
+        // Step 13
+        // Verify that the value of C.origin matches the Relying Party's origin.
+        var result = ValidateOrigin(clientData);
+        if (!result.IsValid)
+        {
+            return result;
+        }
+
+        // Step 14
+        // Verify that the value of C.tokenBinding.status matches the state of Token Binding for the TLS connection
+        // over which the attestation was obtained. If Token Binding was used on that TLS connection, also verify
+        // that C.tokenBinding.id matches the base64url encoding of the Token Binding ID for the connection.
+        result = ValidateTokenBinding(clientData);
+        if (!result.IsValid)
+        {
+            return result;
+        }
+
+        return ValidatorInternalResult.Valid();
+    }
+
+    private ValidatorInternalResult ValidateOrigin(ClientData clientData)
+    {
         if (!Uri.TryCreate(clientData.Origin, UriKind.Absolute, out var originUri))
         {
             return ValidatorInternalResult.Invalid("Invalid client data origin");
@@ -53,10 +115,11 @@ internal class ClientDataValidator : IClientDataValidator
             return ValidatorInternalResult.Invalid("Client data origin mismatch");
         }
 
-        // Step 10
-        // Verify that the value of C.tokenBinding.status matches the state of Token Binding for the TLS connection
-        // over which the assertion was obtained. If Token Binding was used on that TLS connection, also verify that
-        // C.tokenBinding.id matches the base64url encoding of the Token Binding ID for the connection.
+        return ValidatorInternalResult.Valid();
+    }
+
+    private static ValidatorInternalResult ValidateTokenBinding(ClientData clientData)
+    {
         if (clientData.TokenBinding != null)
         {
             // TokenBindingStatusConverter checks whether status is supported

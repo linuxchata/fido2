@@ -89,12 +89,12 @@ public sealed class Attestation : IAttestation
         var response = publicKeyCredentialAttestation.Response;
         if (response == null)
         {
-            return AttestationCompleteResult.CreateFailure("Authenticator attestation response cannot be null");
+            return AttestationCompleteResult.CreateFailure("Attestation response cannot be null");
         }
 
         // Steps 5 to 12
         var challengeString = Convert.ToBase64String(creationOptions.Challenge);
-        var clientDataHandlerResult = _clientDataHandler.Handle(response.ClientDataJson, challengeString);
+        var clientDataHandlerResult = _clientDataHandler.HandleAttestation(response.ClientDataJson, challengeString);
         if (clientDataHandlerResult.HasError)
         {
             return AttestationCompleteResult.CreateFailure(clientDataHandlerResult.Message!);

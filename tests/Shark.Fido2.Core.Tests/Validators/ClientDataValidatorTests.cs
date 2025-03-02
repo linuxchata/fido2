@@ -37,7 +37,7 @@ internal class ClientDataValidatorTests
         };
 
         // Act
-        var result = _sut.Validate(clientDataModel, $"{expectedChallenge}==");
+        var result = _sut.ValidateForAttestation(clientDataModel, $"{expectedChallenge}==");
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -65,7 +65,7 @@ internal class ClientDataValidatorTests
         };
 
         // Act
-        var result = _sut.Validate(clientDataModel, $"{expectedChallenge}==");
+        var result = _sut.ValidateForAttestation(clientDataModel, $"{expectedChallenge}==");
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -86,7 +86,7 @@ internal class ClientDataValidatorTests
         };
 
         // Act
-        var result = _sut.Validate(clientDataModel, "1epJGYQ2Y9DXF1b98tnGwr==");
+        var result = _sut.ValidateForAttestation(clientDataModel, "1epJGYQ2Y9DXF1b98tnGwr==");
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -113,7 +113,7 @@ internal class ClientDataValidatorTests
         };
 
         // Act
-        var result = _sut.Validate(clientDataModel, $"{expectedChallenge}==");
+        var result = _sut.ValidateForAttestation(clientDataModel, $"{expectedChallenge}==");
 
         // Assert
         Assert.That(result, Is.Not.Null);
