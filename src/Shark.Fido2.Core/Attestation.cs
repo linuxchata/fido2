@@ -75,10 +75,10 @@ public sealed class Attestation : IAttestation
     }
 
     public async Task<AttestationCompleteResult> Complete(
-        PublicKeyCredentialAttestation publicKeyCredential,
+        PublicKeyCredentialAttestation publicKeyCredentialAttestation,
         PublicKeyCredentialCreationOptions creationOptions)
     {
-        ArgumentNullException.ThrowIfNull(publicKeyCredential);
+        ArgumentNullException.ThrowIfNull(publicKeyCredentialAttestation);
         ArgumentNullException.ThrowIfNull(creationOptions);
 
         // 7.1. Registering a New Credential
@@ -86,7 +86,7 @@ public sealed class Attestation : IAttestation
         // Step 3
         // Let response be credential.response. If response is not an instance of AuthenticatorAttestationResponse,
         // abort the ceremony with a user-visible error.
-        var response = publicKeyCredential.Response;
+        var response = publicKeyCredentialAttestation.Response;
         if (response == null)
         {
             return AttestationCompleteResult.CreateFailure("Authenticator attestation response cannot be null");
@@ -142,7 +142,7 @@ public sealed class Attestation : IAttestation
             Username = creationOptions.User.Name,
             CredentialPublicKey = attestedCredentialData.CredentialPublicKey,
             SignCount = attestationObjectHandlerResult.Value.AuthenticatorData!.SignCount,
-            Transports = publicKeyCredential.Response.Transports?.Select(t => t.GetValue()).ToArray() ?? [],
+            Transports = publicKeyCredentialAttestation.Response.Transports?.Select(t => t.GetValue()).ToArray() ?? [],
         };
 
         await _credentialRepository.Add(credential);

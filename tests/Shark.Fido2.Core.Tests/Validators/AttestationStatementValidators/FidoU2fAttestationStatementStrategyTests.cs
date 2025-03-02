@@ -3,6 +3,7 @@ using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Handlers;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Core.Services;
+using Shark.Fido2.Core.Tests.DataReaders;
 using Shark.Fido2.Core.Validators;
 using Shark.Fido2.Core.Validators.AttestationStatementValidators;
 using Shark.Fido2.Domain;
@@ -60,11 +61,11 @@ internal class FidoU2fAttestationStatementStrategyTests
     {
         // Arrange
         var fileName = "FidoU2fAttestationWithEs256Algorithm.json";
-        var attestationData = AttestationDataReader.Read(fileName);
-        var clientData = ClientDataBuilder.Build(attestationData!.ClientDataJson);
+        var attestationResponseData = AttestationResponseDataReader.Read(fileName);
+        var clientData = ClientDataBuilder.Build(attestationResponseData!.ClientDataJson);
 
         var internalResult = _attestationObjectHandler.Handle(
-            attestationData!.AttestationObject, clientData, _creationOptions);
+            attestationResponseData!.AttestationObject, clientData, _creationOptions);
 
         // Act
         var result = _sut.Validate(internalResult.Value!, clientData);

@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography.X509Certificates;
 
-namespace Shark.Fido2.Core.Tests;
+namespace Shark.Fido2.Core.Tests.DataReaders;
 
 internal static class CertificateDataReader
 {
