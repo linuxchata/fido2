@@ -1,7 +1,7 @@
 ﻿namespace Shark.Fido2.Domain;
 
 /// <summary>
-/// 5.4. Options for Credential Creation
+/// 5.4. Options for Credential Creation (dictionary PublicKeyCredentialCreationOptions)
 /// https://www.w3.org/TR/webauthn-2/#dictionary-makecredentialoptions
 /// </summary>
 public sealed class PublicKeyCredentialCreationOptions
