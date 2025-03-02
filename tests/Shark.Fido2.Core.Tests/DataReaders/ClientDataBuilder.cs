@@ -1,7 +1,7 @@
 ﻿using Shark.Fido2.Core.Helpers;
 using Shark.Fido2.Domain;
 
-namespace Shark.Fido2.Core.Tests;
+namespace Shark.Fido2.Core.Tests.DataReaders;
 
 internal static class ClientDataBuilder
 {

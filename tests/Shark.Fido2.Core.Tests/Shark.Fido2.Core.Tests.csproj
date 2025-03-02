@@ -8,6 +8,8 @@
   <ItemGroup>
     <None Remove="Data\Certificates\Packed.pem" />
     <None Remove="Data\Certificates\tpm.pem" />
+    <None Remove="Data\iPhone8Attestation.json" />
+    <None Remove="Data\WindowsAttestation.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,6 +34,9 @@
     <Content Include="Data\AndroidSafetyNetAttestationWithRs256Algorithm.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Data\iPhone8Attestation.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Data\NoneAttestation.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -42,6 +47,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Data\TpmAttestationWithRs256Algorithm.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\WindowsAttestation.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

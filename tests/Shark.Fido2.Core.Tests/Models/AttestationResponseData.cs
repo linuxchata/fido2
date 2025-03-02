@@ -1,8 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Shark.Fido2.Core.Tests;
+namespace Shark.Fido2.Core.Tests.Models;
 
-public sealed class AttestationData
+internal sealed class AttestationResponseData
 {
     [JsonPropertyName("attestationObject")]
     public required string AttestationObject { get; set; }
