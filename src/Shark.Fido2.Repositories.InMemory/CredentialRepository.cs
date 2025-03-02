@@ -5,8 +5,18 @@ using Shark.Fido2.Domain;
 
 namespace Shark.Fido2.Repositories.InMemory;
 
-public class CredentialRepository : ICredentialRepository
+public sealed class CredentialRepository : ICredentialRepository
 {
+    private const string CredentialKeyPrefix = "credential:";
+    private const string UsernameKeyPrefix = "user:";
+
+    private static readonly SemaphoreSlim _semaphore = new(1, 1);
+    private static readonly JsonSerializerOptions _jsonOptions = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        WriteIndented = false
+    };
+
     private readonly IDistributedCache _cache;
 
     public CredentialRepository(IDistributedCache cache)
@@ -21,13 +31,11 @@ public class CredentialRepository : ICredentialRepository
             return null;
         }
 
-        var credentialIdString = Convert.ToBase64String(id);
-
-        var serializedCredential = await _cache.GetStringAsync(credentialIdString);
+        var serializedCredential = await _cache.GetStringAsync(GetCredentialKey(id));
 
         if (!string.IsNullOrWhiteSpace(serializedCredential))
         {
-            return JsonSerializer.Deserialize<Credential>(serializedCredential);
+            return JsonSerializer.Deserialize<Credential>(serializedCredential, _jsonOptions);
         }
 
         return null;
@@ -40,11 +48,11 @@ public class CredentialRepository : ICredentialRepository
             return [];
         }
 
-        var serializedCredentials = await _cache.GetStringAsync(username);
+        var serializedCredentials = await _cache.GetStringAsync(GetUsernameKey(username));
 
         if (!string.IsNullOrWhiteSpace(serializedCredentials))
         {
-            return JsonSerializer.Deserialize<List<Credential>>(serializedCredentials) ?? [];
+            return JsonSerializer.Deserialize<List<Credential>>(serializedCredentials, _jsonOptions) ?? [];
         }
 
         return [];
@@ -54,34 +62,51 @@ public class CredentialRepository : ICredentialRepository
     {
         ArgumentNullException.ThrowIfNull(credential);
 
-        await AddInternal(credential);
-        await AddOrUpdateInternal(credential);
+        await _semaphore.WaitAsync();
+
+        try
+        {
+            await AddInternal(credential);
+            await AddOrUpdateInternal(credential);
+        }
+        finally
+        {
+            _semaphore.Release();
+        }
     }
 
     private async Task AddInternal(Credential credential)
     {
-        var credentialIdString = Convert.ToBase64String(credential.CredentialId);
+        var serializedCredential = JsonSerializer.Serialize(credential, _jsonOptions);
 
-        var serializedCredential = JsonSerializer.Serialize(credential);
-
-        await _cache.SetStringAsync(credentialIdString, serializedCredential);
+        await _cache.SetStringAsync(GetCredentialKey(credential.CredentialId), serializedCredential);
     }
 
     private async Task AddOrUpdateInternal(Credential credential)
     {
-        var creadentials = new List<Credential>();
+        var credentials = new List<Credential>();
 
-        var existingCreadentials = await Get(credential.Username);
+        var existingCredentials = await Get(credential.Username);
 
-        if (existingCreadentials.Count != 0)
+        if (existingCredentials.Count != 0)
         {
-            creadentials.AddRange(existingCreadentials);
+            credentials.AddRange(existingCredentials);
         }
 
-        creadentials.Add(credential);
+        credentials.Add(credential);
 
-        var serializedCredentials = JsonSerializer.Serialize(creadentials);
+        var serializedCredentials = JsonSerializer.Serialize(credentials, _jsonOptions);
 
-        await _cache.SetStringAsync(credential.Username, serializedCredentials);
+        await _cache.SetStringAsync(GetUsernameKey(credential.Username), serializedCredentials);
+    }
+
+    private static string GetCredentialKey(byte[] id)
+    {
+        return $"{CredentialKeyPrefix}{Convert.ToBase64String(id)}";
+    }
+
+    private static string GetUsernameKey(string username)
+    {
+        return $"{UsernameKeyPrefix}{username}";
     }
 }
