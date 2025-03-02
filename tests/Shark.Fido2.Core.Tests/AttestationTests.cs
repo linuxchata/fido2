@@ -1,4 +1,5 @@
 using System.Text;
+using System.Xml.Linq;
 using Microsoft.Extensions.Options;
 using Moq;
 using Shark.Fido2.Core.Abstractions;
@@ -26,6 +27,7 @@ public class AttestationTests
     private Mock<ICredentialRepository> _credentialRepositoryMock = null!;
     private Fido2Configuration _fido2Configuration = null!;
     private PublicKeyCredentialCreationOptions _publicKeyCredentialCreationOptions = null!;
+    private PublicKeyCredentialUserEntity _publicKeyCredentialUserEntity = null!;
 
     private Attestation _sut = null!;
 
@@ -81,9 +83,16 @@ public class AttestationTests
             Timeout = 60000
         };
 
+        _publicKeyCredentialUserEntity = new PublicKeyCredentialUserEntity
+        {
+            Id = Encoding.UTF8.GetBytes(UserName),
+            Name = UserName,
+            DisplayName = DisplayName,
+        };
         _publicKeyCredentialCreationOptions = new PublicKeyCredentialCreationOptions
         {
-            Challenge = [1, 2, 3, 4]
+            Challenge = [1, 2, 3, 4],
+            User = _publicKeyCredentialUserEntity,
         };
 
         _sut = new Attestation(
@@ -334,6 +343,7 @@ public class AttestationTests
             .ReturnsAsync(new Credential
             {
                 CredentialId = [1, 2, 3, 4],
+                Username = UserName,
                 CredentialPublicKey = new CredentialPublicKey
                 {
                     KeyType = 2,
@@ -414,6 +424,7 @@ public class AttestationTests
         var publicKeyCredentialCreationOptions = new PublicKeyCredentialCreationOptions
         {
             Challenge = Convert.FromBase64String($"{expectedChallenge}=="),
+            User = _publicKeyCredentialUserEntity,
         };
 
         // Act
@@ -446,6 +457,7 @@ public class AttestationTests
         var publicKeyCredentialCreationOptions = new PublicKeyCredentialCreationOptions
         {
             Challenge = Convert.FromBase64String($"{expectedChallenge}=="),
+            User = _publicKeyCredentialUserEntity,
         };
 
         // Act

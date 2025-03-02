@@ -30,9 +30,9 @@ public class AssertionController(IAssertion assertion) : ControllerBase
     [SwaggerRequestExample(
         typeof(ServerPublicKeyCredentialGetOptionsRequest),
         typeof(ServerPublicKeyCredentialGetOptionsRequestExample))]
-    public IActionResult Options(ServerPublicKeyCredentialGetOptionsRequest request)
+    public async Task<IActionResult> Options(ServerPublicKeyCredentialGetOptionsRequest request)
     {
-        var requestOptions = _assertion.RequestOptions(request.Map());
+        var requestOptions = await _assertion.RequestOptions(request.Map());
 
         var response = requestOptions.Map();
 
