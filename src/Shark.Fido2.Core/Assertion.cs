@@ -1,5 +1,4 @@
-﻿using System.Text;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using Shark.Fido2.Common.Extensions;
 using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Core.Abstractions.Handlers;
@@ -14,17 +13,20 @@ namespace Shark.Fido2.Core;
 public sealed class Assertion : IAssertion
 {
     private readonly IClientDataHandler _clientDataHandler;
+    private readonly IAssertionObjectHandler _assertionObjectHandler;
     private readonly IChallengeGenerator _challengeGenerator;
     private readonly ICredentialRepository _credentialRepository;
     private readonly Fido2Configuration _configuration;
 
     public Assertion(
         IClientDataHandler clientDataHandler,
+        IAssertionObjectHandler assertionObjectHandler,
         IChallengeGenerator challengeGenerator,
         ICredentialRepository credentialRepository,
         IOptions<Fido2Configuration> options)
     {
         _clientDataHandler = clientDataHandler;
+        _assertionObjectHandler = assertionObjectHandler;
         _challengeGenerator = challengeGenerator;
         _credentialRepository = credentialRepository;
         _configuration = options.Value;
@@ -72,9 +74,9 @@ public sealed class Assertion : IAssertion
         // Step 5
         // If options.allowCredentials is not empty, verify that credential.id identifies one of the public key
         // credentials listed in options.allowCredentials.
-        if (requestOptions.AllowCredentials?.Length != 0)
+        if (requestOptions.AllowCredentials != null && requestOptions.AllowCredentials.Length != 0)
         {
-            var credentialId = Encoding.ASCII.GetBytes(publicKeyCredentialAssertion.Id);
+            var credentialId = Convert.FromBase64String(publicKeyCredentialAssertion.RawId);
             if (!requestOptions.AllowCredentials!.Any(c => BytesArrayComparer.CompareNullable(c.Id, credentialId)))
             {
                 return Task.FromResult(AssertionCompleteResult.CreateFailure(
@@ -89,6 +91,11 @@ public sealed class Assertion : IAssertion
         {
             return Task.FromResult(AssertionCompleteResult.CreateFailure(clientDataHandlerResult.Message!));
         }
+
+        _assertionObjectHandler.Handle(
+            publicKeyCredentialAssertion.Response.AuthenticatorData,
+            clientDataHandlerResult.Value!,
+            requestOptions);
 
         return Task.FromResult(AssertionCompleteResult.Create());
     }

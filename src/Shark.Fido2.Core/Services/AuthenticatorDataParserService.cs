@@ -43,6 +43,12 @@ internal sealed class AuthenticatorDataParserService : IAuthenticatorDataParserS
         var signCount = BinaryPrimitives.ReadUInt32BigEndian(signCountArray);
         authenticatorData.SignCount = signCount;
 
+        // Check if attestedCredentialData and extensions data present
+        if (authenticatorDataArray.Length == startIndex + SignCountLength)
+        {
+            return authenticatorData;
+        }
+
         // AAGUID of the authenticator
         startIndex += SignCountLength;
         var aaguidArray = authenticatorDataArray.AsSpan(startIndex, AaguidLength);

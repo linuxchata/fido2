@@ -16,6 +16,6 @@ public sealed class ServerAuthenticatorAssertionResponse : ServerAuthenticatorRe
     [JsonPropertyName("signature")]
     public string? Signature { get; set; }
 
-    [JsonPropertyName("userHandler")]
-    public string? UserHandler { get; set; }
+    [JsonPropertyName("userHandle")]
+    public string? UserHandle { get; set; }
 }
