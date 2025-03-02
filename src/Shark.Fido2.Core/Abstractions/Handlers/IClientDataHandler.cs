@@ -5,5 +5,7 @@ namespace Shark.Fido2.Core.Abstractions.Handlers;
 
 public interface IClientDataHandler
 {
-    InternalResult<ClientData> Handle(string clientDataJson, string expectedChallenge);
+    InternalResult<ClientData> HandleAttestation(string clientDataJson, string expectedChallenge);
+
+    InternalResult<ClientData> HandleAssertion(string clientDataJson, string expectedChallenge);
 }

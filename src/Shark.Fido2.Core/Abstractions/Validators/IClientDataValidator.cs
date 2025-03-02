@@ -14,5 +14,13 @@ public interface IClientDataValidator
     /// <param name="clientData">The client data to validate.</param>
     /// <param name="expectedChallenge">The challenge that was originally sent to the client.</param>
     /// <returns>A ValidatorInternalResult indicating whether the client data is valid.</returns>
-    ValidatorInternalResult Validate(ClientData clientData, string expectedChallenge);
+    ValidatorInternalResult ValidateForAttestation(ClientData clientData, string expectedChallenge);
+
+    /// <summary>
+    /// Validates the client data against WebAuthn specification requirements.
+    /// </summary>
+    /// <param name="clientData">The client data to validate.</param>
+    /// <param name="expectedChallenge">The challenge that was originally sent to the client.</param>
+    /// <returns>A ValidatorInternalResult indicating whether the client data is valid.</returns>
+    ValidatorInternalResult ValidateForAssertion(ClientData clientData, string expectedChallenge);
 }
