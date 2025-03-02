@@ -6,5 +6,7 @@ public interface ICredentialRepository
 {
     Task<Credential?> Get(byte[]? id);
 
+    Task<List<Credential>> Get(string username);
+
     Task Add(Credential credential);
 }
