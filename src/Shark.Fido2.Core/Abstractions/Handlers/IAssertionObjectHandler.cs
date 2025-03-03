@@ -9,5 +9,6 @@ public interface IAssertionObjectHandler
         string authenticatorData,
         string signature,
         ClientData clientData,
+        CredentialPublicKey credentialPublicKey,
         PublicKeyCredentialRequestOptions requestOptions);
 }

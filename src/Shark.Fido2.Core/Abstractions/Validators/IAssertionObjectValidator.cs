@@ -10,5 +10,6 @@ public interface IAssertionObjectValidator
         AuthenticatorData? authenticatorData,
         string signature,
         ClientData clientData,
+        CredentialPublicKey credentialPublicKey,
         PublicKeyCredentialRequestOptions requestOptions);
 }

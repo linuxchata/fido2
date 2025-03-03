@@ -53,7 +53,7 @@ public sealed class Assertion : IAssertion
         };
     }
 
-    public Task<AssertionCompleteResult> Complete(
+    public async Task<AssertionCompleteResult> Complete(
         PublicKeyCredentialAssertion publicKeyCredentialAssertion,
         PublicKeyCredentialRequestOptions requestOptions)
     {
@@ -68,19 +68,19 @@ public sealed class Assertion : IAssertion
         var response = publicKeyCredentialAssertion.Response;
         if (response == null)
         {
-            return Task.FromResult(AssertionCompleteResult.CreateFailure("Assertion response cannot be null"));
+            return AssertionCompleteResult.CreateFailure("Assertion response cannot be null");
         }
 
         // Step 5
         // If options.allowCredentials is not empty, verify that credential.id identifies one of the public key
         // credentials listed in options.allowCredentials.
+        var credentialId = Convert.FromBase64String(publicKeyCredentialAssertion.RawId);
         if (requestOptions.AllowCredentials != null && requestOptions.AllowCredentials.Length != 0)
         {
-            var credentialId = Convert.FromBase64String(publicKeyCredentialAssertion.RawId);
             if (!requestOptions.AllowCredentials!.Any(c => BytesArrayComparer.CompareNullable(c.Id, credentialId)))
             {
-                return Task.FromResult(AssertionCompleteResult.CreateFailure(
-                    "Assertion response does not contain expected credential identifier"));
+                return AssertionCompleteResult.CreateFailure(
+                    "Assertion response does not contain expected credential identifier");
             }
         }
 
@@ -89,16 +89,23 @@ public sealed class Assertion : IAssertion
         var clientDataHandlerResult = _clientDataHandler.HandleAssertion(response.ClientDataJson, challengeString);
         if (clientDataHandlerResult.HasError)
         {
-            return Task.FromResult(AssertionCompleteResult.CreateFailure(clientDataHandlerResult.Message!));
+            return AssertionCompleteResult.CreateFailure(clientDataHandlerResult.Message!);
         }
 
         // Steps 15 to 18
-        _assertionObjectHandler.Handle(
+        var credential = await _credentialRepository.Get(credentialId);
+        if (credential == null)
+        {
+            return AssertionCompleteResult.CreateFailure("Registered credential was not found");
+        }
+
+        var assertionResult = _assertionObjectHandler.Handle(
             publicKeyCredentialAssertion.Response.AuthenticatorData,
             publicKeyCredentialAssertion.Response.Signature,
             clientDataHandlerResult.Value!,
+            credential.CredentialPublicKey,
             requestOptions);
 
-        return Task.FromResult(AssertionCompleteResult.Create());
+        return AssertionCompleteResult.Create();
     }
 }

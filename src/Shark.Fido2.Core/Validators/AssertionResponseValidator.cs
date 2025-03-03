@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using Shark.Fido2.Core.Abstractions.Validators;
+using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Comparers;
 using Shark.Fido2.Core.Configurations;
 using Shark.Fido2.Core.Helpers;
@@ -11,10 +12,14 @@ namespace Shark.Fido2.Core.Validators;
 
 internal class AssertionResponseValidator : IAssertionObjectValidator
 {
+    private readonly ISignatureAttestationStatementValidator _signatureAttestationStatementValidator;
     private readonly Fido2Configuration _configuration;
 
-    public AssertionResponseValidator(IOptions<Fido2Configuration> options)
+    public AssertionResponseValidator(
+        ISignatureAttestationStatementValidator signatureAttestationStatementValidator,
+        IOptions<Fido2Configuration> options)
     {
+        _signatureAttestationStatementValidator = signatureAttestationStatementValidator;
         _configuration = options.Value;
     }
 
@@ -23,6 +28,7 @@ internal class AssertionResponseValidator : IAssertionObjectValidator
         AuthenticatorData? authenticatorData,
         string signature,
         ClientData clientData,
+        CredentialPublicKey credentialPublicKey,
         PublicKeyCredentialRequestOptions requestOptions)
     {
         if (authenticatorData == null)
@@ -73,7 +79,12 @@ internal class AssertionResponseValidator : IAssertionObjectValidator
         // Using credentialPublicKey, verify that sig is a valid signature over the binary concatenation of authData
         // and hash.
         var signatureRawData = Convert.FromBase64String(signature);
-        var concatenation = BytesArrayHelper.Concatenate(authenticatorRawData, clientData.ClientDataHash);
+        var concatenatedData = BytesArrayHelper.Concatenate(authenticatorRawData, clientData.ClientDataHash);
+        var result = _signatureAttestationStatementValidator.Validate(concatenatedData, signatureRawData, credentialPublicKey);
+        if (!result.IsValid)
+        {
+            return result;
+        }
 
         return ValidatorInternalResult.Valid();
     }

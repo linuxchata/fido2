@@ -23,6 +23,7 @@ internal class AssertionObjectHandler : IAssertionObjectHandler
         string authenticatorDataString,
         string signature,
         ClientData clientData,
+        CredentialPublicKey credentialPublicKey,
         PublicKeyCredentialRequestOptions requestOptions)
     {
         if (string.IsNullOrWhiteSpace(authenticatorDataString))
@@ -43,6 +44,7 @@ internal class AssertionObjectHandler : IAssertionObjectHandler
             authenticatorData,
             signature,
             clientData,
+            credentialPublicKey,
             requestOptions);
         if (!result.IsValid)
         {
