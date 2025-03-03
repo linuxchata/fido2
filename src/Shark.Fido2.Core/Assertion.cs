@@ -92,13 +92,13 @@ public sealed class Assertion : IAssertion
             return AssertionCompleteResult.CreateFailure(clientDataHandlerResult.Message!);
         }
 
-        // Steps 15 to 18
         var credential = await _credentialRepository.Get(credentialId);
         if (credential == null)
         {
             return AssertionCompleteResult.CreateFailure("Registered credential was not found");
         }
 
+        // Steps 15 to 20
         var assertionResult = _assertionObjectHandler.Handle(
             publicKeyCredentialAssertion.Response.AuthenticatorData,
             publicKeyCredentialAssertion.Response.Signature,
