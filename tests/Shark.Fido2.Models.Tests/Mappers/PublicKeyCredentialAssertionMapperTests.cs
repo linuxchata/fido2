@@ -39,7 +39,7 @@ public class PublicKeyCredentialAssertionMapperTests
                 ClientDataJson = "ClientDataJson",
                 AuthenticatorData = "AuthenticatorData",
                 Signature = "Signature",
-                UserHandler = "UserHandler",
+                UserHandle = "UserHandler",
             }
         };
 
@@ -53,6 +53,6 @@ public class PublicKeyCredentialAssertionMapperTests
         Assert.That(result.Response.ClientDataJson, Is.EqualTo(assertion.Response.ClientDataJson));
         Assert.That(result.Response.AuthenticatorData, Is.EqualTo(assertion.Response.AuthenticatorData));
         Assert.That(result.Response.Signature, Is.EqualTo(assertion.Response.Signature));
-        Assert.That(result.Response.UserHandler, Is.EqualTo(assertion.Response.UserHandler));
+        Assert.That(result.Response.UserHandle, Is.EqualTo(assertion.Response.UserHandle));
     }
 }

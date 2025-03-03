@@ -101,23 +101,23 @@ public sealed class Attestation : IAttestation
         }
 
         // Steps 13 to 21
-        var attestationObjectHandlerResult = _attestationObjectHandler.Handle(
+        var attestationResult = _attestationObjectHandler.Handle(
             response.AttestationObject,
             clientDataHandlerResult.Value!,
             creationOptions);
-        if (attestationObjectHandlerResult.HasError)
+        if (attestationResult.HasError)
         {
             // Step 24
             // If the attestation statement attStmt successfully verified but is not trustworthy per step 21 above,
             // the Relying Party SHOULD fail the registration ceremony.
-            return AttestationCompleteResult.CreateFailure(attestationObjectHandlerResult.Message!);
+            return AttestationCompleteResult.CreateFailure(attestationResult.Message!);
         }
 
         // Step 22
         // Check that the credentialId is not yet registered to any other user. If registration is requested for a
         // credential that is already registered to a different user, the Relying Party SHOULD fail this registration
         // ceremony, or it MAY decide to accept the registration, e.g. while deleting the older registration.
-        var attestedCredentialData = attestationObjectHandlerResult.Value!.AuthenticatorData!.AttestedCredentialData;
+        var attestedCredentialData = attestationResult.Value!.AuthenticatorData!.AttestedCredentialData;
         var credentialId = attestedCredentialData!.CredentialId;
         var credential = await _credentialRepository.Get(credentialId);
         if (credential != null)
@@ -141,7 +141,7 @@ public sealed class Attestation : IAttestation
             CredentialId = credentialId!,
             Username = creationOptions.User.Name,
             CredentialPublicKey = attestedCredentialData.CredentialPublicKey,
-            SignCount = attestationObjectHandlerResult.Value.AuthenticatorData!.SignCount,
+            SignCount = attestationResult.Value.AuthenticatorData!.SignCount,
             Transports = publicKeyCredentialAttestation.Response.Transports?.Select(t => t.GetValue()).ToArray() ?? [],
         };
 

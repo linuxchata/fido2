@@ -27,6 +27,17 @@ internal class SignatureAttestationStatementValidator : ISignatureAttestationSta
 
     public ValidatorInternalResult Validate(
         byte[] data,
+        byte[] signature,
+        CredentialPublicKey credentialPublicKey)
+    {
+        ArgumentNullException.ThrowIfNull(data);
+        ArgumentNullException.ThrowIfNull(signature);
+
+        return ValidateInternal(data, signature, credentialPublicKey);
+    }
+
+    public ValidatorInternalResult Validate(
+        byte[] data,
         Dictionary<string, object> attestationStatementDict,
         CredentialPublicKey credentialPublicKey,
         X509Certificate2? attestationCertificate = null)
@@ -41,29 +52,7 @@ internal class SignatureAttestationStatementValidator : ISignatureAttestationSta
             return ValidatorInternalResult.Invalid(SignatureCannotBeReadErrorMessage);
         }
 
-        bool isValid;
-        if (credentialPublicKey.KeyType == (int)KeyTypeEnum.Rsa)
-        {
-            isValid = _rsaCryptographyValidator.IsValid(
-                data,
-                (byte[])signature,
-                credentialPublicKey,
-                attestationCertificate);
-        }
-        else if (credentialPublicKey.KeyType == (int)KeyTypeEnum.Ec2)
-        {
-            isValid = _ec2CryptographyValidator.IsValid(
-                data,
-                (byte[])signature,
-                credentialPublicKey,
-                attestationCertificate);
-        }
-        else
-        {
-            throw new NotSupportedException($"Unsupported key type {credentialPublicKey.KeyType}");
-        }
-
-        return isValid ? ValidatorInternalResult.Valid() : ValidatorInternalResult.Invalid(SignatureIsNotValid);
+        return ValidateInternal(data, (byte[])signature, credentialPublicKey, attestationCertificate);
     }
 
     public ValidatorInternalResult ValidateTpm(
@@ -133,6 +122,29 @@ internal class SignatureAttestationStatementValidator : ISignatureAttestationSta
                 (byte[])signature,
                 credentialPublicKey,
                 attestationCertificate);
+        }
+        else
+        {
+            throw new NotSupportedException($"Unsupported key type {credentialPublicKey.KeyType}");
+        }
+
+        return isValid ? ValidatorInternalResult.Valid() : ValidatorInternalResult.Invalid(SignatureIsNotValid);
+    }
+
+    private ValidatorInternalResult ValidateInternal(
+        byte[] data,
+        byte[] signature,
+        CredentialPublicKey credentialPublicKey,
+        X509Certificate2? attestationCertificate = null)
+    {
+        bool isValid;
+        if (credentialPublicKey.KeyType == (int)KeyTypeEnum.Rsa)
+        {
+            isValid = _rsaCryptographyValidator.IsValid(data, signature, credentialPublicKey, attestationCertificate);
+        }
+        else if (credentialPublicKey.KeyType == (int)KeyTypeEnum.Ec2)
+        {
+            isValid = _ec2CryptographyValidator.IsValid(data, signature, credentialPublicKey, attestationCertificate);
         }
         else
         {

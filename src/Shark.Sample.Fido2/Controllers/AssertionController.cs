@@ -36,7 +36,7 @@ public class AssertionController(IAssertion assertion) : ControllerBase
 
         var response = requestOptions.Map();
 
-        HttpContext.Session.SetString("RequestOptions", JsonSerializer.Serialize(response));
+        HttpContext.Session.SetString("RequestOptions", JsonSerializer.Serialize(requestOptions));
 
         return Ok(response);
     }

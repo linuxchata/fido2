@@ -8,5 +8,5 @@ public sealed class AuthenticatorAssertionResponse
 
     public string Signature { get; set; } = null!;
 
-    public string? UserHandler { get; set; }
+    public string? UserHandle { get; set; }
 }

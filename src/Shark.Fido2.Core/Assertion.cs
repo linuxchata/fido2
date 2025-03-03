@@ -1,5 +1,4 @@
-﻿using System.Text;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using Shark.Fido2.Common.Extensions;
 using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Core.Abstractions.Handlers;
@@ -14,17 +13,20 @@ namespace Shark.Fido2.Core;
 public sealed class Assertion : IAssertion
 {
     private readonly IClientDataHandler _clientDataHandler;
+    private readonly IAssertionObjectHandler _assertionObjectHandler;
     private readonly IChallengeGenerator _challengeGenerator;
     private readonly ICredentialRepository _credentialRepository;
     private readonly Fido2Configuration _configuration;
 
     public Assertion(
         IClientDataHandler clientDataHandler,
+        IAssertionObjectHandler assertionObjectHandler,
         IChallengeGenerator challengeGenerator,
         ICredentialRepository credentialRepository,
         IOptions<Fido2Configuration> options)
     {
         _clientDataHandler = clientDataHandler;
+        _assertionObjectHandler = assertionObjectHandler;
         _challengeGenerator = challengeGenerator;
         _credentialRepository = credentialRepository;
         _configuration = options.Value;
@@ -51,7 +53,7 @@ public sealed class Assertion : IAssertion
         };
     }
 
-    public Task<AssertionCompleteResult> Complete(
+    public async Task<AssertionCompleteResult> Complete(
         PublicKeyCredentialAssertion publicKeyCredentialAssertion,
         PublicKeyCredentialRequestOptions requestOptions)
     {
@@ -66,19 +68,19 @@ public sealed class Assertion : IAssertion
         var response = publicKeyCredentialAssertion.Response;
         if (response == null)
         {
-            return Task.FromResult(AssertionCompleteResult.CreateFailure("Assertion response cannot be null"));
+            return AssertionCompleteResult.CreateFailure("Assertion response cannot be null");
         }
 
         // Step 5
         // If options.allowCredentials is not empty, verify that credential.id identifies one of the public key
         // credentials listed in options.allowCredentials.
-        if (requestOptions.AllowCredentials?.Length != 0)
+        var credentialId = Convert.FromBase64String(publicKeyCredentialAssertion.RawId);
+        if (requestOptions.AllowCredentials != null && requestOptions.AllowCredentials.Length != 0)
         {
-            var credentialId = Encoding.ASCII.GetBytes(publicKeyCredentialAssertion.Id);
             if (!requestOptions.AllowCredentials!.Any(c => BytesArrayComparer.CompareNullable(c.Id, credentialId)))
             {
-                return Task.FromResult(AssertionCompleteResult.CreateFailure(
-                    "Assertion response does not contain expected credential identifier"));
+                return AssertionCompleteResult.CreateFailure(
+                    "Assertion response does not contain expected credential identifier");
             }
         }
 
@@ -87,9 +89,23 @@ public sealed class Assertion : IAssertion
         var clientDataHandlerResult = _clientDataHandler.HandleAssertion(response.ClientDataJson, challengeString);
         if (clientDataHandlerResult.HasError)
         {
-            return Task.FromResult(AssertionCompleteResult.CreateFailure(clientDataHandlerResult.Message!));
+            return AssertionCompleteResult.CreateFailure(clientDataHandlerResult.Message!);
         }
 
-        return Task.FromResult(AssertionCompleteResult.Create());
+        var credential = await _credentialRepository.Get(credentialId);
+        if (credential == null)
+        {
+            return AssertionCompleteResult.CreateFailure("Registered credential was not found");
+        }
+
+        // Steps 15 to 20
+        var assertionResult = _assertionObjectHandler.Handle(
+            publicKeyCredentialAssertion.Response.AuthenticatorData,
+            publicKeyCredentialAssertion.Response.Signature,
+            clientDataHandlerResult.Value!,
+            credential.CredentialPublicKey,
+            requestOptions);
+
+        return AssertionCompleteResult.Create();
     }
 }
