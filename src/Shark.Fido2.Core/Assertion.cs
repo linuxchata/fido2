@@ -92,8 +92,10 @@ public sealed class Assertion : IAssertion
             return Task.FromResult(AssertionCompleteResult.CreateFailure(clientDataHandlerResult.Message!));
         }
 
+        // Steps 15 to 18
         _assertionObjectHandler.Handle(
             publicKeyCredentialAssertion.Response.AuthenticatorData,
+            publicKeyCredentialAssertion.Response.Signature,
             clientDataHandlerResult.Value!,
             requestOptions);
 

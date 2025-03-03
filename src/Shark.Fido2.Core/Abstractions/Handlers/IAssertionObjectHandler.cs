@@ -7,6 +7,7 @@ public interface IAssertionObjectHandler
 {
     InternalResult<AuthenticatorData> Handle(
         string authenticatorData,
+        string signature,
         ClientData clientData,
         PublicKeyCredentialRequestOptions requestOptions);
 }

@@ -21,6 +21,7 @@ internal class AssertionObjectHandler : IAssertionObjectHandler
 
     public InternalResult<AuthenticatorData> Handle(
         string authenticatorDataString,
+        string signature,
         ClientData clientData,
         PublicKeyCredentialRequestOptions requestOptions)
     {
@@ -34,10 +35,15 @@ internal class AssertionObjectHandler : IAssertionObjectHandler
             return new InternalResult<AuthenticatorData>("Request options cannot be null");
         }
 
-        var authenticatorDataArray = Convert.FromBase64String(authenticatorDataString);
-        var authenticatorData = _authenticatorDataParserService.Parse(authenticatorDataArray);
+        var authenticatorRawData = Convert.FromBase64String(authenticatorDataString);
+        var authenticatorData = _authenticatorDataParserService.Parse(authenticatorRawData);
 
-        var result = _assertionObjectValidator.Validate(authenticatorData, clientData, requestOptions);
+        var result = _assertionObjectValidator.Validate(
+            authenticatorRawData,
+            authenticatorData,
+            signature,
+            clientData,
+            requestOptions);
         if (!result.IsValid)
         {
             return new InternalResult<AuthenticatorData>(result.Message!);
