@@ -84,18 +84,31 @@ public sealed class Assertion : IAssertion
             }
         }
 
+        // Step 7
+        // Using credential.id (or credential.rawId, if base64url encoding is inappropriate for your use case),
+        // look up the corresponding credential public key and let credentialPublicKey be that credential public key.
+        var credential = await _credentialRepository.Get(credentialId);
+        if (credential == null)
+        {
+            return AssertionCompleteResult.CreateFailure("Registered credential is not found");
+        }
+
+        if (credential.CredentialPublicKey == null)
+        {
+            return AssertionCompleteResult.CreateFailure(
+                "Registered credential's credential public key is not found");
+        }
+
+        // Step 8
+        // Let cData, authData and sig denote the value of response's clientDataJSON, authenticatorData, and
+        // signature respectively.
+
         // Steps 9 to 14
         var challengeString = Convert.ToBase64String(requestOptions.Challenge);
         var clientDataHandlerResult = _clientDataHandler.HandleAssertion(response.ClientDataJson, challengeString);
         if (clientDataHandlerResult.HasError)
         {
             return AssertionCompleteResult.CreateFailure(clientDataHandlerResult.Message!);
-        }
-
-        var credential = await _credentialRepository.Get(credentialId);
-        if (credential == null)
-        {
-            return AssertionCompleteResult.CreateFailure("Registered credential was not found");
         }
 
         // Steps 15 to 20
@@ -105,6 +118,37 @@ public sealed class Assertion : IAssertion
             clientDataHandlerResult.Value!,
             credential.CredentialPublicKey,
             requestOptions);
+        if (assertionResult.HasError)
+        {
+            // Step 22
+            // If all the above steps are successful, continue with the authentication ceremony as appropriate.
+            // Otherwise, fail the authentication ceremony.
+            return AssertionCompleteResult.CreateFailure(assertionResult.Message!);
+        }
+
+        // Step 21
+        // Let storedSignCount be the stored signature counter value associated with credential.id. If authData.signCount
+        // is nonzero or storedSignCount is nonzero, then run the following sub-step:
+        if (assertionResult.Value!.SignCount != 0 || credential.SignCount != 0)
+        {
+            // If authData.signCount is greater than storedSignCount:
+            if (assertionResult.Value!.SignCount > credential.SignCount)
+            {
+                // Update storedSignCount to be the value of authData.signCount.
+                credential.SignCount = assertionResult.Value!.SignCount;
+            }
+            // less than or equal to storedSignCount:
+            else
+            {
+                // This is a signal that the authenticator may be cloned, i.e. at least two copies of the credential
+                // private key may exist and are being used in parallel. Relying Parties should incorporate this
+                // information into their risk scoring. Whether the Relying Party updates storedSignCount in this case,
+                // or not, or fails the authentication ceremony or not, is Relying Party-specific.
+                return AssertionCompleteResult.CreateFailure(
+                    "Signature counter of the authenticator is less or equal to stored signature count. " +
+                    "The authenticator may be cloned");
+            }
+        }
 
         return AssertionCompleteResult.Create();
     }
