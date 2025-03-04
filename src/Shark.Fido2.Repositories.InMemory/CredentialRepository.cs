@@ -10,7 +10,9 @@ public sealed class CredentialRepository : ICredentialRepository
     private const string CredentialKeyPrefix = "credential:";
     private const string UsernameKeyPrefix = "user:";
 
-    private static readonly SemaphoreSlim _semaphore = new(1, 1);
+    private static readonly SemaphoreSlim _semaphoreAdd = new(1, 1);
+    private static readonly SemaphoreSlim _semaphoreUpdate = new(1, 1);
+
     private static readonly JsonSerializerOptions _jsonOptions = new()
     {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -62,7 +64,7 @@ public sealed class CredentialRepository : ICredentialRepository
     {
         ArgumentNullException.ThrowIfNull(credential);
 
-        await _semaphore.WaitAsync();
+        await _semaphoreAdd.WaitAsync();
 
         try
         {
@@ -71,7 +73,26 @@ public sealed class CredentialRepository : ICredentialRepository
         }
         finally
         {
-            _semaphore.Release();
+            _semaphoreAdd.Release();
+        }
+    }
+
+    public async Task UpdateSignCount(Credential credential, uint signCount)
+    {
+        ArgumentNullException.ThrowIfNull(credential);
+
+        await _semaphoreUpdate.WaitAsync();
+
+        credential.SignCount = signCount;
+
+        try
+        {
+            await RemoveInternal(credential.CredentialId);
+            await AddInternal(credential);
+        }
+        finally
+        {
+            _semaphoreUpdate.Release();
         }
     }
 
@@ -98,6 +119,11 @@ public sealed class CredentialRepository : ICredentialRepository
         var serializedCredentials = JsonSerializer.Serialize(credentials, _jsonOptions);
 
         await _cache.SetStringAsync(GetUsernameKey(credential.Username), serializedCredentials);
+    }
+
+    private async Task RemoveInternal(byte[] id)
+    {
+        await _cache.RemoveAsync(GetCredentialKey(id));
     }
 
     private static string GetCredentialKey(byte[] id)

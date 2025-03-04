@@ -135,7 +135,7 @@ public sealed class Assertion : IAssertion
             if (assertionResult.Value!.SignCount > credential.SignCount)
             {
                 // Update storedSignCount to be the value of authData.signCount.
-                credential.SignCount = assertionResult.Value!.SignCount;
+                await _credentialRepository.UpdateSignCount(credential, assertionResult.Value!.SignCount);
             }
             // less than or equal to storedSignCount:
             else

@@ -9,4 +9,6 @@ public interface ICredentialRepository
     Task<List<Credential>> Get(string username);
 
     Task Add(Credential credential);
+
+    Task UpdateSignCount(Credential credential, uint signCount);
 }
