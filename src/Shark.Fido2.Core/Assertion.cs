@@ -37,18 +37,23 @@ public sealed class Assertion : IAssertion
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        var credentials = await _credentialRepository.Get(request.Username);
+        List<Credential>? credentials = null;
+        if (!string.IsNullOrWhiteSpace(request.Username))
+        {
+            credentials = await _credentialRepository.Get(request.Username);
+        }
 
         return new PublicKeyCredentialRequestOptions
         {
             Challenge = _challengeGenerator.Get(),
             Timeout = _configuration.Timeout,
             RpId = _configuration.RelyingPartyId,
-            AllowCredentials = credentials.Select(c => new PublicKeyCredentialDescriptor
+            AllowCredentials = credentials?.Select(c => new PublicKeyCredentialDescriptor
             {
                 Id = c.CredentialId,
                 Transports = c.Transports?.Select(t => t.ToEnum<AuthenticatorTransport>()).ToArray() ?? [],
             }).ToArray(),
+            Username = request.Username,
             UserVerification = request.UserVerification ?? UserVerificationRequirement.Preferred,
         };
     }
@@ -75,7 +80,7 @@ public sealed class Assertion : IAssertion
         // If options.allowCredentials is not empty, verify that credential.id identifies one of the public key
         // credentials listed in options.allowCredentials.
         var credentialId = Convert.FromBase64String(publicKeyCredentialAssertion.RawId);
-        if (requestOptions.AllowCredentials != null && requestOptions.AllowCredentials.Length != 0)
+        if (AreAllowCredentialsPresent(requestOptions))
         {
             if (!requestOptions.AllowCredentials!.Any(c => BytesArrayComparer.CompareNullable(c.Id, credentialId)))
             {
@@ -84,15 +89,54 @@ public sealed class Assertion : IAssertion
             }
         }
 
-        // Step 7
-        // Using credential.id (or credential.rawId, if base64url encoding is inappropriate for your use case),
-        // look up the corresponding credential public key and let credentialPublicKey be that credential public key.
         var credential = await _credentialRepository.Get(credentialId);
         if (credential == null)
         {
             return AssertionCompleteResult.CreateFailure("Registered credential is not found");
         }
 
+        // Step 6
+        // Identify the user being authenticated and verify that this user is the owner of the public key credential
+        // source credentialSource identified by credential.id:
+        // - If the user was identified before the authentication ceremony was initiated, e.g., via a username or
+        // cookie, verify that the identified user is the owner of credentialSource. If response.userHandle is present,
+        // let userHandle be its value. Verify that userHandle also maps to the same user.
+        var userHandle = Convert.FromBase64String(publicKeyCredentialAssertion.Response.UserHandle ?? string.Empty);
+        if (AreAllowCredentialsPresent(requestOptions))
+        {
+            if (userHandle != null && userHandle.Length != 0)
+            {
+                if (!BytesArrayComparer.CompareNullable(credential.UserHandle, userHandle))
+                {
+                    return AssertionCompleteResult.CreateFailure("User is not owner of the credential");
+                }
+            }
+            else
+            {
+                if (!string.Equals(credential.Username, requestOptions.Username, StringComparison.OrdinalIgnoreCase))
+                {
+                    return AssertionCompleteResult.CreateFailure("User is not owner of the credential");
+                }
+            }
+        }
+        // - If the user was not identified before the authentication ceremony was initiated, verify that
+        // response.userHandle is present, and that the user identified by this value is the owner of credentialSource.
+        else
+        {
+            if (userHandle == null || userHandle.Length == 0)
+            {
+                return AssertionCompleteResult.CreateFailure("User handle is not present");
+            }
+
+            if (!BytesArrayComparer.CompareNullable(credential.UserHandle, userHandle))
+            {
+                return AssertionCompleteResult.CreateFailure("User is not owner of the credential");
+            }
+        }
+
+        // Step 7
+        // Using credential.id (or credential.rawId, if base64url encoding is inappropriate for your use case),
+        // look up the corresponding credential public key and let credentialPublicKey be that credential public key.
         if (credential.CredentialPublicKey == null)
         {
             return AssertionCompleteResult.CreateFailure(
@@ -151,5 +195,10 @@ public sealed class Assertion : IAssertion
         }
 
         return AssertionCompleteResult.Create();
+    }
+
+    private static bool AreAllowCredentialsPresent(PublicKeyCredentialRequestOptions requestOptions)
+    {
+        return requestOptions.AllowCredentials != null && requestOptions.AllowCredentials.Length != 0;
     }
 }
