@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿﻿using Microsoft.Extensions.DependencyInjection;
 using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Core.Abstractions.Handlers;
 using Shark.Fido2.Core.Abstractions.Services;
@@ -21,6 +21,7 @@ public static class DependencyInjection
 
         services.AddTransient<IClientDataValidator, ClientDataValidator>();
         services.AddTransient<IClientDataHandler, ClientDataHandler>();
+        services.AddTransient<IUserHandlerValidator, UserHandlerValidator>();
 
         services.AddTransient<IAuthenticatorDataParserService, AuthenticatorDataParserService>();
         services.AddTransient<IAttestationObjectValidator, AttestationObjectValidator>();
