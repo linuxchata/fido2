@@ -344,6 +344,7 @@ public class AttestationTests
             {
                 CredentialId = [1, 2, 3, 4],
                 Username = UserName,
+                UserHandle = Encoding.UTF8.GetBytes(UserName),
                 CredentialPublicKey = new CredentialPublicKey
                 {
                     KeyType = 2,

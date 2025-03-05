@@ -16,5 +16,7 @@ public sealed class PublicKeyCredentialRequestOptions
 
     public PublicKeyCredentialDescriptor[]? AllowCredentials { get; set; }
 
+    public string? Username { get; set; }
+
     public UserVerificationRequirement? UserVerification { get; set; }
 }
