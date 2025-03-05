@@ -3,6 +3,7 @@ using Shark.Fido2.Common.Extensions;
 using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Core.Abstractions.Handlers;
 using Shark.Fido2.Core.Abstractions.Repositories;
+using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Comparers;
 using Shark.Fido2.Core.Configurations;
 using Shark.Fido2.Domain;
@@ -14,6 +15,7 @@ public sealed class Assertion : IAssertion
 {
     private readonly IClientDataHandler _clientDataHandler;
     private readonly IAssertionObjectHandler _assertionObjectHandler;
+    private readonly IUserHandlerValidator _userHandlerValidator;
     private readonly IChallengeGenerator _challengeGenerator;
     private readonly ICredentialRepository _credentialRepository;
     private readonly Fido2Configuration _configuration;
@@ -21,12 +23,14 @@ public sealed class Assertion : IAssertion
     public Assertion(
         IClientDataHandler clientDataHandler,
         IAssertionObjectHandler assertionObjectHandler,
+        IUserHandlerValidator userHandlerValidator,
         IChallengeGenerator challengeGenerator,
         ICredentialRepository credentialRepository,
         IOptions<Fido2Configuration> options)
     {
         _clientDataHandler = clientDataHandler;
         _assertionObjectHandler = assertionObjectHandler;
+        _userHandlerValidator = userHandlerValidator;
         _challengeGenerator = challengeGenerator;
         _credentialRepository = credentialRepository;
         _configuration = options.Value;
@@ -80,7 +84,7 @@ public sealed class Assertion : IAssertion
         // If options.allowCredentials is not empty, verify that credential.id identifies one of the public key
         // credentials listed in options.allowCredentials.
         var credentialId = Convert.FromBase64String(publicKeyCredentialAssertion.RawId);
-        if (AreAllowCredentialsPresent(requestOptions))
+        if (requestOptions.AllowCredentials != null && requestOptions.AllowCredentials.Length != 0)
         {
             if (!requestOptions.AllowCredentials!.Any(c => BytesArrayComparer.CompareNullable(c.Id, credentialId)))
             {
@@ -97,41 +101,11 @@ public sealed class Assertion : IAssertion
 
         // Step 6
         // Identify the user being authenticated and verify that this user is the owner of the public key credential
-        // source credentialSource identified by credential.id:
-        // - If the user was identified before the authentication ceremony was initiated, e.g., via a username or
-        // cookie, verify that the identified user is the owner of credentialSource. If response.userHandle is present,
-        // let userHandle be its value. Verify that userHandle also maps to the same user.
-        var userHandle = Convert.FromBase64String(publicKeyCredentialAssertion.Response.UserHandle ?? string.Empty);
-        if (AreAllowCredentialsPresent(requestOptions))
+        // source credentialSource identified by credential.id
+        var result = _userHandlerValidator.Validate(credential, publicKeyCredentialAssertion, requestOptions);
+        if (!result.IsValid)
         {
-            if (userHandle != null && userHandle.Length != 0)
-            {
-                if (!BytesArrayComparer.CompareNullable(credential.UserHandle, userHandle))
-                {
-                    return AssertionCompleteResult.CreateFailure("User is not owner of the credential");
-                }
-            }
-            else
-            {
-                if (!string.Equals(credential.Username, requestOptions.Username, StringComparison.OrdinalIgnoreCase))
-                {
-                    return AssertionCompleteResult.CreateFailure("User is not owner of the credential");
-                }
-            }
-        }
-        // - If the user was not identified before the authentication ceremony was initiated, verify that
-        // response.userHandle is present, and that the user identified by this value is the owner of credentialSource.
-        else
-        {
-            if (userHandle == null || userHandle.Length == 0)
-            {
-                return AssertionCompleteResult.CreateFailure("User handle is not present");
-            }
-
-            if (!BytesArrayComparer.CompareNullable(credential.UserHandle, userHandle))
-            {
-                return AssertionCompleteResult.CreateFailure("User is not owner of the credential");
-            }
+            return AssertionCompleteResult.CreateFailure(result.Message!);
         }
 
         // Step 7
@@ -139,8 +113,7 @@ public sealed class Assertion : IAssertion
         // look up the corresponding credential public key and let credentialPublicKey be that credential public key.
         if (credential.CredentialPublicKey == null)
         {
-            return AssertionCompleteResult.CreateFailure(
-                "Registered credential's credential public key is not found");
+            return AssertionCompleteResult.CreateFailure("Registered credential's credential public key is not found");
         }
 
         // Step 8
@@ -195,10 +168,5 @@ public sealed class Assertion : IAssertion
         }
 
         return AssertionCompleteResult.Create();
-    }
-
-    private static bool AreAllowCredentialsPresent(PublicKeyCredentialRequestOptions requestOptions)
-    {
-        return requestOptions.AllowCredentials != null && requestOptions.AllowCredentials.Length != 0;
     }
 }
