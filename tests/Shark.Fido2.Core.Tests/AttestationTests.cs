@@ -1,5 +1,4 @@
 using System.Text;
-using System.Xml.Linq;
 using Microsoft.Extensions.Options;
 using Moq;
 using Shark.Fido2.Core.Abstractions;
@@ -18,16 +17,17 @@ public class AttestationTests
 {
     private const string UserName = "testuser";
     private const string DisplayName = "Test User";
-    private const string AttestationId = "AttestationId";
-    private const string AttestationRawId = "AttestationRawId";
+    private const string CredentialId = "CredentialId";
+    private const string CredentialRawId = "CredentialRawId";
 
     private Mock<IClientDataHandler> _clientDataHandlerMock = null!;
     private Mock<IAttestationObjectHandler> _attestationObjectHandlerMock = null!;
     private Mock<IChallengeGenerator> _challengeGeneratorMock = null!;
     private Mock<ICredentialRepository> _credentialRepositoryMock = null!;
-    private Fido2Configuration _fido2Configuration = null!;
+
     private PublicKeyCredentialCreationOptions _publicKeyCredentialCreationOptions = null!;
     private PublicKeyCredentialUserEntity _publicKeyCredentialUserEntity = null!;
+    private Fido2Configuration _fido2Configuration = null!;
 
     private Attestation _sut = null!;
 
@@ -219,8 +219,8 @@ public class AttestationTests
         // Arrange
         var publicKeyCredentialAttestation = new PublicKeyCredentialAttestation
         {
-            Id = AttestationId,
-            RawId = AttestationRawId,
+            Id = CredentialId,
+            RawId = CredentialRawId,
             Type = PublicKeyCredentialType.PublicKey,
             Response = new AuthenticatorAttestationResponse
             {
@@ -242,8 +242,8 @@ public class AttestationTests
         // Arrange
         var publicKeyCredentialAttestation = new PublicKeyCredentialAttestation
         {
-            Id = AttestationId,
-            RawId = AttestationRawId,
+            Id = CredentialId,
+            RawId = CredentialRawId,
             Type = PublicKeyCredentialType.PublicKey,
             Response = null!,
         };
@@ -259,13 +259,13 @@ public class AttestationTests
     }
 
     [Test]
-    public async Task Complete_WhenClientDataHandlerHasError_ThenReturnsFailure()
+    public async Task Complete_WhenClientDataHasError_ThenReturnsFailure()
     {
         // Arrange
         var publicKeyCredentialAttestation = new PublicKeyCredentialAttestation
         {
-            Id = AttestationId,
-            RawId = AttestationRawId,
+            Id = CredentialId,
+            RawId = CredentialRawId,
             Type = PublicKeyCredentialType.PublicKey,
             Response = new AuthenticatorAttestationResponse
             {
@@ -289,13 +289,13 @@ public class AttestationTests
     }
 
     [Test]
-    public async Task Complete_WhenAttestationObjectHandlerHasError_ThenReturnsFailure()
+    public async Task Complete_WhenAttestationObjectHasError_ThenReturnsFailure()
     {
         // Arrange
         var publicKeyCredentialAttestation = new PublicKeyCredentialAttestation
         {
-            Id = AttestationId,
-            RawId = AttestationRawId,
+            Id = CredentialId,
+            RawId = CredentialRawId,
             Type = PublicKeyCredentialType.PublicKey,
             Response = new AuthenticatorAttestationResponse
             {
@@ -327,8 +327,8 @@ public class AttestationTests
         // Arrange
         var publicKeyCredential = new PublicKeyCredentialAttestation
         {
-            Id = AttestationId,
-            RawId = AttestationRawId,
+            Id = CredentialId,
+            RawId = CredentialRawId,
             Type = PublicKeyCredentialType.PublicKey,
             Response = new AuthenticatorAttestationResponse
             {
@@ -367,8 +367,8 @@ public class AttestationTests
         // Arrange
         var publicKeyCredentialAttestation = new PublicKeyCredentialAttestation
         {
-            Id = AttestationId,
-            RawId = AttestationRawId,
+            Id = CredentialId,
+            RawId = CredentialRawId,
             Type = PublicKeyCredentialType.PublicKey,
             Response = new AuthenticatorAttestationResponse
             {
