@@ -6,6 +6,7 @@ EXPOSE 8081
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
+COPY ["Directory.Build.props", "/"]
 COPY ["src/Shark.Sample.Fido2/Shark.Sample.Fido2.csproj", "Shark.Sample.Fido2/"]
 COPY ["src/Shark.Fido2.Core/Shark.Fido2.Core.csproj", "Shark.Fido2.Core/"]
 COPY ["src/Shark.Fido2.Common/Shark.Fido2.Common.csproj", "Shark.Fido2.Common/"]
