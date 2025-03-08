@@ -16,7 +16,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.ExampleFilters();
-    c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "Shark.Fido2.xml"));
+    c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "Shark.Sample.Fido2.xml"));
 });
 builder.Services.AddSwaggerExamplesFromAssemblyOf<ServerPublicKeyCredentialCreationOptionsRequestExample>();
 
