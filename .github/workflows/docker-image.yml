@@ -1,0 +1,26 @@
+name: build_docker_image
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - src/**
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: azure/docker-login@v2
+      with:
+        login-server: ${{ secrets.ACR_SERVER }}
+        username: ${{ secrets.ACR_USER_NAME }}
+        password: ${{ secrets.ACR_PASSWORD }}
+    - uses: actions/checkout@v4
+    - name: Build the Docker image for API project
+      run: |
+        docker build . --file ./src/Shark.Sample.Fido2/Dockerfile --tag ${{ secrets.ACR_SERVER }}/sharkfido2webapi:latest
+        docker push ${{ secrets.ACR_SERVER }}/sharkfido2webapi:latest
+
