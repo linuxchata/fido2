@@ -6,13 +6,12 @@ EXPOSE 8081
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
-WORKDIR /src
-COPY ["Shark.Sample.Fido2/Shark.Sample.Fido2.csproj", "Shark.Sample.Fido2/"]
-COPY ["Shark.Fido2.Core/Shark.Fido2.Core.csproj", "Shark.Fido2.Core/"]
-COPY ["Shark.Fido2.Common/Shark.Fido2.Common.csproj", "Shark.Fido2.Common/"]
-COPY ["Shark.Fido2.Domain/Shark.Fido2.Domain.csproj", "Shark.Fido2.Domain/"]
-COPY ["Shark.Fido2.Models/Shark.Fido2.Models.csproj", "Shark.Fido2.Models/"]
-COPY ["Shark.Fido2.Repositories.InMemory/Shark.Fido2.Repositories.InMemory.csproj", "Shark.Fido2.Repositories.InMemory/"]
+COPY ["src/Shark.Sample.Fido2/Shark.Sample.Fido2.csproj", "Shark.Sample.Fido2/"]
+COPY ["src/Shark.Fido2.Core/Shark.Fido2.Core.csproj", "Shark.Fido2.Core/"]
+COPY ["src/Shark.Fido2.Common/Shark.Fido2.Common.csproj", "Shark.Fido2.Common/"]
+COPY ["src/Shark.Fido2.Domain/Shark.Fido2.Domain.csproj", "Shark.Fido2.Domain/"]
+COPY ["src/Shark.Fido2.Models/Shark.Fido2.Models.csproj", "Shark.Fido2.Models/"]
+COPY ["src/Shark.Fido2.Repositories.InMemory/Shark.Fido2.Repositories.InMemory.csproj", "Shark.Fido2.Repositories.InMemory/"]
 RUN dotnet restore "./Shark.Sample.Fido2/Shark.Sample.Fido2.csproj"
 COPY . .
 WORKDIR "/src/Shark.Sample.Fido2"
