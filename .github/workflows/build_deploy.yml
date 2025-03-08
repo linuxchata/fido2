@@ -58,6 +58,6 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'app-auth-dev-01'
+          app-name: 'app-fido2-dev-01'
           slot-name: 'Production'
           package: .
