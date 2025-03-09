@@ -20,15 +20,31 @@ public static class PublicKeyCredentialAttestationMapper
             {
                 AttestationObject = attestation.Response.AttestationObject,
                 ClientDataJson = attestation.Response.ClientDataJson,
-                Transports = ConvertTransports(attestation.Response.Transports),
+                Transports = Map(attestation.Response.Transports),
             },
             Type = attestation.Type,
-            Extensions = new AuthenticationExtensionsClientOutputs(),
+            Extensions = Map(attestation.Extensions),
         };
     }
 
-    private static AuthenticatorTransport[] ConvertTransports(string[]? transports)
+    private static AuthenticatorTransport[] Map(string[]? transports)
     {
         return transports?.Select(t => t.ToEnum<AuthenticatorTransport>()).ToArray() ?? [];
+    }
+
+    private static AuthenticationExtensionsClientOutputs Map(ServerAuthenticationExtensionsClientOutputs extensions)
+    {
+        if (extensions == null || extensions.CredentialProperties == null)
+        {
+            return new AuthenticationExtensionsClientOutputs();
+        }
+
+        return new AuthenticationExtensionsClientOutputs
+        {
+            CredentialProperties = new CredentialPropertiesOutput
+            {
+                RequireResidentKey = extensions.CredentialProperties.RequireResidentKey,
+            },
+        };
     }
 }

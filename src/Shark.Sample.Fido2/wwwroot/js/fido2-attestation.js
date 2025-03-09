@@ -54,6 +54,8 @@ async function fetchAttestationResult(credentials) {
 }
 
 async function credentialCreate(options) {
+    const extensions = options.extensions.credProps ? { 'credProps': options.extensions.credProps } : {};
+
     const credentialCreationOptions = {
         publicKey: {
             rp: {
@@ -71,7 +73,8 @@ async function credentialCreate(options) {
             })),
             challenge: toUint8Array(options.challenge),
             timeout: options.timeout,
-            attestation: options.attestation
+            attestation: options.attestation,
+            extensions: extensions
         },
     };
 
@@ -93,6 +96,7 @@ async function credentialCreate(options) {
             transports: attestation.response.getTransports(),
         },
         type: attestation.type,
+        extensions: attestation.getClientExtensionResults(),
     };
 
     await fetchAttestationResult(credentials);
