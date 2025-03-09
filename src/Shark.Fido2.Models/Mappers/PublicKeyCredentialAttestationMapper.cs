@@ -23,6 +23,7 @@ public static class PublicKeyCredentialAttestationMapper
                 Transports = ConvertTransports(attestation.Response.Transports),
             },
             Type = attestation.Type,
+            Extensions = new AuthenticationExtensionsClientOutputs(),
         };
     }
 

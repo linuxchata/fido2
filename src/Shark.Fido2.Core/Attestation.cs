@@ -69,6 +69,7 @@ public sealed class Attestation : IAttestation
                     UserVerificationRequirement.Preferred,
             } : new AuthenticatorSelectionCriteria(),
             Attestation = request.Attestation ?? AttestationConveyancePreference.None,
+            Extensions = new AuthenticationExtensionsClientInputs(),
         };
 
         return credentialCreationOptions;

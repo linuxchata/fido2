@@ -17,6 +17,7 @@ public static class PublicKeyCredentialRequestOptionsMapper
             RpId = requestOptions.RpId,
             AllowCredentials = Map(requestOptions.AllowCredentials),
             UserVerification = requestOptions.UserVerification!.Value.GetValue(),
+            Extensions = new ServerAuthenticationExtensionsClientInputs(),
         };
 
         return response;

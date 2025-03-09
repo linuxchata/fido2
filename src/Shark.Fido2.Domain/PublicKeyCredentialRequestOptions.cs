@@ -19,4 +19,6 @@ public sealed class PublicKeyCredentialRequestOptions
     public string? Username { get; set; }
 
     public UserVerificationRequirement? UserVerification { get; set; }
+
+    public AuthenticationExtensionsClientInputs? Extensions { get; set; }
 }

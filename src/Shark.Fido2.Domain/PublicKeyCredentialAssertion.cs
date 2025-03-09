@@ -1,12 +1,18 @@
 ﻿namespace Shark.Fido2.Domain;
 
+/// <summary>
+/// 5.1. PublicKeyCredential Interface
+/// See: https://www.w3.org/TR/webauthn-2/#iface-pkcredential
+/// </summary>
 public sealed class PublicKeyCredentialAssertion
 {
-    public string Id { get; set; } = null!;
+    public required string Id { get; set; }
 
-    public string RawId { get; set; } = null!;
+    public required string RawId { get; set; }
 
-    public AuthenticatorAssertionResponse Response { get; set; } = null!;
+    public required AuthenticatorAssertionResponse Response { get; set; }
 
-    public string Type { get; set; } = null!;
+    public required string Type { get; set; }
+
+    public required AuthenticationExtensionsClientOutputs Extensions { get; set; }
 }

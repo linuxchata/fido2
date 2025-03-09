@@ -20,7 +20,9 @@ public static class PublicKeyCredentialAssertionMapper
                 AuthenticatorData = assertion.Response.AuthenticatorData,
                 Signature = assertion.Response.Signature!,
                 UserHandle = assertion.Response.UserHandle,
-            }
+            },
+            Type = assertion.Type,
+            Extensions = new AuthenticationExtensionsClientOutputs(),
         };
     }
 }
