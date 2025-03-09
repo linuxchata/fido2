@@ -17,6 +17,9 @@ public enum AuthenticatorTransport
     [EnumMember(Value = "ble")]
     Ble,
 
+    [EnumMember(Value = "hybrid")]
+    Hybrid,
+
     [EnumMember(Value = "internal")]
     Internal,
 }

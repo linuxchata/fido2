@@ -2,4 +2,5 @@
 
 public sealed class AuthenticationExtensionsClientInputs
 {
+    public bool? CredentialProperties { get; set; }
 }

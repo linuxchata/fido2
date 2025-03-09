@@ -53,13 +53,13 @@ public sealed class Attestation : IAttestation
                 DisplayName = request.DisplayName,
             },
             Challenge = _challengeGenerator.Get(),
-            PublicKeyCredentialParams = new[]
-            {
+            PublicKeyCredentialParams =
+            [
                 new PublicKeyCredentialParameter { Algorithm = PublicKeyAlgorithm.Es256 },
                 new PublicKeyCredentialParameter { Algorithm = PublicKeyAlgorithm.Rs256 },
-            },
+            ],
             Timeout = _configuration.Timeout ?? DefaultTimeout,
-            ExcludeCredentials = new PublicKeyCredentialDescriptor[0],
+            ExcludeCredentials = [],
             AuthenticatorSelection = request.AuthenticatorSelection != null ? new AuthenticatorSelectionCriteria
             {
                 AuthenticatorAttachment = request.AuthenticatorSelection.AuthenticatorAttachment,

@@ -20,7 +20,7 @@ public static class PublicKeyCredentialCreationOptionsMapper
             ExcludeCredentials = Map(credentialOptions.ExcludeCredentials),
             AuthenticatorSelection = Map(credentialOptions.AuthenticatorSelection),
             Attestation = credentialOptions.Attestation,
-            Extensions = new ServerAuthenticationExtensionsClientInputs(),
+            Extensions = Map(credentialOptions.Extensions),
         };
 
         return response;
@@ -82,6 +82,19 @@ public static class PublicKeyCredentialCreationOptionsMapper
             ResidentKey = authenticatorSelection.ResidentKey.GetValue(),
             RequireResidentKey = authenticatorSelection.RequireResidentKey,
             UserVerification = authenticatorSelection.UserVerification!.Value.GetValue(),
+        };
+    }
+
+    private static ServerAuthenticationExtensionsClientInputs Map(AuthenticationExtensionsClientInputs extensions)
+    {
+        if (extensions == null)
+        {
+            return new ServerAuthenticationExtensionsClientInputs();
+        }
+
+        return new ServerAuthenticationExtensionsClientInputs
+        {
+            CredentialProperties = extensions.CredentialProperties,
         };
     }
 }
