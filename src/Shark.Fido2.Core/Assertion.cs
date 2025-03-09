@@ -59,6 +59,7 @@ public sealed class Assertion : IAssertion
             }).ToArray(),
             Username = request.Username,
             UserVerification = request.UserVerification ?? UserVerificationRequirement.Preferred,
+            Extensions = new AuthenticationExtensionsClientInputs(),
         };
     }
 

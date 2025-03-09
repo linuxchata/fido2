@@ -228,6 +228,7 @@ public class AttestationTests
                 AttestationObject = "test-attestation-object",
                 Transports = [],
             },
+            Extensions = new AuthenticationExtensionsClientOutputs(),
         };
         PublicKeyCredentialCreationOptions? creationOptions = null;
 
@@ -246,6 +247,7 @@ public class AttestationTests
             RawId = CredentialRawId,
             Type = PublicKeyCredentialType.PublicKey,
             Response = null!,
+            Extensions = new AuthenticationExtensionsClientOutputs(),
         };
         var publicKeyCredentialCreationOptions = new PublicKeyCredentialCreationOptions();
 
@@ -273,6 +275,7 @@ public class AttestationTests
                 AttestationObject = "attestation-object",
                 Transports = [],
             },
+            Extensions = new AuthenticationExtensionsClientOutputs(),
         };
 
         _clientDataHandlerMock
@@ -303,6 +306,7 @@ public class AttestationTests
                 AttestationObject = "invalid-attestation",
                 Transports = [],
             },
+            Extensions = new AuthenticationExtensionsClientOutputs(),
         };
 
         _attestationObjectHandlerMock
@@ -336,6 +340,7 @@ public class AttestationTests
                 AttestationObject = "attestation-object",
                 Transports = [AuthenticatorTransport.Internal],
             },
+            Extensions = new AuthenticationExtensionsClientOutputs(),
         };
 
         _credentialRepositoryMock
@@ -375,7 +380,8 @@ public class AttestationTests
                 ClientDataJson = "client-data",
                 AttestationObject = "attestation-object",
                 Transports = [AuthenticatorTransport.Internal, AuthenticatorTransport.Usb],
-            }
+            },
+            Extensions = new AuthenticationExtensionsClientOutputs(),
         };
 
         Credential? addedCredential = null;
@@ -419,6 +425,7 @@ public class AttestationTests
                 Transports = [],
             },
             Type = PublicKeyCredentialType.PublicKey,
+            Extensions = new AuthenticationExtensionsClientOutputs(),
         };
 
         var expectedChallenge = "t2pJGIQ7Y4DXF2b98tnBjg";
@@ -452,6 +459,7 @@ public class AttestationTests
                 Transports = [],
             },
             Type = PublicKeyCredentialType.PublicKey,
+            Extensions = new AuthenticationExtensionsClientOutputs(),
         };
 
         var expectedChallenge = "gsjJTjg3rcml3cfELwxAxQ";

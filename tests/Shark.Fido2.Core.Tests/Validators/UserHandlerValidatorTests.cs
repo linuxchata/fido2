@@ -163,7 +163,8 @@ internal class UserHandlerValidatorTests
                 AuthenticatorData = "data",
                 Signature = "signature",
                 UserHandle = userHandle
-            }
+            },
+            Extensions = new AuthenticationExtensionsClientOutputs(),
         };
     }
 
@@ -177,7 +178,7 @@ internal class UserHandlerValidatorTests
             AllowCredentials = includeAllowCredentials
                 ? [new PublicKeyCredentialDescriptor { Id = [1, 2, 3, 4] }]
                 : null,
-            Username = username
+            Username = username,
         };
     }
 }

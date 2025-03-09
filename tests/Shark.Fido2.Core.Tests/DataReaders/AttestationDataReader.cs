@@ -24,6 +24,7 @@ internal static class AttestationDataReader
                 Transports = [],
             },
             Type = attestationData.Type,
+            Extensions = new AuthenticationExtensionsClientOutputs(),
         };
     }
 }

@@ -13,4 +13,6 @@ public sealed class PublicKeyCredentialAttestation
     public required AuthenticatorAttestationResponse Response { get; set; }
 
     public required string Type { get; set; }
+
+    public required AuthenticationExtensionsClientOutputs Extensions { get; set; }
 }

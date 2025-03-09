@@ -20,6 +20,7 @@ public static class PublicKeyCredentialCreationOptionsMapper
             ExcludeCredentials = Map(credentialOptions.ExcludeCredentials),
             AuthenticatorSelection = Map(credentialOptions.AuthenticatorSelection),
             Attestation = credentialOptions.Attestation,
+            Extensions = new ServerAuthenticationExtensionsClientInputs(),
         };
 
         return response;

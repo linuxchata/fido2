@@ -95,6 +95,7 @@ public class AssertionTests
                 AuthenticatorData = "test-authenticator-data",
                 Signature = "test-signature",
             },
+            Extensions = new AuthenticationExtensionsClientOutputs(),
         };
 
         _publicKeyCredentialRequestOptions = new PublicKeyCredentialRequestOptions
