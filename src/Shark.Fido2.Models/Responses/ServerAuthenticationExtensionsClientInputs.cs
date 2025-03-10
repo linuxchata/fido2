@@ -8,7 +8,7 @@ public sealed class ServerAuthenticationExtensionsClientInputs
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public bool? CredentialProperties { get; set; }
 
-    [JsonPropertyName("example.extension")]
+    [JsonPropertyName("example.extension.bool")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public object? Example { get; set; }
+    public bool? Example { get; set; }
 }

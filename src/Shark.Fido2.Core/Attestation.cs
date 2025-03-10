@@ -48,7 +48,7 @@ public sealed class Attestation : IAttestation
             },
             User = new PublicKeyCredentialUserEntity
             {
-                Id = Encoding.UTF8.GetBytes(request.Username),
+                Id = request.Username.FromBase64Url(),
                 Name = request.Username,
                 DisplayName = request.DisplayName,
             },
@@ -56,7 +56,11 @@ public sealed class Attestation : IAttestation
             PublicKeyCredentialParams =
             [
                 new PublicKeyCredentialParameter { Algorithm = PublicKeyAlgorithm.Es256 },
+                new PublicKeyCredentialParameter { Algorithm = PublicKeyAlgorithm.EdDsa },
+                new PublicKeyCredentialParameter { Algorithm = PublicKeyAlgorithm.Es384 },
+                new PublicKeyCredentialParameter { Algorithm = PublicKeyAlgorithm.Ps256 },
                 new PublicKeyCredentialParameter { Algorithm = PublicKeyAlgorithm.Rs256 },
+                new PublicKeyCredentialParameter { Algorithm = PublicKeyAlgorithm.RS1 },
             ],
             Timeout = _configuration.Timeout ?? DefaultTimeout,
             ExcludeCredentials = [],

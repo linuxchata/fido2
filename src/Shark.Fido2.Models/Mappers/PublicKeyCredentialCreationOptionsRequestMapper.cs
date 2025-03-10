@@ -30,7 +30,7 @@ public static class PublicKeyCredentialCreationOptionsRequestMapper
 
         return new AuthenticatorSelectionCriteria
         {
-            AuthenticatorAttachment = authenticatorSelection.AuthenticatorAttachment.ToEnum<AuthenticatorAttachment>(),
+            AuthenticatorAttachment = authenticatorSelection.AuthenticatorAttachment?.ToEnum<AuthenticatorAttachment>(),
             ResidentKey = authenticatorSelection.ResidentKey?.ToEnum<ResidentKeyRequirement>() ?? 0,
             RequireResidentKey = authenticatorSelection.RequireResidentKey,
             UserVerification = authenticatorSelection.UserVerification?.ToEnum<UserVerificationRequirement>(),

@@ -96,7 +96,7 @@ public static class PublicKeyCredentialCreationOptionsMapper
         return new ServerAuthenticationExtensionsClientInputs
         {
             CredentialProperties = null,
-            Example = new object(),
+            Example = true,
         };
     }
 }
