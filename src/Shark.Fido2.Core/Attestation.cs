@@ -64,10 +64,15 @@ public sealed class Attestation : IAttestation
             {
                 AuthenticatorAttachment = request.AuthenticatorSelection.AuthenticatorAttachment,
                 ResidentKey = request.AuthenticatorSelection.ResidentKey,
-                RequireResidentKey = request.AuthenticatorSelection.RequireResidentKey,
+                RequireResidentKey = request.AuthenticatorSelection.ResidentKey == ResidentKeyRequirement.Required,
                 UserVerification = request.AuthenticatorSelection.UserVerification ??
                     UserVerificationRequirement.Preferred,
-            } : new AuthenticatorSelectionCriteria(),
+            } : new AuthenticatorSelectionCriteria
+                {
+                    ResidentKey = ResidentKeyRequirement.Discouraged,
+                    RequireResidentKey = false,
+                    UserVerification = UserVerificationRequirement.Preferred,
+                },
             Attestation = request.Attestation ?? AttestationConveyancePreference.None,
             Extensions = new AuthenticationExtensionsClientInputs(),
         };

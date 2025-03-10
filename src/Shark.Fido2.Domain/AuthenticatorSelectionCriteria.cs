@@ -8,7 +8,7 @@ namespace Shark.Fido2.Domain;
 /// </summary>
 public class AuthenticatorSelectionCriteria
 {
-    public AuthenticatorAttachment AuthenticatorAttachment { get; set; }
+    public AuthenticatorAttachment? AuthenticatorAttachment { get; set; }
 
     public ResidentKeyRequirement ResidentKey { get; set; }
 

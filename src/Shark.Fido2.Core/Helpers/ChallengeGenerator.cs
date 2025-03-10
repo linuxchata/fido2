@@ -7,7 +7,7 @@ public sealed class ChallengeGenerator : IChallengeGenerator
 {
     public byte[] Get()
     {
-        var challengeBytes = new byte[16];
+        var challengeBytes = new byte[24];
         using var randomNumberGenerator = RandomNumberGenerator.Create();
         randomNumberGenerator.GetBytes(challengeBytes);
         return challengeBytes;

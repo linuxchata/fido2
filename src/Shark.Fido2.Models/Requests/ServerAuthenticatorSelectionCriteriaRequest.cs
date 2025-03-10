@@ -8,7 +8,7 @@ public sealed class ServerAuthenticatorSelectionCriteriaRequest
     public string AuthenticatorAttachment { get; set; } = null!;
 
     [JsonPropertyName("residentKey")]
-    public string ResidentKey { get; set; } = null!;
+    public string? ResidentKey { get; set; }
 
     [JsonPropertyName("requireResidentKey")]
     public bool RequireResidentKey { get; set; } = false;

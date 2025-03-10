@@ -12,7 +12,8 @@ public static class PublicKeyCredentialRequestOptionsMapper
         var response = new ServerPublicKeyCredentialGetOptionsResponse
         {
             Status = "ok",
-            Challenge = Convert.ToBase64String(requestOptions.Challenge),
+            ErrorMessage = string.Empty,
+            Challenge = requestOptions.Challenge.ToBase64Url(),
             Timeout = requestOptions.Timeout,
             RpId = requestOptions.RpId,
             AllowCredentials = Map(requestOptions.AllowCredentials),

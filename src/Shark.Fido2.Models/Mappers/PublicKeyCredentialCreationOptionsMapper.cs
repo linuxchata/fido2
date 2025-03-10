@@ -12,7 +12,8 @@ public static class PublicKeyCredentialCreationOptionsMapper
         var response = new ServerPublicKeyCredentialCreationOptionsResponse
         {
             Status = "ok",
-            Challenge = Convert.ToBase64String(credentialOptions.Challenge),
+            ErrorMessage = string.Empty,
+            Challenge = credentialOptions.Challenge.ToBase64Url(),
             RelyingParty = Map(credentialOptions.RelyingParty),
             User = Map(credentialOptions.User),
             Parameters = Map(credentialOptions.PublicKeyCredentialParams),
@@ -44,7 +45,7 @@ public static class PublicKeyCredentialCreationOptionsMapper
 
         return new ServerPublicKeyCredentialUserEntity
         {
-            Identifier = Convert.ToBase64String(userEntity.Id),
+            Identifier = userEntity.Id.ToBase64Url(),
             Name = userEntity.Name,
             DisplayName = userEntity.DisplayName,
         };
@@ -78,23 +79,24 @@ public static class PublicKeyCredentialCreationOptionsMapper
 
         return new ServerAuthenticatorSelectionCriteria
         {
-            AuthenticatorAttachment = authenticatorSelection.AuthenticatorAttachment.GetValue(),
-            ResidentKey = authenticatorSelection.ResidentKey.GetValue(),
+            AuthenticatorAttachment = authenticatorSelection.AuthenticatorAttachment?.GetValue(),
+            ResidentKey = authenticatorSelection.ResidentKey != 0 ? authenticatorSelection.ResidentKey.GetValue() : null,
             RequireResidentKey = authenticatorSelection.RequireResidentKey,
             UserVerification = authenticatorSelection.UserVerification!.Value.GetValue(),
         };
     }
 
-    private static ServerAuthenticationExtensionsClientInputs Map(AuthenticationExtensionsClientInputs extensions)
+    private static ServerAuthenticationExtensionsClientInputs? Map(AuthenticationExtensionsClientInputs extensions)
     {
         if (extensions == null)
         {
-            return new ServerAuthenticationExtensionsClientInputs();
+            return null;
         }
 
         return new ServerAuthenticationExtensionsClientInputs
         {
-            CredentialProperties = extensions.CredentialProperties,
+            CredentialProperties = null,
+            Example = new object(),
         };
     }
 }

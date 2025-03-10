@@ -5,10 +5,12 @@ namespace Shark.Fido2.Models.Responses;
 public sealed class ServerAuthenticatorSelectionCriteria
 {
     [JsonPropertyName("authenticatorAttachment")]
-    public string AuthenticatorAttachment { get; set; } = null!;
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? AuthenticatorAttachment { get; set; }
 
     [JsonPropertyName("residentKey")]
-    public string ResidentKey { get; set; } = null!;
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? ResidentKey { get; set; }
 
     [JsonPropertyName("requireResidentKey")]
     public bool RequireResidentKey { get; set; }
