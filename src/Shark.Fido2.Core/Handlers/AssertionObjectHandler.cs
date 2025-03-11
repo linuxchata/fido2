@@ -1,4 +1,5 @@
-﻿using Shark.Fido2.Core.Abstractions.Handlers;
+﻿using Shark.Fido2.Common.Extensions;
+using Shark.Fido2.Core.Abstractions.Handlers;
 using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Results.Attestation;
@@ -36,7 +37,7 @@ internal class AssertionObjectHandler : IAssertionObjectHandler
             return new InternalResult<AuthenticatorData>("Request options cannot be null");
         }
 
-        var authenticatorRawData = Convert.FromBase64String(authenticatorDataString);
+        var authenticatorRawData = authenticatorDataString.FromBase64Url();
         var authenticatorData = _authenticatorDataParserService.Parse(authenticatorRawData);
 
         var result = _assertionObjectValidator.Validate(

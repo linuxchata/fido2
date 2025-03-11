@@ -24,5 +24,6 @@ public sealed class ServerPublicKeyCredentialGetOptionsResponse : ServerResponse
     public string UserVerification { get; set; } = null!;
 
     [JsonPropertyName("extensions")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public ServerAuthenticationExtensionsClientInputs? Extensions { get; set; }
 }

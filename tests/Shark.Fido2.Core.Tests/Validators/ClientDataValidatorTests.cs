@@ -37,7 +37,7 @@ internal class ClientDataValidatorTests
         };
 
         // Act
-        var result = _sut.ValidateForAttestation(clientDataModel, $"{expectedChallenge}==");
+        var result = _sut.ValidateForAttestation(clientDataModel, expectedChallenge);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -65,7 +65,7 @@ internal class ClientDataValidatorTests
         };
 
         // Act
-        var result = _sut.ValidateForAttestation(clientDataModel, $"{expectedChallenge}==");
+        var result = _sut.ValidateForAttestation(clientDataModel, expectedChallenge);
 
         // Assert
         Assert.That(result, Is.Not.Null);

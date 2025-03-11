@@ -3,7 +3,6 @@ using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Comparers;
 using Shark.Fido2.Core.Configurations;
 using Shark.Fido2.Core.Constants;
-using Shark.Fido2.Core.Converters;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain;
 using Shark.Fido2.Domain.Enums;
@@ -33,8 +32,7 @@ internal class ClientDataValidator : IClientDataValidator
 
         // Step 8
         // Verify that the value of C.challenge equals the base64url encoding of options.challenge.
-        var base64StringChallenge = Base64UrlConverter.ToBase64(clientData.Challenge!);
-        if (!Base64Comparer.Compare(expectedChallenge!, base64StringChallenge))
+        if (!string.Equals(expectedChallenge, clientData.Challenge, StringComparison.Ordinal))
         {
             return ValidatorInternalResult.Invalid("Challenge mismatch");
         }
@@ -74,8 +72,7 @@ internal class ClientDataValidator : IClientDataValidator
 
         // Step 12
         // Verify that the value of C.challenge equals the base64url encoding of options.challenge.
-        var base64StringChallenge = Base64UrlConverter.ToBase64(clientData.Challenge!);
-        if (!Base64Comparer.Compare(expectedChallenge!, base64StringChallenge))
+        if (!string.Equals(expectedChallenge, clientData.Challenge, StringComparison.Ordinal))
         {
             return ValidatorInternalResult.Invalid("Challenge mismatch");
         }

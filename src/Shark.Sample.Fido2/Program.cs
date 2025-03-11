@@ -8,7 +8,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddControllers();
 
-builder.Services.AddSession();
+builder.Services.AddSession(options =>
+{
+    options.Cookie.SameSite = SameSiteMode.Unspecified;
+});
 
 // Swagger
 builder.Services.AddRouting(options => options.LowercaseUrls = true);

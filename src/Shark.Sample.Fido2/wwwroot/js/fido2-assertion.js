@@ -7,7 +7,7 @@ if (requestLink != null) {
 
 async function credentialRequestClick(event) {
     const optionsRequest = {
-        username: 'shark'
+        username: 'HNAiCzKv7VHrICaBeeFZ'
     };
 
     const options = await fetchAssertionOptions(optionsRequest);

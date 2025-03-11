@@ -7,6 +7,7 @@ public static class ConvertExtensions
         var base64String = Convert.ToBase64String(bytes);
         return base64String.Replace('+', '-').Replace('/', '_').TrimEnd('=');
     }
+
     public static byte[] FromBase64Url(this string @string)
     {
         var base64String = @string.Replace('-', '+').Replace('_', '/');

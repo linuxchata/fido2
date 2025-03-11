@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
+using Shark.Fido2.Common.Extensions;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Comparers;
@@ -78,7 +79,7 @@ internal class AssertionResponseValidator : IAssertionObjectValidator
         // Step 20
         // Using credentialPublicKey, verify that sig is a valid signature over the binary concatenation of authData
         // and hash.
-        var signatureRawData = Convert.FromBase64String(signature);
+        var signatureRawData = signature.FromBase64Url();
         var concatenatedData = BytesArrayHelper.Concatenate(authenticatorRawData, clientData.ClientDataHash);
         var result = _signatureAttestationStatementValidator.Validate(concatenatedData, signatureRawData, credentialPublicKey);
         if (!result.IsValid)

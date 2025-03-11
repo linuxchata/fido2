@@ -7,7 +7,7 @@ if (createLink != null) {
 
 async function credentialCreateClick(event) {
     const optionsRequest = {
-        username: 'shark',
+        username: 'HNAiCzKv7VHrICaBeeFZ',
         displayName: 'Shark',
         attestation: 'direct'
     };

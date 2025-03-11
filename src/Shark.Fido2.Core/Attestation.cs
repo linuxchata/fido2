@@ -103,7 +103,7 @@ public sealed class Attestation : IAttestation
         }
 
         // Steps 5 to 12
-        var challengeString = Convert.ToBase64String(creationOptions.Challenge);
+        var challengeString = creationOptions.Challenge.ToBase64Url();
         var clientDataHandlerResult = _clientDataHandler.HandleAttestation(response.ClientDataJson, challengeString);
         if (clientDataHandlerResult.HasError)
         {

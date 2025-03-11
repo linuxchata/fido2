@@ -35,5 +35,5 @@ public sealed class ServerPublicKeyCredentialCreationOptionsResponse : ServerRes
 
     [JsonPropertyName("extensions")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public ServerAuthenticationExtensionsClientInputs? Extensions { get; set; } = null!;
+    public ServerAuthenticationExtensionsClientInputs? Extensions { get; set; }
 }

@@ -32,7 +32,7 @@ public static class PublicKeyCredentialAttestationMapper
         return transports?.Select(t => t.ToEnum<AuthenticatorTransport>()).ToArray() ?? [];
     }
 
-    private static AuthenticationExtensionsClientOutputs Map(ServerAuthenticationExtensionsClientOutputs extensions)
+    private static AuthenticationExtensionsClientOutputs Map(ServerAuthenticationExtensionsClientOutputs? extensions)
     {
         if (extensions == null || extensions.CredentialProperties == null)
         {

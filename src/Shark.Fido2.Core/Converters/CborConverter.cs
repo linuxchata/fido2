@@ -1,4 +1,5 @@
 ﻿using System.Formats.Cbor;
+using Shark.Fido2.Common.Extensions;
 
 namespace Shark.Fido2.Core.Converters;
 
@@ -9,7 +10,7 @@ public static class CborConverter
 {
     public static Dictionary<string, object> Decode(string input)
     {
-        var inputBytes = Convert.FromBase64String(input);
+        var inputBytes = input.FromBase64Url();
 
         var reader = new CborReader(inputBytes);
         var result = Read(reader) as Dictionary<string, object>;
