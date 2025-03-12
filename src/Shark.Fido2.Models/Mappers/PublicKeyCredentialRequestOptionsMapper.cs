@@ -12,12 +12,13 @@ public static class PublicKeyCredentialRequestOptionsMapper
         var response = new ServerPublicKeyCredentialGetOptionsResponse
         {
             Status = "ok",
-            Challenge = Convert.ToBase64String(requestOptions.Challenge),
+            ErrorMessage = string.Empty,
+            Challenge = requestOptions.Challenge.ToBase64Url(),
             Timeout = requestOptions.Timeout,
             RpId = requestOptions.RpId,
             AllowCredentials = Map(requestOptions.AllowCredentials),
             UserVerification = requestOptions.UserVerification!.Value.GetValue(),
-            Extensions = new ServerAuthenticationExtensionsClientInputs(),
+            Extensions = Map(requestOptions.Extensions),
         };
 
         return response;
@@ -28,8 +29,22 @@ public static class PublicKeyCredentialRequestOptionsMapper
         return allowCredentials?.Select(credential => new ServerPublicKeyCredentialDescriptor
         {
             Type = credential.Type,
-            Id = Convert.ToBase64String(credential.Id),
+            Id = credential.Id.ToBase64Url(),
             Transports = credential.Transports?.Select(t => t.GetValue()).ToArray() ?? [],
         }).ToArray() ?? [];
+    }
+
+    private static ServerAuthenticationExtensionsClientInputs? Map(AuthenticationExtensionsClientInputs? extensions)
+    {
+        if (extensions == null)
+        {
+            return null;
+        }
+
+        return new ServerAuthenticationExtensionsClientInputs
+        {
+            CredentialProperties = null,
+            Example = true,
+        };
     }
 }

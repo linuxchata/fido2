@@ -7,6 +7,7 @@ using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Comparers;
 using Shark.Fido2.Core.Configurations;
 using Shark.Fido2.Domain;
+using Shark.Fido2.Domain.Constants;
 using Shark.Fido2.Domain.Enums;
 
 namespace Shark.Fido2.Core;
@@ -72,6 +73,16 @@ public sealed class Assertion : IAssertion
 
         // 7.2. Verifying an Authentication Assertion
 
+        if (!publicKeyCredentialAssertion.Id.IsBase64Url())
+        {
+            return AssertionCompleteResult.CreateFailure("Assertion identifier is not base64url encode");
+        }
+
+        if (!string.Equals(publicKeyCredentialAssertion.Type, PublicKeyCredentialType.PublicKey))
+        {
+            return AssertionCompleteResult.CreateFailure("Assertion type is not set to \"public-key\"");
+        }
+
         // Step 3
         // Let response be credential.response. If response is not an instance of AuthenticatorAssertionResponse,
         // abort the ceremony with a user-visible error.
@@ -84,7 +95,7 @@ public sealed class Assertion : IAssertion
         // Step 5
         // If options.allowCredentials is not empty, verify that credential.id identifies one of the public key
         // credentials listed in options.allowCredentials.
-        var credentialId = Convert.FromBase64String(publicKeyCredentialAssertion.RawId);
+        var credentialId = publicKeyCredentialAssertion.RawId.FromBase64Url();
         if (requestOptions.AllowCredentials != null && requestOptions.AllowCredentials.Length != 0)
         {
             if (!requestOptions.AllowCredentials!.Any(c => BytesArrayComparer.CompareNullable(c.Id, credentialId)))
@@ -122,7 +133,7 @@ public sealed class Assertion : IAssertion
         // signature respectively.
 
         // Steps 9 to 14
-        var challengeString = Convert.ToBase64String(requestOptions.Challenge);
+        var challengeString = requestOptions.Challenge.ToBase64Url();
         var clientDataHandlerResult = _clientDataHandler.HandleAssertion(response.ClientDataJson, challengeString);
         if (clientDataHandlerResult.HasError)
         {

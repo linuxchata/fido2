@@ -20,5 +20,5 @@ public sealed class ServerPublicKeyCredentialAttestation
     public string Type { get; set; } = null!;
 
     [JsonPropertyName("extensions")]
-    public ServerAuthenticationExtensionsClientOutputs Extensions { get; set; } = null!;
+    public ServerAuthenticationExtensionsClientOutputs? Extensions { get; set; }
 }

@@ -48,7 +48,7 @@ public sealed class Attestation : IAttestation
             },
             User = new PublicKeyCredentialUserEntity
             {
-                Id = Encoding.UTF8.GetBytes(request.Username),
+                Id = request.Username.FromBase64Url(),
                 Name = request.Username,
                 DisplayName = request.DisplayName,
             },
@@ -56,7 +56,11 @@ public sealed class Attestation : IAttestation
             PublicKeyCredentialParams =
             [
                 new PublicKeyCredentialParameter { Algorithm = PublicKeyAlgorithm.Es256 },
+                new PublicKeyCredentialParameter { Algorithm = PublicKeyAlgorithm.EdDsa },
+                new PublicKeyCredentialParameter { Algorithm = PublicKeyAlgorithm.Es384 },
+                new PublicKeyCredentialParameter { Algorithm = PublicKeyAlgorithm.Ps256 },
                 new PublicKeyCredentialParameter { Algorithm = PublicKeyAlgorithm.Rs256 },
+                new PublicKeyCredentialParameter { Algorithm = PublicKeyAlgorithm.RS1 },
             ],
             Timeout = _configuration.Timeout ?? DefaultTimeout,
             ExcludeCredentials = [],
@@ -64,10 +68,15 @@ public sealed class Attestation : IAttestation
             {
                 AuthenticatorAttachment = request.AuthenticatorSelection.AuthenticatorAttachment,
                 ResidentKey = request.AuthenticatorSelection.ResidentKey,
-                RequireResidentKey = request.AuthenticatorSelection.RequireResidentKey,
+                RequireResidentKey = request.AuthenticatorSelection.ResidentKey == ResidentKeyRequirement.Required,
                 UserVerification = request.AuthenticatorSelection.UserVerification ??
                     UserVerificationRequirement.Preferred,
-            } : new AuthenticatorSelectionCriteria(),
+            } : new AuthenticatorSelectionCriteria
+                {
+                    ResidentKey = ResidentKeyRequirement.Discouraged,
+                    RequireResidentKey = false,
+                    UserVerification = UserVerificationRequirement.Preferred,
+                },
             Attestation = request.Attestation ?? AttestationConveyancePreference.None,
             Extensions = new AuthenticationExtensionsClientInputs(),
         };
@@ -84,6 +93,16 @@ public sealed class Attestation : IAttestation
 
         // 7.1. Registering a New Credential
 
+        if (!publicKeyCredentialAttestation.Id.IsBase64Url())
+        {
+            return AttestationCompleteResult.CreateFailure("Attestation identifier is not base64url encode");
+        }
+
+        if (!string.Equals(publicKeyCredentialAttestation.Type, PublicKeyCredentialType.PublicKey))
+        {
+            return AttestationCompleteResult.CreateFailure("Attestation type is not set to \"public-key\"");
+        }
+
         // Step 3
         // Let response be credential.response. If response is not an instance of AuthenticatorAttestationResponse,
         // abort the ceremony with a user-visible error.
@@ -94,7 +113,7 @@ public sealed class Attestation : IAttestation
         }
 
         // Steps 5 to 12
-        var challengeString = Convert.ToBase64String(creationOptions.Challenge);
+        var challengeString = creationOptions.Challenge.ToBase64Url();
         var clientDataHandlerResult = _clientDataHandler.HandleAttestation(response.ClientDataJson, challengeString);
         if (clientDataHandlerResult.HasError)
         {

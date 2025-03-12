@@ -62,10 +62,6 @@ public class PublicKeyCredentialCreationOptionsRequestMapperTests
         Assert.That(result.Username, Is.EqualTo(serverRequest.Username));
         Assert.That(result.DisplayName, Is.EqualTo(serverRequest.DisplayName));
         Assert.That(result.Attestation, Is.EqualTo(serverRequest.Attestation));
-        Assert.That(result.AuthenticatorSelection, Is.Not.Null);
-        Assert.That(result.AuthenticatorSelection.AuthenticatorAttachment, Is.EqualTo((AuthenticatorAttachment)0));
-        Assert.That(result.AuthenticatorSelection.ResidentKey, Is.EqualTo((ResidentKeyRequirement)0));
-        Assert.That(result.AuthenticatorSelection.RequireResidentKey, Is.False);
-        Assert.That(result.AuthenticatorSelection.UserVerification, Is.Null);
+        Assert.That(result.AuthenticatorSelection, Is.Null);
     }
 }

@@ -1,6 +1,7 @@
 using System.Text;
 using Microsoft.Extensions.Options;
 using Moq;
+using Shark.Fido2.Common.Extensions;
 using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Core.Abstractions.Handlers;
 using Shark.Fido2.Core.Abstractions.Repositories;
@@ -133,9 +134,9 @@ public class AttestationTests
         // Assert
         Assert.That(result, Is.Not.Null);
         Assert.That(result.AuthenticatorSelection, Is.Not.Null);
-        Assert.That(result.AuthenticatorSelection.AuthenticatorAttachment, Is.EqualTo((AuthenticatorAttachment)0));
+        Assert.That(result.AuthenticatorSelection.AuthenticatorAttachment, Is.Null);
         Assert.That(result.AuthenticatorSelection.RequireResidentKey, Is.False);
-        Assert.That(result.AuthenticatorSelection.UserVerification, Is.Null);
+        Assert.That(result.AuthenticatorSelection.UserVerification, Is.EqualTo(UserVerificationRequirement.Preferred));
     }
 
     [Test]
@@ -185,9 +186,9 @@ public class AttestationTests
         Assert.That(result.RelyingParty.Name, Is.EqualTo(_fido2Configuration.RelyingPartyIdName));
         Assert.That(result.User.Name, Is.EqualTo(request.Username));
         Assert.That(result.User.DisplayName, Is.EqualTo(request.DisplayName));
-        Assert.That(result.User.Id, Is.EqualTo(Encoding.UTF8.GetBytes(request.Username)));
+        Assert.That(result.User.Id, Is.EqualTo(request.Username.FromBase64Url()));
         Assert.That(result.Challenge, Is.EqualTo(new byte[] { 1, 2, 3, 4 }));
-        Assert.That(result.PublicKeyCredentialParams.Length, Is.EqualTo(2));
+        Assert.That(result.PublicKeyCredentialParams.Length, Is.EqualTo(6));
         Assert.That(result.Timeout, Is.EqualTo(60000));
         Assert.That(result.ExcludeCredentials.Length, Is.EqualTo(0));
         Assert.That(result.AuthenticatorSelection.AuthenticatorAttachment, Is.EqualTo(AuthenticatorAttachment.Platform));
@@ -238,6 +239,34 @@ public class AttestationTests
     }
 
     [Test]
+    public async Task Complete_WhenPublicKeyCredentialAttestationTypeIsInvalid_ThenReturnsFailure()
+    {
+        // Arrange
+        var publicKeyCredentialAttestation = new PublicKeyCredentialAttestation
+        {
+            Id = CredentialId,
+            RawId = CredentialRawId,
+            Type = "invalid-type",
+            Response = new AuthenticatorAttestationResponse
+            {
+                ClientDataJson = "test-client-data",
+                AttestationObject = "test-attestation-object",
+                Transports = [],
+            },
+            Extensions = new AuthenticationExtensionsClientOutputs(),
+        };
+        var creationOptions = new PublicKeyCredentialCreationOptions();
+
+        // Act
+        var result = await _sut.Complete(publicKeyCredentialAttestation, creationOptions);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.IsValid, Is.False);
+        Assert.That(result.Message, Is.EqualTo("Attestation type is not set to \"public-key\""));
+    }
+
+    [Test]
     public async Task Complete_WhenResponseIsNull_ThenReturnsFailure()
     {
         // Arrange
@@ -256,7 +285,7 @@ public class AttestationTests
 
         // Assert
         Assert.That(result, Is.Not.Null);
-        Assert.That(result.Status, Is.EqualTo("failed"));
+        Assert.That(result.IsValid, Is.False);
         Assert.That(result.Message, Is.EqualTo("Attestation response cannot be null"));
     }
 
@@ -287,7 +316,7 @@ public class AttestationTests
 
         // Assert
         Assert.That(result, Is.Not.Null);
-        Assert.That(result.Status, Is.EqualTo("failed"));
+        Assert.That(result.IsValid, Is.False);
         Assert.That(result.Message, Is.EqualTo("Client data validation failed"));
     }
 
@@ -321,7 +350,7 @@ public class AttestationTests
 
         // Assert
         Assert.That(result, Is.Not.Null);
-        Assert.That(result.Status, Is.EqualTo("failed"));
+        Assert.That(result.IsValid, Is.False);
         Assert.That(result.Message, Is.EqualTo("Attestation object validation failed"));
     }
 
@@ -362,7 +391,7 @@ public class AttestationTests
 
         // Assert
         Assert.That(result, Is.Not.Null);
-        Assert.That(result.Status, Is.EqualTo("failed"));
+        Assert.That(result.IsValid, Is.False);
         Assert.That(result.Message, Is.EqualTo("Credential has already been registered"));
     }
 
@@ -395,7 +424,7 @@ public class AttestationTests
 
         // Assert
         Assert.That(result, Is.Not.Null);
-        Assert.That(result.Status, Is.EqualTo("ok"));
+        Assert.That(result.IsValid, Is.True);
         Assert.That(result.Message, Is.Null);
 
         _credentialRepositoryMock.Verify(a => a.Add(It.IsAny<Credential>()), Times.Once);
@@ -440,7 +469,7 @@ public class AttestationTests
 
         // Assert
         Assert.That(result, Is.Not.Null);
-        Assert.That(result.Status, Is.EqualTo("ok"));
+        Assert.That(result.IsValid, Is.True);
         Assert.That(result.Message, Is.Null);
     }
 
@@ -474,7 +503,7 @@ public class AttestationTests
 
         // Assert
         Assert.That(result, Is.Not.Null);
-        Assert.That(result.Status, Is.EqualTo("ok"));
+        Assert.That(result.IsValid, Is.True);
         Assert.That(result.Message, Is.Null);
     }
 

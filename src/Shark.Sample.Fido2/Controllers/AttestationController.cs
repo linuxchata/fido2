@@ -68,8 +68,15 @@ public class AttestationController(IAttestation attestation) : ControllerBase
 
         var creationOptions = JsonSerializer.Deserialize<PublicKeyCredentialCreationOptions>(creationOptionsString!);
 
-        await _attestation.Complete(request.Map(), creationOptions!);
+        var response = await _attestation.Complete(request.Map(), creationOptions!);
 
-        return Ok(ServerResponse.Create());
+        if (response.IsValid)
+        {
+            return Ok(ServerResponse.Create());
+        }
+        else
+        {
+            return BadRequest(ServerResponse.CreateFailed(response.Message));
+        }
     }
 }

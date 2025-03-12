@@ -7,7 +7,7 @@ if (requestLink != null) {
 
 async function credentialRequestClick(event) {
     const optionsRequest = {
-        username: 'shark'
+        username: 'HNAiCzKv7VHrICaBeeFZ'
     };
 
     const options = await fetchAssertionOptions(optionsRequest);
@@ -71,12 +71,12 @@ async function credentialRequest(options) {
 
     const credentials = {
         id: assertion.id,
-        rawId: toBase64(assertion.rawId),
+        rawId: toBase64Url(assertion.rawId),
         response: {
-            authenticatorData: toBase64(assertion.response.authenticatorData),
-            clientDataJson: toBase64(assertion.response.clientDataJSON),
-            signature: toBase64(assertion.response.signature),
-            userHandle: toBase64(assertion.response.userHandle),
+            authenticatorData: toBase64Url(assertion.response.authenticatorData),
+            clientDataJson: toBase64Url(assertion.response.clientDataJSON),
+            signature: toBase64Url(assertion.response.signature),
+            userHandle: toBase64Url(assertion.response.userHandle),
         },
         type: assertion.type,
     };

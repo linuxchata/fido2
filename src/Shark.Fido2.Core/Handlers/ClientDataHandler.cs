@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Text.Json;
+using Shark.Fido2.Common.Extensions;
 using Shark.Fido2.Core.Abstractions.Handlers;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Helpers;
@@ -59,7 +60,7 @@ internal class ClientDataHandler : IClientDataHandler
 
         // Step 5
         // Let JSONtext be the result of running UTF-8 decode on the value of response.clientDataJSON.
-        var clientDataJsonArray = Convert.FromBase64String(clientDataJson);
+        var clientDataJsonArray = clientDataJson.FromBase64Url();
         var decodedClientDataJson = Encoding.UTF8.GetString(clientDataJsonArray);
 
         // Step 6
@@ -85,7 +86,7 @@ internal class ClientDataHandler : IClientDataHandler
 
         // Step 9
         // Let JSONtext be the result of running UTF-8 decode on the value of cData.
-        var clientDataJsonArray = Convert.FromBase64String(clientDataJson);
+        var clientDataJsonArray = clientDataJson.FromBase64Url();
         var decodedClientDataJson = Encoding.UTF8.GetString(clientDataJsonArray);
 
         // Step 10

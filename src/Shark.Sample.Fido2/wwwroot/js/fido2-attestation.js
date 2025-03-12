@@ -7,7 +7,7 @@ if (createLink != null) {
 
 async function credentialCreateClick(event) {
     const optionsRequest = {
-        username: 'shark',
+        username: 'HNAiCzKv7VHrICaBeeFZ',
         displayName: 'Shark',
         attestation: 'direct'
     };
@@ -89,10 +89,10 @@ async function credentialCreate(options) {
 
     const credentials = {
         id: attestation.id,
-        rawId: toBase64(attestation.rawId),
+        rawId: toBase64Url(attestation.rawId),
         response: {
-            attestationObject: toBase64(attestation.response.attestationObject),
-            clientDataJson: toBase64(attestation.response.clientDataJSON),
+            attestationObject: toBase64Url(attestation.response.attestationObject),
+            clientDataJson: toBase64Url(attestation.response.clientDataJSON),
             transports: attestation.response.getTransports(),
         },
         type: attestation.type,

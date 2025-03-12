@@ -21,19 +21,19 @@ public static class PublicKeyCredentialCreationOptionsRequestMapper
         return request;
     }
 
-    private static AuthenticatorSelectionCriteria Map(ServerAuthenticatorSelectionCriteriaRequest? criteriaRequest)
+    private static AuthenticatorSelectionCriteria? Map(ServerAuthenticatorSelectionCriteriaRequest? authenticatorSelection)
     {
-        if (criteriaRequest == null)
+        if (authenticatorSelection == null)
         {
-            return new AuthenticatorSelectionCriteria();
+            return null;
         }
 
         return new AuthenticatorSelectionCriteria
         {
-            AuthenticatorAttachment = criteriaRequest.AuthenticatorAttachment.ToEnum<AuthenticatorAttachment>(),
-            ResidentKey = criteriaRequest.ResidentKey.ToEnum<ResidentKeyRequirement>(),
-            RequireResidentKey = criteriaRequest.RequireResidentKey,
-            UserVerification = criteriaRequest.UserVerification?.ToEnum<UserVerificationRequirement>(),
+            AuthenticatorAttachment = authenticatorSelection.AuthenticatorAttachment?.ToEnum<AuthenticatorAttachment>(),
+            ResidentKey = authenticatorSelection.ResidentKey?.ToEnum<ResidentKeyRequirement>() ?? 0,
+            RequireResidentKey = authenticatorSelection.RequireResidentKey,
+            UserVerification = authenticatorSelection.UserVerification?.ToEnum<UserVerificationRequirement>(),
         };
     }
 }

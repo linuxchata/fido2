@@ -239,6 +239,21 @@ public class AssertionTests
     }
 
     [Test]
+    public async Task Complete_WhenPublicKeyCredentialAssertionTypeIsInvalid_ThenReturnsFailure()
+    {
+        // Arrange
+        _publicKeyCredentialAssertion.Type = "invalid-type";
+
+        // Act
+        var result = await _sut.Complete(_publicKeyCredentialAssertion, _publicKeyCredentialRequestOptions);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.IsValid, Is.False);
+        Assert.That(result.Message, Is.EqualTo("Assertion type is not set to \"public-key\""));
+    }
+
+    [Test]
     public async Task Complete_WhenResponseIsNull_ThenReturnsFailure()
     {
         // Arrange
@@ -249,7 +264,7 @@ public class AssertionTests
 
         // Assert
         Assert.That(result, Is.Not.Null);
-        Assert.That(result.Status, Is.EqualTo("failed"));
+        Assert.That(result.IsValid, Is.False);
         Assert.That(result.Message, Is.EqualTo("Assertion response cannot be null"));
     }
 
@@ -266,7 +281,7 @@ public class AssertionTests
                     Id = [5, 6, 7, 8], // Different credential identifiers
                     Transports = [AuthenticatorTransport.Internal],
                 }
-            }
+            },
         };
 
         // Act
@@ -274,7 +289,7 @@ public class AssertionTests
 
         // Assert
         Assert.That(result, Is.Not.Null);
-        Assert.That(result.Status, Is.EqualTo("failed"));
+        Assert.That(result.IsValid, Is.False);
         Assert.That(result.Message, Is.EqualTo("Assertion response does not contain expected credential identifier"));
     }
 
@@ -303,7 +318,7 @@ public class AssertionTests
 
         // Assert
         Assert.That(result, Is.Not.Null);
-        Assert.That(result.Status, Is.EqualTo("failed"));
+        Assert.That(result.IsValid, Is.False);
         Assert.That(result.Message, Is.EqualTo("Registered credential is not found"));
     }
 
@@ -332,7 +347,7 @@ public class AssertionTests
 
         // Assert
         Assert.That(result, Is.Not.Null);
-        Assert.That(result.Status, Is.EqualTo("failed"));
+        Assert.That(result.IsValid, Is.False);
         Assert.That(result.Message, Is.EqualTo("User is not the owner of the credential"));
     }
 
@@ -361,7 +376,7 @@ public class AssertionTests
 
         // Assert
         Assert.That(result, Is.Not.Null);
-        Assert.That(result.Status, Is.EqualTo("failed"));
+        Assert.That(result.IsValid, Is.False);
         Assert.That(result.Message, Is.EqualTo("Registered credential's credential public key is not found"));
     }
 
@@ -390,7 +405,7 @@ public class AssertionTests
 
         // Assert
         Assert.That(result, Is.Not.Null);
-        Assert.That(result.Status, Is.EqualTo("failed"));
+        Assert.That(result.IsValid, Is.False);
         Assert.That(result.Message, Is.EqualTo("Client data cannot be read"));
     }
 
@@ -424,7 +439,7 @@ public class AssertionTests
 
         // Assert
         Assert.That(result, Is.Not.Null);
-        Assert.That(result.Status, Is.EqualTo("failed"));
+        Assert.That(result.IsValid, Is.False);
         Assert.That(result.Message, Is.EqualTo("Assertion object validation failed"));
     }
 
@@ -450,7 +465,7 @@ public class AssertionTests
 
         // Assert
         Assert.That(result, Is.Not.Null);
-        Assert.That(result.Status, Is.EqualTo("failed"));
+        Assert.That(result.IsValid, Is.False);
         Assert.That(result.Message, Is.EqualTo("Signature counter of the authenticator is less or equal to stored signature count. The authenticator may be cloned"));
     }
 
@@ -476,7 +491,7 @@ public class AssertionTests
 
         // Assert
         Assert.That(result, Is.Not.Null);
-        Assert.That(result.Status, Is.EqualTo("ok"));
+        Assert.That(result.IsValid, Is.True);
         Assert.That(result.Message, Is.Null);
 
         _credentialRepositoryMock.Verify(a => a.UpdateSignCount(credential, 2), Times.Once);
@@ -516,7 +531,7 @@ public class AssertionTests
 
         // Assert
         Assert.That(result, Is.Not.Null);
-        Assert.That(result.Status, Is.EqualTo("ok"));
+        Assert.That(result.IsValid, Is.True);
         Assert.That(result.Message, Is.Null);
 
         // Verify that UpdateSignCount was not called

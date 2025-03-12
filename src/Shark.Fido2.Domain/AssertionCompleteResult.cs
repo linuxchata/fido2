@@ -2,17 +2,17 @@
 
 public sealed class AssertionCompleteResult
 {
-    public string Status { get; set; } = null!;
+    public bool IsValid { get; set; }
 
     public string? Message { get; set; }
 
     public static AssertionCompleteResult Create()
     {
-        return new AssertionCompleteResult { Status = "ok" };
+        return new AssertionCompleteResult { IsValid = true };
     }
 
     public static AssertionCompleteResult CreateFailure(string message)
     {
-        return new AssertionCompleteResult { Status = "failed", Message = message };
+        return new AssertionCompleteResult { IsValid = false, Message = message };
     }
 }
