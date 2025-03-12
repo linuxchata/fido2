@@ -54,6 +54,20 @@ internal class PackedAttestationStatementStrategy : IAttestationStatementStrateg
             attestationObjectData.AuthenticatorRawData,
             clientData.ClientDataHash);
 
+        // Validate that alg matches the algorithm of the credentialPublicKey in authenticatorData.
+        // Validate for both cases when x5c is present and when x5c is not present (Conformance Tools requirement)
+        if (!attestationStatementDict.TryGetValue(AttestationStatement.Algorithm, out var algorithm) ||
+            algorithm is not int)
+        {
+            return ValidatorInternalResult.Invalid("Packed attestation statement algorithm cannot be read");
+        }
+
+        if (credentialPublicKey.Algorithm != (int)algorithm)
+        {
+            return ValidatorInternalResult.Invalid(
+                $"Packed attestation statement algorithm ({algorithm}) does not match credential public key algorithm ({credentialPublicKey.Algorithm})");
+        }
+
         // If x5c is present
         if (_attestationCertificateProviderService.AreCertificatesPresent(attestationStatementDict))
         {
@@ -92,19 +106,6 @@ internal class PackedAttestationStatementStrategy : IAttestationStatementStrateg
         // If x5c is not present, self attestation is in use.
         else
         {
-            // Validate that alg matches the algorithm of the credentialPublicKey in authenticatorData.
-            if (!attestationStatementDict.TryGetValue(AttestationStatement.Algorithm, out var algorithm) ||
-                algorithm is not int)
-            {
-                return ValidatorInternalResult.Invalid("Packed attestation statement algorithm cannot be read");
-            }
-
-            if (credentialPublicKey.Algorithm != (int)algorithm)
-            {
-                return ValidatorInternalResult.Invalid(
-                    $"Packed attestation statement algorithm ({algorithm}) does not match credential public key algorithm ({credentialPublicKey.Algorithm})");
-            }
-
             // Verify that sig is a valid signature over the concatenation of authenticatorData and clientDataHash
             // using the credential public key with alg.
             var result = _signatureValidator.Validate(concatenatedData, attestationStatementDict, credentialPublicKey);

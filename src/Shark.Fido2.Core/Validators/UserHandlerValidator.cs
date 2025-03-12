@@ -1,3 +1,4 @@
+using Shark.Fido2.Common.Extensions;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Comparers;
 using Shark.Fido2.Core.Results;
@@ -14,7 +15,7 @@ internal sealed class UserHandlerValidator : IUserHandlerValidator
         PublicKeyCredentialAssertion publicKeyCredentialAssertion,
         PublicKeyCredentialRequestOptions requestOptions)
     {
-        var userHandle = Convert.FromBase64String(publicKeyCredentialAssertion.Response.UserHandle ?? string.Empty);
+        var userHandle = publicKeyCredentialAssertion.Response.UserHandle?.FromBase64Url();
 
         // Step 6
         // Identify the user being authenticated and verify that this user is the owner of the public key credential
