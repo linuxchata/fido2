@@ -61,8 +61,15 @@ public class AssertionController(IAssertion assertion) : ControllerBase
 
         var requestOptions = JsonSerializer.Deserialize<PublicKeyCredentialRequestOptions>(requestOptionsString!);
 
-        await _assertion.Complete(request.Map(), requestOptions!);
+        var response = await _assertion.Complete(request.Map(), requestOptions!);
 
-        return Ok();
+        if (response.IsValid)
+        {
+            return Ok(ServerResponse.Create());
+        }
+        else
+        {
+            return BadRequest(ServerResponse.CreateFailed(response.Message));
+        }
     }
 }

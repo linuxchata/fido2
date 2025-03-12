@@ -7,6 +7,7 @@ using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Comparers;
 using Shark.Fido2.Core.Configurations;
 using Shark.Fido2.Domain;
+using Shark.Fido2.Domain.Constants;
 using Shark.Fido2.Domain.Enums;
 
 namespace Shark.Fido2.Core;
@@ -71,6 +72,16 @@ public sealed class Assertion : IAssertion
         ArgumentNullException.ThrowIfNull(requestOptions);
 
         // 7.2. Verifying an Authentication Assertion
+
+        if (!publicKeyCredentialAssertion.Id.IsBase64Url())
+        {
+            return AssertionCompleteResult.CreateFailure("Assertion identifier is not base64url encode");
+        }
+
+        if (!string.Equals(publicKeyCredentialAssertion.Type, PublicKeyCredentialType.PublicKey))
+        {
+            return AssertionCompleteResult.CreateFailure("Assertion type is not set to \"public-key\"");
+        }
 
         // Step 3
         // Let response be credential.response. If response is not an instance of AuthenticatorAssertionResponse,

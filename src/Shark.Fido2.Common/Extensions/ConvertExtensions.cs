@@ -1,23 +1,29 @@
-﻿namespace Shark.Fido2.Common.Extensions;
+﻿using Microsoft.IdentityModel.Tokens;
+
+namespace Shark.Fido2.Common.Extensions;
 
 public static class ConvertExtensions
 {
     public static string ToBase64Url(this byte[] bytes)
     {
-        var base64String = Convert.ToBase64String(bytes);
-        return base64String.Replace('+', '-').Replace('/', '_').TrimEnd('=');
+        return Base64UrlEncoder.Encode(bytes);
     }
 
-    public static byte[] FromBase64Url(this string @string)
+    public static byte[] FromBase64Url(this string base64Url)
     {
-        var base64String = @string.Replace('-', '+').Replace('_', '/');
+        return Base64UrlEncoder.DecodeBytes(base64Url);
+    }
 
-        var padding = base64String.Length % 4;
-        if (padding > 0)
+    public static bool IsBase64Url(this string base64Url)
+    {
+        try
         {
-            base64String = base64String.PadRight(base64String.Length + 4 - padding, '=');
+            Base64UrlEncoder.Decode(base64Url);
+            return true;
         }
-
-        return Convert.FromBase64String(base64String);
+        catch
+        {
+            return false;
+        }
     }
 }

@@ -4,7 +4,7 @@
 /// 5.8.2. Credential Type Enumeration (enum PublicKeyCredentialType)
 /// https://www.w3.org/TR/webauthn-2/#enum-credentialType
 /// </summary>
-internal static class PublicKeyCredentialType
+public static class PublicKeyCredentialType
 {
     public const string PublicKey = "public-key";
 }

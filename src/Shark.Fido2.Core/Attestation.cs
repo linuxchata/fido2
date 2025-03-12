@@ -93,6 +93,16 @@ public sealed class Attestation : IAttestation
 
         // 7.1. Registering a New Credential
 
+        if (!publicKeyCredentialAttestation.Id.IsBase64Url())
+        {
+            return AttestationCompleteResult.CreateFailure("Attestation identifier is not base64url encode");
+        }
+
+        if (!string.Equals(publicKeyCredentialAttestation.Type, PublicKeyCredentialType.PublicKey))
+        {
+            return AttestationCompleteResult.CreateFailure("Attestation type is not set to \"public-key\"");
+        }
+
         // Step 3
         // Let response be credential.response. If response is not an instance of AuthenticatorAttestationResponse,
         // abort the ceremony with a user-visible error.

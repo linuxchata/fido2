@@ -239,6 +239,34 @@ public class AttestationTests
     }
 
     [Test]
+    public async Task Complete_WhenPublicKeyCredentialAttestationTypeIsInvalid_ThenReturnsFailure()
+    {
+        // Arrange
+        var publicKeyCredentialAttestation = new PublicKeyCredentialAttestation
+        {
+            Id = CredentialId,
+            RawId = CredentialRawId,
+            Type = "invalid-type",
+            Response = new AuthenticatorAttestationResponse
+            {
+                ClientDataJson = "test-client-data",
+                AttestationObject = "test-attestation-object",
+                Transports = [],
+            },
+            Extensions = new AuthenticationExtensionsClientOutputs(),
+        };
+        var creationOptions = new PublicKeyCredentialCreationOptions();
+
+        // Act
+        var result = await _sut.Complete(publicKeyCredentialAttestation, creationOptions);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.IsValid, Is.False);
+        Assert.That(result.Message, Is.EqualTo("Attestation type is not set to \"public-key\""));
+    }
+
+    [Test]
     public async Task Complete_WhenResponseIsNull_ThenReturnsFailure()
     {
         // Arrange
@@ -257,7 +285,7 @@ public class AttestationTests
 
         // Assert
         Assert.That(result, Is.Not.Null);
-        Assert.That(result.Status, Is.EqualTo("failed"));
+        Assert.That(result.IsValid, Is.False);
         Assert.That(result.Message, Is.EqualTo("Attestation response cannot be null"));
     }
 
@@ -288,7 +316,7 @@ public class AttestationTests
 
         // Assert
         Assert.That(result, Is.Not.Null);
-        Assert.That(result.Status, Is.EqualTo("failed"));
+        Assert.That(result.IsValid, Is.False);
         Assert.That(result.Message, Is.EqualTo("Client data validation failed"));
     }
 
@@ -322,7 +350,7 @@ public class AttestationTests
 
         // Assert
         Assert.That(result, Is.Not.Null);
-        Assert.That(result.Status, Is.EqualTo("failed"));
+        Assert.That(result.IsValid, Is.False);
         Assert.That(result.Message, Is.EqualTo("Attestation object validation failed"));
     }
 
@@ -363,7 +391,7 @@ public class AttestationTests
 
         // Assert
         Assert.That(result, Is.Not.Null);
-        Assert.That(result.Status, Is.EqualTo("failed"));
+        Assert.That(result.IsValid, Is.False);
         Assert.That(result.Message, Is.EqualTo("Credential has already been registered"));
     }
 
@@ -396,7 +424,7 @@ public class AttestationTests
 
         // Assert
         Assert.That(result, Is.Not.Null);
-        Assert.That(result.Status, Is.EqualTo("ok"));
+        Assert.That(result.IsValid, Is.True);
         Assert.That(result.Message, Is.Null);
 
         _credentialRepositoryMock.Verify(a => a.Add(It.IsAny<Credential>()), Times.Once);
@@ -441,7 +469,7 @@ public class AttestationTests
 
         // Assert
         Assert.That(result, Is.Not.Null);
-        Assert.That(result.Status, Is.EqualTo("ok"));
+        Assert.That(result.IsValid, Is.True);
         Assert.That(result.Message, Is.Null);
     }
 
@@ -475,7 +503,7 @@ public class AttestationTests
 
         // Assert
         Assert.That(result, Is.Not.Null);
-        Assert.That(result.Status, Is.EqualTo("ok"));
+        Assert.That(result.IsValid, Is.True);
         Assert.That(result.Message, Is.Null);
     }
 

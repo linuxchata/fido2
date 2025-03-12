@@ -11,7 +11,7 @@
     return uint8Array;
 }
 
-function toBase64(uint8Array) {
+function toBase64Url(uint8Array) {
     // Convert Uint8Array to a binary string
     const binaryString = String.fromCharCode.apply(null, new Uint8Array(uint8Array));
 
