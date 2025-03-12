@@ -20,6 +20,16 @@ internal class NoneAttestationStatementStrategy : IAttestationStatementStrategy
     /// <returns>A ValidatorInternalResult indicating whether the attestation statement is valid</returns>
     public ValidatorInternalResult Validate(AttestationObjectData attestationObjectData, ClientData clientData)
     {
+        if (attestationObjectData.AttestationStatement is not Dictionary<string, object> attestationStatementDict)
+        {
+            throw new ArgumentException("None attestation statement cannot be read", nameof(attestationObjectData));
+        }
+
+        if (attestationStatementDict.Count > 0)
+        {
+            return ValidatorInternalResult.Invalid("None attestation statement is not empty");
+        }
+
         return new AttestationStatementInternalResult(AttestationTypeEnum.None);
     }
 }
