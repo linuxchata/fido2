@@ -101,6 +101,12 @@ internal class FidoU2fAttestationStatementStrategy : IAttestationStatementStrate
             return result;
         }
 
+        // (Conformance Tools requirement)
+        if (attestationObjectData.AuthenticatorData.AttestedCredentialData.AaGuid != Guid.Empty)
+        {
+            return ValidatorInternalResult.Invalid("FIDO U2F attestation statement has not empty AAGUID");
+        }
+
         // Optionally, inspect x5c and consult externally provided knowledge to determine whether attStmt conveys a
         // Basic or AttCA attestation.
         var attestationType = (attestationCertificate.Subject == attestationCertificate.Issuer) ?
