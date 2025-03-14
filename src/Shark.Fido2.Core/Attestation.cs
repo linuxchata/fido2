@@ -1,5 +1,4 @@
-﻿using System.Text;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using Shark.Fido2.Common.Extensions;
 using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Core.Abstractions.Handlers;
@@ -35,9 +34,21 @@ public sealed class Attestation : IAttestation
         _configuration = options.Value;
     }
 
-    public PublicKeyCredentialCreationOptions GetOptions(PublicKeyCredentialCreationOptionsRequest request)
+    public async Task<PublicKeyCredentialCreationOptions> GetOptions(PublicKeyCredentialCreationOptionsRequest request)
     {
         ArgumentNullException.ThrowIfNull(request);
+
+        var credentials = await _credentialRepository.Get(request.Username);
+        PublicKeyCredentialDescriptor[]? excludeCredentials = null;
+        if (credentials != null && credentials.Count > 0)
+        {
+            excludeCredentials = credentials.Select(c => new PublicKeyCredentialDescriptor
+            {
+                Id = c.CredentialId,
+                Transports = c.Transports?.Select(t => t.ToEnum<AuthenticatorTransport>()).ToArray() ?? [],
+                Type = PublicKeyCredentialType.PublicKey,
+            }).ToArray();
+        }
 
         var credentialCreationOptions = new PublicKeyCredentialCreationOptions
         {
@@ -63,7 +74,7 @@ public sealed class Attestation : IAttestation
                 new PublicKeyCredentialParameter { Algorithm = PublicKeyAlgorithm.RS1 },
             ],
             Timeout = _configuration.Timeout ?? DefaultTimeout,
-            ExcludeCredentials = [],
+            ExcludeCredentials = excludeCredentials ?? [],
             AuthenticatorSelection = request.AuthenticatorSelection != null ? new AuthenticatorSelectionCriteria
             {
                 AuthenticatorAttachment = request.AuthenticatorSelection.AuthenticatorAttachment,
@@ -72,11 +83,11 @@ public sealed class Attestation : IAttestation
                 UserVerification = request.AuthenticatorSelection.UserVerification ??
                     UserVerificationRequirement.Preferred,
             } : new AuthenticatorSelectionCriteria
-                {
-                    ResidentKey = ResidentKeyRequirement.Discouraged,
-                    RequireResidentKey = false,
-                    UserVerification = UserVerificationRequirement.Preferred,
-                },
+            {
+                ResidentKey = ResidentKeyRequirement.Discouraged,
+                RequireResidentKey = false,
+                UserVerification = UserVerificationRequirement.Preferred,
+            },
             Attestation = request.Attestation ?? AttestationConveyancePreference.None,
             Extensions = new AuthenticationExtensionsClientInputs(),
         };

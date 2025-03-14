@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using Microsoft.Extensions.Caching.Distributed;
+using Shark.Fido2.Common.Extensions;
 using Shark.Fido2.Core.Abstractions.Repositories;
 using Shark.Fido2.Domain;
 
@@ -128,7 +129,7 @@ public sealed class CredentialRepository : ICredentialRepository
 
     private static string GetCredentialKey(byte[] id)
     {
-        return $"{CredentialKeyPrefix}{Convert.ToBase64String(id)}";
+        return $"{CredentialKeyPrefix}{id.ToBase64Url()}";
     }
 
     private static string GetUsernameKey(string username)

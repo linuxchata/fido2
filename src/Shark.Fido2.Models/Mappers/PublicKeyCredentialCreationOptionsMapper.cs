@@ -65,7 +65,7 @@ public static class PublicKeyCredentialCreationOptionsMapper
         return excludeCredentials?.Select(credential => new ServerPublicKeyCredentialDescriptor
         {
             Type = credential.Type,
-            Id = Convert.ToBase64String(credential.Id),
+            Id = credential.Id.ToBase64Url(),
             Transports = credential.Transports?.Select(t => t.GetValue()).ToArray() ?? [],
         }).ToArray() ?? [];
     }
