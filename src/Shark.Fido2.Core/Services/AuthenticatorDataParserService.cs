@@ -43,33 +43,35 @@ internal sealed class AuthenticatorDataParserService : IAuthenticatorDataParserS
         var signCount = BinaryPrimitives.ReadUInt32BigEndian(signCountArray);
         authenticatorData.SignCount = signCount;
 
-        // Check if attestedCredentialData and extensions data present
-        if (authenticatorDataArray.Length == startIndex + SignCountLength)
+        if (authenticatorData.AttestedCredentialDataIncluded)
         {
-            return authenticatorData;
+            // AAGUID of the authenticator
+            startIndex += SignCountLength;
+            var aaguidArray = authenticatorDataArray.AsSpan(startIndex, AaguidLength);
+            authenticatorData.AttestedCredentialData.AaGuid = new Guid(aaguidArray);
+
+            // Credential ID Length
+            startIndex += AaguidLength;
+            var credentialIdLengthArray = authenticatorDataArray.AsSpan(startIndex, CredentialIdLengthLength);
+            var credentialIdLength = BinaryPrimitives.ReadUInt16BigEndian(credentialIdLengthArray);
+
+            // Credential ID
+            startIndex += CredentialIdLengthLength;
+            var credentialId = authenticatorDataArray.AsSpan(startIndex, credentialIdLength);
+            authenticatorData.AttestedCredentialData.CredentialId = credentialId.ToArray();
+
+            // Credential Public Key
+            startIndex += credentialIdLength;
+            var credentialPublicKeyLength = authenticatorDataArray.Length - startIndex;
+            var credentialPublicKeyArray = authenticatorDataArray.AsSpan(startIndex, credentialPublicKeyLength);
+            var credentialPublicKey = GetCredentialPublicKey(credentialPublicKeyArray);
+            authenticatorData.AttestedCredentialData.CredentialPublicKey = credentialPublicKey;
         }
 
-        // AAGUID of the authenticator
-        startIndex += SignCountLength;
-        var aaguidArray = authenticatorDataArray.AsSpan(startIndex, AaguidLength);
-        authenticatorData.AttestedCredentialData.AaGuid = new Guid(aaguidArray);
-
-        // Credential ID Length
-        startIndex += AaguidLength;
-        var credentialIdLengthArray = authenticatorDataArray.AsSpan(startIndex, CredentialIdLengthLength);
-        var credentialIdLength = BinaryPrimitives.ReadUInt16BigEndian(credentialIdLengthArray);
-
-        // Credential ID
-        startIndex += CredentialIdLengthLength;
-        var credentialId = authenticatorDataArray.AsSpan(startIndex, credentialIdLength);
-        authenticatorData.AttestedCredentialData.CredentialId = credentialId.ToArray();
-
-        // Credential Public Key
-        startIndex += credentialIdLength;
-        var credentialPublicKeyLength = authenticatorDataArray.Length - startIndex;
-        var credentialPublicKeyArray = authenticatorDataArray.AsSpan(startIndex, credentialPublicKeyLength);
-        var credentialPublicKey = GetCredentialPublicKey(credentialPublicKeyArray);
-        authenticatorData.AttestedCredentialData.CredentialPublicKey = credentialPublicKey;
+        if (authenticatorData.ExtensionDataIncluded)
+        {
+            // TODO: Read extension data
+        }
 
         return authenticatorData;
     }
