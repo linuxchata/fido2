@@ -32,9 +32,9 @@ public class AttestationController(IAttestation attestation) : ControllerBase
     [SwaggerRequestExample(
         typeof(ServerPublicKeyCredentialCreationOptionsRequest),
         typeof(ServerPublicKeyCredentialCreationOptionsRequestExample))]
-    public IActionResult Options(ServerPublicKeyCredentialCreationOptionsRequest request)
+    public async Task<IActionResult> Options(ServerPublicKeyCredentialCreationOptionsRequest request)
     {
-        var creationOptions = _attestation.GetOptions(request.Map());
+        var creationOptions = await _attestation.GetOptions(request.Map());
 
         var response = creationOptions.Map();
 
