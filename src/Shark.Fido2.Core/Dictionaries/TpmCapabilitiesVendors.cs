@@ -38,6 +38,7 @@ internal static class TpmCapabilitiesVendors
         { "54584E00", "Texas Instruments" },
         { "57454300", "Winbond" },
         { "5345414C", "Wisekey" },
+        { "FFFFF1D0", "Conformance Tools Test Vendor" }
     };
 
     public static bool Exists(string? verdonId)
