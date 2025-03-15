@@ -1,7 +1,9 @@
 ﻿using System.Security.Cryptography.X509Certificates;
+using Microsoft.Extensions.Options;
 using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Comparers;
+using Shark.Fido2.Core.Configurations;
 using Shark.Fido2.Core.Dictionaries;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain;
@@ -35,15 +37,18 @@ internal class AttestationCertificateValidator : IAttestationCertificateValidato
     private readonly ISubjectAlternativeNameParserService _subjectAlternativeNameParserService;
     private readonly IAndroidKeyAttestationExtensionParserService _androidKeyAttestationExtensionParserService;
     private readonly IAppleAnonymousExtensionParserService _appleAnonymousExtensionParserService;
+    private readonly Fido2Configuration _configuration;
 
     public AttestationCertificateValidator(
         ISubjectAlternativeNameParserService subjectAlternativeNameParserService,
         IAndroidKeyAttestationExtensionParserService androidKeyAttestationExtensionParserService,
-        IAppleAnonymousExtensionParserService appleAnonymousExtensionParserService)
+        IAppleAnonymousExtensionParserService appleAnonymousExtensionParserService,
+        IOptions<Fido2Configuration> options)
     {
         _subjectAlternativeNameParserService = subjectAlternativeNameParserService;
         _androidKeyAttestationExtensionParserService = androidKeyAttestationExtensionParserService;
         _appleAnonymousExtensionParserService = appleAnonymousExtensionParserService;
+        _configuration = options.Value;
     }
 
     public ValidatorInternalResult ValidatePacked(
@@ -249,18 +254,35 @@ internal class AttestationCertificateValidator : IAttestationCertificateValidato
 
         // For the following, use only the teeEnforced authorization list if the RP wants to accept only keys from
         // a trusted execution environment, otherwise use the union of teeEnforced and softwareEnforced.
-        // The value in the AuthorizationList.origin field is equal to KM_ORIGIN_GENERATED.
-        if (androidKeyAttestation.SoftwareEnforced.Origin != KmOriginGenerated ||
-            androidKeyAttestation.HardwareEnforced.Origin != KmOriginGenerated)
+        if (_configuration.EnableTrustedExecutionEnvironmentOnly)
         {
-            return ValidatorInternalResult.Invalid($"{Prefix} origin field has unexpected value");
-        }
+            // - The value in the AuthorizationList.origin field is equal to KM_ORIGIN_GENERATED.
+            if (androidKeyAttestation.HardwareEnforced.Origin != KmOriginGenerated)
+            {
+                return ValidatorInternalResult.Invalid($"{Prefix} hardware origin field has unexpected value");
+            }
 
-        // The value in the AuthorizationList.purpose field is equal to KM_PURPOSE_SIGN.
-        if (androidKeyAttestation.SoftwareEnforced.Purpose != KmPurposeSign ||
-            androidKeyAttestation.HardwareEnforced.Purpose != KmPurposeSign)
+            // - The value in the AuthorizationList.purpose field is equal to KM_PURPOSE_SIGN.
+            if (androidKeyAttestation.HardwareEnforced.Purpose != KmPurposeSign)
+            {
+                return ValidatorInternalResult.Invalid($"{Prefix} hardware purpose field has unexpected value");
+            }
+        }
+        else
         {
-            return ValidatorInternalResult.Invalid($"{Prefix} purpose field has unexpected value");
+            // - The value in the AuthorizationList.origin field is equal to KM_ORIGIN_GENERATED.
+            if (androidKeyAttestation.SoftwareEnforced.Origin != KmOriginGenerated ||
+                androidKeyAttestation.HardwareEnforced.Origin != KmOriginGenerated)
+            {
+                return ValidatorInternalResult.Invalid($"{Prefix} origin field has unexpected value");
+            }
+
+            // - The value in the AuthorizationList.purpose field is equal to KM_PURPOSE_SIGN.
+            if (androidKeyAttestation.SoftwareEnforced.Purpose != KmPurposeSign ||
+                androidKeyAttestation.HardwareEnforced.Purpose != KmPurposeSign)
+            {
+                return ValidatorInternalResult.Invalid($"{Prefix} purpose field has unexpected value");
+            }
         }
 
         return ValidatorInternalResult.Valid();
