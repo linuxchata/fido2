@@ -1,5 +1,7 @@
-﻿using Moq;
+﻿using Microsoft.Extensions.Options;
+using Moq;
 using Shark.Fido2.Core.Abstractions.Validators;
+using Shark.Fido2.Core.Configurations;
 using Shark.Fido2.Core.Handlers;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Core.Services;
@@ -47,7 +49,8 @@ internal class AndroidSafetyNetAttestationStatementStrategyTests
         var attestationCertificateValidator = new AttestationCertificateValidator(
             new SubjectAlternativeNameParserService(),
             new AndroidKeyAttestationExtensionParserService(),
-            new AppleAnonymousExtensionParserService());
+            new AppleAnonymousExtensionParserService(),
+            Options.Create(new Fido2Configuration()));
 
         _sut = new AndroidSafetyNetAttestationStatementStrategy(
             jwsResponseParserService,

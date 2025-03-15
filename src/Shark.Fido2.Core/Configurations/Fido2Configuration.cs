@@ -21,4 +21,10 @@ public sealed class Fido2Configuration
     /// Gets or sets whether Self attestation type is acceptable under Relying Party policy
     /// </summary>
     public bool AllowSelfAttestation { get; set; } = true;
+
+    /// <summary>
+    /// Gets or sets whether the Relying Party trusts only keys that are securely generated
+    /// and stored in a Trusted Execution Environment (Android Key Attestation)
+    /// </summary>
+    public bool EnableTrustedExecutionEnvironmentOnly { get; set; } = true;
 }
