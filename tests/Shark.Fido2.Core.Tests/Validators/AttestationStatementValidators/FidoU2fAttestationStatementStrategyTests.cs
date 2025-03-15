@@ -48,7 +48,8 @@ internal class FidoU2fAttestationStatementStrategyTests
 
         var signatureAttestationStatementValidator = new SignatureAttestationStatementValidator(
             new RsaCryptographyValidator(),
-            new Ec2CryptographyValidator());
+            new Ec2CryptographyValidator(),
+            new OkpCryptographyValidator());
 
         _sut = new FidoU2fAttestationStatementStrategy(
             attestationCertificateProviderService,
@@ -57,10 +58,10 @@ internal class FidoU2fAttestationStatementStrategyTests
     }
 
     [Test]
-    public void Validate_WhenFidoU2fAttestationWithEs256Algorithm_ShouldValidate()
+    public void Validate_WhenFidoU2fAttestationWithEc2Algorithm_ShouldValidate()
     {
         // Arrange
-        var fileName = "FidoU2fAttestationWithEs256Algorithm.json";
+        var fileName = "FidoU2fAttestationWithEc2Algorithm.json";
         var attestationResponseData = AttestationResponseDataReader.Read(fileName);
         var clientData = ClientDataBuilder.Build(attestationResponseData!.ClientDataJson);
 

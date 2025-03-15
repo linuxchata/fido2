@@ -55,10 +55,10 @@ internal class AppleAnonymousAttestationStatementStrategyTests
 
     [Ignore("Apple Anonymous attestation to be generated")]
     [Test]
-    public void Validate_WhenAppleAnonymousAttestationWithEs256Algorithm_ShouldValidate()
+    public void Validate_WhenAppleAnonymousAttestationWithEc2Algorithm_ShouldValidate()
     {
         // Arrange
-        var fileName = "AppleAnonymousAttestationWithEs256Algorithm.json";
+        var fileName = "AppleAnonymousAttestationWithEc2Algorithm.json";
         var attestationResponseData = AttestationResponseDataReader.Read(fileName);
         var clientData = ClientDataBuilder.Build(attestationResponseData!.ClientDataJson);
 

@@ -41,7 +41,8 @@ internal class AndroidKeyAttestationStatementStrategyTests
 
         var signatureAttestationStatementValidator = new SignatureAttestationStatementValidator(
             new RsaCryptographyValidator(),
-            new Ec2CryptographyValidator());
+            new Ec2CryptographyValidator(),
+            new OkpCryptographyValidator());
 
         var attestationCertificateProviderService = new AttestationCertificateProviderService();
 
@@ -61,10 +62,10 @@ internal class AndroidKeyAttestationStatementStrategyTests
 
     [Ignore("Android Key attestation to be generated")]
     [Test]
-    public void Validate_WhenAndroidKeyAttestationWithEs256Algorithm_ShouldValidate()
+    public void Validate_WhenAndroidKeyAttestationWithEc2Algorithm_ShouldValidate()
     {
         // Arrange
-        var fileName = "AndroidKeyAttestationWithEs256Algorithm.json";
+        var fileName = "AndroidKeyAttestationWithEc2Algorithm.json";
         var attestationResponseData = AttestationResponseDataReader.Read(fileName);
         var clientData = ClientDataBuilder.Build(attestationResponseData!.ClientDataJson);
 

@@ -5,16 +5,16 @@ namespace Shark.Fido2.Core.Abstractions.Validators;
 
 /// <summary>
 /// Validates cryptographic signatures using public key credentials or X.509 certificates.
-/// Supports both EC2 (Elliptic Curve) and RSA cryptographic algorithms.
+/// Supports EC2 (Elliptic Curve) algorithms.
 /// </summary>
-public interface ICryptographyValidator
+public interface IEc2CryptographyValidator
 {
     /// <summary>
     /// Validates a cryptographic signature using either a credential public key or an attestation certificate.
     /// </summary>
     /// <param name="data">The signed data.</param>
     /// <param name="signature">The signature to verify.</param>
-    /// <param name="credentialPublicKey">The credential's public key containing either EC2 or RSA parameters.</param>
+    /// <param name="credentialPublicKey">The credential's public key containing EC2 parameters.</param>
     /// <param name="attestationCertificate">Optional X.509 certificate. If provided, its public key will be used instead of the credential public key.</param>
     /// <returns>True if the signature is valid, false otherwise.</returns>
     bool IsValid(
@@ -28,7 +28,7 @@ public interface ICryptographyValidator
     /// </summary>
     /// <param name="data">The signed data.</param>
     /// <param name="signature">The signature to verify.</param>
-    /// <param name="algorithm">The algorithm identifier (maps to either EC2 or RSA algorithm parameters).</param>
+    /// <param name="algorithm">The algorithm identifier (maps to EC2 algorithm parameters).</param>
     /// <param name="attestationCertificate">The X.509 certificate containing the public key for verification.</param>
     /// <returns>True if the signature is valid, false otherwise.</returns>
     bool IsValid(byte[] data, byte[] signature, int algorithm, X509Certificate2 attestationCertificate);

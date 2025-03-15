@@ -42,7 +42,8 @@ internal class PackedAttestationStatementStrategyTests
 
         var signatureAttestationStatementValidator = new SignatureAttestationStatementValidator(
             new RsaCryptographyValidator(),
-            new Ec2CryptographyValidator());
+            new Ec2CryptographyValidator(),
+            new OkpCryptographyValidator());
 
         var attestationCertificateProviderService = new AttestationCertificateProviderService();
 
@@ -78,11 +79,11 @@ internal class PackedAttestationStatementStrategyTests
     }
 
     [Test]
-    public void Validate_WhenPackedAttestationWithEs256Algorithm_ShouldValidate()
+    public void Validate_WhenPackedAttestationWithEc2Algorithm_ShouldValidate()
     {
         // Arrange
         // Source https://fidoalliance.org/specs/fido-v2.0-rd-20180702/fido-server-v2.0-rd-20180702.html#packed-attestation
-        var fileName = "PackedAttestationWithEs256Algorithm.json";
+        var fileName = "PackedAttestationWithEc2Algorithm.json";
         var attestationResponseData = AttestationResponseDataReader.Read(fileName);
         var clientData = ClientDataBuilder.Build(attestationResponseData!.ClientDataJson);
 
@@ -96,6 +97,26 @@ internal class PackedAttestationStatementStrategyTests
         var attestationStatementInternalResult = result as AttestationStatementInternalResult;
         Assert.That(attestationStatementInternalResult, Is.Not.Null, result.Message);
         Assert.That(attestationStatementInternalResult!.AttestationType, Is.EqualTo(AttestationTypeEnum.AttCA));
+    }
+
+    [Test]
+    public void Validate_WhenPackedAttestationWithOkpAlgorithm_ShouldValidate()
+    {
+        // Arrange
+        var fileName = "PackedAttestationWithOkpAlgorithm.json";
+        var attestationResponseData = AttestationResponseDataReader.Read(fileName);
+        var clientData = ClientDataBuilder.Build(attestationResponseData!.ClientDataJson);
+
+        var internalResult = _attestationObjectHandler.Handle(
+            attestationResponseData!.AttestationObject, clientData, _creationOptions);
+
+        // Act
+        var result = _sut.Validate(internalResult.Value!, clientData);
+
+        // Assert
+        var attestationStatementInternalResult = result as AttestationStatementInternalResult;
+        Assert.That(attestationStatementInternalResult, Is.Not.Null, result.Message);
+        Assert.That(attestationStatementInternalResult!.AttestationType, Is.EqualTo(AttestationTypeEnum.Self));
     }
 
     [Test]
