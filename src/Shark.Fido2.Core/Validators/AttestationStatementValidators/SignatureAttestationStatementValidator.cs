@@ -1,5 +1,4 @@
 ﻿using System.Security.Cryptography.X509Certificates;
-using Microsoft.Extensions.DependencyInjection;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Constants;
@@ -14,15 +13,18 @@ internal class SignatureAttestationStatementValidator : ISignatureAttestationSta
     private const string SignatureCannotBeReadErrorMessage = "Attestation statement signature cannot be read";
     private const string SignatureIsNotValid = "Attestation statement signature is not valid";
 
-    private readonly ICryptographyValidator _rsaCryptographyValidator;
-    private readonly ICryptographyValidator _ec2CryptographyValidator;
+    private readonly IRsaCryptographyValidator _rsaCryptographyValidator;
+    private readonly IEc2CryptographyValidator _ec2CryptographyValidator;
+    private readonly IOkpCryptographyValidator _okpCryptographyValidator;
 
     public SignatureAttestationStatementValidator(
-        [FromKeyedServices("rsa")] ICryptographyValidator rsaCryptographyValidator,
-        [FromKeyedServices("ec2")] ICryptographyValidator ec2CryptographyValidator)
+        IRsaCryptographyValidator rsaCryptographyValidator,
+        IEc2CryptographyValidator ec2CryptographyValidator,
+        IOkpCryptographyValidator okpCryptographyValidator)
     {
         _rsaCryptographyValidator = rsaCryptographyValidator;
         _ec2CryptographyValidator = ec2CryptographyValidator;
+        _okpCryptographyValidator = okpCryptographyValidator;
     }
 
     public ValidatorInternalResult Validate(
@@ -145,6 +147,10 @@ internal class SignatureAttestationStatementValidator : ISignatureAttestationSta
         else if (credentialPublicKey.KeyType == (int)KeyTypeEnum.Ec2)
         {
             isValid = _ec2CryptographyValidator.IsValid(data, signature, credentialPublicKey, attestationCertificate);
+        }
+        else if (credentialPublicKey.KeyType == (int)KeyTypeEnum.Okp)
+        {
+            isValid = _okpCryptographyValidator.IsValid(data, signature, credentialPublicKey);
         }
         else
         {

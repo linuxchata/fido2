@@ -48,7 +48,8 @@ internal class TpmAttestationStatementStrategyTests
 
         var signatureAttestationStatementValidator = new SignatureAttestationStatementValidator(
             new RsaCryptographyValidator(),
-            new Ec2CryptographyValidator());
+            new Ec2CryptographyValidator(),
+            new OkpCryptographyValidator());
 
         var attestationCertificateValidator = new AttestationCertificateValidator(
             new SubjectAlternativeNameParserService(),

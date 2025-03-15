@@ -6,7 +6,7 @@ using Shark.Fido2.Domain.Mappers;
 
 namespace Shark.Fido2.Core.Validators;
 
-internal sealed class Ec2CryptographyValidator : ICryptographyValidator
+internal sealed class Ec2CryptographyValidator : IEc2CryptographyValidator
 {
     public bool IsValid(
         byte[] data,
