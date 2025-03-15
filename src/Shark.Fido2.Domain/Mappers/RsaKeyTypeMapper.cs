@@ -15,7 +15,7 @@ public static class RsaKeyTypeMapper
                 Padding = RSASignaturePadding.Pss,
             };
         }
-        else if (publicKeyAlgorithm == (int)PublicKeyAlgorithm.PS384)
+        else if (publicKeyAlgorithm == (int)PublicKeyAlgorithm.Ps384)
         {
             return new Rs256Algorithm
             {
@@ -23,7 +23,7 @@ public static class RsaKeyTypeMapper
                 Padding = RSASignaturePadding.Pss,
             };
         }
-        else if (publicKeyAlgorithm == (int)PublicKeyAlgorithm.PS512)
+        else if (publicKeyAlgorithm == (int)PublicKeyAlgorithm.Ps512)
         {
             return new Rs256Algorithm
             {
@@ -39,7 +39,23 @@ public static class RsaKeyTypeMapper
                 Padding = RSASignaturePadding.Pkcs1,
             };
         }
-        else if (publicKeyAlgorithm == (int)PublicKeyAlgorithm.RS1)
+        else if (publicKeyAlgorithm == (int)PublicKeyAlgorithm.Rs384)
+        {
+            return new Rs256Algorithm
+            {
+                HashAlgorithmName = HashAlgorithmName.SHA384,
+                Padding = RSASignaturePadding.Pkcs1,
+            };
+        }
+        else if (publicKeyAlgorithm == (int)PublicKeyAlgorithm.Rs512)
+        {
+            return new Rs256Algorithm
+            {
+                HashAlgorithmName = HashAlgorithmName.SHA512,
+                Padding = RSASignaturePadding.Pkcs1,
+            };
+        }
+        else if (publicKeyAlgorithm == (int)PublicKeyAlgorithm.Rs1)
         {
             return new Rs256Algorithm
             {

@@ -34,12 +34,12 @@ public enum PublicKeyAlgorithm
     /// <summary>
     /// RSASSA-PSS w/ SHA-384
     /// </summary>
-    PS384 = -38,
+    Ps384 = -38,
 
     /// <summary>
     /// RSASSA-PSS w/ SHA-512
     /// </summary>
-    PS512 = -39,
+    Ps512 = -39,
 
     /// <summary>
     /// RSASSA-PKCS1-v1_5 using SHA-256
@@ -47,7 +47,17 @@ public enum PublicKeyAlgorithm
     Rs256 = -257,
 
     /// <summary>
+    /// RSASSA-PKCS1-v1_5 using SHA-384
+    /// </summary>
+    Rs384 = -258,
+
+    /// <summary>
+    /// RSASSA-PKCS1-v1_5 using SHA-512
+    /// </summary>
+    Rs512 = -259,
+
+    /// <summary>
     /// RSASSA-PKCS1-v1_5 using SHA-1
     /// </summary>
-    RS1 = -65535,
+    Rs1 = -65535,
 }
