@@ -52,6 +52,11 @@ public enum PublicKeyAlgorithm
     Rs384 = -258,
 
     /// <summary>
+    /// RSASSA-PKCS1-v1_5 using SHA-512
+    /// </summary>
+    Rs512 = -259,
+
+    /// <summary>
     /// RSASSA-PKCS1-v1_5 using SHA-1
     /// </summary>
     Rs1 = -65535,
