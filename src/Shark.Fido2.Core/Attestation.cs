@@ -4,6 +4,7 @@ using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Core.Abstractions.Handlers;
 using Shark.Fido2.Core.Abstractions.Repositories;
 using Shark.Fido2.Core.Configurations;
+using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Domain;
 using Shark.Fido2.Domain.Constants;
 using Shark.Fido2.Domain.Enums;
@@ -64,20 +65,8 @@ public sealed class Attestation : IAttestation
                 DisplayName = request.DisplayName,
             },
             Challenge = _challengeGenerator.Get(),
-            PublicKeyCredentialParams =
-            [
-                new PublicKeyCredentialParameter { Algorithm = PublicKeyAlgorithm.Es256 },
-                new PublicKeyCredentialParameter { Algorithm = PublicKeyAlgorithm.EdDsa },
-                new PublicKeyCredentialParameter { Algorithm = PublicKeyAlgorithm.Es384 },
-                new PublicKeyCredentialParameter { Algorithm = PublicKeyAlgorithm.Es512 },
-                new PublicKeyCredentialParameter { Algorithm = PublicKeyAlgorithm.Ps256 },
-                new PublicKeyCredentialParameter { Algorithm = PublicKeyAlgorithm.Ps384 },
-                new PublicKeyCredentialParameter { Algorithm = PublicKeyAlgorithm.Ps512 },
-                new PublicKeyCredentialParameter { Algorithm = PublicKeyAlgorithm.Rs256 },
-                new PublicKeyCredentialParameter { Algorithm = PublicKeyAlgorithm.Rs384 },
-                new PublicKeyCredentialParameter { Algorithm = PublicKeyAlgorithm.Rs512 },
-                new PublicKeyCredentialParameter { Algorithm = PublicKeyAlgorithm.Rs1 },
-            ],
+            PublicKeyCredentialParams = PublicKeyAlgorithms.Extended
+                .Select(a => new PublicKeyCredentialParameter { Algorithm = a  }).ToArray(),
             Timeout = _configuration.Timeout ?? DefaultTimeout,
             ExcludeCredentials = excludeCredentials ?? [],
             AuthenticatorSelection = request.AuthenticatorSelection != null ? new AuthenticatorSelectionCriteria
