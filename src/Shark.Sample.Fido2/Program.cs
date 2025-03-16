@@ -1,9 +1,12 @@
+using Shark.Fido2.Metadata.Core;
 using Shark.Fido2.Repositories.InMemory;
 using Shark.Sample.Fido2.Extensions;
 using Shark.Sample.Fido2.Swagger;
 using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.RegisterMetadataService();
 
 builder.Services.AddRazorPages();
 builder.Services.AddControllers();
