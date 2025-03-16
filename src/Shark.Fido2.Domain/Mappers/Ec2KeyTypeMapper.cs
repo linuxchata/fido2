@@ -31,6 +31,14 @@ public static class Ec2KeyTypeMapper
                 HashAlgorithmName = HashAlgorithmName.SHA512,
             };
         }
+        else if (publicKeyAlgorithm == (int)PublicKeyAlgorithm.Es256K)
+        {
+            return new Ec2Algorithm
+            {
+                Curve = ECCurve.CreateFromFriendlyName("secp256k1"),
+                HashAlgorithmName = HashAlgorithmName.SHA256,
+            };
+        }
 
         throw new NotSupportedException($"{publicKeyAlgorithm} algorithm is not supported");
     }

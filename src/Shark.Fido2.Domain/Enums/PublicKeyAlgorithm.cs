@@ -2,7 +2,7 @@
 
 /// <summary>
 /// COSE Algorithms
-/// https://www.iana.org/assignments/cose/cose.xhtml#algorithms
+/// See: https://www.iana.org/assignments/cose/cose.xhtml#algorithms
 /// </summary>
 public enum PublicKeyAlgorithm
 {
@@ -40,6 +40,11 @@ public enum PublicKeyAlgorithm
     /// RSASSA-PSS w/ SHA-512
     /// </summary>
     Ps512 = -39,
+
+    /// <summary>
+    /// ECDSA using secp256k1 curve and SHA-256
+    /// </summary>
+    Es256K = -47,
 
     /// <summary>
     /// RSASSA-PKCS1-v1_5 using SHA-256
