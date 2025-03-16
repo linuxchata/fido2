@@ -66,7 +66,7 @@ public sealed class Attestation : IAttestation
             },
             Challenge = _challengeGenerator.Get(),
             PublicKeyCredentialParams = PublicKeyAlgorithms.Extended
-                .Select(a => new PublicKeyCredentialParameter { Algorithm = a  }).ToArray(),
+                .Select(a => new PublicKeyCredentialParameter { Algorithm = a }).ToArray(),
             Timeout = _configuration.Timeout ?? DefaultTimeout,
             ExcludeCredentials = excludeCredentials ?? [],
             AuthenticatorSelection = request.AuthenticatorSelection != null ? new AuthenticatorSelectionCriteria
