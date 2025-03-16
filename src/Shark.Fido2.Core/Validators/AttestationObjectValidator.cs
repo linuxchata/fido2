@@ -60,9 +60,10 @@ internal class AttestationObjectValidator : IAttestationObjectValidator
 
         // Step 14
         // Verify that the User Present bit of the flags in authData is set.
-        if (!authenticatorData.UserPresent)
+        if (creationOptions.AuthenticatorSelection.UserVerification == UserVerificationRequirement.Required &&
+            !authenticatorData.UserPresent)
         {
-            return ValidatorInternalResult.Invalid("User Present bit is not set");
+            return ValidatorInternalResult.Invalid("User Present bit is not set as user verification is required");
         }
 
         // Step 15
