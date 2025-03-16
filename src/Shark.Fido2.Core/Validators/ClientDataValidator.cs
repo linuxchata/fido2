@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
 using Shark.Fido2.Core.Abstractions.Validators;
-using Shark.Fido2.Core.Comparers;
 using Shark.Fido2.Core.Configurations;
 using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Results;
