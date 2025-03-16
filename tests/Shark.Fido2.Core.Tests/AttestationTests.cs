@@ -188,7 +188,7 @@ public class AttestationTests
         Assert.That(result.User.DisplayName, Is.EqualTo(request.DisplayName));
         Assert.That(result.User.Id, Is.EqualTo(request.Username.FromBase64Url()));
         Assert.That(result.Challenge, Is.EqualTo(new byte[] { 1, 2, 3, 4 }));
-        Assert.That(result.PublicKeyCredentialParams.Length, Is.EqualTo(11));
+        Assert.That(result.PublicKeyCredentialParams.Length, Is.EqualTo(12));
         Assert.That(result.Timeout, Is.EqualTo(60000));
         Assert.That(result.ExcludeCredentials.Length, Is.EqualTo(0));
         Assert.That(result.AuthenticatorSelection.AuthenticatorAttachment, Is.EqualTo(AuthenticatorAttachment.Platform));
