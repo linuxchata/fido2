@@ -9,8 +9,19 @@ namespace Shark.Fido2.Metadata.Core;
 
 public sealed class MetadataService : IMetadataService
 {
+    private readonly ICertificateValidator _certificateValidator;
+
+    public MetadataService(ICertificateValidator x509Certificate2Validator)
+    {
+        _certificateValidator = x509Certificate2Validator;
+    }
+
     public async Task Refresh()
     {
+        // Step 3
+        // The FIDO Server MUST be able to download the latest metadata BLOB object from the well-known URL when
+        // appropriate, e.g. https://mds.fidoalliance.org/. The nextUpdate field of the Metadata BLOB specifies a
+        // date when the download SHOULD occur at latest.
         var metadataBlob = await GetMetadataBlob();
 
         var handler = new JwtSecurityTokenHandler
@@ -25,6 +36,9 @@ public sealed class MetadataService : IMetadataService
 
         var jwtToken = handler.ReadJwtToken(metadataBlob);
 
+        // Step 5
+        // If the x5u attribute is missing, the chain should be retrieved from the x5c attribute. If that attribute
+        // is missing as well, Metadata BLOB signing trust anchor is considered the BLOB signing certificate chain.
         if (!jwtToken.Header.TryGetValue("x5c", out var x5c) || x5c is not List<object>)
         {
             throw new InvalidOperationException();
@@ -38,17 +52,25 @@ public sealed class MetadataService : IMetadataService
         var rootCertificate = await GetRootCertificate();
         var certificates = x5cList.Select(a => a.ToString()!).ToList();
         var leafCertificate = new X509Certificate2(Convert.FromBase64String(certificates.FirstOrDefault()!));
-        ValidateX509Chain(rootCertificate, leafCertificate, certificates);
+        _certificateValidator.ValidateX509Chain(rootCertificate, leafCertificate, certificates);
 
+        // Step 6
+        // Verify the signature of the Metadata BLOB object using the BLOB signing certificate chain (as determined
+        // by the steps above). The FIDO Server SHOULD ignore the file if the signature is invalid.
         await ValidateBlob(handler, leafCertificate, metadataBlob);
 
+        // Step 6
+        // It SHOULD also ignore the file if its number (no) is less or equal to the number of the last Metadata BLOB
+        // object cached locally.
+        // TODO: Implement this step
         if (!jwtToken.Payload.TryGetValue("no", out var number))
         {
             throw new InvalidOperationException();
         }
 
+        // Step 7
+        // Write the verified object to a local cache as required.
         var result = new List<MetadataBlobPayloadEntry>(jwtToken.Claims.Count());
-
         jwtToken.Claims.ToList().ForEach(claim =>
         {
             if (claim.Type == "entries")
@@ -80,41 +102,6 @@ public sealed class MetadataService : IMetadataService
         }
 
         return null;
-    }
-
-    private X509Certificate2 ValidateX509Chain(
-        X509Certificate2? rootCertificate,
-        X509Certificate2 leafCertificate,
-        List<string> certificates)
-    {
-        if (rootCertificate == null)
-        {
-            throw new InvalidOperationException();
-        }
-
-        using var chain = new X509Chain();
-        chain.ChainPolicy.RevocationMode = X509RevocationMode.Online; // Configuration
-        chain.ChainPolicy.VerificationTime = DateTime.Now;
-
-        // Root certificate
-        chain.ChainPolicy.VerificationFlags = X509VerificationFlags.AllFlags;
-        chain.ChainPolicy.TrustMode = X509ChainTrustMode.CustomRootTrust;
-        chain.ChainPolicy.CustomTrustStore.Add(rootCertificate);
-
-        foreach (var certificate in certificates.Skip(1))
-        {
-            // Intermediate certificate
-            var intermediateCertificate = new X509Certificate2(Convert.FromBase64String(certificate.ToString()!));
-            chain.ChainPolicy.ExtraStore.Add(intermediateCertificate);
-        }
-
-        var isValid = chain.Build(leafCertificate);
-        if (!isValid)
-        {
-            throw new InvalidOperationException();
-        }
-
-        return leafCertificate;
     }
 
     private async Task<bool> ValidateBlob(
