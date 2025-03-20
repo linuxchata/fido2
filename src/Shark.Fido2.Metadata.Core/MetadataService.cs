@@ -3,17 +3,22 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
 using Microsoft.IdentityModel.Tokens;
 using Shark.Fido2.Metadata.Core.Abstractions;
+using Shark.Fido2.Metadata.Core.Abstractions.Repositories;
 using Shark.Fido2.Metadata.Core.Models;
 
 namespace Shark.Fido2.Metadata.Core;
 
 public sealed class MetadataService : IMetadataService
 {
+    private readonly IHttpClientRepository _httpClientRepository;
     private readonly ICertificateValidator _certificateValidator;
 
-    public MetadataService(ICertificateValidator x509Certificate2Validator)
+    public MetadataService(
+        IHttpClientRepository httpClientRepository,
+        ICertificateValidator certificateValidator)
     {
-        _certificateValidator = x509Certificate2Validator;
+        _httpClientRepository = httpClientRepository;
+        _certificateValidator = certificateValidator;
     }
 
     public async Task Refresh()
@@ -22,7 +27,7 @@ public sealed class MetadataService : IMetadataService
         // The FIDO Server MUST be able to download the latest metadata BLOB object from the well-known URL when
         // appropriate, e.g. https://mds.fidoalliance.org/. The nextUpdate field of the Metadata BLOB specifies a
         // date when the download SHOULD occur at latest.
-        var metadataBlob = await GetMetadataBlob();
+        var metadataBlob = await _httpClientRepository.GetMetadataBlob();
 
         var handler = new JwtSecurityTokenHandler
         {
@@ -39,7 +44,7 @@ public sealed class MetadataService : IMetadataService
         // Step 5
         // If the x5u attribute is missing, the chain should be retrieved from the x5c attribute. If that attribute
         // is missing as well, Metadata BLOB signing trust anchor is considered the BLOB signing certificate chain.
-        if (!jwtToken.Header.TryGetValue("x5c", out var x5c) || x5c is not List<object>)
+        if (!jwtToken.Header.TryGetValue(Constants.HeaderX5c, out var x5c) || x5c is not List<object>)
         {
             throw new InvalidOperationException();
         }
@@ -49,7 +54,7 @@ public sealed class MetadataService : IMetadataService
             throw new InvalidOperationException();
         }
 
-        var rootCertificate = await GetRootCertificate();
+        var rootCertificate = await _httpClientRepository.GetRootCertificate();
         var certificates = x5cList.Select(a => a.ToString()!).ToList();
         var leafCertificate = new X509Certificate2(Convert.FromBase64String(certificates.FirstOrDefault()!));
         _certificateValidator.ValidateX509Chain(rootCertificate, leafCertificate, certificates);
@@ -63,7 +68,7 @@ public sealed class MetadataService : IMetadataService
         // It SHOULD also ignore the file if its number (no) is less or equal to the number of the last Metadata BLOB
         // object cached locally.
         // TODO: Implement this step
-        if (!jwtToken.Payload.TryGetValue("no", out var number))
+        if (!jwtToken.Payload.TryGetValue(Constants.PayloadPropertyNumber, out var number))
         {
             throw new InvalidOperationException();
         }
@@ -73,7 +78,7 @@ public sealed class MetadataService : IMetadataService
         var result = new List<MetadataBlobPayloadEntry>(jwtToken.Claims.Count());
         jwtToken.Claims.ToList().ForEach(claim =>
         {
-            if (claim.Type == "entries")
+            if (string.Equals(claim.Type, Constants.ClientTypeEntries, StringComparison.OrdinalIgnoreCase))
             {
                 var payloadEntry = JsonSerializer.Deserialize<MetadataBlobPayloadEntry>(claim.Value);
                 if (payloadEntry != null)
@@ -82,26 +87,6 @@ public sealed class MetadataService : IMetadataService
                 }
             }
         });
-    }
-
-    private async Task<string> GetMetadataBlob()
-    {
-        using var client = new HttpClient();
-        using var stream = await client.GetStreamAsync("https://mds3.fidoalliance.org/"); // Configuration
-        using var reader = new StreamReader(stream);
-        return reader.ReadToEnd();
-    }
-
-    private async Task<X509Certificate2?> GetRootCertificate()
-    {
-        using var client = new HttpClient();
-        var byteArray = await client.GetByteArrayAsync("http://secure.globalsign.com/cacert/root-r3.crt"); // Configuration
-        if (byteArray != null)
-        {
-            return new X509Certificate2(byteArray);
-        }
-
-        return null;
     }
 
     private async Task<bool> ValidateBlob(
