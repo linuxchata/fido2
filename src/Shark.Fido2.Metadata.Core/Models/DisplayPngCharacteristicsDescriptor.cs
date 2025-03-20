@@ -3,8 +3,7 @@
 namespace Shark.Fido2.Metadata.Core.Models;
 
 /// <summary>
-/// The DisplayPNGCharacteristicsDescriptor describes a PNG image characteristics as defined in the PNG [PNG]
-/// spec for IHDR (image header) and PLTE (palette table)
+/// A PNG image characteristics as defined in the PNG [PNG] spec for IHDR (image header) and PLTE (palette table)
 /// See: https://fidoalliance.org/specs/mds/fido-metadata-statement-v3.0-ps-20210518.html#displaypngcharacteristicsdescriptor-dictionary
 /// </summary>
 public sealed class DisplayPngCharacteristicsDescriptor

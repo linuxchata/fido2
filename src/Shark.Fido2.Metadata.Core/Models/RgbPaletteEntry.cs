@@ -3,7 +3,7 @@
 namespace Shark.Fido2.Metadata.Core.Models;
 
 /// <summary>
-/// The rgbPaletteEntry is an RGB three-sample tuple palette entry
+/// A RGB three-sample tuple palette entry
 /// See: https://fidoalliance.org/specs/mds/fido-metadata-statement-v3.0-ps-20210518.html#rgbpaletteentry-dictionary
 /// </summary>
 public sealed class RgbPaletteEntry

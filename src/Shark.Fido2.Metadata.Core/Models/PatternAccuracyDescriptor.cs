@@ -3,7 +3,7 @@
 namespace Shark.Fido2.Metadata.Core.Models;
 
 /// <summary>
-/// The PatternAccuracyDescriptor describes relevant accuracy/complexity aspects in the case that a pattern
+/// A relevant accuracy/complexity aspects in the case that a pattern
 /// is used as the user verification method.
 /// See: https://fidoalliance.org/specs/mds/fido-metadata-statement-v3.0-ps-20210518.html#patternaccuracydescriptor-dictionary
 /// </summary>

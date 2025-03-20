@@ -40,7 +40,7 @@ public sealed class MetadataService : IMetadataService
         var leafCertificate = new X509Certificate2(Convert.FromBase64String(certificates.FirstOrDefault()!));
         ValidateX509Chain(rootCertificate, leafCertificate, certificates);
 
-        await ValidateAccessToken(handler, leafCertificate, metadataBlob);
+        await ValidateBlob(handler, leafCertificate, metadataBlob);
 
         if (!jwtToken.Payload.TryGetValue("no", out var number))
         {
@@ -117,7 +117,7 @@ public sealed class MetadataService : IMetadataService
         return leafCertificate;
     }
 
-    private async Task<bool> ValidateAccessToken(
+    private async Task<bool> ValidateBlob(
         JwtSecurityTokenHandler handler,
         X509Certificate2 certificate,
         string metadataBlob)

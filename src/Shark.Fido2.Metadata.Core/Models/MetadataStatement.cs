@@ -23,7 +23,7 @@ public sealed class MetadataStatement
     public required string Description { get; set; }
 
     [JsonPropertyName("alternativeDescriptions")]
-    public Dictionary<string, string>? AlternativeDescriptions { get; set; }
+    public IDictionary<string, string>? AlternativeDescriptions { get; set; }
 
     [JsonPropertyName("authenticatorVersion")]
     public ulong AuthenticatorVersion { get; set; }
@@ -47,7 +47,7 @@ public sealed class MetadataStatement
     public required string[] AttestationTypes { get; set; }
 
     [JsonPropertyName("userVerificationDetails")]
-    public required VerificationMethodDescriptor[] UserVerificationDetails { get; set; }
+    public required IList<VerificationMethodDescriptor[]> UserVerificationDetails { get; set; }
 
     [JsonPropertyName("keyProtection")]
     public required string[] KeyProtection { get; set; }
@@ -79,7 +79,17 @@ public sealed class MetadataStatement
     [JsonPropertyName("attestationRootCertificates")]
     public required string[] AttestationRootCertificates { get; set; }
 
+    [JsonPropertyName("ecdaaTrustAnchors")]
+    public EcdaaTrustAnchor[]? EcdaaTrustAnchors { get; set; }
 
+    [JsonPropertyName("icon")]
+    public string? Icon { get; set; }
+
+    [JsonPropertyName("supportedExtensions")]
+    public ExtensionDescriptor[]? SupportedExtensions { get; set; }
+
+    [JsonPropertyName("authenticatorGetInfo")]
+    public IDictionary<string, object>? AuthenticatorGetInfo { get; set; }
 
     public override string ToString()
     {
