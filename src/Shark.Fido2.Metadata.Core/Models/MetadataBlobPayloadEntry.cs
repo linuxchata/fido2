@@ -8,7 +8,7 @@ public sealed class MetadataBlobPayloadEntry
     public string? Aaid { get; set; }
 
     [JsonPropertyName("aaguid")]
-    public Guid Aaguid { get; set; }
+    public Guid? Aaguid { get; set; }
 
     [JsonPropertyName("attestationCertificateKeyIdentifiers")]
     public string[]? AttestationCertificateKeyIdentifiers { get; set; }
@@ -20,10 +20,10 @@ public sealed class MetadataBlobPayloadEntry
     public BiometricStatusReport[]? BiometricStatusReports { get; set; }
 
     [JsonPropertyName("statusReports")]
-    public StatusReport[] StatusReports { get; set; } = [];
+    public required StatusReport[] StatusReports { get; set; }
 
     [JsonPropertyName("timeOfLastStatusChange")]
-    public string TimeOfLastStatusChange { get; set; } = string.Empty;
+    public required string TimeOfLastStatusChange { get; set; }
 
     [JsonPropertyName("rogueListURL")]
     public string? RogueListURL { get; set; }

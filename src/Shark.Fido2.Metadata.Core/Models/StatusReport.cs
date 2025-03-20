@@ -2,7 +2,11 @@
 
 namespace Shark.Fido2.Metadata.Core.Models;
 
-public class StatusReport
+/// <summary>
+/// An authenticator status and additional data associated with it, if any.
+/// See: https://fidoalliance.org/specs/mds/fido-metadata-service-v3.0-ps-20210518.html#statusreport-dictionary
+/// </summary>
+public sealed class StatusReport
 {
     [JsonPropertyName("status")]
     public required string Status { get; set; }
