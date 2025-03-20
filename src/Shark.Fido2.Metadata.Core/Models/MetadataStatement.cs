@@ -74,7 +74,10 @@ public sealed class MetadataStatement
     public string? TcDisplayContentType { get; set; }
 
     [JsonPropertyName("tcDisplayPNGCharacteristics")]
-    public object[]? TcDisplayPNGCharacteristics { get; set; }
+    public DisplayPngCharacteristicsDescriptor[]? TcDisplayPNGCharacteristics { get; set; }
+
+    [JsonPropertyName("attestationRootCertificates")]
+    public required string[] AttestationRootCertificates { get; set; }
 
 
 
