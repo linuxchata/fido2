@@ -2,5 +2,5 @@
 
 public interface IMetadataService
 {
-    Task Refresh();
+    Task Refresh(CancellationToken cancellationToken);
 }

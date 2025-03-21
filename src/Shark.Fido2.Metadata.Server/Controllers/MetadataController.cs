@@ -10,9 +10,9 @@ public sealed class MetadataController(IMetadataService metadataService) : Contr
 {
     [HttpPost("refresh")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> Refresh()
+    public async Task<IActionResult> Refresh(CancellationToken cancellationToken)
     {
-        await metadataService.Refresh();
+        await metadataService.Refresh(cancellationToken);
 
         return NoContent();
     }

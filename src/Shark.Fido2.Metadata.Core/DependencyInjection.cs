@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Shark.Fido2.Metadata.Core.Abstractions;
 using Shark.Fido2.Metadata.Core.Abstractions.Repositories;
+using Shark.Fido2.Metadata.Core.Repositories;
 
 namespace Shark.Fido2.Metadata.Core;
 

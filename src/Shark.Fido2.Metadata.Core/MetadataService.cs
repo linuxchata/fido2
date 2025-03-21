@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography.X509Certificates;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
 using Shark.Fido2.Metadata.Core.Abstractions;
 using Shark.Fido2.Metadata.Core.Abstractions.Repositories;
@@ -22,32 +23,24 @@ public sealed class MetadataService : IMetadataService
         _certificateValidator = certificateValidator;
     }
 
-    public async Task Refresh()
+    public async Task Refresh(CancellationToken cancellationToken)
     {
         // Step 3
         // The FIDO Server MUST be able to download the latest metadata BLOB object from the well-known URL when
         // appropriate, e.g. https://mds.fidoalliance.org/. The nextUpdate field of the Metadata BLOB specifies a
         // date when the download SHOULD occur at latest.
-        var metadataBlob = await _httpClientRepository.GetMetadataBlob();
+        var metadataBlob = await _httpClientRepository.GetMetadataBlob(cancellationToken);
 
         var metadataToken = _metadataBlobService.Read(metadataBlob);
 
         // Step 5
         // If the x5u attribute is missing, the chain should be retrieved from the x5c attribute. If that attribute
         // is missing as well, Metadata BLOB signing trust anchor is considered the BLOB signing certificate chain.
-        if (!metadataToken.Header.TryGetValue(Constants.HeaderX5c, out var x5c) || x5c is not List<object>)
-        {
-            throw new InvalidOperationException();
-        }
+        var rootCertificate = await _httpClientRepository.GetRootCertificate(cancellationToken);
 
-        if (x5c is not List<object> x5cList)
-        {
-            throw new InvalidOperationException();
-        }
-
-        var rootCertificate = await _httpClientRepository.GetRootCertificate();
-        var certificates = x5cList.Select(a => a.ToString()!).ToList();
+        var certificates = GetCertificatesFromToken(metadataToken);
         var leafCertificate = new X509Certificate2(Convert.FromBase64String(certificates.FirstOrDefault()!));
+
         _certificateValidator.ValidateX509Chain(rootCertificate, leafCertificate, certificates);
 
         // Step 6
@@ -78,5 +71,20 @@ public sealed class MetadataService : IMetadataService
                 }
             }
         });
+    }
+
+    private static List<string> GetCertificatesFromToken(JwtSecurityToken metadataToken)
+    {
+        if (!metadataToken.Header.TryGetValue(Constants.HeaderX5c, out var x5c) || x5c is not List<object>)
+        {
+            throw new InvalidOperationException();
+        }
+
+        if (x5c is not List<object> x5cList)
+        {
+            throw new InvalidOperationException();
+        }
+
+        return x5cList.Select(a => a.ToString()!).ToList();
     }
 }
