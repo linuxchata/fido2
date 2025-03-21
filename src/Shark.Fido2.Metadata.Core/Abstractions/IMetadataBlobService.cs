@@ -5,6 +5,6 @@ namespace Shark.Fido2.Metadata.Core.Abstractions;
 
 public interface IMetadataBlobService
 {
-    JwtSecurityToken Read(string metadataBlob);
-    Task<bool> Validate(string metadataBlob, X509Certificate2 certificate);
+    JwtSecurityToken ReadToken(string metadataBlob);
+    Task<bool> ValidateToken(string metadataBlob, X509Certificate2 certificate);
 }

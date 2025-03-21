@@ -31,7 +31,7 @@ public sealed class MetadataService : IMetadataService
         // date when the download SHOULD occur at latest.
         var metadataBlob = await _httpClientRepository.GetMetadataBlob(cancellationToken);
 
-        var metadataToken = _metadataBlobService.Read(metadataBlob);
+        var metadataToken = _metadataBlobService.ReadToken(metadataBlob);
 
         // Step 5
         // If the x5u attribute is missing, the chain should be retrieved from the x5c attribute. If that attribute
@@ -46,7 +46,7 @@ public sealed class MetadataService : IMetadataService
         // Step 6
         // Verify the signature of the Metadata BLOB object using the BLOB signing certificate chain (as determined
         // by the steps above). The FIDO Server SHOULD ignore the file if the signature is invalid.
-        await _metadataBlobService.Validate(metadataBlob, leafCertificate);
+        await _metadataBlobService.ValidateToken(metadataBlob, leafCertificate);
 
         // Step 6
         // It SHOULD also ignore the file if its number (no) is less or equal to the number of the last Metadata BLOB

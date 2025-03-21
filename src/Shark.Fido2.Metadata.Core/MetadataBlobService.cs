@@ -7,7 +7,7 @@ namespace Shark.Fido2.Metadata.Core;
 
 public sealed class MetadataBlobService : IMetadataBlobService
 {
-    public JwtSecurityToken Read(string metadataBlob)
+    public JwtSecurityToken ReadToken(string metadataBlob)
     {
         var handler = new JwtSecurityTokenHandler
         {
@@ -22,7 +22,7 @@ public sealed class MetadataBlobService : IMetadataBlobService
         return handler.ReadJwtToken(metadataBlob);
     }
 
-    public async Task<bool> Validate(string metadataBlob, X509Certificate2 certificate)
+    public async Task<bool> ValidateToken(string metadataBlob, X509Certificate2 certificate)
     {
         var handler = new JwtSecurityTokenHandler
         {
