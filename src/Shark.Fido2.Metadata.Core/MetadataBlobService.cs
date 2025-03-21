@@ -1,17 +1,26 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using Microsoft.IdentityModel.Tokens;
 using System.Security.Cryptography.X509Certificates;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Shark.Fido2.Metadata.Core.Abstractions;
+using Shark.Fido2.Metadata.Core.Configurations;
 
 namespace Shark.Fido2.Metadata.Core;
 
 public sealed class MetadataBlobService : IMetadataBlobService
 {
+    private readonly Fido2MetadataServiceConfiguration _configuration;
+
+    public MetadataBlobService(IOptions<Fido2MetadataServiceConfiguration> options)
+    {
+        _configuration = options.Value;
+    }
+
     public JwtSecurityToken ReadToken(string metadataBlob)
     {
         var handler = new JwtSecurityTokenHandler
         {
-            MaximumTokenSizeInBytes = 6 * 1024 * 1024, // Configuration
+            MaximumTokenSizeInBytes = _configuration.MaximumTokenSizeInBytes,
         };
 
         if (!handler.CanReadToken(metadataBlob))
@@ -26,7 +35,7 @@ public sealed class MetadataBlobService : IMetadataBlobService
     {
         var handler = new JwtSecurityTokenHandler
         {
-            MaximumTokenSizeInBytes = 6 * 1024 * 1024, // Configuration
+            MaximumTokenSizeInBytes = _configuration.MaximumTokenSizeInBytes,
         };
 
         var validationParameters = new TokenValidationParameters
