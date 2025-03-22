@@ -9,9 +9,9 @@ namespace Shark.Fido2.Metadata.Core;
 
 internal sealed class MetadataBlobService : IMetadataBlobService
 {
-    private readonly Fido2MetadataServiceConfiguration _configuration;
+    private readonly MetadataServiceConfiguration _configuration;
 
-    public MetadataBlobService(IOptions<Fido2MetadataServiceConfiguration> options)
+    public MetadataBlobService(IOptions<MetadataServiceConfiguration> options)
     {
         _configuration = options.Value;
     }
@@ -25,7 +25,7 @@ internal sealed class MetadataBlobService : IMetadataBlobService
 
         if (!handler.CanReadToken(metadataBlob))
         {
-            throw new InvalidOperationException();
+            throw new InvalidOperationException("String is not a well formed Json Web Token (JWT)");
         }
 
         return handler.ReadJwtToken(metadataBlob);

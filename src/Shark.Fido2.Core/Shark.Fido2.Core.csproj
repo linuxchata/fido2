@@ -5,7 +5,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.4.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.6.1" />
     <PackageReference Include="System.Security.Cryptography.Cose" Version="8.0.1" />
     <PackageReference Include="System.Text.Json" Version="8.0.5" />
   </ItemGroup>
@@ -13,6 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Shark.Fido2.Common\Shark.Fido2.Common.csproj" />
     <ProjectReference Include="..\Shark.Fido2.Domain\Shark.Fido2.Domain.csproj" />
+    <ProjectReference Include="..\Shark.Fido2.Metadata.Core\Shark.Fido2.Metadata.Core.csproj" />
   </ItemGroup>
 
 </Project>

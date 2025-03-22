@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Core.Abstractions.Handlers;
 using Shark.Fido2.Core.Abstractions.Services;
@@ -11,15 +12,16 @@ using Shark.Fido2.Core.Helpers;
 using Shark.Fido2.Core.Services;
 using Shark.Fido2.Core.Validators;
 using Shark.Fido2.Core.Validators.AttestationStatementValidators;
+using Shark.Fido2.Metadata.Core;
 
 namespace Shark.Fido2.Core;
 
 public static class DependencyInjection
 {
-    public static void AddFido2(this IServiceCollection services)
+    public static void AddFido2(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddOptions<Fido2Configuration>()
-            .BindConfiguration(Fido2Configuration.Name);
+        var fido2ConfigurationSection = configuration.GetSection(Fido2Configuration.Name);
+        services.Configure<Fido2Configuration>(fido2ConfigurationSection);
 
         services.AddTransient<IChallengeGenerator, ChallengeGenerator>();
 
@@ -69,5 +71,11 @@ public static class DependencyInjection
 
         services.AddTransient<IAttestation, Attestation>();
         services.AddTransient<IAssertion, Assertion>();
+
+        var fido2Configuration = fido2ConfigurationSection.Get<Fido2Configuration>();
+        if (fido2Configuration?.EnableMetadataService ?? true)
+        {
+            services.AddMetadataService(fido2ConfigurationSection);
+        }
     }
 }

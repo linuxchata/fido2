@@ -7,9 +7,9 @@ namespace Shark.Fido2.Metadata.Core.Repositories;
 
 internal sealed class HttpClientRepository : IHttpClientRepository
 {
-    private readonly Fido2MetadataServiceConfiguration _configuration;
+    private readonly MetadataServiceConfiguration _configuration;
 
-    public HttpClientRepository(IOptions<Fido2MetadataServiceConfiguration> options)
+    public HttpClientRepository(IOptions<MetadataServiceConfiguration> options)
     {
         _configuration = options.Value;
     }
