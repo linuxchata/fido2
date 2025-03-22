@@ -1,5 +1,4 @@
 using Shark.Fido2.Core;
-using Shark.Fido2.Metadata.Core;
 using Shark.Fido2.Repositories.InMemory;
 using Shark.Sample.Fido2.Swagger;
 using Swashbuckle.AspNetCore.Filters;
