@@ -18,6 +18,7 @@
   
   <ItemGroup>
     <ProjectReference Include="..\Shark.Fido2.Core\Shark.Fido2.Core.csproj" />
+    <ProjectReference Include="..\Shark.Fido2.Metadata.Server\Shark.Fido2.Metadata.Server.csproj" />
     <ProjectReference Include="..\Shark.Fido2.Models\Shark.Fido2.Models.csproj" />
     <ProjectReference Include="..\Shark.Fido2.Repositories.InMemory\Shark.Fido2.Repositories.InMemory.csproj" />
   </ItemGroup>

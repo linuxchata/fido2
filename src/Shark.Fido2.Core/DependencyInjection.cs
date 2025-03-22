@@ -4,6 +4,7 @@ using Shark.Fido2.Core.Abstractions.Handlers;
 using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
+using Shark.Fido2.Core.Configurations;
 using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Handlers;
 using Shark.Fido2.Core.Helpers;
@@ -15,8 +16,11 @@ namespace Shark.Fido2.Core;
 
 public static class DependencyInjection
 {
-    public static void Register(this IServiceCollection services)
+    public static void AddFido2(this IServiceCollection services)
     {
+        services.AddOptions<Fido2Configuration>()
+            .BindConfiguration(Fido2Configuration.Name);
+
         services.AddTransient<IChallengeGenerator, ChallengeGenerator>();
 
         services.AddTransient<IClientDataValidator, ClientDataValidator>();
