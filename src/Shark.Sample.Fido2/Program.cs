@@ -1,12 +1,12 @@
+using Shark.Fido2.Core;
 using Shark.Fido2.Metadata.Core;
 using Shark.Fido2.Repositories.InMemory;
-using Shark.Sample.Fido2.Extensions;
 using Shark.Sample.Fido2.Swagger;
 using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.RegisterMetadataService();
+builder.Services.AddMetadataService();
 
 builder.Services.AddRazorPages();
 builder.Services.AddControllers();
@@ -28,7 +28,7 @@ builder.Services.AddSwaggerExamplesFromAssemblyOf<ServerPublicKeyCredentialCreat
 
 builder.Services.AddDistributedMemoryCache();
 builder.Services.RegisterInMemoryRepositories();
-builder.Services.AddFido2(builder.Configuration);
+builder.Services.AddFido2();
 
 var app = builder.Build();
 

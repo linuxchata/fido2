@@ -8,7 +8,7 @@ namespace Shark.Fido2.Metadata.Core;
 
 public static class DependencyInjection
 {
-    public static void RegisterMetadataService(this IServiceCollection services)
+    public static void AddMetadataService(this IServiceCollection services)
     {
         services.AddOptions<Fido2MetadataServiceConfiguration>()
             .BindConfiguration(Fido2MetadataServiceConfiguration.Name);

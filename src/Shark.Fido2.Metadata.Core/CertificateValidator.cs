@@ -3,12 +3,12 @@ using Shark.Fido2.Metadata.Core.Abstractions;
 
 namespace Shark.Fido2.Metadata.Core;
 
-public sealed class CertificateValidator : ICertificateValidator
+internal sealed class CertificateValidator : ICertificateValidator
 {
     public void ValidateX509Chain(
         X509Certificate2? rootCertificate,
         X509Certificate2 leafCertificate,
-        List<string> certificates)
+        List<X509Certificate2> certificates)
     {
         if (rootCertificate == null)
         {
@@ -24,10 +24,9 @@ public sealed class CertificateValidator : ICertificateValidator
         chain.ChainPolicy.TrustMode = X509ChainTrustMode.CustomRootTrust;
         chain.ChainPolicy.CustomTrustStore.Add(rootCertificate);
 
-        foreach (var certificate in certificates.Skip(1))
+        foreach (var intermediateCertificate in certificates.Skip(1))
         {
             // Intermediate certificate
-            var intermediateCertificate = new X509Certificate2(Convert.FromBase64String(certificate.ToString()!));
             chain.ChainPolicy.ExtraStore.Add(intermediateCertificate);
         }
 

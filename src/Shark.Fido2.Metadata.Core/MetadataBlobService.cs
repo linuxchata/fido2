@@ -7,7 +7,7 @@ using Shark.Fido2.Metadata.Core.Configurations;
 
 namespace Shark.Fido2.Metadata.Core;
 
-public sealed class MetadataBlobService : IMetadataBlobService
+internal sealed class MetadataBlobService : IMetadataBlobService
 {
     private readonly Fido2MetadataServiceConfiguration _configuration;
 
