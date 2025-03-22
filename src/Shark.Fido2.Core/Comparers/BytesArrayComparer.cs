@@ -17,7 +17,12 @@ public static class BytesArrayComparer
         return Compare(expected, actual);
     }
 
-    public static bool Compare(byte[] expected, byte[] actual)
+    public static bool CompareAsSpan(ReadOnlySpan<byte> expected, ReadOnlySpan<byte> actual)
+    {
+        return expected.SequenceEqual(actual);
+    }
+
+    private static bool Compare(byte[] expected, byte[] actual)
     {
         if (expected == actual)
         {
@@ -38,10 +43,5 @@ public static class BytesArrayComparer
         }
 
         return true;
-    }
-
-    public static bool CompareAsSpan(ReadOnlySpan<byte> expected, ReadOnlySpan<byte> actual)
-    {
-        return expected.SequenceEqual(actual);
     }
 }
