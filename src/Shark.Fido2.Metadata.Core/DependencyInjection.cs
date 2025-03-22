@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Shark.Fido2.Metadata.Core.Abstractions;
 using Shark.Fido2.Metadata.Core.Abstractions.Repositories;
 using Shark.Fido2.Metadata.Core.Configurations;
@@ -8,10 +9,10 @@ namespace Shark.Fido2.Metadata.Core;
 
 public static class DependencyInjection
 {
-    public static void AddMetadataService(this IServiceCollection services)
+    public static void AddMetadataService(this IServiceCollection services, IConfigurationSection configurationSection)
     {
-        services.AddOptions<Fido2MetadataServiceConfiguration>()
-            .BindConfiguration(Fido2MetadataServiceConfiguration.Name);
+        var metadataServiceConfigurationSection = configurationSection.GetSection(MetadataServiceConfiguration.Name);
+        services.Configure<MetadataServiceConfiguration>(metadataServiceConfigurationSection);
 
         services.AddTransient<IHttpClientRepository, HttpClientRepository>();
         services.AddTransient<IMetadataBlobService, MetadataBlobService>();

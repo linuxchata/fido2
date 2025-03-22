@@ -15,13 +15,13 @@ public sealed class MetadataService : IMetadataService
     private readonly IHttpClientRepository _httpClientRepository;
     private readonly IMetadataBlobService _metadataBlobService;
     private readonly ICertificateValidator _certificateValidator;
-    private readonly Fido2MetadataServiceConfiguration _configuration;
+    private readonly MetadataServiceConfiguration _configuration;
 
     public MetadataService(
         IHttpClientRepository httpClientRepository,
         IMetadataBlobService metadataBlobService,
         ICertificateValidator certificateValidator,
-        IOptions<Fido2MetadataServiceConfiguration> options)
+        IOptions<MetadataServiceConfiguration> options)
     {
         _httpClientRepository = httpClientRepository;
         _metadataBlobService = metadataBlobService;

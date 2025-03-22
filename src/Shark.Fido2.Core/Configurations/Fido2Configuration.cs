@@ -27,4 +27,9 @@ public sealed class Fido2Configuration
     /// and stored in a Trusted Execution Environment (Android Key Attestation)
     /// </summary>
     public bool EnableTrustedExecutionEnvironmentOnly { get; set; } = true;
+
+    /// <summary>
+    /// Gets or sets whether the Relying Party uses the Metadata Service to verify the attestation object
+    /// </summary>
+    public bool EnableMetadataService { get; set; } = true;
 }
