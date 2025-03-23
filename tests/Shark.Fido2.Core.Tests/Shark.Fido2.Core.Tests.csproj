@@ -13,6 +13,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Data\Certificates\PackedWithCa.pem">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Data\PackedAttestationWithOkpAlgorithm.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

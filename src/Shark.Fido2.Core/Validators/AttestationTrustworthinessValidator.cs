@@ -66,10 +66,8 @@ internal class AttestationTrustworthinessValidator : IAttestationTrustworthiness
         {
             if (certificate.Subject == certificate.Issuer)
             {
-                // Root certificate
-                chain.ChainPolicy.VerificationFlags = X509VerificationFlags.AllFlags;
-                chain.ChainPolicy.TrustMode = X509ChainTrustMode.CustomRootTrust;
-                chain.ChainPolicy.CustomTrustStore.Add(certificate);
+                // If trust path contains a root certificate (full chain), the server should return error
+                return ValidatorInternalResult.Invalid("Trust path contains a root certificate");
             }
             else
             {
