@@ -131,6 +131,22 @@ public class AttestationTrustworthinessValidatorTests
     }
 
     [Test]
+    public void Validate_WhenAttCaAttestationWithTrustPathWithPackedCertificatesWithCa_ThenReturnsValid()
+    {
+        // Arrange
+        var fileName = "PackedWithCa.pem";
+        var certificateData = CertificateDataReader.Read(fileName);
+
+        var attestationResult = new AttestationStatementInternalResult(AttestationTypeEnum.AttCA, certificateData);
+
+        // Act
+        var result = _sut.Validate(attestationResult);
+
+        // Assert
+        Assert.That(result.IsValid, Is.False);
+    }
+
+    [Test]
     public void Validate_WhenAttCaAttestationWithTrustPathWitFidoU2fCertificates_ThenReturnsValid()
     {
         // Arrange
