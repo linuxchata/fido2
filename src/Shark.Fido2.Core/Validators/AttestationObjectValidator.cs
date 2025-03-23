@@ -8,6 +8,8 @@ using Shark.Fido2.Core.Helpers;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain;
 using Shark.Fido2.Domain.Enums;
+using Shark.Fido2.Metadata.Core;
+using Shark.Fido2.Metadata.Core.Abstractions;
 
 namespace Shark.Fido2.Core.Validators;
 
@@ -15,19 +17,22 @@ internal class AttestationObjectValidator : IAttestationObjectValidator
 {
     private readonly IAttestationStatementValidator _attestationStatementValidator;
     private readonly IAttestationTrustworthinessValidator _attestationTrustworthinessValidator;
+    private readonly IMetadataCachedService _metadataService;
     private readonly Fido2Configuration _configuration;
 
     public AttestationObjectValidator(
         IAttestationStatementValidator attestationStatementValidator,
         IAttestationTrustworthinessValidator attestationTrustworthinessValidator,
+        IMetadataCachedService metadataService,
         IOptions<Fido2Configuration> options)
     {
         _attestationStatementValidator = attestationStatementValidator;
         _attestationTrustworthinessValidator = attestationTrustworthinessValidator;
+        _metadataService = metadataService;
         _configuration = options.Value;
     }
 
-    public ValidatorInternalResult Validate(
+    public async Task<ValidatorInternalResult> Validate(
         AttestationObjectData? attestationObjectData,
         ClientData clientData,
         PublicKeyCredentialCreationOptions creationOptions)
@@ -118,7 +123,12 @@ internal class AttestationObjectValidator : IAttestationObjectValidator
         // for that attestation type and attestation statement format fmt, from a trusted source or from policy.
         // For example, the FIDO Metadata Service [FIDOMetadataService] provides one way to obtain such information,
         // using the aaguid in the attestedCredentialData in authData.
-        // TODO: Implement
+        var aaGuid = attestationObjectData.AuthenticatorData!.AttestedCredentialData.AaGuid;
+        var authenticatorMetadata = await _metadataService.Get(aaGuid);
+        if (authenticatorMetadata != null)
+        {
+            // TODO: Implement this check
+        }
 
         // Step 21
         // Assess the attestation trustworthiness using the outputs of the verification procedure in step 19

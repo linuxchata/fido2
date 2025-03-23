@@ -46,7 +46,7 @@ public class AttestationTests
                 It.IsAny<string>(),
                 It.IsAny<ClientData>(),
                 It.IsAny<PublicKeyCredentialCreationOptions>()))
-            .Returns(new InternalResult<AttestationObjectData>(new AttestationObjectData
+            .ReturnsAsync(new InternalResult<AttestationObjectData>(new AttestationObjectData
             {
                 AuthenticatorData = new AuthenticatorData
                 {
@@ -343,7 +343,7 @@ public class AttestationTests
                 It.IsAny<string>(),
                 It.IsAny<ClientData>(),
                 It.IsAny<PublicKeyCredentialCreationOptions>()))
-            .Returns(new InternalResult<AttestationObjectData>("Attestation object validation failed"));
+            .ReturnsAsync(new InternalResult<AttestationObjectData>("Attestation object validation failed"));
 
         // Act
         var result = await _sut.Complete(publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions);

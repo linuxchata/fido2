@@ -126,7 +126,7 @@ public sealed class Attestation : IAttestation
         }
 
         // Steps 13 to 21
-        var attestationResult = _attestationObjectHandler.Handle(
+        var attestationResult = await _attestationObjectHandler.Handle(
             response.AttestationObject,
             clientDataHandlerResult.Value!,
             creationOptions);

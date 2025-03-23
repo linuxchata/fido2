@@ -15,7 +15,7 @@ public interface IAttestationObjectValidator
     /// <param name="clientData">The client data associated with the registration ceremony.</param>
     /// <param name="creationOptions">The options that were used to create the credential.</param>
     /// <returns>A ValidatorInternalResult indicating whether the attestation object is valid.</returns>
-    ValidatorInternalResult Validate(
+    Task<ValidatorInternalResult> Validate(
         AttestationObjectData? attestationObjectData,
         ClientData clientData,
         PublicKeyCredentialCreationOptions creationOptions);

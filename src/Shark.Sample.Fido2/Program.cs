@@ -23,7 +23,6 @@ builder.Services.AddSwaggerGen(c =>
 });
 builder.Services.AddSwaggerExamplesFromAssemblyOf<ServerPublicKeyCredentialCreationOptionsRequestExample>();
 
-builder.Services.AddDistributedMemoryCache();
 builder.Services.RegisterInMemoryRepositories();
 builder.Services.AddFido2(builder.Configuration);
 

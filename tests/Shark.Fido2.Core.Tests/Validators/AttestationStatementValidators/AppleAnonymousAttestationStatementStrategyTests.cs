@@ -31,7 +31,7 @@ internal class AppleAnonymousAttestationStatementStrategyTests
                 It.IsAny<AttestationObjectData>(),
                 It.IsAny<ClientData>(),
                 It.IsAny<PublicKeyCredentialCreationOptions>()))
-            .Returns(ValidatorInternalResult.Valid());
+            .ReturnsAsync(ValidatorInternalResult.Valid());
 
         _provider = new AuthenticatorDataParserService();
 
@@ -58,14 +58,14 @@ internal class AppleAnonymousAttestationStatementStrategyTests
 
     [Ignore("Apple Anonymous attestation to be generated")]
     [Test]
-    public void Validate_WhenAppleAnonymousAttestationWithEc2Algorithm_ShouldValidate()
+    public async Task Validate_WhenAppleAnonymousAttestationWithEc2Algorithm_ShouldValidate()
     {
         // Arrange
         var fileName = "AppleAnonymousAttestationWithEc2Algorithm.json";
         var attestationResponseData = AttestationResponseDataReader.Read(fileName);
         var clientData = ClientDataBuilder.Build(attestationResponseData!.ClientDataJson);
 
-        var internalResult = _attestationObjectHandler.Handle(
+        var internalResult = await _attestationObjectHandler.Handle(
             attestationResponseData!.AttestationObject, clientData, _creationOptions);
 
         // Act

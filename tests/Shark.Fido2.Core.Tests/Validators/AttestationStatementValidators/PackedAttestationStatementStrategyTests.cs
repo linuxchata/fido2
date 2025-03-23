@@ -32,7 +32,7 @@ internal class PackedAttestationStatementStrategyTests
                 It.IsAny<AttestationObjectData>(),
                 It.IsAny<ClientData>(),
                 It.IsAny<PublicKeyCredentialCreationOptions>()))
-        .Returns(ValidatorInternalResult.Valid());
+        .ReturnsAsync(ValidatorInternalResult.Valid());
 
         _authenticatorDataProvider = new AuthenticatorDataParserService();
 
@@ -62,14 +62,14 @@ internal class PackedAttestationStatementStrategyTests
     }
 
     [Test]
-    public void Validate_WhenPackedAttestationWithRs256Algorithm_ShouldValidate()
+    public async Task Validate_WhenPackedAttestationWithRs256Algorithm_ShouldValidate()
     {
         // Arrange
         var fileName = "PackedAttestationWithRs256Algorithm.json";
         var attestationResponseData = AttestationResponseDataReader.Read(fileName);
         var clientData = ClientDataBuilder.Build(attestationResponseData!.ClientDataJson);
 
-        var internalResult = _attestationObjectHandler.Handle(
+        var internalResult = await _attestationObjectHandler.Handle(
             attestationResponseData!.AttestationObject, clientData, _creationOptions);
 
         // Act
@@ -82,7 +82,7 @@ internal class PackedAttestationStatementStrategyTests
     }
 
     [Test]
-    public void Validate_WhenPackedAttestationWithEc2Algorithm_ShouldValidate()
+    public async Task Validate_WhenPackedAttestationWithEc2Algorithm_ShouldValidate()
     {
         // Arrange
         // Source https://fidoalliance.org/specs/fido-v2.0-rd-20180702/fido-server-v2.0-rd-20180702.html#packed-attestation
@@ -90,7 +90,7 @@ internal class PackedAttestationStatementStrategyTests
         var attestationResponseData = AttestationResponseDataReader.Read(fileName);
         var clientData = ClientDataBuilder.Build(attestationResponseData!.ClientDataJson);
 
-        var internalResult = _attestationObjectHandler.Handle(
+        var internalResult = await _attestationObjectHandler.Handle(
             attestationResponseData!.AttestationObject, clientData, _creationOptions);
 
         // Act
@@ -99,18 +99,18 @@ internal class PackedAttestationStatementStrategyTests
         // Assert
         var attestationStatementInternalResult = result as AttestationStatementInternalResult;
         Assert.That(attestationStatementInternalResult, Is.Not.Null, result.Message);
-        Assert.That(attestationStatementInternalResult!.AttestationType, Is.EqualTo(AttestationTypeEnum.AttCA));
+        Assert.That(attestationStatementInternalResult!.AttestationType, Is.EqualTo(AttestationTypeEnum.Basic));
     }
 
     [Test]
-    public void Validate_WhenPackedAttestationWithOkpAlgorithm_ShouldValidate()
+    public async Task Validate_WhenPackedAttestationWithOkpAlgorithm_ShouldValidate()
     {
         // Arrange
         var fileName = "PackedAttestationWithOkpAlgorithm.json";
         var attestationResponseData = AttestationResponseDataReader.Read(fileName);
         var clientData = ClientDataBuilder.Build(attestationResponseData!.ClientDataJson);
 
-        var internalResult = _attestationObjectHandler.Handle(
+        var internalResult = await _attestationObjectHandler.Handle(
             attestationResponseData!.AttestationObject, clientData, _creationOptions);
 
         // Act

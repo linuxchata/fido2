@@ -14,9 +14,12 @@ public static class DependencyInjection
         var metadataServiceConfigurationSection = configurationSection.GetSection(MetadataServiceConfiguration.Name);
         services.Configure<MetadataServiceConfiguration>(metadataServiceConfigurationSection);
 
+        services.AddDistributedMemoryCache();
+
         services.AddTransient<IHttpClientRepository, HttpClientRepository>();
         services.AddTransient<IMetadataBlobService, MetadataBlobService>();
         services.AddTransient<ICertificateValidator, CertificateValidator>();
         services.AddTransient<IMetadataService, MetadataService>();
+        services.AddTransient<IMetadataCachedService, MetadataCachedService>();
     }
 }

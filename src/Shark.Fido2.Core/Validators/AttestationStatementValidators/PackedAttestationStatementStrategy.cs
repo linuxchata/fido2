@@ -97,7 +97,7 @@ internal class PackedAttestationStatementStrategy : IAttestationStatementStrateg
             // Optionally, inspect x5c and consult externally provided knowledge to determine whether attStmt conveys
             // a Basic or AttCA attestation.
             var attestationType = (attestationCertificate.Subject == attestationCertificate.Issuer) ?
-                AttestationTypeEnum.Basic : AttestationTypeEnum.AttCA;
+                AttestationTypeEnum.AttCA : AttestationTypeEnum.Basic;
 
             // If successful, return implementation-specific values representing attestation type Basic, AttCA or
             // uncertainty, and attestation trust path x5c.

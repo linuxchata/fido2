@@ -21,7 +21,7 @@ internal class AttestationObjectHandler : IAttestationObjectHandler
         _attestationObjectValidator = attestationObjectValidator;
     }
 
-    public InternalResult<AttestationObjectData> Handle(
+    public async Task<InternalResult<AttestationObjectData>> Handle(
         string attestationObject,
         ClientData clientData,
         PublicKeyCredentialCreationOptions creationOptions)
@@ -38,7 +38,7 @@ internal class AttestationObjectHandler : IAttestationObjectHandler
 
         var attestationObjectData = GetAttestationObjectData(attestationObject);
 
-        var result = _attestationObjectValidator.Validate(attestationObjectData, clientData, creationOptions);
+        var result = await _attestationObjectValidator.Validate(attestationObjectData, clientData, creationOptions);
         if (!result.IsValid)
         {
             return new InternalResult<AttestationObjectData>(result.Message!);

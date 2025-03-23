@@ -2,18 +2,28 @@
 
 public enum AttestationTypeEnum
 {
-    // Basic Attestation
+    /// <summary>
+    /// Basic Attestation
+    /// </summary>
     Basic = 1,
 
-    // Self Attestation
+    /// <summary>
+    /// Self Attestation
+    /// </summary>
     Self = 2,
 
-    // Attestation CA
+    /// <summary>
+    /// Attestation CA
+    /// </summary>
     AttCA = 3,
 
-    // Anonymization CA
+    /// <summary>
+    /// Anonymization CA
+    /// </summary>
     AnonCA = 4,
 
-    // No attestation statement
+    /// <summary>
+    /// No attestation statement
+    /// </summary>
     None = 5,
 }
