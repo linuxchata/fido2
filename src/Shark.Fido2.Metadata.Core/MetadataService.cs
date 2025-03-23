@@ -13,6 +13,8 @@ namespace Shark.Fido2.Metadata.Core;
 
 public sealed class MetadataService : IMetadataService
 {
+    private const string NextUpdateDateTimeFormat = "yyyy-MM-dd";
+
     private readonly IHttpClientRepository _httpClientRepository;
     private readonly IMetadataBlobService _metadataBlobService;
     private readonly ICertificateValidator _certificateValidator;
@@ -108,7 +110,7 @@ public sealed class MetadataService : IMetadataService
         // Step 6
         // It SHOULD also ignore the file if its number (no) is less or equal to the number of the last Metadata BLOB
         // object cached locally.
-        // TODO: Implement this step
+        // Skipped for now, as an expiring distributed cache is used.
         if (!metadataToken.Payload.TryGetValue(Constants.PayloadPropertyNumber, out var number) ||
             number is not int)
         {
@@ -123,7 +125,7 @@ public sealed class MetadataService : IMetadataService
 
         if (!DateTime.TryParseExact(
             (string)nextUpdateString,
-            "yyyy-MM-dd",
+            NextUpdateDateTimeFormat,
             CultureInfo.InvariantCulture,
             DateTimeStyles.AssumeUniversal,
             out DateTime nextUpdate))
@@ -150,7 +152,7 @@ public sealed class MetadataService : IMetadataService
         {
             Payload = payload,
             Number = (int)number,
-            Expiration = nextUpdate.ToUniversalTime(),
+            NextUpdate = nextUpdate.ToUniversalTime(),
         };
 
         return metadataBlobPayload;

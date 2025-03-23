@@ -8,16 +8,22 @@ namespace Shark.Fido2.Metadata.Core;
 public sealed class MetadataCachedService : IMetadataCachedService
 {
     private const string KeyPrefix = "md";
+    private const int DefaultExpirationInSeconds = 30;
 
     private static readonly SemaphoreSlim _semaphore = new(1, 1);
 
     private readonly IMetadataService _metadataService;
     private readonly IDistributedCache _cache;
+    private readonly TimeProvider _timeProvider;
 
-    public MetadataCachedService(IMetadataService metadataService, IDistributedCache cache)
+    public MetadataCachedService(
+        IMetadataService metadataService,
+        IDistributedCache cache,
+        TimeProvider timeProvider)
     {
         _metadataService = metadataService;
         _cache = cache;
+        _timeProvider = timeProvider;
     }
 
     public async Task<MetadataBlobPayloadEntry?> Get(Guid aaguid, CancellationToken cancellationToken = default)
@@ -37,7 +43,7 @@ public sealed class MetadataCachedService : IMetadataCachedService
 
                 var options = new DistributedCacheEntryOptions
                 {
-                    AbsoluteExpiration = new DateTimeOffset(metadata.Expiration),
+                    AbsoluteExpiration = GetAbsoluteExpiration(metadata.NextUpdate),
                 };
 
                 await _cache.SetStringAsync(KeyPrefix, serializedPayload, options, cancellationToken);
@@ -50,5 +56,21 @@ public sealed class MetadataCachedService : IMetadataCachedService
 
         var payload = JsonSerializer.Deserialize<List<MetadataBlobPayloadEntry>>(serializedPayload);
         return payload?.FirstOrDefault(x => x.Aaguid == aaguid);
+    }
+
+    private DateTimeOffset GetAbsoluteExpiration(DateTime nextUpdate)
+    {
+        var expiration = new DateTimeOffset(nextUpdate);
+
+        // The metadata BLOB object only contains the date of the next update, so the exact availability time
+        // of the next object is unknown. If a new object is unavailable, retain the "old" Metadata BLOB object
+        // for a short period.
+        var now = _timeProvider.GetUtcNow();
+        if (nextUpdate.Date == now.Date)
+        {
+            expiration = now.AddMinutes(DefaultExpirationInSeconds);
+        }
+
+        return expiration;
     }
 }

@@ -4,7 +4,7 @@ public sealed class MetadataBlobPayload
 {
     public required List<MetadataBlobPayloadEntry> Payload { get; set; }
 
-    public DateTime Expiration { get; set; }
+    public DateTime NextUpdate { get; set; }
 
     public int Number { get; set; }
 }

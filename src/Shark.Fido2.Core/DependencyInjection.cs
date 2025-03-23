@@ -23,6 +23,8 @@ public static class DependencyInjection
         var fido2ConfigurationSection = configuration.GetSection(Fido2Configuration.Name);
         services.Configure<Fido2Configuration>(fido2ConfigurationSection);
 
+        services.AddSingleton(TimeProvider.System);
+
         services.AddTransient<IChallengeGenerator, ChallengeGenerator>();
 
         services.AddTransient<IClientDataValidator, ClientDataValidator>();
