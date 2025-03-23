@@ -123,11 +123,11 @@ internal class AttestationObjectValidator : IAttestationObjectValidator
         // for that attestation type and attestation statement format fmt, from a trusted source or from policy.
         // For example, the FIDO Metadata Service [FIDOMetadataService] provides one way to obtain such information,
         // using the aaguid in the attestedCredentialData in authData.
-        // TODO: Implement
         var aaGuid = attestationObjectData.AuthenticatorData!.AttestedCredentialData.AaGuid;
         var authenticatorMetadata = await _metadataService.Get(aaGuid);
         if (authenticatorMetadata != null)
         {
+            // TODO: Implement this check
         }
 
         // Step 21
