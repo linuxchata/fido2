@@ -29,7 +29,7 @@ internal class NoneAttestationStatementStrategyTests
                 It.IsAny<AttestationObjectData>(),
                 It.IsAny<ClientData>(),
                 It.IsAny<PublicKeyCredentialCreationOptions>()))
-            .Returns(ValidatorInternalResult.Valid());
+            .ReturnsAsync(ValidatorInternalResult.Valid());
 
         _provider = new AuthenticatorDataParserService();
 
@@ -42,14 +42,14 @@ internal class NoneAttestationStatementStrategyTests
     }
 
     [Test]
-    public void Validate_WhenNoneAttestation_ShouldValidate()
+    public async Task Validate_WhenNoneAttestation_ShouldValidate()
     {
         // Arrange
         var fileName = "NoneAttestation.json";
         var attestationResponseData = AttestationResponseDataReader.Read(fileName);
         var clientData = ClientDataBuilder.Build(attestationResponseData!.ClientDataJson);
 
-        var internalResult = _attestationObjectHandler.Handle(
+        var internalResult = await _attestationObjectHandler.Handle(
             attestationResponseData!.AttestationObject, clientData, _creationOptions);
 
         // Act

@@ -9,6 +9,7 @@ using Shark.Fido2.Core.Services;
 using Shark.Fido2.Core.Validators;
 using Shark.Fido2.Domain;
 using Shark.Fido2.Domain.Enums;
+using Shark.Fido2.Metadata.Core.Abstractions;
 
 namespace Shark.Fido2.Core.Tests.Validators;
 
@@ -30,6 +31,8 @@ internal class AttestationObjectValidatorTests
             .Setup(a => a.Validate(It.IsAny<AttestationStatementInternalResult>()))
             .Returns(ValidatorInternalResult.Valid());
 
+        var metadataCachedServiceMock = new Mock<IMetadataCachedService>();
+
         var fido2ConfigurationMock = new Fido2Configuration
         {
             Origin = "localhost",
@@ -39,11 +42,12 @@ internal class AttestationObjectValidatorTests
         _sut = new AttestationObjectValidator(
             attestationStatementValidatorMock.Object,
             attestationTrustworthinessValidatorMock.Object,
+            metadataCachedServiceMock.Object,
             Options.Create(fido2ConfigurationMock));
     }
 
     [Test]
-    public void Validate_WheniPhoneAttestationObjectDataValid_ThenReturnsValidResult()
+    public async Task Validate_WheniPhoneAttestationObjectDataValid_ThenReturnsValidResult()
     {
         // Arrange
         var authenticatorDataString = "SZYN5YgOjGh0NBcPZHZgW4/krrmihjLHmVzzuoMdl2NdAAAAAAAAAAAAAAAAAAAAAAAAAAAAFNIOIaOVgJRyI6ffE8tNV4tHvGJVpQECAyYgASFYIEgIOe/+LSvpyPB010CZ4+ox3EAG6dp611nzoff5QH15IlggC/DWA8k1rogu86PSgVzEjD9ObamYaO2dbj710ogx1dw=";
@@ -69,7 +73,7 @@ internal class AttestationObjectValidatorTests
         };
 
         // Act
-        var result = _sut.Validate(attestationObjectData, new ClientData(), creationOptions);
+        var result = await _sut.Validate(attestationObjectData, new ClientData(), creationOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -78,7 +82,7 @@ internal class AttestationObjectValidatorTests
     }
 
     [Test]
-    public void Validate_WhenWindowsAttestationObjectDataValid_ThenReturnsValidResult()
+    public async Task Validate_WhenWindowsAttestationObjectDataValid_ThenReturnsValidResult()
     {
         // Arrange
         var authenticatorDataString = "SZYN5YgOjGh0NBcPZHZgW4/krrmihjLHmVzzuoMdl2NFAAAAAGAosBex1EwCtLOvza/Ja7IAIHgppX3fEq9YSztHkiwb17ns0+Px0i+cSd9aTkm1JD5LpAEDAzkBACBZAQCmBcYvuGi9gyjh5lXY0wiL0oYw1voBr5XHTwP+14ezQBR90zV93anRBAfqFr5MLzY+0EB+YhwjvhL51G0INgmFS6rUhpfG1wQp+MvSU7tSaK1MwZKB35r17oU77/zjroBt780iDHGdYaUx4UN0Mi4oIGe9pmZTTiSUOwq9KpoE4aixjVQNfurWUs036xnkFJ5ZMVON4ki8dXLuOtqgtNy06/X98EKsFcwNKA83ob6XKUZCnG2GlWQJyMBnE8p1p4k46r3DF5p6vdVH+3Ibujmcxhw/f6/M6UTvhvYofT+ljqFYhHKT2iRp1m2+iFQJAbcGCvXW9AWVWeqU1tBQ5yENIUMBAAE=";
@@ -104,7 +108,7 @@ internal class AttestationObjectValidatorTests
         };
 
         // Act
-        var result = _sut.Validate(attestationObjectData, new ClientData(), creationOptions);
+        var result = await _sut.Validate(attestationObjectData, new ClientData(), creationOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);

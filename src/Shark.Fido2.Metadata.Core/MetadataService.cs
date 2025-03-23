@@ -1,4 +1,5 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+﻿using System.Globalization;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
 using Microsoft.Extensions.Options;
@@ -29,7 +30,7 @@ public sealed class MetadataService : IMetadataService
         _configuration = options.Value;
     }
 
-    public async Task Refresh(CancellationToken cancellationToken)
+    public async Task<MetadataBlobPayload> Get(CancellationToken cancellationToken)
     {
         // Step 1
         // Download and cache the root signing trust anchor from the respective MDS root location e.g.
@@ -108,14 +109,31 @@ public sealed class MetadataService : IMetadataService
         // It SHOULD also ignore the file if its number (no) is less or equal to the number of the last Metadata BLOB
         // object cached locally.
         // TODO: Implement this step
-        if (!metadataToken.Payload.TryGetValue(Constants.PayloadPropertyNumber, out var number))
+        if (!metadataToken.Payload.TryGetValue(Constants.PayloadPropertyNumber, out var number) ||
+            number is not int)
         {
             throw new InvalidDataException("Metadata token payload does not contain the 'no' property");
         }
 
+        if (!metadataToken.Payload.TryGetValue(Constants.PayloadPropertyNextUpdate, out var nextUpdateString) ||
+            nextUpdateString is not string)
+        {
+            throw new InvalidDataException("Metadata token payload does not contain the 'nextUpdate' property");
+        }
+
+        if (!DateTime.TryParseExact(
+            (string)nextUpdateString,
+            "yyyy-MM-dd",
+            CultureInfo.InvariantCulture,
+            DateTimeStyles.AssumeUniversal,
+            out DateTime nextUpdate))
+        {
+            throw new InvalidDataException("Metadata token payload 'nextUpdate' property is not date");
+        }
+
         // Step 7
         // Write the verified object to a local cache as required.
-        var result = new List<MetadataBlobPayloadEntry>(metadataToken.Claims.Count());
+        var payload = new List<MetadataBlobPayloadEntry>(metadataToken.Claims.Count());
         metadataToken.Claims.ToList().ForEach(claim =>
         {
             if (string.Equals(claim.Type, Constants.ClientTypeEntries, StringComparison.OrdinalIgnoreCase))
@@ -123,10 +141,19 @@ public sealed class MetadataService : IMetadataService
                 var payloadEntry = JsonSerializer.Deserialize<MetadataBlobPayloadEntry>(claim.Value);
                 if (payloadEntry != null)
                 {
-                    result.Add(payloadEntry);
+                    payload.Add(payloadEntry);
                 }
             }
         });
+
+        var metadataBlobPayload = new MetadataBlobPayload
+        {
+            Payload = payload,
+            Number = (int)number,
+            Expiration = nextUpdate.ToUniversalTime(),
+        };
+
+        return metadataBlobPayload;
     }
 
     private static string? GetCertificateUrlFromToken(JwtSecurityToken metadataToken)

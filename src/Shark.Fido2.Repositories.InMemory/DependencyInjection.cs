@@ -7,6 +7,8 @@ public static class DependencyInjection
 {
     public static void RegisterInMemoryRepositories(this IServiceCollection services)
     {
+        services.AddDistributedMemoryCache();
+
         services.AddTransient<ICredentialRepository, CredentialRepository>();
     }
 }

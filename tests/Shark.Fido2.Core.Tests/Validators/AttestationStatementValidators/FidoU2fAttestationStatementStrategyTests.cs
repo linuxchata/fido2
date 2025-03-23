@@ -32,7 +32,7 @@ internal class FidoU2fAttestationStatementStrategyTests
                 It.IsAny<AttestationObjectData>(),
                 It.IsAny<ClientData>(),
                 It.IsAny<PublicKeyCredentialCreationOptions>()))
-            .Returns(ValidatorInternalResult.Valid());
+            .ReturnsAsync(ValidatorInternalResult.Valid());
 
         _provider = new AuthenticatorDataParserService();
 
@@ -61,14 +61,14 @@ internal class FidoU2fAttestationStatementStrategyTests
     }
 
     [Test]
-    public void Validate_WhenFidoU2fAttestationWithEc2Algorithm_ShouldValidate()
+    public async Task Validate_WhenFidoU2fAttestationWithEc2Algorithm_ShouldValidate()
     {
         // Arrange
         var fileName = "FidoU2fAttestationWithEc2Algorithm.json";
         var attestationResponseData = AttestationResponseDataReader.Read(fileName);
         var clientData = ClientDataBuilder.Build(attestationResponseData!.ClientDataJson);
 
-        var internalResult = _attestationObjectHandler.Handle(
+        var internalResult = await _attestationObjectHandler.Handle(
             attestationResponseData!.AttestationObject, clientData, _creationOptions);
 
         // Act

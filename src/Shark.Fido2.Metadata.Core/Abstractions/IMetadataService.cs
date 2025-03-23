@@ -1,6 +1,8 @@
-﻿namespace Shark.Fido2.Metadata.Core.Abstractions;
+﻿using Shark.Fido2.Metadata.Core.Models;
+
+namespace Shark.Fido2.Metadata.Core.Abstractions;
 
 public interface IMetadataService
 {
-    Task Refresh(CancellationToken cancellationToken);
+    Task<MetadataBlobPayload> Get(CancellationToken cancellationToken);
 }
