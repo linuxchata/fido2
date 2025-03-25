@@ -48,7 +48,7 @@ internal sealed class AuthenticatorDataParserService : IAuthenticatorDataParserS
             // AAGUID of the authenticator
             startIndex += SignCountLength;
             var aaguidArray = authenticatorDataArray.AsSpan(startIndex, AaguidLength);
-            authenticatorData.AttestedCredentialData.AaGuid = new Guid(aaguidArray);
+            authenticatorData.AttestedCredentialData.AaGuid = new Guid(aaguidArray, bigEndian: true);
 
             // Credential ID Length
             startIndex += AaguidLength;

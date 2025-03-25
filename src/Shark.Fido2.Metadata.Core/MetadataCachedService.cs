@@ -1,6 +1,8 @@
 ﻿using System.Text.Json;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Options;
 using Shark.Fido2.Metadata.Core.Abstractions;
+using Shark.Fido2.Metadata.Core.Configurations;
 using Shark.Fido2.Metadata.Core.Models;
 
 namespace Shark.Fido2.Metadata.Core;
@@ -8,7 +10,7 @@ namespace Shark.Fido2.Metadata.Core;
 public sealed class MetadataCachedService : IMetadataCachedService
 {
     private const string KeyPrefix = "md";
-    private const int DefaultExpirationInSeconds = 30;
+    private const int DefaultExpirationInMinutes = 30;
 
     private static readonly SemaphoreSlim _semaphore = new(1, 1);
 
@@ -37,16 +39,7 @@ public sealed class MetadataCachedService : IMetadataCachedService
             serializedPayload = await _cache.GetStringAsync(KeyPrefix, cancellationToken);
             if (serializedPayload == null)
             {
-                var metadata = await _metadataService.Get(cancellationToken);
-
-                serializedPayload = JsonSerializer.Serialize(metadata.Payload);
-
-                var options = new DistributedCacheEntryOptions
-                {
-                    AbsoluteExpiration = GetAbsoluteExpiration(metadata.NextUpdate),
-                };
-
-                await _cache.SetStringAsync(KeyPrefix, serializedPayload, options, cancellationToken);
+                serializedPayload = await Cache(cancellationToken);
             }
         }
         finally
@@ -59,6 +52,22 @@ public sealed class MetadataCachedService : IMetadataCachedService
         return entry;
     }
 
+    private async Task<string> Cache(CancellationToken cancellationToken)
+    {
+        var metadata = await _metadataService.Get(cancellationToken);
+
+        var serializedPayload = JsonSerializer.Serialize(metadata.Payload);
+
+        var options = new DistributedCacheEntryOptions
+        {
+            AbsoluteExpiration = GetAbsoluteExpiration(metadata.NextUpdate),
+        };
+
+        await _cache.SetStringAsync(KeyPrefix, serializedPayload, options, cancellationToken);
+
+        return serializedPayload;
+    }
+
     private DateTimeOffset GetAbsoluteExpiration(DateTime nextUpdate)
     {
         var expiration = new DateTimeOffset(nextUpdate);
@@ -69,7 +78,7 @@ public sealed class MetadataCachedService : IMetadataCachedService
         var now = _timeProvider.GetUtcNow();
         if (nextUpdate.Date == now.Date)
         {
-            expiration = now.AddMinutes(DefaultExpirationInSeconds);
+            expiration = now.AddMinutes(DefaultExpirationInMinutes);
         }
 
         return expiration;

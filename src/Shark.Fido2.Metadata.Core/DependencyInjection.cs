@@ -20,6 +20,10 @@ public static class DependencyInjection
         services.AddTransient<IMetadataBlobService, MetadataBlobService>();
         services.AddTransient<ICertificateValidator, CertificateValidator>();
         services.AddTransient<IMetadataService, MetadataService>();
-        services.AddTransient<IMetadataCachedService, MetadataCachedService>();
+        services.AddTransient<IMetadataReaderService, MetadataReaderService>();
+        // services.AddTransient<IMetadataCachedService, MetadataCachedService>();
+
+        services.AddTransient<IHttpClientConformanceTestRepository, HttpClientConformanceTestRepository>();
+        services.AddTransient<IMetadataCachedService, MetadataConformanceTestService>();
     }
 }
