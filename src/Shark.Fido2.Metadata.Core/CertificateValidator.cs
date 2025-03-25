@@ -17,10 +17,10 @@ internal sealed class CertificateValidator : ICertificateValidator
 
         using var chain = new X509Chain();
         chain.ChainPolicy.RevocationMode = X509RevocationMode.Online; // Configuration
+        chain.ChainPolicy.VerificationFlags = X509VerificationFlags.NoFlag;
         chain.ChainPolicy.VerificationTime = DateTime.Now;
 
         // Root certificate
-        chain.ChainPolicy.VerificationFlags = X509VerificationFlags.AllFlags;
         chain.ChainPolicy.TrustMode = X509ChainTrustMode.CustomRootTrust;
         chain.ChainPolicy.CustomTrustStore.Add(rootCertificate);
 
