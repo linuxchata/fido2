@@ -2,9 +2,9 @@
 
 public sealed class MetadataBlobPayload
 {
-    public required List<MetadataBlobPayloadEntry> Payload { get; set; }
+    public required List<MetadataBlobPayloadEntry> Payload { get; init; }
 
-    public DateTime NextUpdate { get; set; }
+    public DateTime NextUpdate { get; init; }
 
-    public int Number { get; set; }
+    public int Number { get; init; }
 }

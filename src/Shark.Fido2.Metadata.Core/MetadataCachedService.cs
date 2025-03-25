@@ -55,7 +55,8 @@ public sealed class MetadataCachedService : IMetadataCachedService
         }
 
         var payload = JsonSerializer.Deserialize<List<MetadataBlobPayloadEntry>>(serializedPayload);
-        return payload?.FirstOrDefault(x => x.Aaguid == aaguid);
+        var entry = payload?.FirstOrDefault(x => Guid.Equals(x.Aaguid, aaguid));
+        return entry;
     }
 
     private DateTimeOffset GetAbsoluteExpiration(DateTime nextUpdate)
