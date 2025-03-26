@@ -39,10 +39,9 @@ public sealed class MetadataReaderService : IMetadataReaderService
     {
         var metadataToken = _metadataBlobService.ReadToken(metadataBlob);
 
-        X509Certificate2 leafCertificate = null!;
-
         // Step 4
         // If the x5u attribute is present in the JWT Header, then:
+        List<X509Certificate2> certificates = [];
         var certificateUrl = GetCertificateUrlFromToken(metadataToken);
         if (!string.IsNullOrWhiteSpace(certificateUrl))
         {
@@ -63,18 +62,16 @@ public sealed class MetadataReaderService : IMetadataReaderService
             // [JWS]. The certificate chain MUST be verified to properly chain to the metadata BLOB signing trust
             // anchor according to [RFC5280]. All certificates in the chain MUST be checked for revocation
             // according to [RFC5280].
-            var certificates = await _httpClientRepository.GetCertificates(certificateUrl, cancellationToken);
+            certificates = await _httpClientRepository.GetCertificates(certificateUrl, cancellationToken);
 
             if (certificates.Count != 0)
             {
-                throw new InvalidDataException(
-                    "X.509 URL does not have the certificate (chain)");
+                throw new InvalidDataException("X.509 URL does not have the certificate (chain)");
             }
 
             // The FIDO Server SHOULD ignore the file if the chain cannot be verified or if one of the chain
             // certificates is revoked.
-            leafCertificate = certificates.First();
-            _certificateValidator.ValidateX509Chain(rootCertificate, leafCertificate, certificates);
+            _certificateValidator.ValidateX509Chain(rootCertificate, certificates);
         }
         else
         {
@@ -82,22 +79,24 @@ public sealed class MetadataReaderService : IMetadataReaderService
             // If the x5u attribute is missing, the chain should be retrieved from the x5c attribute. If that
             // attribute is missing as well, Metadata BLOB signing trust anchor is considered the BLOB signing
             // certificate chain.
-            var certificates = GetCertificatesFromToken(metadataToken);
+            certificates = GetCertificatesFromToken(metadataToken);
             if (certificates.Count != 0)
             {
-                leafCertificate = certificates.First();
-                _certificateValidator.ValidateX509Chain(rootCertificate, leafCertificate, certificates);
+                _certificateValidator.ValidateX509Chain(rootCertificate, certificates);
             }
             else
             {
-                leafCertificate = rootCertificate;
+                certificates.Add(rootCertificate);
             }
         }
 
         // Step 6
         // Verify the signature of the Metadata BLOB object using the BLOB signing certificate chain (as determined
         // by the steps above). The FIDO Server SHOULD ignore the file if the signature is invalid.
-        await _metadataBlobService.ValidateToken(metadataBlob, leafCertificate);
+        if (!await _metadataBlobService.IsTokenValid(metadataBlob, certificates))
+        {
+            throw new InvalidDataException("Signature of the Metadata BLOB object is invalid");
+        }
 
         // Step 6
         // It SHOULD also ignore the file if its number (no) is less or equal to the number of the last Metadata BLOB

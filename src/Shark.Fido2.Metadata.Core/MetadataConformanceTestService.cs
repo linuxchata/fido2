@@ -53,8 +53,8 @@ public class MetadataConformanceTestService : IMetadataCachedService
 
         var payload = JsonSerializer.Deserialize<List<MetadataBlobPayloadEntry>>(serializedPayload);
 
-        var dict = payload!.Where(p => p.Aaguid.HasValue).ToDictionary(p => p.Aaguid!.Value, p => p);
-        dict.TryGetValue(aaguid, out var entry);
+        var map = payload!.Where(p => p.Aaguid.HasValue).ToDictionary(p => p.Aaguid!.Value, p => p);
+        map.TryGetValue(aaguid, out var entry);
         return entry;
     }
 

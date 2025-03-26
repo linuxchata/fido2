@@ -5,10 +5,7 @@ namespace Shark.Fido2.Metadata.Core;
 
 internal sealed class CertificateValidator : ICertificateValidator
 {
-    public void ValidateX509Chain(
-        X509Certificate2? rootCertificate,
-        X509Certificate2 leafCertificate,
-        List<X509Certificate2> certificates)
+    public void ValidateX509Chain(X509Certificate2? rootCertificate, List<X509Certificate2> certificates)
     {
         if (rootCertificate == null)
         {
@@ -30,6 +27,7 @@ internal sealed class CertificateValidator : ICertificateValidator
             chain.ChainPolicy.ExtraStore.Add(intermediateCertificate);
         }
 
+        var leafCertificate = certificates.First();
         var isValid = chain.Build(leafCertificate);
         if (!isValid)
         {
