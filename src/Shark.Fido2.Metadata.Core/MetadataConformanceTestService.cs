@@ -1,14 +1,15 @@
 ﻿using System.Text.Json;
 using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Options;
 using Shark.Fido2.Metadata.Core.Abstractions;
 using Shark.Fido2.Metadata.Core.Abstractions.Repositories;
-using Shark.Fido2.Metadata.Core.Configurations;
 using Shark.Fido2.Metadata.Core.Models;
 
 namespace Shark.Fido2.Metadata.Core;
 
-public class MetadataConformanceTestService : IMetadataCachedService
+/// <summary>
+/// See: https://github.com/fido-alliance/conformance-test-tools-resources/issues/422#issuecomment-508959572
+/// </summary>
+public sealed class MetadataConformanceTestService : IMetadataCachedService
 {
     private const string KeyPrefix = "md";
     private const int DefaultExpirationInMinutes = 5;
@@ -18,18 +19,15 @@ public class MetadataConformanceTestService : IMetadataCachedService
     private readonly IHttpClientConformanceTestRepository _httpClientRepository;
     private readonly IMetadataReaderService _metadataReaderService;
     private readonly IDistributedCache _cache;
-    private readonly MetadataServiceConfiguration _configuration;
 
     public MetadataConformanceTestService(
         IHttpClientConformanceTestRepository httpClientRepository,
         IMetadataReaderService metadataReaderService,
-        IDistributedCache cache,
-        IOptions<MetadataServiceConfiguration> options)
+        IDistributedCache cache)
     {
         _httpClientRepository = httpClientRepository;
         _metadataReaderService = metadataReaderService;
         _cache = cache;
-        _configuration = options.Value;
     }
 
     public async Task<MetadataBlobPayloadEntry?> Get(Guid aaguid, CancellationToken cancellationToken = default)
@@ -41,10 +39,7 @@ public class MetadataConformanceTestService : IMetadataCachedService
         try
         {
             serializedPayload = await _cache.GetStringAsync(KeyPrefix, cancellationToken);
-            if (serializedPayload == null)
-            {
-                serializedPayload = await Cache(cancellationToken);
-            }
+            serializedPayload ??= await Cache(cancellationToken);
         }
         finally
         {

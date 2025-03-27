@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Comparers;
@@ -124,30 +123,34 @@ internal class AttestationObjectValidator : IAttestationObjectValidator
         // For example, the FIDO Metadata Service [FIDOMetadataService] provides one way to obtain such information,
         // using the aaguid in the attestedCredentialData in authData.
         var aaGuid = attestationObjectData.AuthenticatorData!.AttestedCredentialData.AaGuid;
-        var authenticatorMetadata = await _metadataService.Get(aaGuid);
-        if (authenticatorMetadata != null)
+        if (_configuration.EnableMetadataService)
         {
-            var statusReports = authenticatorMetadata.StatusReports;
-
-            var statuses = new HashSet<string>([
-                "USER_VERIFICATION_BYPASS",
-                "ATTESTATION_KEY_COMPROMISE",
-                "USER_KEY_REMOTE_COMPROMISE",
-                "USER_KEY_PHYSICAL_COMPROMISE",
-                "REVOKED"]);
-
-            /// The latest StatusReport entry MUST reflect the "current" status
-            var currentStatusReport = statusReports.LastOrDefault();
-            if (currentStatusReport != null && statuses.Contains(currentStatusReport.Status))
+            var authenticatorMetadata = await _metadataService.Get(aaGuid);
+            if (authenticatorMetadata != null)
             {
-                return ValidatorInternalResult.Invalid($"Authenticator {aaGuid} has {currentStatusReport.Status} status");
+                var statusReports = authenticatorMetadata.StatusReports;
+
+                var statuses = new HashSet<string>([
+                    "USER_VERIFICATION_BYPASS",
+                    "ATTESTATION_KEY_COMPROMISE",
+                    "USER_KEY_REMOTE_COMPROMISE",
+                    "USER_KEY_PHYSICAL_COMPROMISE",
+                    "REVOKED"]);
+
+                /// The latest StatusReport entry MUST reflect the "current" status
+                var currentStatusReport = statusReports.LastOrDefault();
+                if (currentStatusReport != null && statuses.Contains(currentStatusReport.Status))
+                {
+                    return ValidatorInternalResult.Invalid(
+                        $"Authenticator {aaGuid} has {currentStatusReport.Status} status");
+                }
+            }
+            else
+            {
+                return ValidatorInternalResult.Invalid($"Metadata for authenticator {aaGuid} is not available");
             }
         }
-        else
-        {
-            return ValidatorInternalResult.Invalid($"Metadata for authenticator {aaGuid} is not available");
-        }
-
+        
         // Step 21
         // Assess the attestation trustworthiness using the outputs of the verification procedure in step 19
         var attestationStatementResult = (AttestationStatementInternalResult)result;

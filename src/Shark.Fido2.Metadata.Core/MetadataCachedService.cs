@@ -1,8 +1,6 @@
 ﻿using System.Text.Json;
 using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.Options;
 using Shark.Fido2.Metadata.Core.Abstractions;
-using Shark.Fido2.Metadata.Core.Configurations;
 using Shark.Fido2.Metadata.Core.Models;
 
 namespace Shark.Fido2.Metadata.Core;
@@ -37,10 +35,7 @@ public sealed class MetadataCachedService : IMetadataCachedService
         try
         {
             serializedPayload = await _cache.GetStringAsync(KeyPrefix, cancellationToken);
-            if (serializedPayload == null)
-            {
-                serializedPayload = await Cache(cancellationToken);
-            }
+            serializedPayload ??= await Cache(cancellationToken);
         }
         finally
         {
@@ -48,7 +43,9 @@ public sealed class MetadataCachedService : IMetadataCachedService
         }
 
         var payload = JsonSerializer.Deserialize<List<MetadataBlobPayloadEntry>>(serializedPayload);
-        var entry = payload?.FirstOrDefault(x => Guid.Equals(x.Aaguid, aaguid));
+
+        var map = payload!.Where(p => p.Aaguid.HasValue).ToDictionary(p => p.Aaguid!.Value, p => p);
+        map.TryGetValue(aaguid, out var entry);
         return entry;
     }
 

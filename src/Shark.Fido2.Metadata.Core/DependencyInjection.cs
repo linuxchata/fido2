@@ -21,9 +21,18 @@ public static class DependencyInjection
         services.AddTransient<ICertificateValidator, CertificateValidator>();
         services.AddTransient<IMetadataService, MetadataService>();
         services.AddTransient<IMetadataReaderService, MetadataReaderService>();
-        //services.AddTransient<IMetadataCachedService, MetadataCachedService>();
+        services.AddTransient<IMetadataCachedService, MetadataCachedService>();
 
-        services.AddTransient<IHttpClientConformanceTestRepository, HttpClientConformanceTestRepository>();
-        services.AddTransient<IMetadataCachedService, MetadataConformanceTestService>();
+        if (IsConformanceTest())
+        {
+            services.AddTransient<IHttpClientConformanceTestRepository, HttpClientConformanceTestRepository>();
+            services.AddTransient<IMetadataCachedService, MetadataConformanceTestService>();
+        }
+    }
+
+    private static bool IsConformanceTest()
+    {
+        var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+        return string.Equals(environment, "Test", StringComparison.OrdinalIgnoreCase);
     }
 }
