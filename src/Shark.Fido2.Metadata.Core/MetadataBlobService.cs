@@ -18,6 +18,8 @@ internal sealed class MetadataBlobService : IMetadataBlobService
 
     public JwtSecurityToken ReadToken(string metadataBlob)
     {
+        ArgumentNullException.ThrowIfNullOrWhiteSpace(metadataBlob);
+
         var handler = new JwtSecurityTokenHandler
         {
             MaximumTokenSizeInBytes = _configuration.MaximumTokenSizeInBytes,
@@ -31,12 +33,17 @@ internal sealed class MetadataBlobService : IMetadataBlobService
         return handler.ReadJwtToken(metadataBlob);
     }
 
-    public async Task<bool> ValidateToken(string metadataBlob, X509Certificate2 certificate)
+    public async Task<bool> IsTokenValid(string metadataBlob, List<X509Certificate2> certificates)
     {
+        ArgumentNullException.ThrowIfNullOrWhiteSpace(metadataBlob);
+        ArgumentNullException.ThrowIfNull(certificates);
+
         var handler = new JwtSecurityTokenHandler
         {
             MaximumTokenSizeInBytes = _configuration.MaximumTokenSizeInBytes,
         };
+
+        var issuerSigningKeys = GetIssuerSigningKeys(certificates);
 
         var validationParameters = new TokenValidationParameters
         {
@@ -44,7 +51,7 @@ internal sealed class MetadataBlobService : IMetadataBlobService
             ValidateAudience = false,
             ValidateLifetime = false,
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new X509SecurityKey(certificate),
+            IssuerSigningKeys = issuerSigningKeys,
         };
 
         try
@@ -56,5 +63,33 @@ internal sealed class MetadataBlobService : IMetadataBlobService
         {
             return false;
         }
+    }
+
+    private static List<SecurityKey> GetIssuerSigningKeys(List<X509Certificate2> certificates)
+    {
+        // X509SecurityKey has issues extracting public keys from ECDsa certificates, so the public keys are
+        // extracted manually
+
+        var issuerSigningKeys = new List<SecurityKey>();
+        foreach (var certificate in certificates)
+        {
+            var ecdsaPublicKey = certificate.GetECDsaPublicKey();
+            var rsaPublicKey = certificate.GetRSAPublicKey();
+
+            if (ecdsaPublicKey != null)
+            {
+                issuerSigningKeys.Add(new ECDsaSecurityKey(ecdsaPublicKey));
+            }
+            else if (rsaPublicKey != null)
+            {
+                issuerSigningKeys.Add(new RsaSecurityKey(rsaPublicKey));
+            }
+            else
+            {
+                throw new InvalidOperationException("Certificate does not have a supported public key");
+            }
+        }
+
+        return issuerSigningKeys;
     }
 }

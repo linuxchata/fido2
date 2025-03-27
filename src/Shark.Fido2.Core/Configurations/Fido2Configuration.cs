@@ -32,4 +32,9 @@ public sealed class Fido2Configuration
     /// Gets or sets whether the Relying Party uses the Metadata Service to verify the attestation object
     /// </summary>
     public bool EnableMetadataService { get; set; } = true;
+
+    /// <summary>
+    /// Gets or sets whether the Relying Party requires strict verification of authenticators
+    /// </summary>
+    public bool EnableStrictAuthenticatorVerification { get; set; } = false;
 }

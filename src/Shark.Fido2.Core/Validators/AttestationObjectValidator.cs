@@ -123,12 +123,23 @@ internal class AttestationObjectValidator : IAttestationObjectValidator
         // For example, the FIDO Metadata Service [FIDOMetadataService] provides one way to obtain such information,
         // using the aaguid in the attestedCredentialData in authData.
         var aaGuid = attestationObjectData.AuthenticatorData!.AttestedCredentialData.AaGuid;
-        var authenticatorMetadata = await _metadataService.Get(aaGuid);
-        if (authenticatorMetadata != null)
+        if (_configuration.EnableMetadataService)
         {
-            // TODO: Implement this check
+            var authenticatorMetadata = await _metadataService.Get(aaGuid);
+            if (authenticatorMetadata != null)
+            {
+                if (authenticatorMetadata.HasIncreasedRisk())
+                {
+                    return ValidatorInternalResult.Invalid(
+                        $"Authenticator {aaGuid} has {authenticatorMetadata.GetLastStatus()} status (increased risk)");
+                }
+            }
+            else if (_configuration.EnableStrictAuthenticatorVerification)
+            {
+                return ValidatorInternalResult.Invalid($"Metadata for authenticator {aaGuid} is not available");
+            }
         }
-
+        
         // Step 21
         // Assess the attestation trustworthiness using the outputs of the verification procedure in step 19
         var attestationStatementResult = (AttestationStatementInternalResult)result;

@@ -486,6 +486,6 @@ internal class AttestationCertificateValidator : IAttestationCertificateValidato
         var guidBytes = new byte[length];
         Array.Copy(data, 2, guidBytes, 0, length);
 
-        return new Guid(guidBytes);
+        return new Guid(guidBytes, bigEndian: true);
     }
 }

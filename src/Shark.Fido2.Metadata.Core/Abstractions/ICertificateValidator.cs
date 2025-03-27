@@ -4,8 +4,5 @@ namespace Shark.Fido2.Metadata.Core.Abstractions;
 
 public interface ICertificateValidator
 {
-    void ValidateX509Chain(
-        X509Certificate2? rootCertificate,
-        X509Certificate2 leafCertificate,
-        List<X509Certificate2> certificates);
+    void ValidateX509Chain(X509Certificate2? rootCertificate, List<X509Certificate2> certificates);
 }
