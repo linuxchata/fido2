@@ -145,7 +145,7 @@ internal class AttestationObjectValidator : IAttestationObjectValidator
                         $"Authenticator {aaGuid} has {currentStatusReport.Status} status");
                 }
             }
-            else
+            else if (_configuration.EnableStrictAuthenticatorVerification)
             {
                 return ValidatorInternalResult.Invalid($"Metadata for authenticator {aaGuid} is not available");
             }
