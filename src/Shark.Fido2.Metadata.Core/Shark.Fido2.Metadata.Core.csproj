@@ -9,4 +9,8 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.7.0" />
 </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Shark.Fido2.Metadata.Domain\Shark.Fido2.Metadata.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

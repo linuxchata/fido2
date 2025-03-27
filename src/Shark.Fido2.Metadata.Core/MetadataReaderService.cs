@@ -115,11 +115,11 @@ public sealed class MetadataReaderService : IMetadataReaderService
         }
 
         if (!DateTime.TryParseExact(
-            (string)nextUpdateString,
-            NextUpdateDateTimeFormat,
-            CultureInfo.InvariantCulture,
-            DateTimeStyles.AssumeUniversal,
-            out DateTime nextUpdate))
+                (string)nextUpdateString,
+                NextUpdateDateTimeFormat,
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.AssumeUniversal,
+                out DateTime nextUpdate))
         {
             throw new InvalidDataException("Metadata token payload 'nextUpdate' property is not date");
         }
