@@ -22,7 +22,7 @@ internal class HttpClientConformanceTestRepository : IHttpClientConformanceTestR
 
         var payload = new { endpoint = "https://localhost:8082/" };
 
-        using var response = await client.PostAsJsonAsync(_configuration.MetadataBlobLocationUrl, payload, cancellationToken);
+        using var response = await client.PostAsJsonAsync(_configuration.MetadataBlobLocation, payload, cancellationToken);
         var content = await response.Content.ReadAsStringAsync(cancellationToken);
 
         var apiResponse = JsonSerializer.Deserialize<ApiResponse>(content);

@@ -9,9 +9,10 @@ using Shark.Fido2.Metadata.Domain;
 namespace Shark.Fido2.Metadata.Core;
 
 /// <summary>
+/// Remote blob test service is used for conformance testing for metadata service test cases.
 /// See: https://github.com/fido-alliance/conformance-test-tools-resources/issues/422#issuecomment-508959572
 /// </summary>
-public sealed class MetadataConformanceTestService : IMetadataCachedService
+public sealed class MetadataRemoteBlobTestService : IMetadataCachedService
 {
     private const string KeyPrefix = "md";
     private const int DefaultExpirationInMinutes = 5;
@@ -22,7 +23,7 @@ public sealed class MetadataConformanceTestService : IMetadataCachedService
     private readonly IMetadataReaderService _metadataReaderService;
     private readonly IDistributedCache _cache;
 
-    public MetadataConformanceTestService(
+    public MetadataRemoteBlobTestService(
         IHttpClientConformanceTestRepository httpClientRepository,
         IMetadataReaderService metadataReaderService,
         IDistributedCache cache)
@@ -32,7 +33,7 @@ public sealed class MetadataConformanceTestService : IMetadataCachedService
         _cache = cache;
     }
 
-    public async Task<MetadataBlobPayloadItem?> Get(Guid aaguid, CancellationToken cancellationToken = default)
+    public async Task<MetadataPayloadItem?> Get(Guid aaguid, CancellationToken cancellationToken = default)
     {
         await _semaphore.WaitAsync(cancellationToken);
 
@@ -48,9 +49,9 @@ public sealed class MetadataConformanceTestService : IMetadataCachedService
             _semaphore.Release();
         }
 
-        var payload = JsonSerializer.Deserialize<List<MetadataBlobPayloadEntry>>(serializedPayload);
+        var payloadEntries = JsonSerializer.Deserialize<List<MetadataBlobPayloadEntry>>(serializedPayload);
 
-        var map = payload!.Where(p => p.Aaguid.HasValue).ToDictionary(p => p.Aaguid!.Value, p => p);
+        var map = payloadEntries!.Where(p => p.Aaguid.HasValue).ToDictionary(p => p.Aaguid!.Value, p => p);
         map.TryGetValue(aaguid, out var entry);
         return entry?.ToDomain();
     }

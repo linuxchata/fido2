@@ -50,7 +50,7 @@ public sealed class MetadataReaderService : IMetadataReaderService
             // the web-origin differs (in order to prevent loading objects from arbitrary sites).
             var areTheSameOrigins = UrlOriginComparer.CompareOrigins(
                 certificateUrl,
-                _configuration.MetadataBlobLocationUrl);
+                _configuration.MetadataBlobLocation);
 
             if (!areTheSameOrigins)
             {

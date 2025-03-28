@@ -1,8 +1,8 @@
 ﻿using System.Text.Json;
 using Microsoft.Extensions.Caching.Distributed;
 using Shark.Fido2.Metadata.Core.Abstractions;
-using Shark.Fido2.Metadata.Core.Models;
 using Shark.Fido2.Metadata.Core.Mappers;
+using Shark.Fido2.Metadata.Core.Models;
 using Shark.Fido2.Metadata.Domain;
 
 namespace Shark.Fido2.Metadata.Core;
@@ -28,7 +28,7 @@ public sealed class MetadataCachedService : IMetadataCachedService
         _timeProvider = timeProvider;
     }
 
-    public async Task<MetadataBlobPayloadItem?> Get(Guid aaguid, CancellationToken cancellationToken = default)
+    public async Task<MetadataPayloadItem?> Get(Guid aaguid, CancellationToken cancellationToken = default)
     {
         await _semaphore.WaitAsync(cancellationToken);
 

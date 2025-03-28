@@ -2,11 +2,13 @@
 
 namespace Shark.Fido2.Metadata.Domain;
 
-public sealed class MetadataBlobPayloadItem
+public sealed class MetadataPayloadItem
 {
     public Guid Aaguid { get; init; }
 
     public required StatusReport[] StatusReports { get; init; }
+
+    public required string[] AttestationTypes { get; init; }
 
     public bool HasIncreasedRisk()
     {
