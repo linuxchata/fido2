@@ -25,7 +25,7 @@ public class AttestationTrustworthinessValidatorTests
     public void Validate_WhenNullAttestationStatementResult_ThenReturnsInvalid()
     {
         // Act
-        var result = _sut.Validate(null!);
+        var result = _sut.Validate(null!, null);
 
         // Assert
         Assert.That(result.IsValid, Is.False);
@@ -41,7 +41,7 @@ public class AttestationTrustworthinessValidatorTests
         var attestationResult = new AttestationStatementInternalResult(AttestationTypeEnum.None);
 
         // Act
-        var result = _sut.Validate(attestationResult);
+        var result = _sut.Validate(attestationResult, null);
 
         // Assert
         Assert.That(result.IsValid, Is.EqualTo(allowNoneAttestation));
@@ -60,7 +60,7 @@ public class AttestationTrustworthinessValidatorTests
         var attestationResult = new AttestationStatementInternalResult(AttestationTypeEnum.Self);
 
         // Act
-        var result = _sut.Validate(attestationResult);
+        var result = _sut.Validate(attestationResult, null);
 
         // Assert
         Assert.That(result.IsValid, Is.EqualTo(allowSelfAttestation));
@@ -77,7 +77,7 @@ public class AttestationTrustworthinessValidatorTests
         var attestationResult = new AttestationStatementInternalResult(AttestationTypeEnum.Basic);
 
         // Act
-        var result = _sut.Validate(attestationResult);
+        var result = _sut.Validate(attestationResult, null);
 
         // Assert
         Assert.That(result.IsValid, Is.False);
@@ -91,7 +91,7 @@ public class AttestationTrustworthinessValidatorTests
         var attestationResult = new AttestationStatementInternalResult(AttestationTypeEnum.Basic, []);
 
         // Act
-        var result = _sut.Validate(attestationResult);
+        var result = _sut.Validate(attestationResult, null);
 
         // Assert
         Assert.That(result.IsValid, Is.False);
@@ -108,7 +108,7 @@ public class AttestationTrustworthinessValidatorTests
         var attestationResult = new AttestationStatementInternalResult(AttestationTypeEnum.AttCA, certificateData);
 
         // Act
-        var result = _sut.Validate(attestationResult);
+        var result = _sut.Validate(attestationResult, null);
 
         // Assert
         Assert.That(result.IsValid, Is.True);
@@ -124,7 +124,7 @@ public class AttestationTrustworthinessValidatorTests
         var attestationResult = new AttestationStatementInternalResult(AttestationTypeEnum.AttCA, certificateData);
 
         // Act
-        var result = _sut.Validate(attestationResult);
+        var result = _sut.Validate(attestationResult, null);
 
         // Assert
         Assert.That(result.IsValid, Is.True);
@@ -140,7 +140,7 @@ public class AttestationTrustworthinessValidatorTests
         var attestationResult = new AttestationStatementInternalResult(AttestationTypeEnum.AttCA, certificateData);
 
         // Act
-        var result = _sut.Validate(attestationResult);
+        var result = _sut.Validate(attestationResult, null);
 
         // Assert
         Assert.That(result.IsValid, Is.False);
@@ -156,7 +156,7 @@ public class AttestationTrustworthinessValidatorTests
         var attestationResult = new AttestationStatementInternalResult(AttestationTypeEnum.AttCA, certificateData);
 
         // Act
-        var result = _sut.Validate(attestationResult);
+        var result = _sut.Validate(attestationResult, null);
 
         // Assert
         Assert.That(result.IsValid, Is.True);

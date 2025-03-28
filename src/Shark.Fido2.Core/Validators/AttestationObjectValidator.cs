@@ -9,6 +9,7 @@ using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain;
 using Shark.Fido2.Domain.Enums;
 using Shark.Fido2.Metadata.Core.Abstractions;
+using Shark.Fido2.Metadata.Domain;
 
 namespace Shark.Fido2.Core.Validators;
 
@@ -123,9 +124,10 @@ internal class AttestationObjectValidator : IAttestationObjectValidator
         // For example, the FIDO Metadata Service [FIDOMetadataService] provides one way to obtain such information,
         // using the aaguid in the attestedCredentialData in authData.
         var aaGuid = attestationObjectData.AuthenticatorData!.AttestedCredentialData.AaGuid;
+        MetadataPayloadItem? authenticatorMetadata = null;
         if (_configuration.EnableMetadataService)
         {
-            var authenticatorMetadata = await _metadataService.Get(aaGuid);
+            authenticatorMetadata = await _metadataService.Get(aaGuid);
             if (authenticatorMetadata != null)
             {
                 if (authenticatorMetadata.HasIncreasedRisk())
@@ -139,11 +141,13 @@ internal class AttestationObjectValidator : IAttestationObjectValidator
                 return ValidatorInternalResult.Invalid($"Metadata for authenticator {aaGuid} is not available");
             }
         }
-        
+
         // Step 21
         // Assess the attestation trustworthiness using the outputs of the verification procedure in step 19
         var attestationStatementResult = (AttestationStatementInternalResult)result;
-        var trustworthinessResult = _attestationTrustworthinessValidator.Validate(attestationStatementResult);
+        var trustworthinessResult = _attestationTrustworthinessValidator.Validate(
+            attestationStatementResult,
+            authenticatorMetadata);
         if (!trustworthinessResult.IsValid)
         {
             return trustworthinessResult;

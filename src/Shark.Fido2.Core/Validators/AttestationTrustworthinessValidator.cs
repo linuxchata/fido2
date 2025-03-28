@@ -4,6 +4,8 @@ using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Configurations;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain.Enums;
+using Shark.Fido2.Metadata.Domain;
+using Shark.Fido2.Metadata.Domain.Constants;
 
 namespace Shark.Fido2.Core.Validators;
 
@@ -16,7 +18,9 @@ internal class AttestationTrustworthinessValidator : IAttestationTrustworthiness
         _configuration = options.Value;
     }
 
-    public ValidatorInternalResult Validate(AttestationStatementInternalResult attestationStatementResult)
+    public ValidatorInternalResult Validate(
+        AttestationStatementInternalResult attestationStatementResult,
+        MetadataPayloadItem? authenticatorMetadata)
     {
         if (attestationStatementResult == null)
         {
@@ -39,10 +43,19 @@ internal class AttestationTrustworthinessValidator : IAttestationTrustworthiness
                 : ValidatorInternalResult.Invalid("Self attestation type is not allowed under current policy");
         }
 
+        // Self attestation cannot contains full attestation (trust path)
+        if (authenticatorMetadata?.AttestationTypes?.Length == 1 &&
+            authenticatorMetadata.AttestationTypes.First() == AttestationType.BasicSurrogate &&
+            attestationStatementResult.TrustPath?.Length > 0)
+        {
+            return ValidatorInternalResult.Invalid(
+                $"{AttestationType.BasicSurrogate} (self) attestation type cannot have trust path");
+        }
+
         // Otherwise, use the X.509 certificates returned as the attestation trust path from the verification
         // procedure to verify that the attestation public key either correctly chains up to an acceptable root
         // certificate, or is itself an acceptable certificate.
-        if (attestationStatementResult.TrustPath == null || !attestationStatementResult.TrustPath.Any())
+        if (attestationStatementResult.TrustPath == null || attestationStatementResult.TrustPath.Length == 0)
         {
             return ValidatorInternalResult.Invalid(
                 $"Trust path is required for {attestationStatementResult.AttestationType} attestation type");

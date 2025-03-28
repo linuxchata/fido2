@@ -9,6 +9,8 @@ namespace Shark.Fido2.Metadata.Core;
 
 public static class DependencyInjection
 {
+    private const string EnvironmentVariableName = "ASPNETCORE_ENVIRONMENT";
+
     public static void AddMetadataService(this IServiceCollection services, IConfigurationSection configurationSection)
     {
         var metadataServiceConfigurationSection = configurationSection.GetSection(MetadataServiceConfiguration.Name);
@@ -23,16 +25,27 @@ public static class DependencyInjection
         services.AddTransient<IMetadataReaderService, MetadataReaderService>();
         services.AddTransient<IMetadataCachedService, MetadataCachedService>();
 
-        if (IsConformanceTest())
+        if (IsConformanceTestWithLocalMetadataBlob())
         {
             services.AddTransient<IHttpClientConformanceTestRepository, HttpClientConformanceTestRepository>();
-            services.AddTransient<IMetadataCachedService, MetadataConformanceTestService>();
+            services.AddTransient<IMetadataCachedService, MetadataLocalBlobTestService>();
+        }
+        else if (IsConformanceTestWithRemoteMetadataBlob())
+        {
+            services.AddTransient<IHttpClientConformanceTestRepository, HttpClientConformanceTestRepository>();
+            services.AddTransient<IMetadataCachedService, MetadataRemoteBlobTestService>();
         }
     }
 
-    private static bool IsConformanceTest()
+    private static bool IsConformanceTestWithLocalMetadataBlob()
     {
-        var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-        return string.Equals(environment, "Test", StringComparison.OrdinalIgnoreCase);
+        var environment = Environment.GetEnvironmentVariable(EnvironmentVariableName);
+        return string.Equals(environment, "TestLocalMetadataBlob", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool IsConformanceTestWithRemoteMetadataBlob()
+    {
+        var environment = Environment.GetEnvironmentVariable(EnvironmentVariableName);
+        return string.Equals(environment, "TestRemoteMetadataBlob", StringComparison.OrdinalIgnoreCase);
     }
 }
