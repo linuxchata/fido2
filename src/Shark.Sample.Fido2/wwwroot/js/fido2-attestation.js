@@ -42,7 +42,7 @@ async function createCredential(options) {
         attestation = await navigator.credentials.create(credentialCreationOptions);
     }
     catch (error) {
-        toastr.error(error, 'Web Authentication');
+        toastr.error(error.message, 'Web Authentication');
         return;
     }
 
@@ -75,7 +75,7 @@ async function fetchAttestationOptions(optionsRequest) {
             return await response.json();
         }
     } catch (error) {
-        toastr.error(error, 'Web Authentication');
+        toastr.error(error.message, 'Web Authentication');
     }
 }
 
@@ -93,7 +93,7 @@ async function fetchAttestationResult(credentials) {
             toastr.info('Registration was successful', 'Web Authentication');
         }
     } catch (error) {
-        toastr.error(error, 'Web Authentication');
+        toastr.error(error.message, 'Web Authentication');
     }
 }
 

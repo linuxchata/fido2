@@ -24,8 +24,8 @@ async function requestCredential(options) {
         assertion = await navigator.credentials.get(credentialRequestOptions);
     }
     catch (error) {
-        toastr.error(error, 'Web Authentication');
-        return
+        toastr.error(error.message, 'Web Authentication');
+        return;
     }
 
     const credentials = {
@@ -57,7 +57,7 @@ async function fetchAssertionOptions(optionsRequest) {
             return await response.json();
         }
     } catch (error) {
-        toastr.error(error, 'Web Authentication');
+        toastr.error(error.message, 'Web Authentication');
     }
 }
 
@@ -75,7 +75,7 @@ async function fetchAssertionResult(credentials) {
             toastr.info('Authentication was successful', 'Web Authentication');
         }
     } catch (error) {
-        toastr.error(error, 'Web Authentication');
+        toastr.error(error.message, 'Web Authentication');
     }
 }
 

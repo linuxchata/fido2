@@ -1,5 +1,5 @@
 ﻿toastr.options = {
-    "positionClass": "toast-top-center",
+    "positionClass": "toast-top-right",
     "timeOut": "2500",
     "closeButton": true,
     "showEasing": "swing",
