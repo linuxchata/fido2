@@ -57,6 +57,7 @@ internal class TpmAttestationStatementStrategyTests
             new SubjectAlternativeNameParserService(),
             new AndroidKeyAttestationExtensionParserService(),
             new AppleAnonymousExtensionParserService(),
+            TimeProvider.System,
             Options.Create(new Fido2Configuration()));
 
         _sut = new TpmAttestationStatementStrategy(

@@ -5,6 +5,13 @@ namespace Shark.Fido2.Metadata.Core;
 
 internal sealed class CertificateValidator : ICertificateValidator
 {
+    private readonly TimeProvider _timeProvider;
+
+    public CertificateValidator(TimeProvider timeProvider)
+    {
+        _timeProvider = timeProvider;
+    }
+
     public void ValidateX509Chain(X509Certificate2? rootCertificate, List<X509Certificate2> certificates)
     {
         if (rootCertificate == null)
@@ -15,7 +22,7 @@ internal sealed class CertificateValidator : ICertificateValidator
         using var chain = new X509Chain();
         chain.ChainPolicy.RevocationMode = X509RevocationMode.Online; // Configuration
         chain.ChainPolicy.VerificationFlags = X509VerificationFlags.NoFlag;
-        chain.ChainPolicy.VerificationTime = DateTime.Now;
+        chain.ChainPolicy.VerificationTime = _timeProvider.GetLocalNow().DateTime;
 
         // Root certificate
         chain.ChainPolicy.TrustMode = X509ChainTrustMode.CustomRootTrust;
@@ -31,7 +38,7 @@ internal sealed class CertificateValidator : ICertificateValidator
         var isValid = chain.Build(leafCertificate);
         if (!isValid)
         {
-            var errors = chain.ChainStatus.Select(x => x.StatusInformation).ToList();
+            var errors = chain.ChainStatus.Select(x => x.StatusInformation);
             throw new InvalidOperationException(
                 $"Invalid certificate. Errors:{Environment.NewLine}{string.Join(Environment.NewLine, errors)}");
         }

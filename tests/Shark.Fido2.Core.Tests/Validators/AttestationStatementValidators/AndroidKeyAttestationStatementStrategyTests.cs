@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using System;
+using Microsoft.Extensions.Options;
 using Moq;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Configurations;
@@ -52,6 +53,7 @@ internal class AndroidKeyAttestationStatementStrategyTests
             new SubjectAlternativeNameParserService(),
             new AndroidKeyAttestationExtensionParserService(),
             new AppleAnonymousExtensionParserService(),
+            TimeProvider.System,
             Options.Create(new Fido2Configuration()));
 
         var certificatePublicKeyValidator = new CertificatePublicKeyValidator();

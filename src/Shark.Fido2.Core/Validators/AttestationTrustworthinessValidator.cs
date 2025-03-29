@@ -11,10 +11,12 @@ namespace Shark.Fido2.Core.Validators;
 
 internal class AttestationTrustworthinessValidator : IAttestationTrustworthinessValidator
 {
+    private readonly TimeProvider _timeProvider;
     private readonly Fido2Configuration _configuration;
 
-    public AttestationTrustworthinessValidator(IOptions<Fido2Configuration> options)
+    public AttestationTrustworthinessValidator(TimeProvider timeProvider, IOptions<Fido2Configuration> options)
     {
+        _timeProvider = timeProvider;
         _configuration = options.Value;
     }
 
@@ -71,7 +73,7 @@ internal class AttestationTrustworthinessValidator : IAttestationTrustworthiness
         using var chain = new X509Chain();
         chain.ChainPolicy.RevocationMode = X509RevocationMode.NoCheck;
         chain.ChainPolicy.VerificationFlags = X509VerificationFlags.AllowUnknownCertificateAuthority;
-        chain.ChainPolicy.VerificationTime = DateTime.Now;
+        chain.ChainPolicy.VerificationTime = _timeProvider.GetLocalNow().DateTime;
 
         var leafCertificate = certificates.First();
 
