@@ -5,6 +5,7 @@ This repository provides a server-side implementation of the FIDO2 protocol, ena
 | Build server | Target |  Status |
 |-|-|-|
 | GitHub Actions | Build | [![build](https://github.com/linuxchata/fido2/actions/workflows/build.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build.yml) |
+| GitHub Actions | NuGet | [![nuget](https://github.com/linuxchata/fido2/actions/workflows/build_push_nuget_sdk.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build_push_nuget_sdk.yml) |
 
 # Specification
 ## Web Authentication
