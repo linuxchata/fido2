@@ -1,11 +1,6 @@
 ﻿// Registration
 
-var createLink = document.getElementById('credential-create');
-if (createLink != null) {
-    createLink.addEventListener('click', credentialCreateClick);
-}
-
-async function credentialCreateClick(event) {
+async function requestCreateCredentialOptions() {
     const optionsRequest = {
         username: 'HNAiCzKv7VHrICaBeeFZ',
         displayName: 'Shark',
@@ -14,46 +9,10 @@ async function credentialCreateClick(event) {
 
     const options = await fetchAttestationOptions(optionsRequest);
 
-    await credentialCreate(options);
+    await createCredential(options);
 }
 
-async function fetchAttestationOptions(optionsRequest) {
-    try {
-        const response = await fetch('/attestation/options/', {
-            method: 'POST',
-            headers: {
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify(optionsRequest)
-        });
-
-        if (response.ok) {
-            return await response.json();
-        }
-    } catch (error) {
-        console.error(error);
-    }
-}
-
-async function fetchAttestationResult(credentials) {
-    try {
-        const response = await fetch('/attestation/result/', {
-            method: 'POST',
-            headers: {
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify(credentials)
-        });
-
-        if (response.ok) {
-            return await response.json();
-        }
-    } catch (error) {
-        console.error(error);
-    }
-}
-
-async function credentialCreate(options) {
+async function createCredential(options) {
     const extensions = options.extensions.credProps ? { 'credProps': options.extensions.credProps } : {};
 
     const credentialCreationOptions = {
@@ -83,8 +42,8 @@ async function credentialCreate(options) {
         attestation = await navigator.credentials.create(credentialCreationOptions);
     }
     catch (error) {
-        console.error(error);
-        return
+        toastr.error(error, 'Web Authentication');
+        return;
     }
 
     const credentials = {
@@ -102,4 +61,40 @@ async function credentialCreate(options) {
     await fetchAttestationResult(credentials);
 }
 
-window.credentialCreateClick = credentialCreateClick;
+async function fetchAttestationOptions(optionsRequest) {
+    try {
+        const response = await fetch('/attestation/options/', {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(optionsRequest)
+        });
+
+        if (response.ok) {
+            return await response.json();
+        }
+    } catch (error) {
+        toastr.error(error, 'Web Authentication');
+    }
+}
+
+async function fetchAttestationResult(credentials) {
+    try {
+        const response = await fetch('/attestation/result/', {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(credentials)
+        });
+
+        if (response.ok) {
+            toastr.info('Registration was successful', 'Web Authentication');
+        }
+    } catch (error) {
+        toastr.error(error, 'Web Authentication');
+    }
+}
+
+window.requestCreateCredentialOptions = requestCreateCredentialOptions;
