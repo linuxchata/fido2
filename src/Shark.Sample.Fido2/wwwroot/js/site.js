@@ -1,4 +1,38 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿toastr.options = {
+    "positionClass": "toast-top-center",
+    "timeOut": "2500",
+    "closeButton": true,
+    "showEasing": "swing",
+    "hideEasing": "linear",
+    "showMethod": "fadeIn",
+    "hideMethod": "fadeOut"
+};
 
-// Write your JavaScript code.
+function onRegister() {
+    let button = document.getElementById('register');
+    let previousText = button.innerHTML;
+    button.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Processing...';
+    button.disabled = true;
+
+    requestCreateCredentialOptions()
+        .then(() => {
+            button.innerHTML = previousText;
+            button.disabled = false;
+        });
+}
+
+function onAuthenticate() {
+    let button = document.getElementById('authenticate');
+    let previousText = button.innerHTML;
+    button.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Processing...';
+    button.disabled = true;
+
+    requestVerifyCredentialOptions()
+        .then(() => {
+            button.innerHTML = previousText;
+            button.disabled = false;
+        });
+}
+
+window.onRegister = onRegister;
+window.onAuthenticate = onAuthenticate;
