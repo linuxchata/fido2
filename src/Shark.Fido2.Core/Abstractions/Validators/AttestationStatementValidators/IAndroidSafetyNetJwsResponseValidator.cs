@@ -1,4 +1,5 @@
 ﻿using System.Security.Cryptography.X509Certificates;
+using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain;
 
 namespace Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
@@ -11,10 +12,17 @@ namespace Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidator
 public interface IAndroidSafetyNetJwsResponseValidator
 {
     /// <summary>
+    /// Pre-validates the Android SafetyNet JWS response.
+    /// </summary>
+    /// <param name="jwsResponse">The JWS response from Android SafetyNet containing attestation data.</param>
+    /// <returns>A validation result indicating success or failure with error details.</returns>
+    ValidatorInternalResult PreValidate(JwsResponse jwsResponse);
+
+    /// <summary>
     /// Validates the Android SafetyNet JWS response.
     /// </summary>
     /// <param name="jwsResponse">The JWS response from Android SafetyNet containing attestation data.</param>
     /// <param name="certificate">The X.509 certificate used to validate the JWS signature.</param>
-    /// <returns>True if the JWS response is valid; otherwise, false.</returns>
-    bool Validate(JwsResponse jwsResponse, X509Certificate2 certificate);
+    /// <returns>A validation result indicating success or failure with error details.</returns>
+    ValidatorInternalResult Validate(JwsResponse jwsResponse, X509Certificate2 certificate);
 }

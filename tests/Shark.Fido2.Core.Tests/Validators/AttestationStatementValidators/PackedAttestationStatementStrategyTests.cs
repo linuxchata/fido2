@@ -53,6 +53,7 @@ internal class PackedAttestationStatementStrategyTests
             new SubjectAlternativeNameParserService(),
             new AndroidKeyAttestationExtensionParserService(),
             new AppleAnonymousExtensionParserService(),
+            TimeProvider.System,
             Options.Create(new Fido2Configuration()));
 
         _sut = new PackedAttestationStatementStrategy(

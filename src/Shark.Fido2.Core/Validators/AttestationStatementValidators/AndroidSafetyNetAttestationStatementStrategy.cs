@@ -103,41 +103,24 @@ internal class AndroidSafetyNetAttestationStatementStrategy : IAttestationStatem
         // Verify that the SafetyNet response actually came from the SafetyNet service by following the steps in the
         // SafetyNet online documentation.
         // https://web.archive.org/web/20180710064905/https://developer.android.com/training/safetynet/attestation#verify-compat-check
-        if (jwsResponse.CtsProfileMatch == null)
+        var result = _jwsResponseValidator.PreValidate(jwsResponse);
+        if (!result.IsValid)
         {
-            return ValidatorInternalResult.Invalid(
-                "Android SafetyNet attestation statement JWS response ctsProfileMatch is not found");
+            return result;
         }
 
-        if (jwsResponse.BasicIntegrity == null)
-        {
-            return ValidatorInternalResult.Invalid(
-                "Android SafetyNet attestation statement JWS response basicIntegrity is not found");
-        }
-
-        if (string.IsNullOrWhiteSpace(jwsResponse.ApkPackageName) ||
-            string.IsNullOrWhiteSpace(jwsResponse.ApkCertificateDigestSha256) ||
-            string.IsNullOrWhiteSpace(jwsResponse.ApkDigestSha256))
-        {
-            return ValidatorInternalResult.Invalid(
-                "Android SafetyNet attestation statement JWS response APK information is not found");
-        }
-
-        if (jwsResponse.Certificates == null)
-        {
-            return ValidatorInternalResult.Invalid(
-                "Android SafetyNet attestation statement JWS response certificates are not found");
-        }
-
-        var certificates = _attestationCertificateProviderService.GetCertificates(jwsResponse.Certificates);
+        var certificates = _attestationCertificateProviderService.GetCertificates(jwsResponse.Certificates!);
 
         // Validate the SSL certificate chain
-        // TODO: Skip result of SSL certificate chain validation, since provided certificates are not valid.
-        _attestationCertificateValidator.ValidateChainOfTrustWithSystemCa(certificates);
+        result = _attestationCertificateValidator.ValidateChainOfTrustWithSystemCa(certificates);
+        if (!result.IsValid)
+        {
+            return result;
+        }
 
         // Use SSL hostname matching to verify that the leaf certificate was issued to the hostname attest.android.com
         var attestationCertificate = _attestationCertificateProviderService.GetAttestationCertificate(certificates);
-        var result = _attestationCertificateValidator.ValidateAndroidSafetyNet(attestationCertificate);
+        result = _attestationCertificateValidator.ValidateAndroidSafetyNet(attestationCertificate);
         if (!result.IsValid)
         {
             return result;
@@ -145,8 +128,11 @@ internal class AndroidSafetyNetAttestationStatementStrategy : IAttestationStatem
 
         // Use the certificate to verify the signature of the JWS message.
         // Check the data of the JWS message to make sure it matches the data within your original request.
-        // TODO: Skip result of the validation, since provided certificate is not valid and JWS response has expired.
-        _jwsResponseValidator.Validate(jwsResponse, attestationCertificate);
+        result = _jwsResponseValidator.Validate(jwsResponse, attestationCertificate);
+        if (!result.IsValid)
+        {
+            return result;
+        }
 
         // If successful, return implementation-specific values representing attestation type Basic and attestation
         // trust path x5c.

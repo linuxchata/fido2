@@ -47,6 +47,7 @@ internal class FidoU2fAttestationStatementStrategyTests
             new SubjectAlternativeNameParserService(),
             new AndroidKeyAttestationExtensionParserService(),
             new AppleAnonymousExtensionParserService(),
+            TimeProvider.System,
             Options.Create(new Fido2Configuration()));
 
         var signatureAttestationStatementValidator = new SignatureAttestationStatementValidator(

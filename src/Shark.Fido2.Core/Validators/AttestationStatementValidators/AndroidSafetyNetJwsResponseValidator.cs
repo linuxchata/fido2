@@ -3,6 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.IdentityModel.Tokens;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
+using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain;
 
 namespace Shark.Fido2.Core.Validators.AttestationStatementValidators;
@@ -13,28 +14,61 @@ namespace Shark.Fido2.Core.Validators.AttestationStatementValidators;
 /// </summary>
 internal sealed class AndroidSafetyNetJwsResponseValidator : IAndroidSafetyNetJwsResponseValidator
 {
+    private const string Prefix = "Android SafetyNet attestation statement JWS response";
+
     private const string ApkPackageName = "com.google.android.gms";
 
-    public bool Validate(JwsResponse jwsResponse, X509Certificate2 certificate)
+    public ValidatorInternalResult PreValidate(JwsResponse jwsResponse)
+    {
+        if (jwsResponse.CtsProfileMatch == null)
+        {
+            return ValidatorInternalResult.Invalid($"{Prefix} ctsProfileMatch is not found");
+        }
+
+        if (jwsResponse.BasicIntegrity == null)
+        {
+            return ValidatorInternalResult.Invalid($"{Prefix} basicIntegrity is not found");
+        }
+
+        if (string.IsNullOrWhiteSpace(jwsResponse.ApkPackageName) ||
+            string.IsNullOrWhiteSpace(jwsResponse.ApkCertificateDigestSha256) ||
+            string.IsNullOrWhiteSpace(jwsResponse.ApkDigestSha256))
+        {
+            return ValidatorInternalResult.Invalid($"{Prefix} APK information is not found");
+        }
+
+        if (jwsResponse.Certificates == null)
+        {
+            return ValidatorInternalResult.Invalid($"{Prefix} certificates are not found");
+        }
+
+        return ValidatorInternalResult.Valid();
+    }
+
+    public ValidatorInternalResult Validate(JwsResponse jwsResponse, X509Certificate2 certificate)
     {
         ArgumentNullException.ThrowIfNull(jwsResponse);
         ArgumentNullException.ThrowIfNull(certificate);
 
-        // TODO: Skip result of the validation, since provided certificate is not valid.
-        ValidateSignature(jwsResponse, certificate);
-
-        // TODO: Skip result of the validation, since JWS response has expired.
-        ValidateTimestamp(jwsResponse);
-
-        if (!ValidatePackageName(jwsResponse))
+        if (!IsSignatureValid(jwsResponse, certificate))
         {
-            return false;
+            return ValidatorInternalResult.Invalid($"{Prefix} signature is not valid");
         }
 
-        return true;
+        if (!IsTimestampValid(jwsResponse))
+        {
+            return ValidatorInternalResult.Invalid($"{Prefix} timestamp is not valid");
+        }
+
+        if (!IsPackageNameValid(jwsResponse))
+        {
+            return ValidatorInternalResult.Invalid($"{Prefix} package name is not valid");
+        }
+
+        return ValidatorInternalResult.Valid();
     }
 
-    internal bool ValidateSignature(JwsResponse jwsResponse, X509Certificate2 certificate)
+    private static bool IsSignatureValid(JwsResponse jwsResponse, X509Certificate2 certificate)
     {
         // JwsResponse includes certificates, but the attestation certificate is passed separately to delegate
         // certificate extraction to another class for better separation of concerns.
@@ -65,9 +99,13 @@ internal sealed class AndroidSafetyNetJwsResponseValidator : IAndroidSafetyNetJw
         return true;
     }
 
-    internal bool ValidateTimestamp(JwsResponse jwsResponse)
+    private static bool IsTimestampValid(JwsResponse jwsResponse)
     {
-        if (!long.TryParse(jwsResponse.TimestampMs, NumberStyles.Integer, CultureInfo.InvariantCulture, out long unixTimestampMs))
+        if (!long.TryParse(
+            jwsResponse.TimestampMs,
+            NumberStyles.Integer,
+            CultureInfo.InvariantCulture,
+            out long unixTimestampMs))
         {
             return false;
         }
@@ -83,7 +121,7 @@ internal sealed class AndroidSafetyNetJwsResponseValidator : IAndroidSafetyNetJw
         return true;
     }
 
-    internal bool ValidatePackageName(JwsResponse jwsResponse)
+    private static bool IsPackageNameValid(JwsResponse jwsResponse)
     {
         if (!string.Equals(jwsResponse.ApkPackageName, ApkPackageName, StringComparison.InvariantCultureIgnoreCase))
         {

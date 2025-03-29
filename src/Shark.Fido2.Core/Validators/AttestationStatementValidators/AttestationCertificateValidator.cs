@@ -37,17 +37,20 @@ internal class AttestationCertificateValidator : IAttestationCertificateValidato
     private readonly ISubjectAlternativeNameParserService _subjectAlternativeNameParserService;
     private readonly IAndroidKeyAttestationExtensionParserService _androidKeyAttestationExtensionParserService;
     private readonly IAppleAnonymousExtensionParserService _appleAnonymousExtensionParserService;
+    private readonly TimeProvider _timeProvider;
     private readonly Fido2Configuration _configuration;
 
     public AttestationCertificateValidator(
         ISubjectAlternativeNameParserService subjectAlternativeNameParserService,
         IAndroidKeyAttestationExtensionParserService androidKeyAttestationExtensionParserService,
         IAppleAnonymousExtensionParserService appleAnonymousExtensionParserService,
+        TimeProvider timeProvider,
         IOptions<Fido2Configuration> options)
     {
         _subjectAlternativeNameParserService = subjectAlternativeNameParserService;
         _androidKeyAttestationExtensionParserService = androidKeyAttestationExtensionParserService;
         _appleAnonymousExtensionParserService = appleAnonymousExtensionParserService;
+        _timeProvider = timeProvider;
         _configuration = options.Value;
     }
 
@@ -307,16 +310,17 @@ internal class AttestationCertificateValidator : IAttestationCertificateValidato
     {
         ArgumentNullException.ThrowIfNull(certificates);
 
+        const string Prefix = "Android SafetyNet attestation statement";
+
         if (certificates.Count < 2)
         {
-            return ValidatorInternalResult.Invalid(
-                "Android SafetyNet attestation statement self-signed certificate is not supported");
+            return ValidatorInternalResult.Invalid($"{Prefix} self-signed certificate is not supported");
         }
 
         using var chain = new X509Chain();
         chain.ChainPolicy.RevocationMode = X509RevocationMode.NoCheck;
         chain.ChainPolicy.VerificationFlags = X509VerificationFlags.NoFlag;
-        chain.ChainPolicy.VerificationTime = DateTime.Now;
+        chain.ChainPolicy.VerificationTime = _timeProvider.GetLocalNow().DateTime;
 
         var leafCertificate = certificates.First();
         var intermediateCertificates = certificates.Skip(1).Take(certificates.Count - 2);
@@ -329,7 +333,7 @@ internal class AttestationCertificateValidator : IAttestationCertificateValidato
         var isValid = chain.Build(leafCertificate);
         if (!isValid)
         {
-            return ValidatorInternalResult.Invalid("Android SafetyNet attestation statement certificates are invalid");
+            return ValidatorInternalResult.Invalid($"{Prefix} certificates are invalid");
         }
 
         return ValidatorInternalResult.Valid();
