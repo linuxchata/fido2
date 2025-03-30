@@ -1,12 +1,16 @@
 ﻿namespace Shark.Fido2.Domain;
 
+/// <summary>
+/// 5.2.2. Web Authentication Assertion (interface AuthenticatorAssertionResponse)
+/// See: https://www.w3.org/TR/webauthn-2/#iface-authenticatorassertionresponse
+/// </summary>
 public sealed class AuthenticatorAssertionResponse
 {
-    public string ClientDataJson { get; set; } = null!;
+    public required string ClientDataJson { get; init; }
 
-    public string AuthenticatorData { get; set; } = null!;
+    public required string AuthenticatorData { get; init; }
 
-    public string Signature { get; set; } = null!;
+    public required string Signature { get; init; }
 
-    public string? UserHandle { get; set; }
+    public string? UserHandle { get; init; }
 }

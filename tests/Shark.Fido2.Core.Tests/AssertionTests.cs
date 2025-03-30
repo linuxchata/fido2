@@ -1,6 +1,7 @@
 using System.Text;
 using Microsoft.Extensions.Options;
 using Moq;
+using Org.BouncyCastle.Asn1.Cmp;
 using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Core.Abstractions.Handlers;
 using Shark.Fido2.Core.Abstractions.Repositories;
@@ -43,7 +44,7 @@ public class AssertionTests
         _clientDataHandlerMock = new Mock<IClientDataHandler>();
         _clientDataHandlerMock
             .Setup(a => a.HandleAssertion(It.IsAny<string>(), It.IsAny<string>()))
-            .Returns(new InternalResult<ClientData>(new ClientData()));
+            .Returns(new InternalResult<ClientData>(ClientDataBuilder.BuildGet()));
 
         _assertionObjectHandlerMock = new Mock<IAssertionObjectHandler>();
         _assertionObjectHandlerMock
@@ -55,6 +56,7 @@ public class AssertionTests
                 It.IsAny<PublicKeyCredentialRequestOptions>()))
             .Returns(new InternalResult<AuthenticatorData>(new AuthenticatorData
             {
+                AttestedCredentialData = new AttestedCredentialData(),
                 SignCount = 2,
             }));
 
@@ -220,7 +222,7 @@ public class AssertionTests
     {
         // Arrange
         PublicKeyCredentialAssertion? publicKeyCredentialAssertion = null;
-        var requestOptions = new PublicKeyCredentialRequestOptions();
+        var requestOptions = new PublicKeyCredentialRequestOptions { Challenge = [], };
 
         // Act & Assert
         Assert.ThrowsAsync<ArgumentNullException>(
@@ -274,14 +276,15 @@ public class AssertionTests
         // Arrange
         var requestOptions = new PublicKeyCredentialRequestOptions
         {
-            AllowCredentials = new[]
-            {
+            Challenge = [],
+            AllowCredentials =
+            [
                 new PublicKeyCredentialDescriptor
                 {
                     Id = [5, 6, 7, 8], // Different credential identifiers
                     Transports = [AuthenticatorTransport.Internal],
                 },
-            },
+            ],
         };
 
         // Act
@@ -299,14 +302,15 @@ public class AssertionTests
         // Arrange
         var requestOptions = new PublicKeyCredentialRequestOptions
         {
-            AllowCredentials = new[]
-            {
+            Challenge = [],
+            AllowCredentials =
+            [
                 new PublicKeyCredentialDescriptor
                 {
                     Id = [1, 2, 3, 4], // Matching credential identifiers
                     Transports = [AuthenticatorTransport.Internal],
                 },
-            },
+            ],
         };
 
         _credentialRepositoryMock
@@ -523,6 +527,7 @@ public class AssertionTests
                 It.IsAny<PublicKeyCredentialRequestOptions>()))
             .Returns(new InternalResult<AuthenticatorData>(new AuthenticatorData
             {
+                AttestedCredentialData = new AttestedCredentialData(),
                 SignCount = 0, // Zero sign count
             }));
 

@@ -2,7 +2,7 @@
 
 /// <summary>
 /// 5.1. PublicKeyCredential Interface
-/// See: https://www.w3.org/TR/webauthn-2/#iface-pkcredential
+/// See: https://www.w3.org/TR/webauthn-2/#iface-pkcredential.
 /// </summary>
 public sealed class PublicKeyCredentialAttestation
 {

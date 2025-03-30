@@ -4,7 +4,7 @@ namespace Shark.Fido2.Domain;
 
 public sealed class Rs256Algorithm
 {
-    public HashAlgorithmName HashAlgorithmName { get; set; }
+    public HashAlgorithmName HashAlgorithmName { get; init; }
 
-    public RSASignaturePadding? Padding { get; set; }
+    public RSASignaturePadding? Padding { get; init; }
 }

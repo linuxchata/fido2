@@ -10,7 +10,7 @@ namespace Shark.Fido2.Core.Validators.AttestationStatementValidators;
 /// <summary>
 /// Implementation of the FIDO U2F attestation statement validation strategy.
 /// This validates attestation statements according to the FIDO2 specification section 8.6.
-/// See: https://www.w3.org/TR/webauthn/#sctn-fido-u2f-attestation
+/// See: https://www.w3.org/TR/webauthn/#sctn-fido-u2f-attestation.
 /// </summary>
 internal class FidoU2fAttestationStatementStrategy : IAttestationStatementStrategy
 {
@@ -33,11 +33,11 @@ internal class FidoU2fAttestationStatementStrategy : IAttestationStatementStrate
     /// <summary>
     /// Validates a FIDO U2F attestation statement.
     /// </summary>
-    /// <param name="attestationObjectData">The attestation object data containing the statement to validate</param>
-    /// <param name="clientData">The client data associated with the attestation</param>
-    /// <returns>A ValidatorInternalResult indicating whether the attestation statement is valid</returns>
-    /// <exception cref="ArgumentNullException">Thrown when attestationObjectData or clientData is null</exception>
-    /// <exception cref="ArgumentException">Thrown when attestation statement cannot be read</exception>
+    /// <param name="attestationObjectData">The attestation object data containing the statement to validate.</param>
+    /// <param name="clientData">The client data associated with the attestation.</param>
+    /// <returns>A ValidatorInternalResult indicating whether the attestation statement is valid.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when attestationObjectData or clientData is null.</exception>
+    /// <exception cref="ArgumentException">Thrown when attestation statement cannot be read.</exception>
     public ValidatorInternalResult Validate(AttestationObjectData attestationObjectData, ClientData clientData)
     {
         ArgumentNullException.ThrowIfNull(attestationObjectData);
@@ -72,7 +72,7 @@ internal class FidoU2fAttestationStatementStrategy : IAttestationStatementStrate
         // Let x be the value corresponding to the "-2" key (representing x coordinate) in credentialPublicKey, and
         // confirm its size to be of 32 bytes. If size differs or "-2" key is not found, terminate this algorithm and
         // return an appropriate error.
-        if (credentialPublicKey.XCoordinate?.Length != CoordinateSize)
+        if (credentialPublicKey?.XCoordinate?.Length != CoordinateSize)
         {
             return ValidatorInternalResult.Invalid(
                 "FIDO U2F attestation statement credential public key X coordinate is missing or has a wrong size");

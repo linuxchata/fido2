@@ -62,10 +62,10 @@ internal class PackedAttestationStatementStrategy : IAttestationStatementStrateg
             return ValidatorInternalResult.Invalid("Packed attestation statement algorithm cannot be read");
         }
 
-        if (credentialPublicKey.Algorithm != (int)algorithm)
+        if (credentialPublicKey?.Algorithm != (int)algorithm)
         {
             return ValidatorInternalResult.Invalid(
-                $"Packed attestation statement algorithm ({algorithm}) does not match credential public key algorithm ({credentialPublicKey.Algorithm})");
+                $"Packed attestation statement algorithm ({algorithm}) does not match credential public key algorithm ({credentialPublicKey?.Algorithm})");
         }
 
         if (_attestationCertificateProviderService.AreCertificatesPresent(attestationStatementDict))

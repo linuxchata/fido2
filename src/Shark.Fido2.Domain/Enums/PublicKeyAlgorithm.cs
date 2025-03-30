@@ -2,7 +2,7 @@
 
 /// <summary>
 /// COSE Algorithms
-/// See: https://www.iana.org/assignments/cose/cose.xhtml#algorithms
+/// See: https://www.iana.org/assignments/cose/cose.xhtml#algorithms.
 /// </summary>
 public enum PublicKeyAlgorithm
 {

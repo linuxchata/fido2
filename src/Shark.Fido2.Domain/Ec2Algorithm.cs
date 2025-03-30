@@ -4,7 +4,7 @@ namespace Shark.Fido2.Domain;
 
 public sealed class Ec2Algorithm
 {
-    public ECCurve Curve { get; set; }
+    public ECCurve Curve { get; init; }
 
-    public HashAlgorithmName HashAlgorithmName { get; set; }
+    public HashAlgorithmName HashAlgorithmName { get; init; }
 }

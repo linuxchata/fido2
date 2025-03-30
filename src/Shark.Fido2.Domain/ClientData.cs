@@ -4,25 +4,25 @@ namespace Shark.Fido2.Domain;
 
 /// <summary>
 /// 5.8.1. Client Data Used in WebAuthn Signatures
-/// https://www.w3.org/TR/webauthn-2/#dictionary-client-data
+/// https://www.w3.org/TR/webauthn-2/#dictionary-client-data.
 /// </summary>
 public sealed class ClientData
 {
     [JsonPropertyName("type")]
-    public string Type { get; set; } = null!;
+    public required string Type { get; init; }
 
     [JsonPropertyName("challenge")]
-    public string Challenge { get; set; } = null!;
+    public required string Challenge { get; init; }
 
     [JsonPropertyName("origin")]
-    public string Origin { get; set; } = null!;
+    public required string Origin { get; init; }
 
     [JsonPropertyName("crossOrigin")]
-    public bool CrossOrigin { get; set; }
+    public bool CrossOrigin { get; init; }
 
     [JsonPropertyName("tokenBinding")]
-    public TokenBinding? TokenBinding { get; set; }
+    public TokenBinding? TokenBinding { get; init; }
 
     [JsonIgnore]
-    public byte[] ClientDataHash { get; set; } = null!;
+    public byte[]? ClientDataHash { get; set; }
 }

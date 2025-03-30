@@ -4,15 +4,15 @@ namespace Shark.Fido2.Domain;
 
 /// <summary>
 /// 5.4.4. Authenticator Selection Criteria
-/// https://www.w3.org/TR/webauthn-2/#dictionary-authenticatorSelection
+/// https://www.w3.org/TR/webauthn-2/#dictionary-authenticatorSelection.
 /// </summary>
 public class AuthenticatorSelectionCriteria
 {
-    public AuthenticatorAttachment? AuthenticatorAttachment { get; set; }
+    public AuthenticatorAttachment? AuthenticatorAttachment { get; init; }
 
-    public ResidentKeyRequirement ResidentKey { get; set; }
+    public ResidentKeyRequirement ResidentKey { get; init; }
 
-    public bool RequireResidentKey { get; set; } = false;
+    public bool RequireResidentKey { get; init; } = false;
 
-    public UserVerificationRequirement? UserVerification { get; set; }
+    public UserVerificationRequirement? UserVerification { get; init; }
 }

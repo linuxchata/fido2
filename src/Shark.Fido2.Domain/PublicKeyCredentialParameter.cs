@@ -3,9 +3,9 @@ using Shark.Fido2.Domain.Enums;
 
 namespace Shark.Fido2.Domain;
 
-public class PublicKeyCredentialParameter
+public sealed class PublicKeyCredentialParameter
 {
-    public string Type { get; set; } = PublicKeyCredentialType.PublicKey;
+    public string Type { get; init; } = PublicKeyCredentialType.PublicKey;
 
-    public PublicKeyAlgorithm Algorithm { get; set; }
+    public PublicKeyAlgorithm Algorithm { get; init; }
 }

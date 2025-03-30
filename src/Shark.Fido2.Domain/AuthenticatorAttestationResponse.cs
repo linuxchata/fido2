@@ -4,7 +4,7 @@ namespace Shark.Fido2.Domain;
 
 /// <summary>
 /// 5.2.1. Information About Public Key Credential (interface AuthenticatorAttestationResponse)
-/// See: https://www.w3.org/TR/webauthn-2/#iface-authenticatorattestationresponse
+/// See: https://www.w3.org/TR/webauthn-2/#iface-authenticatorattestationresponse.
 /// </summary>
 public sealed class AuthenticatorAttestationResponse
 {

@@ -74,6 +74,11 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
         // Verify that the public key specified by the parameters and unique fields of pubArea is identical
         // to the credentialPublicKey in the attestedCredentialData in authenticatorData.
         var credentialPublicKey = attestationObjectData.AuthenticatorData!.AttestedCredentialData.CredentialPublicKey;
+        if (credentialPublicKey == null)
+        {
+            return ValidatorInternalResult.Invalid("Credential public key is not found");
+        }
+
         if (tpmtPublic.EccParameters != null)
         {
             (var xCoordinate, var yCoordinate) = BytesArrayHelper.Split(tpmtPublic.Unique);
@@ -95,7 +100,7 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
                 return ValidatorInternalResult.Invalid("TPM attestation statement public key mismatch (modulus)");
             }
 
-            if (GetExponentAsUInt32LittleEndian(credentialPublicKey.Exponent!) != tpmtPublic.RsaParameters!.Exponent)
+            if (GetExponentAsUInt32LittleEndian(credentialPublicKey.Exponent) != tpmtPublic.RsaParameters!.Exponent)
             {
                 return ValidatorInternalResult.Invalid("TPM attestation statement public key mismatch (exponent)");
             }
@@ -185,7 +190,7 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
         return new AttestationStatementInternalResult(AttestationTypeEnum.AttCA, [.. certificates]);
     }
 
-    private static uint GetExponentAsUInt32LittleEndian(byte[] exponent)
+    private static uint GetExponentAsUInt32LittleEndian(byte[]? exponent)
     {
         if (exponent == null || exponent.Length == 0)
         {

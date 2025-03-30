@@ -3,22 +3,22 @@
 public sealed class TpmIssuer
 {
     /// <summary>
-    /// TPM manufacturer
+    /// Gets a TPM manufacturer.
     /// </summary>
     public string? Manufacturer { get; init; }
 
     /// <summary>
-    /// TPM manufacturer
+    /// Gets a TPM manufacturer.
     /// </summary>
     public string? ManufacturerValue { get; init; }
 
     /// <summary>
-    /// TPM part number
+    /// Gets a TPM part number.
     /// </summary>
     public string? Model { get; init; }
 
     /// <summary>
-    /// TPM firmware version
+    /// Gets a TPM firmware version.
     /// </summary>
     public string? Version { get; init; }
 }

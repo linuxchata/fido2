@@ -1,10 +1,14 @@
 ﻿namespace Shark.Fido2.Domain;
 
-public class PublicKeyCredentialUserEntity
+/// <summary>
+/// 5.4.3. User Account Parameters for Credential Generation (dictionary PublicKeyCredentialUserEntity)
+/// See: https://www.w3.org/TR/webauthn-2/#dictdef-publickeycredentialuserentity.
+/// </summary>
+public sealed class PublicKeyCredentialUserEntity
 {
-    public byte[] Id { get; set; } = null!;
+    public required byte[] Id { get; init; }
 
-    public string Name { get; set; } = null!;
+    public required string Name { get; init; }
 
-    public string DisplayName { get; set; } = null!;
+    public required string DisplayName { get; init; }
 }

@@ -2,9 +2,9 @@
 
 public sealed class AssertionCompleteResult
 {
-    public bool IsValid { get; set; }
+    public bool IsValid { get; private set; }
 
-    public string? Message { get; set; }
+    public string? Message { get; private set; }
 
     public static AssertionCompleteResult Create()
     {

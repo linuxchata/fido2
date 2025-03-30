@@ -4,21 +4,21 @@ namespace Shark.Fido2.Domain;
 
 /// <summary>
 /// 5.5. Options for Assertion Generation (dictionary PublicKeyCredentialRequestOptions)
-/// https://www.w3.org/TR/webauthn-2/#dictionary-assertion-options
+/// https://www.w3.org/TR/webauthn-2/#dictionary-assertion-options.
 /// </summary>
 public sealed class PublicKeyCredentialRequestOptions
 {
-    public byte[] Challenge { get; set; } = null!;
+    public required byte[] Challenge { get; init; }
 
-    public ulong? Timeout { get; set; }
+    public ulong? Timeout { get; init; }
 
-    public string? RpId { get; set; }
+    public string? RpId { get; init; }
 
-    public PublicKeyCredentialDescriptor[]? AllowCredentials { get; set; }
+    public PublicKeyCredentialDescriptor[]? AllowCredentials { get; init; }
 
-    public string? Username { get; set; }
+    public string? Username { get; init; }
 
-    public UserVerificationRequirement? UserVerification { get; set; }
+    public UserVerificationRequirement? UserVerification { get; init; }
 
-    public AuthenticationExtensionsClientInputs? Extensions { get; set; }
+    public AuthenticationExtensionsClientInputs? Extensions { get; init; }
 }

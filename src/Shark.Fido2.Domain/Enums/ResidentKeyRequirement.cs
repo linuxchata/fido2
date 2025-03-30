@@ -4,7 +4,7 @@ namespace Shark.Fido2.Domain.Enums;
 
 /// <summary>
 /// 5.4.6. Resident Key Requirement Enumeration
-/// https://www.w3.org/TR/webauthn-2/#enum-residentKeyRequirement
+/// https://www.w3.org/TR/webauthn-2/#enum-residentKeyRequirement.
 /// </summary>
 public enum ResidentKeyRequirement
 {

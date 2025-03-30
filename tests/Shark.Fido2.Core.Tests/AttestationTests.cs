@@ -38,7 +38,7 @@ public class AttestationTests
         _clientDataHandlerMock = new Mock<IClientDataHandler>();
         _clientDataHandlerMock
             .Setup(a => a.HandleAttestation(It.IsAny<string>(), It.IsAny<string>()))
-            .Returns(new InternalResult<ClientData>(new ClientData()));
+            .Returns(new InternalResult<ClientData>(ClientDataBuilder.BuildCreate()));
 
         _attestationObjectHandlerMock = new Mock<IAttestationObjectHandler>();
         _attestationObjectHandlerMock
@@ -52,14 +52,14 @@ public class AttestationTests
                 {
                     AttestedCredentialData = new AttestedCredentialData
                     {
-                        CredentialId = new byte[] { 1, 2, 3, 4 },
+                        CredentialId = [1, 2, 3, 4],
                         CredentialPublicKey = new CredentialPublicKey
                         {
                             KeyType = 2, // EC2
                             Algorithm = -7, // ES256
                             Curve = 1, // P-256
-                            XCoordinate = new byte[] { 5, 6, 7, 8 },
-                            YCoordinate = new byte[] { 9, 10, 11, 12 },
+                            XCoordinate = [5, 6, 7, 8],
+                            YCoordinate = [9, 10, 11, 12],
                         },
                     },
                     SignCount = 1,
@@ -69,7 +69,7 @@ public class AttestationTests
         _challengeGeneratorMock = new Mock<IChallengeGenerator>();
         _challengeGeneratorMock
             .Setup(a => a.Get())
-            .Returns(new byte[] { 1, 2, 3, 4 });
+            .Returns([1, 2, 3, 4]);
 
         _credentialRepositoryMock = new Mock<ICredentialRepository>();
         _credentialRepositoryMock
