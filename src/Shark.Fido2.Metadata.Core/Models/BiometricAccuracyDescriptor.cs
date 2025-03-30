@@ -5,7 +5,7 @@ namespace Shark.Fido2.Metadata.Core.Models;
 /// <summary>
 /// A relevant accuracy/complexity aspects in the case of a biometric
 /// user verification method
-/// See: https://fidoalliance.org/specs/mds/fido-metadata-statement-v3.0-ps-20210518.html#biometricaccuracydescriptor-dictionary
+/// See: https://fidoalliance.org/specs/mds/fido-metadata-statement-v3.0-ps-20210518.html#biometricaccuracydescriptor-dictionary.
 /// </summary>
 public sealed class BiometricAccuracyDescriptor
 {

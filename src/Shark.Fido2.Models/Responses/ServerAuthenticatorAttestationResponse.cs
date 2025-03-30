@@ -4,7 +4,7 @@ namespace Shark.Fido2.Models.Responses;
 
 /// <summary>
 /// 7.3.3.3. ServerAuthenticatorAttestationResponse
-/// See: https://fidoalliance.org/specs/fido-v2.0-rd-20180702/fido-server-v2.0-rd-20180702.html#serverauthenticatorattestationresponse
+/// See: https://fidoalliance.org/specs/fido-v2.0-rd-20180702/fido-server-v2.0-rd-20180702.html#serverauthenticatorattestationresponse.
 /// </summary>
 public sealed class ServerAuthenticatorAttestationResponse : ServerAuthenticatorResponse
 {
