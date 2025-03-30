@@ -8,16 +8,16 @@ namespace Shark.Fido2.Core.Services;
 
 internal sealed class SubjectAlternativeNameParserService : ISubjectAlternativeNameParserService
 {
-    private readonly Regex RegexNumericNotation = new Regex(@"(?<key>\d+(\.\d+)+)=(?<value>[\w:]+)");
-    private readonly Regex RegexNameNotation = new Regex(@"(?<key>\w+)=(?<value>[\w:]+)");
-    private readonly Regex RegexManufacturer = new Regex(@"id:([A-F0-9]+)");
-
     private const string TpmManufacturerName = "TPMManufacturer";
     private const string TpmManufacturerId = "2.23.133.2.1";
     private const string TpmModelName = "TPMModel";
     private const string TpmModelId = "2.23.133.2.2";
     private const string TpmVersionName = "TPMVersion";
     private const string TpmVersionId = "2.23.133.2.3";
+
+    private readonly Regex _regexNumericNotation = new Regex(@"(?<key>\d+(\.\d+)+)=(?<value>[\w:]+)");
+    private readonly Regex _regexNameNotation = new Regex(@"(?<key>\w+)=(?<value>[\w:]+)");
+    private readonly Regex _regexManufacturer = new Regex(@"id:([A-F0-9]+)");
 
     public TpmIssuer Parse(X509SubjectAlternativeNameExtension subjectAlternativeNameExtension)
     {
@@ -29,8 +29,8 @@ internal sealed class SubjectAlternativeNameParserService : ISubjectAlternativeN
 
     internal TpmIssuer Parse(string subjectAlternativeName)
     {
-        var matchesNumericNotation = RegexNumericNotation.Matches(subjectAlternativeName);
-        var matchesNameNotation = RegexNameNotation.Matches(subjectAlternativeName);
+        var matchesNumericNotation = _regexNumericNotation.Matches(subjectAlternativeName);
+        var matchesNameNotation = _regexNameNotation.Matches(subjectAlternativeName);
 
         var matches = matchesNumericNotation.Count != 0 ? matchesNumericNotation : matchesNameNotation;
 
@@ -72,7 +72,7 @@ internal sealed class SubjectAlternativeNameParserService : ISubjectAlternativeN
 
     private string GetManufacturerValue(string input)
     {
-        var match = RegexManufacturer.Match(input);
+        var match = _regexManufacturer.Match(input);
         if (match.Success)
         {
             return match.Groups[1].Value;

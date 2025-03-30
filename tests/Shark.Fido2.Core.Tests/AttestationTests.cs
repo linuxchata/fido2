@@ -59,11 +59,11 @@ public class AttestationTests
                             Algorithm = -7, // ES256
                             Curve = 1, // P-256
                             XCoordinate = new byte[] { 5, 6, 7, 8 },
-                            YCoordinate = new byte[] { 9, 10, 11, 12 }
-                        }
+                            YCoordinate = new byte[] { 9, 10, 11, 12 },
+                        },
                     },
-                    SignCount = 1
-                }
+                    SignCount = 1,
+                },
             }));
 
         _challengeGeneratorMock = new Mock<IChallengeGenerator>();
@@ -81,7 +81,7 @@ public class AttestationTests
             Origin = "localhost",
             RelyingPartyId = "localhost",
             RelyingPartyIdName = "Test RP",
-            Timeout = 60000
+            Timeout = 60000,
         };
 
         _publicKeyCredentialUserEntity = new PublicKeyCredentialUserEntity
@@ -125,7 +125,7 @@ public class AttestationTests
             Username = UserName,
             DisplayName = DisplayName,
             AuthenticatorSelection = null,
-            Attestation = AttestationConveyancePreference.Direct
+            Attestation = AttestationConveyancePreference.Direct,
         };
 
         // Act
@@ -148,7 +148,7 @@ public class AttestationTests
             Username = UserName,
             DisplayName = DisplayName,
             AuthenticatorSelection = null,
-            Attestation = null
+            Attestation = null,
         };
 
         // Act
@@ -172,9 +172,9 @@ public class AttestationTests
                 AuthenticatorAttachment = AuthenticatorAttachment.Platform,
                 ResidentKey = ResidentKeyRequirement.Required,
                 RequireResidentKey = true,
-                UserVerification = UserVerificationRequirement.Required
+                UserVerification = UserVerificationRequirement.Required,
             },
-            Attestation = AttestationConveyancePreference.Direct
+            Attestation = AttestationConveyancePreference.Direct,
         };
 
         // Act

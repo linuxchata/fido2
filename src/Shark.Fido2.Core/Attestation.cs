@@ -76,7 +76,8 @@ public sealed class Attestation : IAttestation
                 RequireResidentKey = request.AuthenticatorSelection.ResidentKey == ResidentKeyRequirement.Required,
                 UserVerification = request.AuthenticatorSelection.UserVerification ??
                     UserVerificationRequirement.Preferred,
-            } : new AuthenticatorSelectionCriteria
+            }
+            : new AuthenticatorSelectionCriteria
             {
                 ResidentKey = ResidentKeyRequirement.Discouraged,
                 RequireResidentKey = false,
@@ -96,7 +97,7 @@ public sealed class Attestation : IAttestation
         ArgumentNullException.ThrowIfNull(publicKeyCredentialAttestation);
         ArgumentNullException.ThrowIfNull(creationOptions);
 
-        // 7.1. Registering a New Credential
+        //// 7.1. Registering a New Credential
 
         if (!publicKeyCredentialAttestation.Id.IsBase64Url())
         {

@@ -71,7 +71,7 @@ public sealed class Assertion : IAssertion
         ArgumentNullException.ThrowIfNull(publicKeyCredentialAssertion);
         ArgumentNullException.ThrowIfNull(requestOptions);
 
-        // 7.2. Verifying an Authentication Assertion
+        //// 7.2. Verifying an Authentication Assertion
 
         if (!publicKeyCredentialAssertion.Id.IsBase64Url())
         {
@@ -156,8 +156,8 @@ public sealed class Assertion : IAssertion
         }
 
         // Step 21
-        // Let storedSignCount be the stored signature counter value associated with credential.id. If authData.signCount
-        // is nonzero or storedSignCount is nonzero, then run the following sub-step:
+        // Let storedSignCount be the stored signature counter value associated with credential.id.
+        // If authData.signCount is nonzero or storedSignCount is nonzero, then run the following sub-step:
         if (assertionResult.Value!.SignCount != 0 || credential.SignCount != 0)
         {
             // If authData.signCount is greater than storedSignCount:
@@ -166,9 +166,9 @@ public sealed class Assertion : IAssertion
                 // Update storedSignCount to be the value of authData.signCount.
                 await _credentialRepository.UpdateSignCount(credential, assertionResult.Value!.SignCount);
             }
-            // less than or equal to storedSignCount:
             else
             {
+                // Less than or equal to storedSignCount:
                 // This is a signal that the authenticator may be cloned, i.e. at least two copies of the credential
                 // private key may exist and are being used in parallel. Relying Parties should incorporate this
                 // information into their risk scoring. Whether the Relying Party updates storedSignCount in this case,

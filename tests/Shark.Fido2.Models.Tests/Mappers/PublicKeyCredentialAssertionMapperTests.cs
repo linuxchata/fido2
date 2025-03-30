@@ -40,7 +40,7 @@ public class PublicKeyCredentialAssertionMapperTests
                 AuthenticatorData = "AuthenticatorData",
                 Signature = "Signature",
                 UserHandle = "UserHandler",
-            }
+            },
         };
 
         // Act

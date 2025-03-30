@@ -4,7 +4,7 @@ using Shark.Fido2.Common.Extensions;
 namespace Shark.Fido2.Core.Converters;
 
 /// <summary>
-/// Converter for Concise Binary Object Representation
+/// Converter for Concise Binary Object Representation.
 /// </summary>
 public static class CborConverter
 {
@@ -89,6 +89,7 @@ public static class CborConverter
             var value = Read(reader);
             map[key] = value;
         }
+
         reader.ReadEndMap();
         return map;
     }
@@ -101,6 +102,7 @@ public static class CborConverter
         {
             array.Add(Read(reader));
         }
+
         reader.ReadEndArray();
         return array;
     }

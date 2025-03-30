@@ -145,7 +145,7 @@ internal class UserHandlerValidatorTests
             CredentialId = [1, 2, 3, 4],
             UserHandle = Convert.FromBase64String(DefaultUserHandleBase64),
             Username = username,
-            CredentialPublicKey = new CredentialPublicKey()
+            CredentialPublicKey = new CredentialPublicKey(),
         };
     }
 
@@ -162,7 +162,7 @@ internal class UserHandlerValidatorTests
                 ClientDataJson = "{}",
                 AuthenticatorData = "data",
                 Signature = "signature",
-                UserHandle = userHandle
+                UserHandle = userHandle,
             },
             Extensions = new AuthenticationExtensionsClientOutputs(),
         };

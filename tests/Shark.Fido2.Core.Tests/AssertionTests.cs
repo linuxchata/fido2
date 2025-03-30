@@ -55,7 +55,7 @@ public class AssertionTests
                 It.IsAny<PublicKeyCredentialRequestOptions>()))
             .Returns(new InternalResult<AuthenticatorData>(new AuthenticatorData
             {
-                SignCount = 2
+                SignCount = 2,
             }));
 
         _userHandlerValidatorMock = new Mock<IUserHandlerValidator>();
@@ -81,7 +81,7 @@ public class AssertionTests
             Origin = "localhost",
             RelyingPartyId = "localhost",
             RelyingPartyIdName = "Test RP",
-            Timeout = 60000
+            Timeout = 60000,
         };
 
         _publicKeyCredentialAssertion = new PublicKeyCredentialAssertion
@@ -172,7 +172,7 @@ public class AssertionTests
                 UserHandle = _userHandle,
                 CredentialPublicKey = new CredentialPublicKey(),
                 Transports = ["internal", "usb"],
-            }
+            },
         };
 
         _credentialRepositoryMock.Setup(a => a.Get(UserName)).ReturnsAsync(credentials);
@@ -280,7 +280,7 @@ public class AssertionTests
                 {
                     Id = [5, 6, 7, 8], // Different credential identifiers
                     Transports = [AuthenticatorTransport.Internal],
-                }
+                },
             },
         };
 
@@ -304,9 +304,9 @@ public class AssertionTests
                 new PublicKeyCredentialDescriptor
                 {
                     Id = [1, 2, 3, 4], // Matching credential identifiers
-                    Transports = [AuthenticatorTransport.Internal]
-                }
-            }
+                    Transports = [AuthenticatorTransport.Internal],
+                },
+            },
         };
 
         _credentialRepositoryMock
@@ -331,7 +331,7 @@ public class AssertionTests
             CredentialId = [1, 2, 3, 4],
             Username = UserName,
             UserHandle = _userHandle,
-            CredentialPublicKey = new CredentialPublicKey()
+            CredentialPublicKey = new CredentialPublicKey(),
         };
 
         _credentialRepositoryMock
@@ -453,7 +453,7 @@ public class AssertionTests
             Username = UserName,
             UserHandle = _userHandle,
             CredentialPublicKey = new CredentialPublicKey(),
-            SignCount = 3 // Higher than the authenticator's sign count (2)
+            SignCount = 3, // Higher than the authenticator's sign count (2)
         };
 
         _credentialRepositoryMock
@@ -479,7 +479,7 @@ public class AssertionTests
             Username = UserName,
             UserHandle = _userHandle,
             CredentialPublicKey = new CredentialPublicKey(),
-            SignCount = 1 // Lower than the authenticator's sign count (2)
+            SignCount = 1, // Lower than the authenticator's sign count (2)
         };
 
         _credentialRepositoryMock
@@ -507,7 +507,7 @@ public class AssertionTests
             Username = UserName,
             UserHandle = _userHandle,
             CredentialPublicKey = new CredentialPublicKey(),
-            SignCount = 0 // Zero sign count
+            SignCount = 0, // Zero sign count
         };
 
         _credentialRepositoryMock
@@ -523,7 +523,7 @@ public class AssertionTests
                 It.IsAny<PublicKeyCredentialRequestOptions>()))
             .Returns(new InternalResult<AuthenticatorData>(new AuthenticatorData
             {
-                SignCount = 0 // Zero sign count
+                SignCount = 0, // Zero sign count
             }));
 
         // Act

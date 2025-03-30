@@ -119,7 +119,6 @@ internal class ClientDataValidator : IClientDataValidator
         if (clientData.TokenBinding != null)
         {
             // TokenBindingStatusConverter checks whether status is supported
-
             if (clientData.TokenBinding.Status == TokenBindingStatus.Present &&
                 string.IsNullOrWhiteSpace(clientData.TokenBinding.Id))
             {
@@ -127,7 +126,7 @@ internal class ClientDataValidator : IClientDataValidator
                     "Token binding identifier is not found for 'present' token binding status");
             }
 
-            // TODO: Implement
+            //// TODO: Implement
         }
 
         return ValidatorInternalResult.Valid();

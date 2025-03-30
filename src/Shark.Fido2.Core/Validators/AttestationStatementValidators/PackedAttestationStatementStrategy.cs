@@ -11,7 +11,7 @@ namespace Shark.Fido2.Core.Validators.AttestationStatementValidators;
 /// <summary>
 /// Implementation of the Packed attestation statement validation strategy.
 /// This validates attestation statements according to the FIDO2 specification section 8.2.
-/// See: https://www.w3.org/TR/webauthn/#sctn-packed-attestation
+/// See: https://www.w3.org/TR/webauthn/#sctn-packed-attestation.
 /// </summary>
 internal class PackedAttestationStatementStrategy : IAttestationStatementStrategy
 {
@@ -32,11 +32,11 @@ internal class PackedAttestationStatementStrategy : IAttestationStatementStrateg
     /// <summary>
     /// Validates a Packed attestation statement.
     /// </summary>
-    /// <param name="attestationObjectData">The attestation object data containing the statement to validate</param>
-    /// <param name="clientData">The client data associated with the attestation</param>
-    /// <returns>A ValidatorInternalResult indicating whether the attestation statement is valid</returns>
-    /// <exception cref="ArgumentNullException">Thrown when attestationObjectData or clientData is null</exception>
-    /// <exception cref="ArgumentException">Thrown when attestation statement cannot be read</exception>
+    /// <param name="attestationObjectData">The attestation object data containing the statement to validate.</param>
+    /// <param name="clientData">The client data associated with the attestation.</param>
+    /// <returns>A ValidatorInternalResult indicating whether the attestation statement is valid.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when attestationObjectData or clientData is null.</exception>
+    /// <exception cref="ArgumentException">Thrown when attestation statement cannot be read.</exception>
     public ValidatorInternalResult Validate(AttestationObjectData attestationObjectData, ClientData clientData)
     {
         ArgumentNullException.ThrowIfNull(attestationObjectData);
@@ -68,9 +68,9 @@ internal class PackedAttestationStatementStrategy : IAttestationStatementStrateg
                 $"Packed attestation statement algorithm ({algorithm}) does not match credential public key algorithm ({credentialPublicKey.Algorithm})");
         }
 
-        // If x5c is present
         if (_attestationCertificateProviderService.AreCertificatesPresent(attestationStatementDict))
         {
+            // If x5c is present
             // Verify that sig is a valid signature over the concatenation of authenticatorData and clientDataHash
             // using the attestation public key in attestnCert with the algorithm specified in alg.
             var certificates = _attestationCertificateProviderService.GetCertificates(attestationStatementDict);
@@ -103,9 +103,9 @@ internal class PackedAttestationStatementStrategy : IAttestationStatementStrateg
             // uncertainty, and attestation trust path x5c.
             return new AttestationStatementInternalResult(attestationType, [.. certificates]);
         }
-        // If x5c is not present, self attestation is in use.
         else
         {
+            // If x5c is not present, self attestation is in use.
             // Verify that sig is a valid signature over the concatenation of authenticatorData and clientDataHash
             // using the credential public key with alg.
             var result = _signatureValidator.Validate(concatenatedData, attestationStatementDict, credentialPublicKey);

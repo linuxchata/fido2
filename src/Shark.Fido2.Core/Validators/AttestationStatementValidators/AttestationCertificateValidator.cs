@@ -347,7 +347,6 @@ internal class AttestationCertificateValidator : IAttestationCertificateValidato
 
         // If certificate public key is not an Elliptic Curve (EC) public key over the P-256 curve, terminate
         // this algorithm and return an appropriate error.
-
         using var ecdsaPublicKey = attestationCertificate.GetECDsaPublicKey();
 
         if (ecdsaPublicKey == null)

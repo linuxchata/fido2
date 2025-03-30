@@ -6,7 +6,7 @@ namespace Shark.Fido2.Core.Abstractions.Validators;
 /// Validates cryptographic signatures using public key credentials.
 /// Supports OKP (Octet Key Pair) cryptographic algorithms.
 /// </summary>
-interface IOkpCryptographyValidator
+public interface IOkpCryptographyValidator
 {
     /// <summary>
     /// Validates a cryptographic signature using either a credential public key.

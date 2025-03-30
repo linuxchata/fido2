@@ -9,7 +9,7 @@ namespace Shark.Fido2.Core.Services;
 
 /// <summary>
 /// Gode sample from Google:
-/// https://github.com/googlesamples/android-play-safetynet/tree/master/server/csharp
+/// https://github.com/googlesamples/android-play-safetynet/tree/master/server/csharp.
 /// </summary>
 internal sealed class AndroidSafetyNetJwsResponseParserService : IAndroidSafetyNetJwsResponseParserService
 {
@@ -66,7 +66,7 @@ internal sealed class AndroidSafetyNetJwsResponseParserService : IAndroidSafetyN
             ApkPackageName = apkPackageNameClaim?.Value,
             ApkCertificateDigestSha256 = apkCertificateDigestSha256Claim?.Value,
             ApkDigestSha256 = apkDigestSha256Claim?.Value,
-            TimestampMs = timestampMsClaim?.Value
+            TimestampMs = timestampMsClaim?.Value,
         };
     }
 

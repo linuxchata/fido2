@@ -1,7 +1,7 @@
 ﻿namespace Shark.Fido2.Domain.Enums;
 
 /// <summary>
-/// TPM Algorithm Types
+/// TPM Algorithm Types.
 /// </summary>
 public enum TpmAlgorithmEnum
 {
@@ -183,5 +183,5 @@ public enum TpmAlgorithmEnum
     /// <summary>
     /// TPM_ALG_ECB (0x0044)
     /// </summary>
-    TpmAlgorithmEcb = 0x0044
+    TpmAlgorithmEcb = 0x0044,
 }
