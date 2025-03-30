@@ -10,7 +10,7 @@ namespace Shark.Fido2.Core.Validators.AttestationStatementValidators;
 
 /// <summary>
 /// Gode sample from Google:
-/// https://github.com/googlesamples/android-play-safetynet/tree/master/server/csharp
+/// https://github.com/googlesamples/android-play-safetynet/tree/master/server/csharp.
 /// </summary>
 internal sealed class AndroidSafetyNetJwsResponseValidator : IAndroidSafetyNetJwsResponseValidator
 {
@@ -116,7 +116,7 @@ internal sealed class AndroidSafetyNetJwsResponseValidator : IAndroidSafetyNetJw
             return false;
         }
 
-        // TODO: Define other validation rules for timestamp
+        //// TODO: Define other validation rules for timestamp
 
         return true;
     }

@@ -12,7 +12,7 @@ using Swashbuckle.AspNetCore.Filters;
 namespace Shark.Sample.Fido2.Controllers;
 
 /// <summary>
-/// Assertion (authentication)
+/// Assertion (authentication).
 /// </summary>
 [Route("[controller]")]
 [ApiController]
@@ -23,6 +23,7 @@ public class AssertionController(IAssertion assertion) : ControllerBase
     /// <summary>
     /// Gets credential request options.
     /// </summary>
+    /// <param name="request">The request.</param>
     /// <returns>The HTTP response.</returns>
     [HttpPost("options")]
     [Produces(MediaTypeNames.Application.Json)]

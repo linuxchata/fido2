@@ -7,8 +7,9 @@ namespace Shark.Fido2.Core.Tests.Helpers;
 [TestFixture]
 public class HashProviderTests
 {
-    private static readonly byte[] TestData = Encoding.UTF8.GetBytes("test data");
     private const string TestString = "test data";
+
+    private static readonly byte[] TestData = Encoding.UTF8.GetBytes("test data");
 
     [Test]
     public void GetHash_WithSHA1_ReturnsCorrectHash()

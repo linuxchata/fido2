@@ -69,7 +69,6 @@ internal sealed class MetadataBlobService : IMetadataBlobService
     {
         // X509SecurityKey has issues extracting public keys from ECDsa certificates, so the public keys are
         // extracted manually
-
         var issuerSigningKeys = new List<SecurityKey>();
         foreach (var certificate in certificates)
         {

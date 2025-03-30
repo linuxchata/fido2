@@ -20,11 +20,11 @@ internal sealed class UserHandlerValidator : IUserHandlerValidator
         // Step 6
         // Identify the user being authenticated and verify that this user is the owner of the public key credential
         // source credentialSource identified by credential.id
-        // - If the user was identified before the authentication ceremony was initiated, e.g., via a username or
-        // cookie, verify that the identified user is the owner of credentialSource. If response.userHandle is present,
-        // let userHandle be its value. Verify that userHandle also maps to the same user.
         if (AreAllowCredentialsPresent(requestOptions))
         {
+            // - If the user was identified before the authentication ceremony was initiated, e.g., via a username or
+            // cookie, verify that the identified user is the owner of credentialSource. If response.userHandle is present,
+            // let userHandle be its value. Verify that userHandle also maps to the same user.
             if (userHandle != null && userHandle.Length != 0)
             {
                 if (!BytesArrayComparer.CompareNullable(credential.UserHandle, userHandle))
@@ -40,10 +40,10 @@ internal sealed class UserHandlerValidator : IUserHandlerValidator
                 }
             }
         }
-        // - If the user was not identified before the authentication ceremony was initiated, verify that
-        // response.userHandle is present, and that the user identified by this value is the owner of credentialSource.
         else
         {
+            // - If the user was not identified before the authentication ceremony was initiated, verify that
+            // response.userHandle is present, and that the user identified by this value is the owner of credentialSource.
             if (userHandle == null || userHandle.Length == 0)
             {
                 return ValidatorInternalResult.Invalid("User handle is not present");

@@ -14,7 +14,7 @@ namespace Shark.Fido2.Core.Validators.AttestationStatementValidators;
 /// <summary>
 /// Implementation of the TPM attestation statement validation strategy.
 /// This validates attestation statements according to the FIDO2 specification section 8.3.
-/// See: https://www.w3.org/TR/webauthn/#sctn-tpm-attestation
+/// See: https://www.w3.org/TR/webauthn/#sctn-tpm-attestation.
 /// </summary>
 internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
 {
@@ -41,11 +41,11 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
     /// <summary>
     /// Validates a TPM attestation statement.
     /// </summary>
-    /// <param name="attestationObjectData">The attestation object data containing the statement to validate</param>
-    /// <param name="clientData">The client data associated with the attestation</param>
-    /// <returns>A ValidatorInternalResult indicating whether the attestation statement is valid</returns>
-    /// <exception cref="ArgumentNullException">Thrown when attestationObjectData or clientData is null</exception>
-    /// <exception cref="ArgumentException">Thrown when attestation statement cannot be read</exception>
+    /// <param name="attestationObjectData">The attestation object data containing the statement to validate.</param>
+    /// <param name="clientData">The client data associated with the attestation.</param>
+    /// <returns>A ValidatorInternalResult indicating whether the attestation statement is valid.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when attestationObjectData or clientData is null.</exception>
+    /// <exception cref="ArgumentException">Thrown when attestation statement cannot be read.</exception>
     public ValidatorInternalResult Validate(AttestationObjectData attestationObjectData, ClientData clientData)
     {
         ArgumentNullException.ThrowIfNull(attestationObjectData);
@@ -82,6 +82,7 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
             {
                 return ValidatorInternalResult.Invalid("TPM attestation statement public key mismatch (X coordinate)");
             }
+
             if (!BytesArrayComparer.CompareNullable(credentialPublicKey.YCoordinate, yCoordinate))
             {
                 return ValidatorInternalResult.Invalid("TPM attestation statement public key mismatch (Y coordinate)");

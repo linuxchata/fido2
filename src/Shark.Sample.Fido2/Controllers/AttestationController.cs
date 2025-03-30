@@ -13,7 +13,7 @@ using Swashbuckle.AspNetCore.Filters;
 namespace Shark.Sample.Fido2.Controllers;
 
 /// <summary>
-/// Attestation (registration)
+/// Attestation (registration).
 /// </summary>
 [Route("[controller]")]
 [ApiController]
@@ -63,7 +63,6 @@ public class AttestationController(IAttestation attestation) : ControllerBase
         // the ServerAuthenticatorAttestationResponse according to the algorithm
         // described in section 7.1 of the [Webauthn] specs, and will respond with
         // the appropriate ServerResponse message.
-
         var creationOptionsString = HttpContext.Session.GetString("CreationOptions");
 
         var creationOptions = JsonSerializer.Deserialize<PublicKeyCredentialCreationOptions>(creationOptionsString!);
