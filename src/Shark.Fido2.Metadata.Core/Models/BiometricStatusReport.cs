@@ -3,7 +3,7 @@
 namespace Shark.Fido2.Metadata.Core.Models;
 
 /// <summary>
-/// See: https://fidoalliance.org/specs/mds/fido-metadata-service-v3.0-ps-20210518.html#biometricstatusreport-dictionary
+/// See: https://fidoalliance.org/specs/mds/fido-metadata-service-v3.0-ps-20210518.html#biometricstatusreport-dictionary.
 /// </summary>
 public sealed class BiometricStatusReport
 {

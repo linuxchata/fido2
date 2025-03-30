@@ -3,7 +3,7 @@
 namespace Shark.Fido2.Models.Responses;
 
 /// <summary>
-/// 7.3.4.1. ServerPublicKeyCredential
+/// 7.3.4.1. ServerPublicKeyCredential.
 /// </summary>
 public sealed class ServerPublicKeyCredentialAttestation
 {

@@ -34,6 +34,7 @@ internal class ClientDataValidatorTests
             Challenge = expectedChallenge,
             Origin = "https://localhost:4000",
             CrossOrigin = false,
+            ClientDataHash = [],
         };
 
         // Act
@@ -57,6 +58,7 @@ internal class ClientDataValidatorTests
             Challenge = expectedChallenge,
             Origin = "https://localhost:4000",
             CrossOrigin = false,
+            ClientDataHash = [],
             TokenBinding = new TokenBinding
             {
                 Id = "7864716657891",
@@ -83,6 +85,7 @@ internal class ClientDataValidatorTests
             Challenge = "t2pJGIQ7Y4DXF2b98tnBjg",
             Origin = "https://localhost:4000",
             CrossOrigin = false,
+            ClientDataHash = [],
         };
 
         // Act
@@ -106,6 +109,7 @@ internal class ClientDataValidatorTests
             Challenge = expectedChallenge,
             Origin = "https://localhost:4000",
             CrossOrigin = false,
+            ClientDataHash = [],
             TokenBinding = new TokenBinding
             {
                 Status = Domain.Enums.TokenBindingStatus.Present,

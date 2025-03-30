@@ -4,7 +4,7 @@ namespace Shark.Fido2.Metadata.Core.Models;
 
 /// <summary>
 /// An extension supported by the authenticator
-/// See: https://fidoalliance.org/specs/mds/fido-metadata-statement-v3.0-ps-20210518.html#extensiondescriptor-dictionary
+/// See: https://fidoalliance.org/specs/mds/fido-metadata-statement-v3.0-ps-20210518.html#extensiondescriptor-dictionary.
 /// </summary>
 public sealed class ExtensionDescriptor
 {

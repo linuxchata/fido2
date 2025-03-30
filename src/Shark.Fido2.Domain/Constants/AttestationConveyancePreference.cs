@@ -2,7 +2,7 @@
 
 /// <summary>
 /// 5.4.7. Attestation Conveyance Preference Enumeration
-/// https://www.w3.org/TR/webauthn-2/#enum-attestation-convey
+/// https://www.w3.org/TR/webauthn-2/#enum-attestation-convey.
 /// </summary>
 public static class AttestationConveyancePreference
 {

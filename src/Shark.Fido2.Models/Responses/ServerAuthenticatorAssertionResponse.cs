@@ -3,7 +3,7 @@
 namespace Shark.Fido2.Models.Responses;
 
 /// <summary>
-/// 7.4.3.3. ServerAuthenticatorAssertionResponse
+/// 7.4.3.3. ServerAuthenticatorAssertionResponse.
 /// </summary>
 public sealed class ServerAuthenticatorAssertionResponse : ServerAuthenticatorResponse
 {

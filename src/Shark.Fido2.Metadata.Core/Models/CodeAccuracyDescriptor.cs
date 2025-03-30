@@ -4,7 +4,7 @@ namespace Shark.Fido2.Metadata.Core.Models;
 
 /// <summary>
 /// A relevant accuracy/complexity aspects of passcode user verification methods.
-/// See: https://fidoalliance.org/specs/mds/fido-metadata-statement-v3.0-ps-20210518.html#codeaccuracydescriptor-dictionary
+/// See: https://fidoalliance.org/specs/mds/fido-metadata-statement-v3.0-ps-20210518.html#codeaccuracydescriptor-dictionary.
 /// </summary>
 public sealed class CodeAccuracyDescriptor
 {

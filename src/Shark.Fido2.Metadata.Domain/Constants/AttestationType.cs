@@ -2,7 +2,7 @@
 
 /// <summary>
 /// Authenticator attestation types
-/// SeeL https://fidoalliance.org/specs/common-specs/fido-registry-v2.1-ps-20191217.html#authenticator-attestation-types
+/// SeeL https://fidoalliance.org/specs/common-specs/fido-registry-v2.1-ps-20191217.html#authenticator-attestation-types.
 /// </summary>
 public static class AttestationType
 {

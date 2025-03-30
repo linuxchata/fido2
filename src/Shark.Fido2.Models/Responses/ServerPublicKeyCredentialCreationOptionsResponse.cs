@@ -4,7 +4,7 @@ namespace Shark.Fido2.Models.Responses;
 
 /// <summary>
 /// 7.3.3.2. ServerPublicKeyCredentialCreationOptionsResponse
-/// See: https://fidoalliance.org/specs/fido-v2.0-rd-20180702/fido-server-v2.0-rd-20180702.html#serverpublickeycredentialcreationoptionsresponse
+/// See: https://fidoalliance.org/specs/fido-v2.0-rd-20180702/fido-server-v2.0-rd-20180702.html#serverpublickeycredentialcreationoptionsresponse.
 /// </summary>
 public sealed class ServerPublicKeyCredentialCreationOptionsResponse : ServerResponse
 {

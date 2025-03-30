@@ -3,7 +3,7 @@
 namespace Shark.Fido2.Metadata.Core.Models;
 
 /// <summary>
-/// See: https://fidoalliance.org/specs/mds/fido-metadata-statement-v3.0-ps-20210518.html#metadata-keys
+/// See: https://fidoalliance.org/specs/mds/fido-metadata-statement-v3.0-ps-20210518.html#metadata-keys.
 /// </summary>
 public sealed class MetadataStatement
 {

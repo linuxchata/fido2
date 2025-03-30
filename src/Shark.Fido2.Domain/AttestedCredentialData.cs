@@ -1,7 +1,7 @@
 ﻿namespace Shark.Fido2.Domain;
 
 /// <summary>
-/// Attested Credential Data
+/// Attested Credential Data.
 /// </summary>
 public sealed class AttestedCredentialData
 {
@@ -11,17 +11,17 @@ public sealed class AttestedCredentialData
     }
 
     /// <summary>
-    /// The AAGUID of the authenticator
+    /// Gets or sets the AAGUID of the authenticator.
     /// </summary>
     public Guid AaGuid { get; set; }
 
     /// <summary>
-    /// Credential ID
+    /// Gets or sets the credential ID.
     /// </summary>
-    public byte[] CredentialId { get; set; } = null!;
+    public byte[]? CredentialId { get; set; }
 
     /// <summary>
-    /// The credential public key
+    /// Gets or sets the credential public key.
     /// </summary>
-    public CredentialPublicKey CredentialPublicKey { get; set; } = null!;
+    public CredentialPublicKey? CredentialPublicKey { get; set; }
 }

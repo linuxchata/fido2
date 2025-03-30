@@ -74,7 +74,7 @@ internal class AttestationObjectValidatorTests
         };
 
         // Act
-        var result = await _sut.Validate(attestationObjectData, new ClientData(), creationOptions);
+        var result = await _sut.Validate(attestationObjectData, ClientDataBuilder.BuildCreate(), creationOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -109,7 +109,7 @@ internal class AttestationObjectValidatorTests
         };
 
         // Act
-        var result = await _sut.Validate(attestationObjectData, new ClientData(), creationOptions);
+        var result = await _sut.Validate(attestationObjectData, ClientDataBuilder.BuildCreate(), creationOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);

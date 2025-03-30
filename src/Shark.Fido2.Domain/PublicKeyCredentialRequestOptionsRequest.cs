@@ -4,7 +4,7 @@ namespace Shark.Fido2.Domain;
 
 public sealed class PublicKeyCredentialRequestOptionsRequest
 {
-    public string? Username { get; set; }
+    public string? Username { get; init; }
 
-    public UserVerificationRequirement? UserVerification { get; set; }
+    public UserVerificationRequirement? UserVerification { get; init; }
 }

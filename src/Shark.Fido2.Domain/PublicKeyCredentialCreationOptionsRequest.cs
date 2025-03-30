@@ -2,11 +2,11 @@
 
 public sealed class PublicKeyCredentialCreationOptionsRequest
 {
-    public string Username { get; set; } = null!;
+    public required string Username { get; init; }
 
-    public string DisplayName { get; set; } = null!;
+    public required string DisplayName { get; init; }
 
-    public AuthenticatorSelectionCriteria? AuthenticatorSelection { get; set; }
+    public AuthenticatorSelectionCriteria? AuthenticatorSelection { get; init; }
 
-    public string? Attestation { get; set; }
+    public string? Attestation { get; init; }
 }

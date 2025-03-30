@@ -11,7 +11,7 @@ namespace Shark.Fido2.Core.Validators.AttestationStatementValidators;
 /// <summary>
 /// Implementation of the Apple Anonymous attestation statement validation strategy.
 /// This validates attestation statements according to the FIDO2 specification section 8.8.
-/// See: https://www.w3.org/TR/webauthn/#sctn-apple-anonymous-attestation
+/// See: https://www.w3.org/TR/webauthn/#sctn-apple-anonymous-attestation.
 /// </summary>
 internal class AppleAnonymousAttestationStatementStrategy : IAttestationStatementStrategy
 {
@@ -32,11 +32,11 @@ internal class AppleAnonymousAttestationStatementStrategy : IAttestationStatemen
     /// <summary>
     /// Validates an Apple Anonymous attestation statement.
     /// </summary>
-    /// <param name="attestationObjectData">The attestation object data containing the statement to validate</param>
-    /// <param name="clientData">The client data associated with the attestation</param>
-    /// <returns>A ValidatorInternalResult indicating whether the attestation statement is valid</returns>
-    /// <exception cref="ArgumentNullException">Thrown when attestationObjectData or clientData is null</exception>
-    /// <exception cref="ArgumentException">Thrown when attestation statement cannot be read</exception>
+    /// <param name="attestationObjectData">The attestation object data containing the statement to validate.</param>
+    /// <param name="clientData">The client data associated with the attestation.</param>
+    /// <returns>A ValidatorInternalResult indicating whether the attestation statement is valid.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when attestationObjectData or clientData is null.</exception>
+    /// <exception cref="ArgumentException">Thrown when attestation statement cannot be read.</exception>
     public ValidatorInternalResult Validate(AttestationObjectData attestationObjectData, ClientData clientData)
     {
         ArgumentNullException.ThrowIfNull(attestationObjectData);
@@ -70,7 +70,7 @@ internal class AppleAnonymousAttestationStatementStrategy : IAttestationStatemen
 
         // Verify that the credential public key equals the Subject Public Key of credCert.
         var credentialPublicKey = attestationObjectData.AuthenticatorData!.AttestedCredentialData.CredentialPublicKey;
-        result = _certificatePublicKeyValidator.Validate(attestationCertificate, credentialPublicKey);
+        result = _certificatePublicKeyValidator.Validate(attestationCertificate, credentialPublicKey!);
         if (!result.IsValid)
         {
             return result;

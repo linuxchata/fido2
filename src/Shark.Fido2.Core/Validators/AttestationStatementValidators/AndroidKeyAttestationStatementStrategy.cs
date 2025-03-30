@@ -10,7 +10,7 @@ namespace Shark.Fido2.Core.Validators.AttestationStatementValidators;
 /// <summary>
 /// Implementation of the Android Key attestation statement validation strategy.
 /// This validates attestation statements according to the FIDO2 specification section 8.4.
-/// See: https://www.w3.org/TR/webauthn-2/#sctn-android-key-attestation
+/// See: https://www.w3.org/TR/webauthn-2/#sctn-android-key-attestation.
 /// </summary>
 internal class AndroidKeyAttestationStatementStrategy : IAttestationStatementStrategy
 {
@@ -34,11 +34,11 @@ internal class AndroidKeyAttestationStatementStrategy : IAttestationStatementStr
     /// <summary>
     /// Validates an Android Key attestation statement.
     /// </summary>
-    /// <param name="attestationObjectData">The attestation object data containing the statement to validate</param>
-    /// <param name="clientData">The client data associated with the attestation</param>
-    /// <returns>A ValidatorInternalResult indicating whether the attestation statement is valid</returns>
-    /// <exception cref="ArgumentNullException">Thrown when attestationObjectData or clientData is null</exception>
-    /// <exception cref="ArgumentException">Thrown when attestation statement cannot be read</exception>
+    /// <param name="attestationObjectData">The attestation object data containing the statement to validate.</param>
+    /// <param name="clientData">The client data associated with the attestation.</param>
+    /// <returns>A ValidatorInternalResult indicating whether the attestation statement is valid.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when attestationObjectData or clientData is null.</exception>
+    /// <exception cref="ArgumentException">Thrown when attestation statement cannot be read.</exception>
     public ValidatorInternalResult Validate(AttestationObjectData attestationObjectData, ClientData clientData)
     {
         ArgumentNullException.ThrowIfNull(attestationObjectData);
@@ -65,7 +65,7 @@ internal class AndroidKeyAttestationStatementStrategy : IAttestationStatementStr
         var result = _signatureValidator.Validate(
             concatenatedData,
             attestationStatementDict,
-            credentialPublicKey,
+            credentialPublicKey!,
             attestationCertificate);
         if (!result.IsValid)
         {
@@ -74,7 +74,7 @@ internal class AndroidKeyAttestationStatementStrategy : IAttestationStatementStr
 
         // Verify that the public key in the first certificate in x5c matches the credentialPublicKey in the
         // attestedCredentialData in authenticatorData.
-        result = _certificatePublicKeyValidator.Validate(attestationCertificate, credentialPublicKey);
+        result = _certificatePublicKeyValidator.Validate(attestationCertificate, credentialPublicKey!);
         if (!result.IsValid)
         {
             return result;

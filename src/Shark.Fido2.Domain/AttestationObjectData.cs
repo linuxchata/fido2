@@ -2,24 +2,27 @@
 
 /// <summary>
 /// Attestation Object Data
-/// https://www.w3.org/TR/webauthn-2/#attestation-object
+/// https://www.w3.org/TR/webauthn-2/#attestation-object.
 /// </summary>
 public sealed class AttestationObjectData
 {
     /// <summary>
-    /// An attestation statement format (fmt).
+    /// Gets an attestation statement format (fmt).
     /// </summary>
-    public string? AttestationStatementFormat { get; set; }
+    public string? AttestationStatementFormat { get; init; }
 
     /// <summary>
-    /// Attestation statement (attStmt).
+    /// Gets an attestation statement (attStmt).
     /// </summary>
-    public object? AttestationStatement { get; set; }
+    public object? AttestationStatement { get; init; }
 
     /// <summary>
-    /// A byte array containing authenticator data (attStmt).
+    /// Gets a byte array containing authenticator data (attStmt).
     /// </summary>
-    public AuthenticatorData? AuthenticatorData { get; set; }
+    public AuthenticatorData? AuthenticatorData { get; init; }
 
-    public byte[] AuthenticatorRawData { get; set; } = null!;
+    /// <summary>
+    /// Gets an authenticator raw data.
+    /// </summary>
+    public byte[]? AuthenticatorRawData { get; init; }
 }

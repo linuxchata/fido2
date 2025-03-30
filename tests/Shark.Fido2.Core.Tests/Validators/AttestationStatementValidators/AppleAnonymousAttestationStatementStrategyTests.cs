@@ -82,7 +82,7 @@ internal class AppleAnonymousAttestationStatementStrategyTests
     public void Validate_WhenAttestationObjectDataIsNull_ThrowsArgumentNullException()
     {
         // Arrange
-        var clientData = new ClientData();
+        var clientData = ClientDataBuilder.BuildCreate();
 
         // Act & Assert
         Assert.Throws<ArgumentNullException>(() => _sut.Validate(null!, clientData));
@@ -103,7 +103,7 @@ internal class AppleAnonymousAttestationStatementStrategyTests
     {
         // Arrange
         var attestationObjectData = new AttestationObjectData { AttestationStatement = "not a dictionary" };
-        var clientData = new ClientData();
+        var clientData = ClientDataBuilder.BuildCreate();
 
         // Act & Assert
         Assert.Throws<ArgumentException>(() => _sut.Validate(attestationObjectData, clientData));

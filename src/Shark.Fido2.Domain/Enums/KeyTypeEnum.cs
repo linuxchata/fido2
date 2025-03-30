@@ -3,7 +3,7 @@
 /// <summary>
 /// COSE Key Types
 /// https://www.iana.org/assignments/cose/cose.xhtml#key-type
-/// https://www.rfc-editor.org/rfc/rfc9053.html#initial-kty-caps
+/// https://www.rfc-editor.org/rfc/rfc9053.html#initial-kty-caps.
 /// </summary>
 public enum KeyTypeEnum
 {

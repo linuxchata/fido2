@@ -4,7 +4,7 @@ namespace Shark.Fido2.Metadata.Core.Models;
 
 /// <summary>
 /// ECDAA-Issuer's trust anchor
-/// See: https://fidoalliance.org/specs/mds/fido-metadata-statement-v3.0-ps-20210518.html#ecdaatrustanchor-dictionary
+/// See: https://fidoalliance.org/specs/mds/fido-metadata-statement-v3.0-ps-20210518.html#ecdaatrustanchor-dictionary.
 /// </summary>
 public sealed class EcdaaTrustAnchor
 {

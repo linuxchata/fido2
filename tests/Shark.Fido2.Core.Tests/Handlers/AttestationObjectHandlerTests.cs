@@ -41,7 +41,7 @@ internal class AttestationObjectHandlerTests
         var creationOptions = new PublicKeyCredentialCreationOptions();
 
         // Act
-        var result = await _sut.Handle(attestationObject, new ClientData(), creationOptions);
+        var result = await _sut.Handle(attestationObject, ClientDataBuilder.BuildCreate(), creationOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -58,7 +58,7 @@ internal class AttestationObjectHandlerTests
         var creationOptions = new PublicKeyCredentialCreationOptions();
 
         // Act
-        var result = await _sut.Handle(attestationObject, new ClientData(), creationOptions);
+        var result = await _sut.Handle(attestationObject, ClientDataBuilder.BuildCreate(), creationOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -75,7 +75,7 @@ internal class AttestationObjectHandlerTests
         var creationOptions = new PublicKeyCredentialCreationOptions();
 
         // Act
-        var result = await _sut.Handle(attestationObject, new ClientData(), creationOptions);
+        var result = await _sut.Handle(attestationObject, ClientDataBuilder.BuildCreate(), creationOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);
