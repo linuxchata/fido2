@@ -57,7 +57,6 @@ internal class AppleAnonymousAttestationStatementStrategyTests
             certificatePublicKeyValidator);
     }
 
-    [Ignore("Apple Anonymous attestation to be generated")]
     [Test]
     public async Task Validate_WhenAppleAnonymousAttestationWithEc2Algorithm_ShouldValidate()
     {
