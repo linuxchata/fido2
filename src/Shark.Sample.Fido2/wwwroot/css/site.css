@@ -21,10 +21,6 @@ body {
     margin-bottom: 60px;
 }
 
-.container {
-    margin-top: 40px;
-}
-
 .main-controls-container {
     display: flex;
     flex-direction: column;
