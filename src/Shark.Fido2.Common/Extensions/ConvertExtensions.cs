@@ -1,4 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using System.Text;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Shark.Fido2.Common.Extensions;
 
@@ -11,7 +12,14 @@ public static class ConvertExtensions
 
     public static byte[] FromBase64Url(this string base64Url)
     {
-        return Base64UrlEncoder.DecodeBytes(base64Url);
+        try
+        {
+            return Base64UrlEncoder.DecodeBytes(base64Url);
+        }
+        catch (FormatException)
+        {
+            return Encoding.UTF8.GetBytes(base64Url);
+        }
     }
 
     public static bool IsBase64Url(this string base64Url)

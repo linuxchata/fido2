@@ -1,8 +1,10 @@
 ﻿// Authentication
 
-async function requestVerifyCredentialOptions() {
+const toastrAuthenticationTitle = 'Web Authentication';
+
+async function requestVerifyCredentialOptions(username) {
     const optionsRequest = {
-        username: 'HNAiCzKv7VHrICaBeeFZ'
+        username: username
     };
 
     const options = await fetchAssertionOptions(optionsRequest);
@@ -24,7 +26,7 @@ async function requestCredential(options) {
         assertion = await navigator.credentials.get(credentialRequestOptions);
     }
     catch (error) {
-        toastr.error(error.message, 'Web Authentication');
+        toastr.error(error.message, toastrAuthenticationTitle);
         return;
     }
 
@@ -56,8 +58,11 @@ async function fetchAssertionOptions(optionsRequest) {
         if (response.ok) {
             return await response.json();
         }
+        else {
+            toastr.error("Error creating authentication options", toastrAuthenticationTitle);
+        }
     } catch (error) {
-        toastr.error(error.message, 'Web Authentication');
+        toastr.error(error.message, toastrAuthenticationTitle);
     }
 }
 
@@ -72,10 +77,13 @@ async function fetchAssertionResult(credentials) {
         });
 
         if (response.ok) {
-            toastr.info('Authentication was successful', 'Web Authentication');
+            toastr.info('Authentication was successful', toastrAuthenticationTitle);
+        }
+        else {
+            toastr.error("Authentication has failed", toastrAuthenticationTitle);
         }
     } catch (error) {
-        toastr.error(error.message, 'Web Authentication');
+        toastr.error(error.message, toastrAuthenticationTitle);
     }
 }
 
