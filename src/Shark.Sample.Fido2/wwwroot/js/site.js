@@ -16,7 +16,7 @@ $(function () {
         let username = userNameInput.val();
 
         if (!isValidInput(username)) {
-            messageSpan.text("Invalid username");
+            messageSpan.text("Please input a username");
             return;
         }
 
