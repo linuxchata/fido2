@@ -21,7 +21,11 @@ body {
     margin-bottom: 60px;
 }
 
-.main-container {
+.container {
+    margin-top: 40px;
+}
+
+.main-controls-container {
     display: flex;
     flex-direction: column;
     margin: auto;
@@ -29,6 +33,12 @@ body {
     width: 30%;
     margin-top: 60px;
     margin-bottom: 60px;
+}
+
+@media (max-width: 992px) {
+    .main-controls-container {
+        width: 100%;
+    }
 }
 
 .input-text {
