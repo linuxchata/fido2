@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Options;
-using Shark.Fido2.Core.Configurations;
 using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Validators;
 using Shark.Fido2.Domain;
@@ -14,12 +13,7 @@ internal class ClientDataValidatorTests
     [SetUp]
     public void Setup()
     {
-        var fido2ConfigurationMock = new Fido2Configuration
-        {
-            Origin = "localhost",
-        };
-
-        _sut = new ClientDataValidator(Options.Create(fido2ConfigurationMock));
+        _sut = new ClientDataValidator(Options.Create(Fido2ConfigurationBuilder.Build()));
     }
 
     [Test]

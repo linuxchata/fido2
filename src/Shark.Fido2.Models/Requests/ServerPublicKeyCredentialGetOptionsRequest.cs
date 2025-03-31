@@ -9,8 +9,8 @@ namespace Shark.Fido2.Models.Requests;
 public sealed class ServerPublicKeyCredentialGetOptionsRequest
 {
     [JsonPropertyName("username")]
-    public string? Username { get; set; } // Optional
+    public string? Username { get; init; } // Optional
 
     [JsonPropertyName("userVerification")]
-    public string? UserVerification { get; set; }
+    public string? UserVerification { get; init; }
 }

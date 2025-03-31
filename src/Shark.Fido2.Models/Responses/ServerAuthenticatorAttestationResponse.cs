@@ -9,11 +9,11 @@ namespace Shark.Fido2.Models.Responses;
 public sealed class ServerAuthenticatorAttestationResponse : ServerAuthenticatorResponse
 {
     [JsonPropertyName("clientDataJSON")]
-    public required string ClientDataJson { get; set; }
+    public required string ClientDataJson { get; init; }
 
     [JsonPropertyName("attestationObject")]
-    public required string AttestationObject { get; set; }
+    public required string AttestationObject { get; init; }
 
     [JsonPropertyName("transports")]
-    public string[]? Transports { get; set; }
+    public string[]? Transports { get; init; }
 }

@@ -20,10 +20,16 @@ public class PublicKeyCredentialAttestationMapperTests
     public void Map_WhenAttestationResponseIsNull_ThenThrowsArgumentNullException()
     {
         // Arrange
-        var attestation = new ServerPublicKeyCredentialAttestation();
+        var attestation = new ServerPublicKeyCredentialAttestation
+        {
+            Id = "Id",
+            RawId = "RawId",
+            Response = null!,
+            Type = "public-key",
+        };
 
         // Act & Assert
-        Assert.Throws<ArgumentNullException>(() => attestation!.Map());
+        Assert.Throws<ArgumentNullException>(() => attestation.Map());
     }
 
     [Test]

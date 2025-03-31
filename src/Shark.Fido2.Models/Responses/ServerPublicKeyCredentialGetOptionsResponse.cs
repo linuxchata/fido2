@@ -9,21 +9,21 @@ namespace Shark.Fido2.Models.Responses;
 public sealed class ServerPublicKeyCredentialGetOptionsResponse : ServerResponse
 {
     [JsonPropertyName("challenge")]
-    public string Challenge { get; set; } = null!;
+    public required string Challenge { get; init; }
 
     [JsonPropertyName("timeout")]
-    public ulong? Timeout { get; set; }
+    public ulong? Timeout { get; init; }
 
     [JsonPropertyName("rpId")]
-    public string? RpId { get; set; }
+    public string? RpId { get; init; }
 
     [JsonPropertyName("allowCredentials")]
-    public ServerPublicKeyCredentialDescriptor[] AllowCredentials { get; set; } = null!;
+    public required ServerPublicKeyCredentialDescriptor[] AllowCredentials { get; init; }
 
     [JsonPropertyName("userVerification")]
-    public string UserVerification { get; set; } = null!;
+    public required string UserVerification { get; init; }
 
     [JsonPropertyName("extensions")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public ServerAuthenticationExtensionsClientInputs? Extensions { get; set; }
+    public ServerAuthenticationExtensionsClientInputs? Extensions { get; init; }
 }

@@ -20,10 +20,16 @@ public class PublicKeyCredentialAssertionMapperTests
     public void Map_WhenAssertionResponseIsNull_ThenThrowsArgumentNullException()
     {
         // Arrange
-        var assertion = new ServerPublicKeyCredentialAssertion();
+        var assertion = new ServerPublicKeyCredentialAssertion
+        {
+            Id = "Id",
+            RawId = "RawId",
+            Response = null!,
+            Type = "public-key",
+        };
 
         // Act & Assert
-        Assert.Throws<ArgumentNullException>(() => assertion!.Map());
+        Assert.Throws<ArgumentNullException>(() => assertion.Map());
     }
 
     [Test]
@@ -41,6 +47,7 @@ public class PublicKeyCredentialAssertionMapperTests
                 Signature = "Signature",
                 UserHandle = "UserHandler",
             },
+            Type = "public-key",
         };
 
         // Act

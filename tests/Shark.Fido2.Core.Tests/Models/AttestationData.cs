@@ -5,14 +5,14 @@ namespace Shark.Fido2.Core.Tests.Models;
 internal sealed class AttestationData
 {
     [JsonPropertyName("id")]
-    public string Id { get; set; } = null!;
+    public required string Id { get; set; }
 
     [JsonPropertyName("rawId")]
-    public string RawId { get; set; } = null!;
+    public required string RawId { get; set; }
 
     [JsonPropertyName("response")]
-    public AttestationResponseData Response { get; set; } = null!;
+    public required AttestationResponseData Response { get; set; }
 
     [JsonPropertyName("type")]
-    public string Type { get; set; } = null!;
+    public required string Type { get; set; }
 }

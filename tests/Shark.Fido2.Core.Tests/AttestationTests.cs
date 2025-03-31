@@ -1,6 +1,7 @@
 using System.Text;
 using Microsoft.Extensions.Options;
 using Moq;
+using Org.BouncyCastle.Asn1.Cmp;
 using Shark.Fido2.Common.Extensions;
 using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Core.Abstractions.Handlers;
@@ -10,6 +11,7 @@ using Shark.Fido2.Core.Results.Attestation;
 using Shark.Fido2.Domain;
 using Shark.Fido2.Domain.Constants;
 using Shark.Fido2.Domain.Enums;
+using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 namespace Shark.Fido2.Core.Tests;
 
@@ -90,11 +92,10 @@ public class AttestationTests
             Name = UserName,
             DisplayName = DisplayName,
         };
-        _publicKeyCredentialCreationOptions = new PublicKeyCredentialCreationOptions
-        {
-            Challenge = [1, 2, 3, 4],
-            User = _publicKeyCredentialUserEntity,
-        };
+
+        _publicKeyCredentialCreationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
+        _publicKeyCredentialCreationOptions.Challenge = [1, 2, 3, 4];
+        _publicKeyCredentialCreationOptions.User = _publicKeyCredentialUserEntity;
 
         _sut = new Attestation(
             _clientDataHandlerMock.Object,
@@ -207,7 +208,7 @@ public class AttestationTests
     {
         // Arrange
         PublicKeyCredentialAttestation? publicKeyCredentialAttestation = null;
-        var creationOptions = new PublicKeyCredentialCreationOptions();
+        var creationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
 
         // Act & Assert
         Assert.ThrowsAsync<ArgumentNullException>(() =>
@@ -255,7 +256,7 @@ public class AttestationTests
             },
             Extensions = new AuthenticationExtensionsClientOutputs(),
         };
-        var creationOptions = new PublicKeyCredentialCreationOptions();
+        var creationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
 
         // Act
         var result = await _sut.Complete(publicKeyCredentialAttestation, creationOptions);
@@ -278,7 +279,7 @@ public class AttestationTests
             Response = null!,
             Extensions = new AuthenticationExtensionsClientOutputs(),
         };
-        var publicKeyCredentialCreationOptions = new PublicKeyCredentialCreationOptions();
+        var publicKeyCredentialCreationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
 
         // Act
         var result = await _sut.Complete(publicKeyCredentialAttestation, publicKeyCredentialCreationOptions);
@@ -458,11 +459,9 @@ public class AttestationTests
         };
 
         var expectedChallenge = "t2pJGIQ7Y4DXF2b98tnBjg";
-        var publicKeyCredentialCreationOptions = new PublicKeyCredentialCreationOptions
-        {
-            Challenge = Convert.FromBase64String($"{expectedChallenge}=="),
-            User = _publicKeyCredentialUserEntity,
-        };
+        var publicKeyCredentialCreationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
+        publicKeyCredentialCreationOptions.Challenge = Convert.FromBase64String($"{expectedChallenge}==");
+        publicKeyCredentialCreationOptions.User = _publicKeyCredentialUserEntity;
 
         // Act
         var result = await _sut.Complete(publicKeyCredential, publicKeyCredentialCreationOptions);
@@ -492,11 +491,9 @@ public class AttestationTests
         };
 
         var expectedChallenge = "gsjJTjg3rcml3cfELwxAxQ";
-        var publicKeyCredentialCreationOptions = new PublicKeyCredentialCreationOptions
-        {
-            Challenge = Convert.FromBase64String($"{expectedChallenge}=="),
-            User = _publicKeyCredentialUserEntity,
-        };
+        var publicKeyCredentialCreationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
+        publicKeyCredentialCreationOptions.Challenge = Convert.FromBase64String($"{expectedChallenge}==");
+        publicKeyCredentialCreationOptions.User = _publicKeyCredentialUserEntity;
 
         // Act
         var result = await _sut.Complete(publicKeyCredential, publicKeyCredentialCreationOptions);

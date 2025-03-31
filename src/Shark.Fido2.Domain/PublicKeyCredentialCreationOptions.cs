@@ -6,21 +6,21 @@
 /// </summary>
 public sealed class PublicKeyCredentialCreationOptions
 {
-    public PublicKeyCredentialRpEntity RelyingParty { get; set; } = null!;
+    public required PublicKeyCredentialRpEntity RelyingParty { get; set; }
 
-    public PublicKeyCredentialUserEntity User { get; set; } = null!;
+    public required PublicKeyCredentialUserEntity User { get; set; }
 
-    public byte[] Challenge { get; set; } = null!;
+    public required byte[] Challenge { get; set; }
 
-    public PublicKeyCredentialParameter[] PublicKeyCredentialParams { get; set; } = null!;
+    public required PublicKeyCredentialParameter[] PublicKeyCredentialParams { get; set; }
 
     public ulong Timeout { get; set; }
 
-    public PublicKeyCredentialDescriptor[] ExcludeCredentials { get; set; } = null!;
+    public required PublicKeyCredentialDescriptor[] ExcludeCredentials { get; set; }
 
-    public AuthenticatorSelectionCriteria AuthenticatorSelection { get; set; } = null!;
+    public required AuthenticatorSelectionCriteria AuthenticatorSelection { get; set; }
 
-    public string Attestation { get; set; } = null!;
+    public required string Attestation { get; set; }
 
-    public AuthenticationExtensionsClientInputs Extensions { get; set; } = null!;
+    public required AuthenticationExtensionsClientInputs Extensions { get; set; }
 }

@@ -8,17 +8,17 @@ namespace Shark.Fido2.Models.Responses;
 public sealed class ServerPublicKeyCredentialAttestation
 {
     [JsonPropertyName("id")]
-    public string Id { get; set; } = null!;
+    public required string Id { get; init; }
 
     [JsonPropertyName("rawId")]
-    public string RawId { get; set; } = null!;
+    public required string RawId { get; init; }
 
     [JsonPropertyName("response")]
-    public ServerAuthenticatorAttestationResponse Response { get; set; } = null!;
+    public required ServerAuthenticatorAttestationResponse Response { get; init; }
 
     [JsonPropertyName("type")]
-    public string Type { get; set; } = null!;
+    public required string Type { get; init; }
 
     [JsonPropertyName("extensions")]
-    public ServerAuthenticationExtensionsClientOutputs? Extensions { get; set; }
+    public ServerAuthenticationExtensionsClientOutputs? Extensions { get; init; }
 }

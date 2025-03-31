@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using Moq;
 using Shark.Fido2.Core.Abstractions.Validators;
-using Shark.Fido2.Core.Configurations;
 using Shark.Fido2.Core.Handlers;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Core.Services;
@@ -36,7 +35,7 @@ internal class PackedAttestationStatementStrategyTests
 
         _authenticatorDataProvider = new AuthenticatorDataParserService();
 
-        _creationOptions = new PublicKeyCredentialCreationOptions();
+        _creationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
 
         _attestationObjectHandler = new AttestationObjectHandler(
             _authenticatorDataProvider,
@@ -54,7 +53,7 @@ internal class PackedAttestationStatementStrategyTests
             new AndroidKeyAttestationExtensionParserService(),
             new AppleAnonymousExtensionParserService(),
             TimeProvider.System,
-            Options.Create(new Fido2Configuration()));
+            Options.Create(Fido2ConfigurationBuilder.Build()));
 
         _sut = new PackedAttestationStatementStrategy(
             signatureAttestationStatementValidator,

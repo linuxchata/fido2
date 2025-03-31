@@ -2,7 +2,6 @@
 using Moq;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
-using Shark.Fido2.Core.Configurations;
 using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Core.Services;
@@ -34,17 +33,11 @@ internal class AttestationObjectValidatorTests
 
         var metadataCachedServiceMock = new Mock<IMetadataCachedService>();
 
-        var fido2ConfigurationMock = new Fido2Configuration
-        {
-            Origin = "localhost",
-            RelyingPartyId = "localhost",
-        };
-
         _sut = new AttestationObjectValidator(
             attestationStatementValidatorMock.Object,
             attestationTrustworthinessValidatorMock.Object,
             metadataCachedServiceMock.Object,
-            Options.Create(fido2ConfigurationMock));
+            Options.Create(Fido2ConfigurationBuilder.Build()));
     }
 
     [Test]
@@ -64,13 +57,11 @@ internal class AttestationObjectValidatorTests
             AuthenticatorData = authenticatorData,
         };
 
-        var creationOptions = new PublicKeyCredentialCreationOptions
+        var creationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
+        creationOptions.PublicKeyCredentialParams = [new() { Algorithm = PublicKeyAlgorithm.Es256 }];
+        creationOptions.AuthenticatorSelection = new AuthenticatorSelectionCriteria
         {
-            PublicKeyCredentialParams = [new() { Algorithm = PublicKeyAlgorithm.Es256 }],
-            AuthenticatorSelection = new AuthenticatorSelectionCriteria
-            {
-                UserVerification = UserVerificationRequirement.Required,
-            },
+            UserVerification = UserVerificationRequirement.Required,
         };
 
         // Act
@@ -99,13 +90,11 @@ internal class AttestationObjectValidatorTests
             AuthenticatorData = authenticatorData,
         };
 
-        var creationOptions = new PublicKeyCredentialCreationOptions
+        var creationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
+        creationOptions.PublicKeyCredentialParams = [new() { Algorithm = PublicKeyAlgorithm.Rs256 }];
+        creationOptions.AuthenticatorSelection = new AuthenticatorSelectionCriteria
         {
-            PublicKeyCredentialParams = [new() { Algorithm = PublicKeyAlgorithm.Rs256 }],
-            AuthenticatorSelection = new AuthenticatorSelectionCriteria
-            {
-                UserVerification = UserVerificationRequirement.Required,
-            },
+            UserVerification = UserVerificationRequirement.Required,
         };
 
         // Act

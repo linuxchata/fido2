@@ -9,30 +9,30 @@ namespace Shark.Fido2.Models.Responses;
 public sealed class ServerPublicKeyCredentialCreationOptionsResponse : ServerResponse
 {
     [JsonPropertyName("rp")]
-    public ServerPublicKeyCredentialRpEntity RelyingParty { get; set; } = null!;
+    public required ServerPublicKeyCredentialRpEntity RelyingParty { get; init; }
 
     [JsonPropertyName("user")]
-    public ServerPublicKeyCredentialUserEntity User { get; set; } = null!;
+    public required ServerPublicKeyCredentialUserEntity User { get; init; }
 
     [JsonPropertyName("pubKeyCredParams")]
-    public ServerPublicKeyCredentialParameters[] Parameters { get; set; } = null!;
+    public required ServerPublicKeyCredentialParameters[] Parameters { get; init; }
 
     [JsonPropertyName("challenge")]
-    public string Challenge { get; set; } = null!;
+    public required string Challenge { get; init; }
 
     [JsonPropertyName("timeout")]
-    public ulong Timeout { get; set; }
+    public ulong Timeout { get; init; }
 
     [JsonPropertyName("excludeCredentials")]
-    public ServerPublicKeyCredentialDescriptor[] ExcludeCredentials { get; set; } = null!;
+    public required ServerPublicKeyCredentialDescriptor[] ExcludeCredentials { get; init; }
 
     [JsonPropertyName("authenticatorSelection")]
-    public ServerAuthenticatorSelectionCriteria AuthenticatorSelection { get; set; } = null!;
+    public required ServerAuthenticatorSelectionCriteria AuthenticatorSelection { get; init; }
 
     [JsonPropertyName("attestation")]
-    public string Attestation { get; set; } = null!;
+    public required string Attestation { get; init; }
 
     [JsonPropertyName("extensions")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public ServerAuthenticationExtensionsClientInputs? Extensions { get; set; }
+    public ServerAuthenticationExtensionsClientInputs? Extensions { get; init; }
 }
