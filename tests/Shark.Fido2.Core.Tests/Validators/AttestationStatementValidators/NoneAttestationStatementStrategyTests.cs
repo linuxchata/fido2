@@ -33,7 +33,7 @@ internal class NoneAttestationStatementStrategyTests
 
         _provider = new AuthenticatorDataParserService();
 
-        _creationOptions = new PublicKeyCredentialCreationOptions();
+        _creationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
 
         _attestationObjectHandler = new AttestationObjectHandler(
             _provider, _attestationObjectValidatorMock.Object);

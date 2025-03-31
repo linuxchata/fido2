@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using Moq;
 using Shark.Fido2.Core.Abstractions.Validators;
-using Shark.Fido2.Core.Configurations;
 using Shark.Fido2.Core.Handlers;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Core.Services;
@@ -9,6 +8,7 @@ using Shark.Fido2.Core.Tests.DataReaders;
 using Shark.Fido2.Core.Validators;
 using Shark.Fido2.Core.Validators.AttestationStatementValidators;
 using Shark.Fido2.Domain;
+using Shark.Fido2.Domain.Constants;
 using Shark.Fido2.Domain.Enums;
 
 namespace Shark.Fido2.Core.Tests.Validators.AttestationStatementValidators;
@@ -36,7 +36,7 @@ internal class TpmAttestationStatementStrategyTests
 
         _authenticatorDataProvider = new AuthenticatorDataParserService();
 
-        _creationOptions = new PublicKeyCredentialCreationOptions();
+        _creationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
 
         _attestationObjectHandler = new AttestationObjectHandler(
             _authenticatorDataProvider,
@@ -58,7 +58,7 @@ internal class TpmAttestationStatementStrategyTests
             new AndroidKeyAttestationExtensionParserService(),
             new AppleAnonymousExtensionParserService(),
             TimeProvider.System,
-            Options.Create(new Fido2Configuration()));
+            Options.Create(Fido2ConfigurationBuilder.Build()));
 
         _sut = new TpmAttestationStatementStrategy(
             tpmtPublicAreaParserService,

@@ -1,7 +1,6 @@
 using System.Text;
 using Microsoft.Extensions.Options;
 using Moq;
-using Org.BouncyCastle.Asn1.Cmp;
 using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Core.Abstractions.Handlers;
 using Shark.Fido2.Core.Abstractions.Repositories;

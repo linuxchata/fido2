@@ -5,11 +5,11 @@ namespace Shark.Fido2.Models.Responses;
 public sealed class ServerPublicKeyCredentialDescriptor
 {
     [JsonPropertyName("type")]
-    public string Type { get; set; } = null!;
+    public required string Type { get; init; }
 
     [JsonPropertyName("id")]
-    public string Id { get; set; } = null!;
+    public required string Id { get; init; }
 
     [JsonPropertyName("transports")]
-    public string[] Transports { get; set; } = null!;
+    public required string[] Transports { get; init; }
 }

@@ -42,5 +42,5 @@ public sealed class AuthenticatorData
     /// </summary>
     public required AttestedCredentialData AttestedCredentialData { get; set; }
 
-    public string Extensions { get; set; } = null!;
+    public string? Extensions { get; set; }
 }

@@ -16,7 +16,7 @@ public class AttestationTrustworthinessValidatorTests
     [SetUp]
     public void Setup()
     {
-        _configuration = new Fido2Configuration();
+        _configuration = Fido2ConfigurationBuilder.Build();
         var options = Options.Create(_configuration);
         _sut = new AttestationTrustworthinessValidator(TimeProvider.System, options);
     }
