@@ -5,22 +5,17 @@
     ViewData["Title"] = "Home page";
 }
 
-<div class="container mt-5">
+<div class="container-md">
     <h1 class="display-4 text-center">Web Authentication</h1>
     <h2 class="fs-5 text-center text-muted">Public Key Credentials</h2>
-    <div class="container d-flex justify-content-center mt-5">
-        <div class="mb-3 w-30 text-center">
-            <input id="username" type="text" class="form-control mx-auto" placeholder="Enter username" required>
-            <span id="message" class="d-block mt-2 text-danger"></span>
 
-            <div class="align-items-center mt-3">
-                <button id="register" data-action="register" class="btn btn-primary px-4 py-2">
-                    Register
-                </button>
-                <button id="authenticate" data-action="authenticate" class="btn btn-primary px-4 py-2">
-                    Authenticate
-                </button>
-            </div>
+    <div class="main-container">
+        <input id="username" type="text" class="form-control input-text" placeholder="Enter username" />
+        <span id="message" class="d-block mt-2 mb-2 text-danger"></span>
+        <div class="button-container">
+            <button id="register" data-action="register" class="button btn btn-primary">Register</button>
+            <button id="authenticate" data-action="authenticate" class="button btn btn-primary">Authenticate</button>
         </div>
     </div>
 </div>
+

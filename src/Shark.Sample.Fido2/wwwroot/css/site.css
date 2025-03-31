@@ -20,3 +20,26 @@ html {
 body {
     margin-bottom: 60px;
 }
+
+.main-container {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    justify-content: center;
+    width: 30%;
+    margin-top: 60px;
+    margin-bottom: 60px;
+}
+
+.input-text {
+    padding: 8px;
+}
+
+.button-container {
+    display: flex;
+    gap: 10px;
+}
+
+.button {
+    flex-grow: 1;
+}
