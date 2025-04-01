@@ -221,7 +221,6 @@ public class AssertionTests
     {
         // Arrange
         PublicKeyCredentialAssertion? publicKeyCredentialAssertion = null;
-        var requestOptions = new PublicKeyCredentialRequestOptions { Challenge = [], };
 
         // Act & Assert
         Assert.ThrowsAsync<ArgumentNullException>(
