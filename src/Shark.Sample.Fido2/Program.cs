@@ -5,6 +5,18 @@ using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Logger
+builder.Logging.AddSimpleConsole(options =>
+{
+    options.IncludeScopes = false;
+    options.TimestampFormat = "dd-MM-yyyy HH:mm:ss ";
+    options.SingleLine = true;
+});
+builder.Logging.Configure(options =>
+{
+    options.ActivityTrackingOptions = ActivityTrackingOptions.None;
+});
+
 builder.Services.AddRazorPages();
 builder.Services.AddControllers();
 
