@@ -35,7 +35,8 @@ public sealed class Attestation : IAttestation
         _configuration = options.Value;
     }
 
-    public async Task<PublicKeyCredentialCreationOptions> GetOptions(PublicKeyCredentialCreationOptionsRequest request)
+    public async Task<PublicKeyCredentialCreationOptions> GetOptions(
+        PublicKeyCredentialCreationOptionsRequest request)
     {
         ArgumentNullException.ThrowIfNull(request);
 
@@ -43,12 +44,14 @@ public sealed class Attestation : IAttestation
         PublicKeyCredentialDescriptor[]? excludeCredentials = null;
         if (credentials != null && credentials.Count > 0)
         {
-            excludeCredentials = credentials.Select(c => new PublicKeyCredentialDescriptor
-            {
-                Id = c.CredentialId,
-                Transports = c.Transports?.Select(t => t.ToEnum<AuthenticatorTransport>()).ToArray() ?? [],
-                Type = PublicKeyCredentialType.PublicKey,
-            }).ToArray();
+            excludeCredentials = credentials
+                .Select(c => new PublicKeyCredentialDescriptor
+                {
+                    Id = c.CredentialId,
+                    Transports = c.Transports?.Select(t => t.ToEnum<AuthenticatorTransport>()).ToArray() ?? [],
+                    Type = PublicKeyCredentialType.PublicKey,
+                })
+                .ToArray();
         }
 
         var credentialCreationOptions = new PublicKeyCredentialCreationOptions
@@ -66,24 +69,12 @@ public sealed class Attestation : IAttestation
             },
             Challenge = _challengeGenerator.Get(),
             PublicKeyCredentialParams = PublicKeyAlgorithms.Extended
-                .Select(a => new PublicKeyCredentialParameter { Algorithm = a }).ToArray(),
+                .Select(a => new PublicKeyCredentialParameter { Algorithm = a })
+                .ToArray(),
             Timeout = _configuration.Timeout ?? DefaultTimeout,
             ExcludeCredentials = excludeCredentials ?? [],
-            AuthenticatorSelection = request.AuthenticatorSelection != null ? new AuthenticatorSelectionCriteria
-            {
-                AuthenticatorAttachment = request.AuthenticatorSelection.AuthenticatorAttachment,
-                ResidentKey = request.AuthenticatorSelection.ResidentKey,
-                RequireResidentKey = request.AuthenticatorSelection.ResidentKey == ResidentKeyRequirement.Required,
-                UserVerification = request.AuthenticatorSelection.UserVerification ??
-                    UserVerificationRequirement.Preferred,
-            }
-            : new AuthenticatorSelectionCriteria
-            {
-                ResidentKey = ResidentKeyRequirement.Discouraged,
-                RequireResidentKey = false,
-                UserVerification = UserVerificationRequirement.Preferred,
-            },
-            Attestation = request.Attestation ?? AttestationConveyancePreference.None,
+            AuthenticatorSelection = GetAuthenticatorSelection(request),
+            Attestation = GetAttestation(request.Attestation),
             Extensions = new AuthenticationExtensionsClientInputs(),
         };
 
@@ -175,5 +166,36 @@ public sealed class Attestation : IAttestation
         await _credentialRepository.Add(credential);
 
         return AttestationCompleteResult.Create();
+    }
+
+    private static AuthenticatorSelectionCriteria GetAuthenticatorSelection(
+        PublicKeyCredentialCreationOptionsRequest request)
+    {
+        return request.AuthenticatorSelection != null ?
+            new AuthenticatorSelectionCriteria
+            {
+                AuthenticatorAttachment = request.AuthenticatorSelection.AuthenticatorAttachment,
+                ResidentKey = request.AuthenticatorSelection.ResidentKey,
+                RequireResidentKey = request.AuthenticatorSelection.ResidentKey == ResidentKeyRequirement.Required,
+                UserVerification = request.AuthenticatorSelection.UserVerification ??
+                UserVerificationRequirement.Preferred,
+            }
+            : new AuthenticatorSelectionCriteria
+            {
+                ResidentKey = ResidentKeyRequirement.Discouraged,
+                RequireResidentKey = false,
+                UserVerification = UserVerificationRequirement.Preferred,
+            };
+    }
+
+    private static string GetAttestation(string? attestation)
+    {
+        if (attestation == null)
+        {
+            return AttestationConveyancePreference.None;
+        }
+
+        return AttestationConveyancePreference.Supported.Contains(attestation) ?
+            attestation : AttestationConveyancePreference.None;
     }
 }

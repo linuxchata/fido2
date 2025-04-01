@@ -31,12 +31,12 @@ internal static class AttestationStatementFormatIdentifier
     public const string AndroidSafetyNet = "android-safetynet";
 
     /// <summary>
-    /// Used with FIDO U2F authenticators
+    /// Used with FIDO U2F authenticators.
     /// </summary>
     public const string FidoU2f = "fido-u2f";
 
     /// <summary>
-    /// Used with Apple devices' platform authenticators
+    /// Used with Apple devices' platform authenticators.
     /// </summary>
     public const string Apple = "apple";
 

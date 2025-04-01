@@ -53,11 +53,13 @@ public sealed class Assertion : IAssertion
             Challenge = _challengeGenerator.Get(),
             Timeout = _configuration.Timeout,
             RpId = _configuration.RelyingPartyId,
-            AllowCredentials = credentials?.Select(c => new PublicKeyCredentialDescriptor
-            {
-                Id = c.CredentialId,
-                Transports = c.Transports?.Select(t => t.ToEnum<AuthenticatorTransport>()).ToArray() ?? [],
-            }).ToArray(),
+            AllowCredentials = credentials?
+                .Select(c => new PublicKeyCredentialDescriptor
+                {
+                    Id = c.CredentialId,
+                    Transports = c.Transports?.Select(t => t.ToEnum<AuthenticatorTransport>()).ToArray() ?? [],
+                })
+                .ToArray(),
             Username = request.Username,
             UserVerification = request.UserVerification ?? UserVerificationRequirement.Preferred,
             Extensions = new AuthenticationExtensionsClientInputs(),
