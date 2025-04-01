@@ -18,8 +18,8 @@ public class AttestationTests
 {
     private const string UserName = "testuser";
     private const string DisplayName = "Test User";
-    private const string CredentialId = "NC7_wIRhGJe0XH7huO8z9IYcMXlxVSrTfk5z2umF7Rc";
-    private const string CredentialRawId = "NC7_wIRhGJe0XH7huO8z9IYcMXlxVSrTfk5z2umF7Rc";
+    private const string CredentialId = "AQIDBA=="; // Base64 for [1,2,3,4]
+    private const string CredentialRawId = "AQIDBA==";
 
     private Mock<IClientDataHandler> _clientDataHandlerMock = null!;
     private Mock<IAttestationObjectHandler> _attestationObjectHandlerMock = null!;
