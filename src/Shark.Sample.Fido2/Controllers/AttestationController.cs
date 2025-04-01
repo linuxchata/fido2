@@ -17,7 +17,7 @@ namespace Shark.Sample.Fido2.Controllers;
 /// </summary>
 [Route("[controller]")]
 [ApiController]
-public class AttestationController(IAttestation attestation) : ControllerBase
+public class AttestationController(IAttestation attestation, ILogger<AttestationController> logger) : ControllerBase
 {
     private readonly IAttestation _attestation = attestation;
 
@@ -75,6 +75,7 @@ public class AttestationController(IAttestation attestation) : ControllerBase
         }
         else
         {
+            logger.LogWarning("{Message}", response.Message);
             return BadRequest(ServerResponse.CreateFailed(response.Message));
         }
     }

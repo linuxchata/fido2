@@ -1,7 +1,6 @@
 using System.Text;
 using Microsoft.Extensions.Options;
 using Moq;
-using Org.BouncyCastle.Asn1.Cmp;
 using Shark.Fido2.Common.Extensions;
 using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Core.Abstractions.Handlers;
@@ -11,7 +10,6 @@ using Shark.Fido2.Core.Results.Attestation;
 using Shark.Fido2.Domain;
 using Shark.Fido2.Domain.Constants;
 using Shark.Fido2.Domain.Enums;
-using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
 
 namespace Shark.Fido2.Core.Tests;
 

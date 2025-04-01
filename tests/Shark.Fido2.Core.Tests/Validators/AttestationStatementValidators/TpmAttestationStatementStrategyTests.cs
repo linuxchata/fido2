@@ -8,7 +8,6 @@ using Shark.Fido2.Core.Tests.DataReaders;
 using Shark.Fido2.Core.Validators;
 using Shark.Fido2.Core.Validators.AttestationStatementValidators;
 using Shark.Fido2.Domain;
-using Shark.Fido2.Domain.Constants;
 using Shark.Fido2.Domain.Enums;
 
 namespace Shark.Fido2.Core.Tests.Validators.AttestationStatementValidators;

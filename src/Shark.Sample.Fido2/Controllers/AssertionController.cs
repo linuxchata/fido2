@@ -16,7 +16,7 @@ namespace Shark.Sample.Fido2.Controllers;
 /// </summary>
 [Route("[controller]")]
 [ApiController]
-public class AssertionController(IAssertion assertion) : ControllerBase
+public class AssertionController(IAssertion assertion, ILogger<AttestationController> logger) : ControllerBase
 {
     private readonly IAssertion _assertion = assertion;
 
@@ -70,6 +70,7 @@ public class AssertionController(IAssertion assertion) : ControllerBase
         }
         else
         {
+            logger.LogWarning("{Message}", response.Message);
             return BadRequest(ServerResponse.CreateFailed(response.Message));
         }
     }
