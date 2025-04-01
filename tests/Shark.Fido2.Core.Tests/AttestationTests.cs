@@ -18,14 +18,15 @@ public class AttestationTests
 {
     private const string UserName = "testuser";
     private const string DisplayName = "Test User";
-    private const string CredentialId = "CredentialId";
-    private const string CredentialRawId = "CredentialRawId";
+    private const string CredentialId = "AQIDBA=="; // Base64 for [1,2,3,4]
+    private const string CredentialRawId = "AQIDBA==";
 
     private Mock<IClientDataHandler> _clientDataHandlerMock = null!;
     private Mock<IAttestationObjectHandler> _attestationObjectHandlerMock = null!;
     private Mock<IChallengeGenerator> _challengeGeneratorMock = null!;
     private Mock<ICredentialRepository> _credentialRepositoryMock = null!;
 
+    private PublicKeyCredentialAttestation _publicKeyCredentialAttestation = null!;
     private PublicKeyCredentialCreationOptions _publicKeyCredentialCreationOptions = null!;
     private PublicKeyCredentialUserEntity _publicKeyCredentialUserEntity = null!;
     private Fido2Configuration _fido2Configuration = null!;
@@ -82,6 +83,20 @@ public class AttestationTests
             RelyingPartyId = "localhost",
             RelyingPartyIdName = "Test RP",
             Timeout = 60000,
+        };
+
+        _publicKeyCredentialAttestation = new PublicKeyCredentialAttestation
+        {
+            Id = CredentialId,
+            RawId = CredentialRawId,
+            Type = PublicKeyCredentialType.PublicKey,
+            Response = new AuthenticatorAttestationResponse
+            {
+                ClientDataJson = "client-data",
+                AttestationObject = "attestation-object",
+                Transports = [AuthenticatorTransport.Internal],
+            },
+            Extensions = new AuthenticationExtensionsClientOutputs(),
         };
 
         _publicKeyCredentialUserEntity = new PublicKeyCredentialUserEntity
@@ -159,7 +174,49 @@ public class AttestationTests
     }
 
     [Test]
-    public async Task GetOptions_WhenRequestIsValid_ThenReturnsOptions()
+    public async Task GetOptions_WhenCredentialExists_ThenReturnsOptions()
+    {
+        // Arrange
+        var credential = new Credential
+        {
+            CredentialId = [7, 6, 1],
+            CredentialPublicKey = new CredentialPublicKey
+            {
+                KeyType = 2,
+                Algorithm = -7,
+            },
+            UserHandle = Encoding.UTF8.GetBytes(UserName),
+            Username = UserName,
+        };
+
+        _credentialRepositoryMock
+            .Setup(a => a.Get(UserName))
+            .ReturnsAsync([credential]);
+
+        var request = new PublicKeyCredentialCreationOptionsRequest
+        {
+            Username = UserName,
+            DisplayName = DisplayName,
+            AuthenticatorSelection = null,
+            Attestation = AttestationConveyancePreference.Direct,
+        };
+
+        // Act
+        var result = await _sut.GetOptions(request);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.ExcludeCredentials.Length, Is.EqualTo(1));
+        Assert.That(result.ExcludeCredentials[0].Id, Is.EqualTo(credential.CredentialId));
+        Assert.That(result.ExcludeCredentials[0].Type, Is.EqualTo(PublicKeyCredentialType.PublicKey));
+    }
+
+    [Test]
+    [TestCase(AttestationConveyancePreference.None)]
+    [TestCase(AttestationConveyancePreference.Indirect)]
+    [TestCase(AttestationConveyancePreference.Direct)]
+    [TestCase(AttestationConveyancePreference.Enterprise)]
+    public async Task GetOptions_WhenRequestIsValid_ThenReturnsOptions(string attestationConveyancePreference)
     {
         // Arrange
         var request = new PublicKeyCredentialCreationOptionsRequest
@@ -173,7 +230,7 @@ public class AttestationTests
                 RequireResidentKey = true,
                 UserVerification = UserVerificationRequirement.Required,
             },
-            Attestation = AttestationConveyancePreference.Direct,
+            Attestation = attestationConveyancePreference,
         };
 
         // Act
@@ -194,7 +251,7 @@ public class AttestationTests
         Assert.That(result.AuthenticatorSelection.ResidentKey, Is.EqualTo(ResidentKeyRequirement.Required));
         Assert.That(result.AuthenticatorSelection.RequireResidentKey, Is.True);
         Assert.That(result.AuthenticatorSelection.UserVerification, Is.EqualTo(UserVerificationRequirement.Required));
-        Assert.That(result.Attestation, Is.EqualTo(AttestationConveyancePreference.Direct));
+        Assert.That(result.Attestation, Is.EqualTo(attestationConveyancePreference));
     }
 
     #endregion
@@ -206,58 +263,46 @@ public class AttestationTests
     {
         // Arrange
         PublicKeyCredentialAttestation? publicKeyCredentialAttestation = null;
-        var creationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
 
         // Act & Assert
         Assert.ThrowsAsync<ArgumentNullException>(() =>
-            _sut.Complete(publicKeyCredentialAttestation!, creationOptions));
+            _sut.Complete(publicKeyCredentialAttestation!, _publicKeyCredentialCreationOptions));
     }
 
     [Test]
     public void Complete_WhenPublicKeyCredentialCreationOptionsIsNull_ThenThrowsArgumentNullException()
     {
         // Arrange
-        var publicKeyCredentialAttestation = new PublicKeyCredentialAttestation
-        {
-            Id = CredentialId,
-            RawId = CredentialRawId,
-            Type = PublicKeyCredentialType.PublicKey,
-            Response = new AuthenticatorAttestationResponse
-            {
-                ClientDataJson = "test-client-data",
-                AttestationObject = "test-attestation-object",
-                Transports = [],
-            },
-            Extensions = new AuthenticationExtensionsClientOutputs(),
-        };
         PublicKeyCredentialCreationOptions? creationOptions = null;
 
         // Act & Assert
         Assert.ThrowsAsync<ArgumentNullException>(() =>
-            _sut.Complete(publicKeyCredentialAttestation, creationOptions!));
+            _sut.Complete(_publicKeyCredentialAttestation, creationOptions!));
+    }
+
+    [Test]
+    public async Task Complete_WhenPublicKeyCredentialAttestationIdIsInvalid_ThenReturnsFailure()
+    {
+        // Arrange
+        _publicKeyCredentialAttestation.Id = "aaa";
+
+        // Act
+        var result = await _sut.Complete(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.IsValid, Is.False);
+        Assert.That(result.Message, Is.EqualTo("Attestation identifier is not base64url encode"));
     }
 
     [Test]
     public async Task Complete_WhenPublicKeyCredentialAttestationTypeIsInvalid_ThenReturnsFailure()
     {
         // Arrange
-        var publicKeyCredentialAttestation = new PublicKeyCredentialAttestation
-        {
-            Id = CredentialId,
-            RawId = CredentialRawId,
-            Type = "invalid-type",
-            Response = new AuthenticatorAttestationResponse
-            {
-                ClientDataJson = "test-client-data",
-                AttestationObject = "test-attestation-object",
-                Transports = [],
-            },
-            Extensions = new AuthenticationExtensionsClientOutputs(),
-        };
-        var creationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
+        _publicKeyCredentialAttestation.Type = "invalid-type";
 
         // Act
-        var result = await _sut.Complete(publicKeyCredentialAttestation, creationOptions);
+        var result = await _sut.Complete(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -269,18 +314,10 @@ public class AttestationTests
     public async Task Complete_WhenResponseIsNull_ThenReturnsFailure()
     {
         // Arrange
-        var publicKeyCredentialAttestation = new PublicKeyCredentialAttestation
-        {
-            Id = CredentialId,
-            RawId = CredentialRawId,
-            Type = PublicKeyCredentialType.PublicKey,
-            Response = null!,
-            Extensions = new AuthenticationExtensionsClientOutputs(),
-        };
-        var publicKeyCredentialCreationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
+        _publicKeyCredentialAttestation.Response = null!;
 
         // Act
-        var result = await _sut.Complete(publicKeyCredentialAttestation, publicKeyCredentialCreationOptions);
+        var result = await _sut.Complete(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -292,18 +329,11 @@ public class AttestationTests
     public async Task Complete_WhenClientDataHasError_ThenReturnsFailure()
     {
         // Arrange
-        var publicKeyCredentialAttestation = new PublicKeyCredentialAttestation
+        _publicKeyCredentialAttestation.Response = new AuthenticatorAttestationResponse
         {
-            Id = CredentialId,
-            RawId = CredentialRawId,
-            Type = PublicKeyCredentialType.PublicKey,
-            Response = new AuthenticatorAttestationResponse
-            {
-                ClientDataJson = "invalid-data",
-                AttestationObject = "attestation-object",
-                Transports = [],
-            },
-            Extensions = new AuthenticationExtensionsClientOutputs(),
+            ClientDataJson = "invalid-data",
+            AttestationObject = "attestation-object",
+            Transports = [],
         };
 
         _clientDataHandlerMock
@@ -311,7 +341,7 @@ public class AttestationTests
             .Returns(new InternalResult<ClientData>("Client data validation failed"));
 
         // Act
-        var result = await _sut.Complete(publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions);
+        var result = await _sut.Complete(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -323,18 +353,11 @@ public class AttestationTests
     public async Task Complete_WhenAttestationObjectHasError_ThenReturnsFailure()
     {
         // Arrange
-        var publicKeyCredentialAttestation = new PublicKeyCredentialAttestation
+        _publicKeyCredentialAttestation.Response = new AuthenticatorAttestationResponse
         {
-            Id = CredentialId,
-            RawId = CredentialRawId,
-            Type = PublicKeyCredentialType.PublicKey,
-            Response = new AuthenticatorAttestationResponse
-            {
-                ClientDataJson = "client-data",
-                AttestationObject = "invalid-attestation",
-                Transports = [],
-            },
-            Extensions = new AuthenticationExtensionsClientOutputs(),
+            ClientDataJson = "client-data",
+            AttestationObject = "invalid-attestation",
+            Transports = [],
         };
 
         _attestationObjectHandlerMock
@@ -345,7 +368,7 @@ public class AttestationTests
             .ReturnsAsync(new InternalResult<AttestationObjectData>("Attestation object validation failed"));
 
         // Act
-        var result = await _sut.Complete(publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions);
+        var result = await _sut.Complete(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -357,20 +380,6 @@ public class AttestationTests
     public async Task Complete_WhenCredentialAlreadyExists_ThenReturnsFailure()
     {
         // Arrange
-        var publicKeyCredential = new PublicKeyCredentialAttestation
-        {
-            Id = CredentialId,
-            RawId = CredentialRawId,
-            Type = PublicKeyCredentialType.PublicKey,
-            Response = new AuthenticatorAttestationResponse
-            {
-                ClientDataJson = "client-data",
-                AttestationObject = "attestation-object",
-                Transports = [AuthenticatorTransport.Internal],
-            },
-            Extensions = new AuthenticationExtensionsClientOutputs(),
-        };
-
         _credentialRepositoryMock
             .Setup(a => a.Get(It.IsAny<byte[]>()))
             .ReturnsAsync(new Credential
@@ -386,7 +395,7 @@ public class AttestationTests
             });
 
         // Act
-        var result = await _sut.Complete(publicKeyCredential, _publicKeyCredentialCreationOptions);
+        var result = await _sut.Complete(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -398,28 +407,14 @@ public class AttestationTests
     public async Task Complete_WhenPublicKeyCredentialAttestationIsValid_ThenAddsCredentialAndReturnsSuccess()
     {
         // Arrange
-        var publicKeyCredentialAttestation = new PublicKeyCredentialAttestation
-        {
-            Id = CredentialId,
-            RawId = CredentialRawId,
-            Type = PublicKeyCredentialType.PublicKey,
-            Response = new AuthenticatorAttestationResponse
-            {
-                ClientDataJson = "client-data",
-                AttestationObject = "attestation-object",
-                Transports = [AuthenticatorTransport.Internal, AuthenticatorTransport.Usb],
-            },
-            Extensions = new AuthenticationExtensionsClientOutputs(),
-        };
-
-        Credential? addedCredential = null;
+        Credential? credential = null;
         _credentialRepositoryMock
             .Setup(a => a.Add(It.IsAny<Credential>()))
-            .Callback<Credential>(c => addedCredential = c)
+            .Callback<Credential>(c => credential = c)
             .Returns(Task.CompletedTask);
 
         // Act
-        var result = await _sut.Complete(publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions);
+        var result = await _sut.Complete(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -427,22 +422,22 @@ public class AttestationTests
         Assert.That(result.Message, Is.Null);
 
         _credentialRepositoryMock.Verify(a => a.Add(It.IsAny<Credential>()), Times.Once);
-        Assert.That(addedCredential, Is.Not.Null);
-        Assert.That(addedCredential!.CredentialId, Is.EqualTo(new byte[] { 1, 2, 3, 4 }));
-        Assert.That(addedCredential.CredentialPublicKey.KeyType, Is.EqualTo(2));
-        Assert.That(addedCredential.CredentialPublicKey.Algorithm, Is.EqualTo(-7));
-        Assert.That(addedCredential.CredentialPublicKey.Curve, Is.EqualTo(1));
-        Assert.That(addedCredential.CredentialPublicKey.XCoordinate, Is.EqualTo(new byte[] { 5, 6, 7, 8 }));
-        Assert.That(addedCredential.CredentialPublicKey.YCoordinate, Is.EqualTo(new byte[] { 9, 10, 11, 12 }));
-        Assert.That(addedCredential.SignCount, Is.EqualTo(1));
-        Assert.That(addedCredential.Transports, Is.EquivalentTo(new[] { "internal", "usb" }));
+        Assert.That(credential, Is.Not.Null);
+        Assert.That(credential!.CredentialId, Is.EqualTo(new byte[] { 1, 2, 3, 4 }));
+        Assert.That(credential.CredentialPublicKey.KeyType, Is.EqualTo(2));
+        Assert.That(credential.CredentialPublicKey.Algorithm, Is.EqualTo(-7));
+        Assert.That(credential.CredentialPublicKey.Curve, Is.EqualTo(1));
+        Assert.That(credential.CredentialPublicKey.XCoordinate, Is.EqualTo(new byte[] { 5, 6, 7, 8 }));
+        Assert.That(credential.CredentialPublicKey.YCoordinate, Is.EqualTo(new byte[] { 9, 10, 11, 12 }));
+        Assert.That(credential.SignCount, Is.EqualTo(1));
+        Assert.That(credential.Transports, Is.EquivalentTo(["internal"]));
     }
 
     [Test]
     public async Task Complete_WheniPhoneAndPublicKeyCredentialAttestationIsValid_ThenReturnsSuccess()
     {
         // Arrange
-        var publicKeyCredential = new PublicKeyCredentialAttestation
+        var publicKeyCredentialAttestation = new PublicKeyCredentialAttestation
         {
             Id = "0g4ho5WAlHIjp98Ty01Xi0e8YlU",
             RawId = "0g4ho5WAlHIjp98Ty01Xi0e8YlU=",
@@ -457,12 +452,11 @@ public class AttestationTests
         };
 
         var expectedChallenge = "t2pJGIQ7Y4DXF2b98tnBjg";
-        var publicKeyCredentialCreationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
-        publicKeyCredentialCreationOptions.Challenge = Convert.FromBase64String($"{expectedChallenge}==");
-        publicKeyCredentialCreationOptions.User = _publicKeyCredentialUserEntity;
+        _publicKeyCredentialCreationOptions.Challenge = Convert.FromBase64String($"{expectedChallenge}==");
+        _publicKeyCredentialCreationOptions.User = _publicKeyCredentialUserEntity;
 
         // Act
-        var result = await _sut.Complete(publicKeyCredential, publicKeyCredentialCreationOptions);
+        var result = await _sut.Complete(publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -474,7 +468,7 @@ public class AttestationTests
     public async Task Complete_WhenWindowsAndPublicKeyCredentialAttestationIsValid_ThenReturnsSuccess()
     {
         // Arrange
-        var publicKeyCredential = new PublicKeyCredentialAttestation
+        var publicKeyCredentialAttestation = new PublicKeyCredentialAttestation
         {
             Id = "eCmlfd8Sr1hLO0eSLBvXuezT4_HSL5xJ31pOSbUkPks",
             RawId = "eCmlfd8Sr1hLO0eSLBvXuezT4/HSL5xJ31pOSbUkPks=",
@@ -489,12 +483,11 @@ public class AttestationTests
         };
 
         var expectedChallenge = "gsjJTjg3rcml3cfELwxAxQ";
-        var publicKeyCredentialCreationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
-        publicKeyCredentialCreationOptions.Challenge = Convert.FromBase64String($"{expectedChallenge}==");
-        publicKeyCredentialCreationOptions.User = _publicKeyCredentialUserEntity;
+        _publicKeyCredentialCreationOptions.Challenge = Convert.FromBase64String($"{expectedChallenge}==");
+        _publicKeyCredentialCreationOptions.User = _publicKeyCredentialUserEntity;
 
         // Act
-        var result = await _sut.Complete(publicKeyCredential, publicKeyCredentialCreationOptions);
+        var result = await _sut.Complete(publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);

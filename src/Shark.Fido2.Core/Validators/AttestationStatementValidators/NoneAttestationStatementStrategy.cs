@@ -8,16 +8,16 @@ namespace Shark.Fido2.Core.Validators.AttestationStatementValidators;
 /// <summary>
 /// Implementation of the None attestation statement validation strategy.
 /// This validates attestation statements according to the FIDO2 specification section 8.7.
-/// See: https://www.w3.org/TR/webauthn/#sctn-none-attestation
+/// See: https://www.w3.org/TR/webauthn/#sctn-none-attestation.
 /// </summary>
 internal class NoneAttestationStatementStrategy : IAttestationStatementStrategy
 {
     /// <summary>
     /// Validates a None attestation statement.
     /// </summary>
-    /// <param name="attestationObjectData">The attestation object data containing the statement to validate</param>
-    /// <param name="clientData">The client data associated with the attestation</param>
-    /// <returns>A ValidatorInternalResult indicating whether the attestation statement is valid</returns>
+    /// <param name="attestationObjectData">The attestation object data containing the statement to validate.</param>
+    /// <param name="clientData">The client data associated with the attestation.</param>
+    /// <returns>A ValidatorInternalResult indicating whether the attestation statement is valid.</returns>
     public ValidatorInternalResult Validate(AttestationObjectData attestationObjectData, ClientData clientData)
     {
         if (attestationObjectData.AttestationStatement is not Dictionary<string, object> attestationStatementDict)

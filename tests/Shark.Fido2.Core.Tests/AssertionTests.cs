@@ -19,8 +19,8 @@ namespace Shark.Fido2.Core.Tests;
 public class AssertionTests
 {
     private const string UserName = "testuser";
-    private const string CredentialId = "CredentialId";
-    private const string CredentialRawId = "AQIDBA=="; // Base64 for [1,2,3,4]
+    private const string CredentialId = "AQIDBA=="; // Base64 for [1,2,3,4]
+    private const string CredentialRawId = "AQIDBA==";
 
     private Mock<IClientDataHandler> _clientDataHandlerMock = null!;
     private Mock<IAssertionObjectHandler> _assertionObjectHandlerMock = null!;
@@ -221,7 +221,6 @@ public class AssertionTests
     {
         // Arrange
         PublicKeyCredentialAssertion? publicKeyCredentialAssertion = null;
-        var requestOptions = new PublicKeyCredentialRequestOptions { Challenge = [], };
 
         // Act & Assert
         Assert.ThrowsAsync<ArgumentNullException>(
@@ -237,6 +236,21 @@ public class AssertionTests
         // Act & Assert
         Assert.ThrowsAsync<ArgumentNullException>(() =>
             _sut.Complete(_publicKeyCredentialAssertion, requestOptions!));
+    }
+
+    [Test]
+    public async Task Complete_WhenPublicKeyCredentialAttestationIdIsInvalid_ThenReturnsFailure()
+    {
+        // Arrange
+        _publicKeyCredentialAssertion.Id = "aaa";
+
+        // Act
+        var result = await _sut.Complete(_publicKeyCredentialAssertion, _publicKeyCredentialRequestOptions);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.IsValid, Is.False);
+        Assert.That(result.Message, Is.EqualTo("Assertion identifier is not base64url encode"));
     }
 
     [Test]

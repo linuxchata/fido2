@@ -53,11 +53,13 @@ public sealed class Assertion : IAssertion
             Challenge = _challengeGenerator.Get(),
             Timeout = _configuration.Timeout,
             RpId = _configuration.RelyingPartyId,
-            AllowCredentials = credentials?.Select(c => new PublicKeyCredentialDescriptor
-            {
-                Id = c.CredentialId,
-                Transports = c.Transports?.Select(t => t.ToEnum<AuthenticatorTransport>()).ToArray() ?? [],
-            }).ToArray(),
+            AllowCredentials = credentials?
+                .Select(c => new PublicKeyCredentialDescriptor
+                {
+                    Id = c.CredentialId,
+                    Transports = c.Transports?.Select(t => t.ToEnum<AuthenticatorTransport>()).ToArray() ?? [],
+                })
+                .ToArray(),
             Username = request.Username,
             UserVerification = request.UserVerification ?? UserVerificationRequirement.Preferred,
             Extensions = new AuthenticationExtensionsClientInputs(),
@@ -98,7 +100,7 @@ public sealed class Assertion : IAssertion
         var credentialId = publicKeyCredentialAssertion.RawId.FromBase64Url();
         if (requestOptions.AllowCredentials != null && requestOptions.AllowCredentials.Length != 0)
         {
-            if (!requestOptions.AllowCredentials!.Any(c => BytesArrayComparer.CompareNullable(c.Id, credentialId)))
+            if (!requestOptions.AllowCredentials.Any(c => BytesArrayComparer.CompareNullable(c.Id, credentialId)))
             {
                 return AssertionCompleteResult.CreateFailure(
                     "Assertion response does not contain expected credential identifier");

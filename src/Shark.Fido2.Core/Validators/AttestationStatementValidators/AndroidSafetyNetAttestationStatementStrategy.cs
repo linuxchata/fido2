@@ -13,7 +13,7 @@ namespace Shark.Fido2.Core.Validators.AttestationStatementValidators;
 /// <summary>
 /// Implementation of the Android SafetyNet attestation statement validation strategy.
 /// This validates attestation statements according to the FIDO2 specification section 8.5.
-/// See: https://www.w3.org/TR/webauthn/#sctn-android-safetynet-attestation
+/// See: https://www.w3.org/TR/webauthn/#sctn-android-safetynet-attestation.
 /// </summary>
 internal class AndroidSafetyNetAttestationStatementStrategy : IAttestationStatementStrategy
 {
@@ -37,11 +37,11 @@ internal class AndroidSafetyNetAttestationStatementStrategy : IAttestationStatem
     /// <summary>
     /// Validates an Android SafetyNet attestation statement.
     /// </summary>
-    /// <param name="attestationObjectData">The attestation object data containing the statement to validate</param>
-    /// <param name="clientData">The client data associated with the attestation</param>
-    /// <returns>A ValidatorInternalResult indicating whether the attestation statement is valid</returns>
-    /// <exception cref="ArgumentNullException">Thrown when attestationObjectData or clientData is null</exception>
-    /// <exception cref="ArgumentException">Thrown when attestation statement cannot be read</exception>
+    /// <param name="attestationObjectData">The attestation object data containing the statement to validate.</param>
+    /// <param name="clientData">The client data associated with the attestation.</param>
+    /// <returns>A ValidatorInternalResult indicating whether the attestation statement is valid.</returns>
+    /// <exception cref="ArgumentNullException">Thrown when attestationObjectData or clientData is null.</exception>
+    /// <exception cref="ArgumentException">Thrown when attestation statement cannot be read.</exception>
     public ValidatorInternalResult Validate(AttestationObjectData attestationObjectData, ClientData clientData)
     {
         ArgumentNullException.ThrowIfNull(attestationObjectData);

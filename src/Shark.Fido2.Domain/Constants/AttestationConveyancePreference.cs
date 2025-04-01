@@ -13,4 +13,9 @@ public static class AttestationConveyancePreference
     public const string Direct = "direct";
 
     public const string Enterprise = "enterprise";
+
+    public readonly static HashSet<string> Supported =
+    [
+        None, Indirect, Direct, Enterprise
+    ];
 }
