@@ -5,7 +5,7 @@
     <IsPackable>true</IsPackable>
     <Description>FIDO2 WebAuthn library</Description>
     <PackageId>Shark.Fido2.Core</PackageId>
-    <PackageTags>fido2</PackageTags>
+    <PackageTags>security;fido2;fido2-standard;passkeys</PackageTags>
     <RepositoryUrl>https://github.com/linuxchata/fido2</RepositoryUrl>
     <Product>FIDO2 WebAuthn library</Product>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
