@@ -11,7 +11,7 @@ on:
       - src/Shark.Fido2.Domain/**
       - src/Shark.Fido2.Metadata.Core/**
       - src/Shark.Fido2.Models/**
-      - src/Shark.Fido2.Repositories.InMemory/**
+      - src/Shark.Fido2.InMemory/**
   workflow_dispatch:
 
 jobs:
@@ -42,6 +42,15 @@ jobs:
     - name: Pack Models with dotnet
       run: dotnet pack ./src/Shark.Fido2.Models/Shark.Fido2.Models.csproj --configuration Release --no-restore --output ./nupkg /p:Version=0.0."${{ github.run_number }}"
 
+    - name: Restore dependencies for InMemory
+      run: dotnet restore ./src/Shark.Fido2.InMemory/Shark.Fido2.InMemory.csproj
+
+    - name: Build InMemory with dotnet
+      run: dotnet build ./src/Shark.Fido2.InMemory/Shark.Fido2.InMemory.csproj --configuration Release --no-restore
+
+    - name: Pack InMemory with dotnet
+      run: dotnet pack ./src/Shark.Fido2.InMemory/Shark.Fido2.InMemory.csproj --configuration Release --no-restore --output ./nupkg /p:Version=0.0."${{ github.run_number }}"
+
     - name: Add nuget source
       run: dotnet nuget add source --username linuxchata --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/linuxchata/index.json"
 
@@ -56,3 +65,9 @@ jobs:
 
     - name: Push Models nuget to nuget.org
       run: dotnet nuget push "./nupkg/Shark.Fido2.Models.*.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+
+    - name: Push InMemory nuget to github.com
+      run: dotnet nuget push "./nupkg/Shark.Fido2.InMemory.*.nupkg" --api-key ${{ secrets.OAUTH_GITHUB_PAT }} --source "github" --skip-duplicate
+
+    - name: Push InMemory nuget to nuget.org
+      run: dotnet nuget push "./nupkg/Shark.Fido2.InMemory.*.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
