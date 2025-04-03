@@ -9,6 +9,8 @@
     <RepositoryUrl>https://github.com/linuxchata/fido2</RepositoryUrl>
     <Product>FIDO2 WebAuthn library</Product>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PublishTrimmed>true</PublishTrimmed>
+    <EnableTrimAnalyzer>true</EnableTrimAnalyzer>
   </PropertyGroup>
 
   <ItemGroup>
