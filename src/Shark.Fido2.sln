@@ -13,7 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0DBAB265
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.Core.Tests", "..\tests\Shark.Fido2.Core.Tests\Shark.Fido2.Core.Tests.csproj", "{41DB6C7C-A63E-4654-A32C-D1E551218693}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.InMemory", "Shark.Fido2.Repositories.InMemory\Shark.Fido2.InMemory.csproj", "{8CEAE035-58ED-4E86-AEDC-6E61487702F2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.InMemory", "Shark.Fido2.InMemory\Shark.Fido2.InMemory.csproj", "{8CEAE035-58ED-4E86-AEDC-6E61487702F2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.Models", "Shark.Fido2.Models\Shark.Fido2.Models.csproj", "{DD27C759-32C7-4A09-BD6C-9CB1F1F47110}"
 EndProject

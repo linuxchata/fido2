@@ -23,7 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Shark.Fido2.Core\Shark.Fido2.Core.csproj" />
     <ProjectReference Include="..\Shark.Fido2.Models\Shark.Fido2.Models.csproj" />
-    <ProjectReference Include="..\Shark.Fido2.Repositories.InMemory\Shark.Fido2.InMemory.csproj" />
+    <ProjectReference Include="..\Shark.Fido2.InMemory\Shark.Fido2.InMemory.csproj" />
   </ItemGroup>
 
 </Project>
