@@ -8,7 +8,7 @@
     <PackageTags>fido2</PackageTags>
     <RepositoryUrl>https://github.com/linuxchata/fido2</RepositoryUrl>
     <Product>FIDO2 WebAuthn library</Product>
-    <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -44,7 +44,7 @@
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
   </PropertyGroup>
 
-  <Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">
+  <Target DependsOnTargets="BuildOnlySettings;ResolveReferences" Name="CopyProjectReferencesToPackage">
     <ItemGroup>
       <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))" />
     </ItemGroup>
@@ -52,5 +52,10 @@
 
   <ItemGroup>
     <None Include="README.md" Pack="true" PackagePath="\" />
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
+
 </Project>
