@@ -5,6 +5,10 @@
     <IsPackable>true</IsPackable>
     <Description>FIDO2 WebAuthn library</Description>
     <PackageId>Shark.Fido2.Core</PackageId>
+    <PackageTags>fido2</PackageTags>
+    <RepositoryUrl>https://github.com/linuxchata/fido2</RepositoryUrl>
+    <Product>FIDO2 WebAuthn library</Product>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -23,7 +27,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Shark.Fido2.Common\Shark.Fido2.Common.csproj" />
-    <ProjectReference Include="..\Shark.Fido2.Domain\Shark.Fido2.Domain.csproj" PrivateAssets="None" />
+    <ProjectReference Include="..\Shark.Fido2.Domain\Shark.Fido2.Domain.csproj" Pack="true" PrivateAssets="None" />
     <ProjectReference Include="..\Shark.Fido2.Metadata.Core\Shark.Fido2.Metadata.Core.csproj" />
   </ItemGroup>
 
