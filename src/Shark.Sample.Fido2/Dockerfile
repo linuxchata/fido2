@@ -12,7 +12,7 @@ COPY ["src/Shark.Fido2.Core/Shark.Fido2.Core.csproj", "Shark.Fido2.Core/"]
 COPY ["src/Shark.Fido2.Common/Shark.Fido2.Common.csproj", "Shark.Fido2.Common/"]
 COPY ["src/Shark.Fido2.Domain/Shark.Fido2.Domain.csproj", "Shark.Fido2.Domain/"]
 COPY ["src/Shark.Fido2.Models/Shark.Fido2.Models.csproj", "Shark.Fido2.Models/"]
-COPY ["src/Shark.Fido2.Repositories.InMemory/Shark.Fido2.Repositories.InMemory.csproj", "Shark.Fido2.Repositories.InMemory/"]
+COPY ["src/Shark.Fido2.InMemory/Shark.Fido2.InMemory.csproj", "Shark.Fido2.InMemory/"]
 RUN dotnet restore "Shark.Sample.Fido2/Shark.Sample.Fido2.csproj"
 COPY . .
 WORKDIR "/src/Shark.Sample.Fido2"
