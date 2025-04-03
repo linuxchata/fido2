@@ -24,6 +24,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Shark.Fido2.Common\Shark.Fido2.Common.csproj" />
+    <ProjectReference Include="..\..\src\Shark.Fido2.Domain\Shark.Fido2.Domain.csproj" />
     <ProjectReference Include="..\..\src\Shark.Fido2.Models\Shark.Fido2.Models.csproj" />
   </ItemGroup>
 
