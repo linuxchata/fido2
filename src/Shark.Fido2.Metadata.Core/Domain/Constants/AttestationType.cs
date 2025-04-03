@@ -1,4 +1,4 @@
-﻿namespace Shark.Fido2.Metadata.Domain.Constants;
+﻿namespace Shark.Fido2.Metadata.Core.Domain.Constants;
 
 /// <summary>
 /// Authenticator attestation types

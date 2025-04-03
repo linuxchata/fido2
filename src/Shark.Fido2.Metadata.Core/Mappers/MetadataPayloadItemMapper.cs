@@ -1,5 +1,5 @@
-﻿using Shark.Fido2.Metadata.Core.Models;
-using Shark.Fido2.Metadata.Domain;
+﻿using Shark.Fido2.Metadata.Core.Domain;
+using Shark.Fido2.Metadata.Core.Models;
 
 namespace Shark.Fido2.Metadata.Core.Mappers;
 

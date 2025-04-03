@@ -1,4 +1,4 @@
-﻿namespace Shark.Fido2.Metadata.Domain;
+﻿namespace Shark.Fido2.Metadata.Core.Domain;
 
 public sealed class StatusReport
 {

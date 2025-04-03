@@ -1,4 +1,4 @@
-﻿using Shark.Fido2.Metadata.Domain;
+﻿using Shark.Fido2.Metadata.Core.Domain;
 
 namespace Shark.Fido2.Metadata.Core.Abstractions;
 

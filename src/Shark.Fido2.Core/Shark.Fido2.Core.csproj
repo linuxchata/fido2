@@ -26,16 +26,25 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Shark.Fido2.Common\Shark.Fido2.Common.csproj" />
-    <ProjectReference Include="..\Shark.Fido2.Domain\Shark.Fido2.Domain.csproj" Pack="true" PrivateAssets="None" />
-    <ProjectReference Include="..\Shark.Fido2.Metadata.Core\Shark.Fido2.Metadata.Core.csproj" />
+    <ProjectReference Include="..\Shark.Fido2.Common\Shark.Fido2.Common.csproj">
+      <IncludeAssets></IncludeAssets>
+      <ReferenceOutputAssembly>True</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\Shark.Fido2.Domain\Shark.Fido2.Domain.csproj">
+      <IncludeAssets></IncludeAssets>
+      <ReferenceOutputAssembly>True</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\Shark.Fido2.Metadata.Core\Shark.Fido2.Metadata.Core.csproj">
+      <IncludeAssets></IncludeAssets>
+      <ReferenceOutputAssembly>True</ReferenceOutputAssembly>
+    </ProjectReference>
   </ItemGroup>
 
   <PropertyGroup>
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
   </PropertyGroup>
 
-  <Target Name="CopyProjectReferencesToPackage" DependsOnTargets="ResolveReferences">
+  <Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">
     <ItemGroup>
       <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))" />
     </ItemGroup>
