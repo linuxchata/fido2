@@ -1,12 +1,6 @@
 name: build_docker_image
 
 on:
-  push:
-    branches: [ "main" ]
-    paths:
-      - src/**
-  pull_request:
-    branches: [ "main" ]
   workflow_dispatch:
 
 jobs:
