@@ -6,7 +6,7 @@ using Shark.Fido2.Domain;
 
 namespace Shark.Fido2.InMemory;
 
-public sealed class CredentialRepository : ICredentialRepository
+internal sealed class CredentialRepository : ICredentialRepository
 {
     private const string CredentialKeyPrefix = "credential:";
     private const string UsernameKeyPrefix = "user:";
