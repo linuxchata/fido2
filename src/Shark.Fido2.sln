@@ -25,6 +25,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.Common", "Shark
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.Metadata.Core", "Shark.Fido2.Metadata.Core\Shark.Fido2.Metadata.Core.csproj", "{09F40C48-8F5D-4807-A957-9532BE969685}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Portal.Fido2", "Shark.Portal.Fido2\Shark.Portal.Fido2.csproj", "{C247B935-3422-42FF-8E8E-DF34A018B89B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,10 @@ Global
 		{09F40C48-8F5D-4807-A957-9532BE969685}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09F40C48-8F5D-4807-A957-9532BE969685}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09F40C48-8F5D-4807-A957-9532BE969685}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C247B935-3422-42FF-8E8E-DF34A018B89B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C247B935-3422-42FF-8E8E-DF34A018B89B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C247B935-3422-42FF-8E8E-DF34A018B89B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C247B935-3422-42FF-8E8E-DF34A018B89B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
