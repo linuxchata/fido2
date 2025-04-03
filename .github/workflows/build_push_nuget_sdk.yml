@@ -1,17 +1,6 @@
 name: build_push_nuget_sdk
 
 on:
-  push:
-    branches:
-      - main
-      - feature/nuget-**
-    paths:
-      - src/Shark.Fido2.Common/**
-      - src/Shark.Fido2.Core/**
-      - src/Shark.Fido2.Domain/**
-      - src/Shark.Fido2.Metadata.Core/**
-      - src/Shark.Fido2.Models/**
-      - src/Shark.Fido2.InMemory/**
   workflow_dispatch:
 
 jobs:
