@@ -9,7 +9,7 @@ using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain;
 using Shark.Fido2.Domain.Enums;
 using Shark.Fido2.Metadata.Core.Abstractions;
-using Shark.Fido2.Metadata.Domain;
+using Shark.Fido2.Metadata.Core.Domain;
 
 namespace Shark.Fido2.Core.Validators;
 

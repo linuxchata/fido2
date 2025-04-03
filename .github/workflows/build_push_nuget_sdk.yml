@@ -37,5 +37,8 @@ jobs:
     - name: Add nuget source
       run: dotnet nuget add source --username linuxchata --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/linuxchata/index.json"
 
-    - name: Push nuget
+    - name: Push nuget to github.com
       run: dotnet nuget push "./nupkg/Shark.Fido2.Core.*.nupkg" --api-key ${{ secrets.OAUTH_GITHUB_PAT }} --source "github" --skip-duplicate
+
+    - name: Push nuget to nuget.org
+      run: dotnet nuget push "./nupkg/Shark.Fido2.Core.*.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate

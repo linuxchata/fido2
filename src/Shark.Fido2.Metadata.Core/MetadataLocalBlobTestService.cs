@@ -3,9 +3,9 @@ using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Options;
 using Shark.Fido2.Metadata.Core.Abstractions;
 using Shark.Fido2.Metadata.Core.Configurations;
+using Shark.Fido2.Metadata.Core.Domain;
 using Shark.Fido2.Metadata.Core.Mappers;
 using Shark.Fido2.Metadata.Core.Models;
-using Shark.Fido2.Metadata.Domain;
 
 namespace Shark.Fido2.Metadata.Core;
 

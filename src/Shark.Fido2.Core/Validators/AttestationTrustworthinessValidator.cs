@@ -4,8 +4,8 @@ using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Configurations;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain.Enums;
-using Shark.Fido2.Metadata.Domain;
-using Shark.Fido2.Metadata.Domain.Constants;
+using Shark.Fido2.Metadata.Core.Domain;
+using Shark.Fido2.Metadata.Core.Domain.Constants;
 
 namespace Shark.Fido2.Core.Validators;
 

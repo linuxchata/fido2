@@ -1,6 +1,6 @@
-﻿using Shark.Fido2.Metadata.Domain.Constants;
+﻿using Shark.Fido2.Metadata.Core.Domain.Constants;
 
-namespace Shark.Fido2.Metadata.Domain;
+namespace Shark.Fido2.Metadata.Core.Domain;
 
 public sealed class MetadataPayloadItem
 {
