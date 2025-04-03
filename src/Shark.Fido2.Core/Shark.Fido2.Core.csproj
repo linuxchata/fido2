@@ -8,7 +8,7 @@
     <PackageTags>fido2</PackageTags>
     <RepositoryUrl>https://github.com/linuxchata/fido2</RepositoryUrl>
     <Product>FIDO2 WebAuthn library</Product>
-    <PackageLicenseExpression>BSD-3-Clause license</PackageLicenseExpression>
+    <PackageLicenseExpression>BSD-3-Clause</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
