@@ -4,7 +4,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <IsPackable>true</IsPackable>
     <Description>FIDO2 WebAuthn library</Description>
-    <PackageId>Shark.Fido2</PackageId>
+    <PackageId>Shark.Fido2.Core</PackageId>
   </PropertyGroup>
 
   <ItemGroup>
