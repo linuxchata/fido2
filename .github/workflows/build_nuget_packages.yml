@@ -1,4 +1,4 @@
-name: build_push_nuget_sdk
+name: Build NuGet packages
 
 on:
   workflow_dispatch:
