@@ -17,9 +17,12 @@ dotnet_diagnostic.CA2217.severity = warning
 dotnet_diagnostic.TS6387.severity = none
 
 dotnet_diagnostic.IDE1006.severity = none
+dotnet_diagnostic.IDE0290.severity = none
 
 dotnet_diagnostic.SA1201.severity = none
 dotnet_diagnostic.SA1124.severity = none
+
+dotnet_diagnostic.NUnit2045.severity = none
 
 [*.{cs,vb}]
 #### Naming styles ####

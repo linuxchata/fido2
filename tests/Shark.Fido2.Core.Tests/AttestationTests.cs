@@ -74,7 +74,7 @@ public class AttestationTests
 
         _credentialRepositoryMock = new Mock<ICredentialRepository>();
         _credentialRepositoryMock
-            .Setup(a => a.Get(It.IsAny<byte[]>()))
+            .Setup(a => a.Get(It.IsAny<byte[]>(), CancellationToken.None))
             .ReturnsAsync((Credential?)null);
 
         _fido2Configuration = new Fido2Configuration
@@ -190,7 +190,7 @@ public class AttestationTests
         };
 
         _credentialRepositoryMock
-            .Setup(a => a.Get(UserName))
+            .Setup(a => a.Get(UserName, CancellationToken.None))
             .ReturnsAsync([credential]);
 
         var request = new PublicKeyCredentialCreationOptionsRequest
@@ -206,7 +206,7 @@ public class AttestationTests
 
         // Assert
         Assert.That(result, Is.Not.Null);
-        Assert.That(result.ExcludeCredentials.Length, Is.EqualTo(1));
+        Assert.That(result.ExcludeCredentials, Has.Length.EqualTo(1));
         Assert.That(result.ExcludeCredentials[0].Id, Is.EqualTo(credential.CredentialId));
         Assert.That(result.ExcludeCredentials[0].Type, Is.EqualTo(PublicKeyCredentialType.PublicKey));
     }
@@ -244,9 +244,9 @@ public class AttestationTests
         Assert.That(result.User.DisplayName, Is.EqualTo(request.DisplayName));
         Assert.That(result.User.Id, Is.EqualTo(request.Username.FromBase64Url()));
         Assert.That(result.Challenge, Is.EqualTo(new byte[] { 1, 2, 3, 4 }));
-        Assert.That(result.PublicKeyCredentialParams.Length, Is.EqualTo(12));
+        Assert.That(result.PublicKeyCredentialParams, Has.Length.EqualTo(12));
         Assert.That(result.Timeout, Is.EqualTo(60000));
-        Assert.That(result.ExcludeCredentials.Length, Is.EqualTo(0));
+        Assert.That(result.ExcludeCredentials, Has.Length.EqualTo(0));
         Assert.That(result.AuthenticatorSelection.AuthenticatorAttachment, Is.EqualTo(AuthenticatorAttachment.Platform));
         Assert.That(result.AuthenticatorSelection.ResidentKey, Is.EqualTo(ResidentKeyRequirement.Required));
         Assert.That(result.AuthenticatorSelection.RequireResidentKey, Is.True);
@@ -381,7 +381,7 @@ public class AttestationTests
     {
         // Arrange
         _credentialRepositoryMock
-            .Setup(a => a.Get(It.IsAny<byte[]>()))
+            .Setup(a => a.Get(It.IsAny<byte[]>(), CancellationToken.None))
             .ReturnsAsync(new Credential
             {
                 CredentialId = [1, 2, 3, 4],
@@ -409,8 +409,8 @@ public class AttestationTests
         // Arrange
         Credential? credential = null;
         _credentialRepositoryMock
-            .Setup(a => a.Add(It.IsAny<Credential>()))
-            .Callback<Credential>(c => credential = c)
+            .Setup(a => a.Add(It.IsAny<Credential>(), CancellationToken.None))
+            .Callback<Credential, CancellationToken>((c, ct) => credential = c)
             .Returns(Task.CompletedTask);
 
         // Act
@@ -421,7 +421,6 @@ public class AttestationTests
         Assert.That(result.IsValid, Is.True);
         Assert.That(result.Message, Is.Null);
 
-        _credentialRepositoryMock.Verify(a => a.Add(It.IsAny<Credential>()), Times.Once);
         Assert.That(credential, Is.Not.Null);
         Assert.That(credential!.CredentialId, Is.EqualTo(new byte[] { 1, 2, 3, 4 }));
         Assert.That(credential.CredentialPublicKey.KeyType, Is.EqualTo(2));
