@@ -1,5 +1,4 @@
-﻿using System.Text;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Microsoft.Extensions.Caching.Distributed;
 using Shark.Fido2.Core.Abstractions.Repositories;
 using Shark.Fido2.Domain;
@@ -8,11 +7,10 @@ namespace Shark.Fido2.InMemory;
 
 internal sealed class CredentialRepository : ICredentialRepository
 {
-    private const string CredentialKeyPrefix = "credential:";
-    private const string UsernameKeyPrefix = "user:";
+    private const string CredentialKeyPrefix = "credential";
+    private const string UsernameKeyPrefix = "user";
 
-    private static readonly SemaphoreSlim _semaphoreAdd = new(1, 1);
-    private static readonly SemaphoreSlim _semaphoreUpdate = new(1, 1);
+    private static readonly SemaphoreSlim _operationLock = new(1, 1);
 
     private static readonly JsonSerializerOptions _jsonOptions = new()
     {
@@ -34,11 +32,11 @@ internal sealed class CredentialRepository : ICredentialRepository
             return null;
         }
 
-        var serializedCredential = await _cache.GetStringAsync(GetCredentialKey(id));
+        var serialized = await _cache.GetStringAsync(GetCredentialKey(id));
 
-        if (!string.IsNullOrWhiteSpace(serializedCredential))
+        if (!string.IsNullOrWhiteSpace(serialized))
         {
-            return JsonSerializer.Deserialize<Credential>(serializedCredential, _jsonOptions);
+            return JsonSerializer.Deserialize<Credential>(serialized, _jsonOptions);
         }
 
         return null;
@@ -51,11 +49,11 @@ internal sealed class CredentialRepository : ICredentialRepository
             return [];
         }
 
-        var serializedCredentials = await _cache.GetStringAsync(GetUsernameKey(username));
+        var serialized = await _cache.GetStringAsync(GetUsernameKey(username));
 
-        if (!string.IsNullOrWhiteSpace(serializedCredentials))
+        if (!string.IsNullOrWhiteSpace(serialized))
         {
-            return JsonSerializer.Deserialize<List<Credential>>(serializedCredentials, _jsonOptions) ?? [];
+            return JsonSerializer.Deserialize<List<Credential>>(serialized, _jsonOptions) ?? [];
         }
 
         return [];
@@ -65,16 +63,16 @@ internal sealed class CredentialRepository : ICredentialRepository
     {
         ArgumentNullException.ThrowIfNull(credential);
 
-        await _semaphoreAdd.WaitAsync();
+        await _operationLock.WaitAsync();
 
         try
         {
-            await AddInternal(credential);
-            await AddOrUpdateInternal(credential);
+            await AddOrUpdateForCredentialId(credential);
+            await AddForUsername(credential);
         }
         finally
         {
-            _semaphoreAdd.Release();
+            _operationLock.Release();
         }
     }
 
@@ -82,59 +80,62 @@ internal sealed class CredentialRepository : ICredentialRepository
     {
         ArgumentNullException.ThrowIfNull(credential);
 
-        await _semaphoreUpdate.WaitAsync();
-
-        credential.SignCount = signCount;
+        await _operationLock.WaitAsync();
 
         try
         {
-            await RemoveInternal(credential.CredentialId);
-            await AddInternal(credential);
+            await UpdateForCredentialId(credential, signCount);
+            await UpdateForUsername(credential, signCount);
         }
         finally
         {
-            _semaphoreUpdate.Release();
+            _operationLock.Release();
         }
     }
 
-    private async Task AddInternal(Credential credential)
+    private async Task AddOrUpdateForCredentialId(Credential credential)
     {
-        var serializedCredential = JsonSerializer.Serialize(credential, _jsonOptions);
-
-        await _cache.SetStringAsync(GetCredentialKey(credential.CredentialId), serializedCredential);
+        var serialized = JsonSerializer.Serialize(credential, _jsonOptions);
+        await _cache.SetStringAsync(GetCredentialKey(credential.CredentialId), serialized);
     }
 
-    private async Task AddOrUpdateInternal(Credential credential)
+    private async Task AddForUsername(Credential credential)
     {
-        var credentials = new List<Credential>();
-
-        var existingCredentials = await Get(credential.Username);
-
-        if (existingCredentials.Count != 0)
-        {
-            credentials.AddRange(existingCredentials);
-        }
-
+        var credentials = await Get(credential.Username);
         credentials.Add(credential);
 
-        var serializedCredentials = JsonSerializer.Serialize(credentials, _jsonOptions);
-
-        await _cache.SetStringAsync(GetUsernameKey(credential.Username), serializedCredentials);
+        var serialized = JsonSerializer.Serialize(credentials, _jsonOptions);
+        await _cache.SetStringAsync(GetUsernameKey(credential.Username), serialized);
     }
 
-    private async Task RemoveInternal(byte[] id)
+    private async Task UpdateForCredentialId(Credential credential, uint signCount)
     {
-        await _cache.RemoveAsync(GetCredentialKey(id));
+        credential.SignCount = signCount;
+
+        await AddOrUpdateForCredentialId(credential);
+    }
+
+    private async Task UpdateForUsername(Credential credential, uint signCount)
+    {
+        var credentials = await Get(credential.Username);
+
+        var targetCredential = credentials.FirstOrDefault(c => c.CredentialId.SequenceEqual(credential.CredentialId));
+        if (targetCredential != null)
+        {
+            targetCredential!.SignCount = signCount;
+
+            var serializedCredentials = JsonSerializer.Serialize(credentials, _jsonOptions);
+            await _cache.SetStringAsync(GetUsernameKey(credential.Username), serializedCredentials);
+        }
     }
 
     private static string GetCredentialKey(byte[] id)
     {
-        var idString = Encoding.ASCII.GetString(id);
-        return $"{CredentialKeyPrefix}{idString}";
+        return $"{CredentialKeyPrefix}:{Convert.ToBase64String(id)}";
     }
 
     private static string GetUsernameKey(string username)
     {
-        return $"{UsernameKeyPrefix}{username}";
+        return $"{UsernameKeyPrefix}:{username}";
     }
 }
