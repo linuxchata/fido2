@@ -25,14 +25,14 @@ internal sealed class CredentialRepository : ICredentialRepository
         _cache = cache;
     }
 
-    public async Task<Credential?> Get(byte[]? id)
+    public async Task<Credential?> Get(byte[]? id, CancellationToken cancellationToken = default)
     {
         if (id == null || id.Length == 0)
         {
             return null;
         }
 
-        var serialized = await _cache.GetStringAsync(GetCredentialKey(id));
+        var serialized = await _cache.GetStringAsync(GetCredentialKey(id), cancellationToken);
 
         if (!string.IsNullOrWhiteSpace(serialized))
         {
@@ -42,14 +42,14 @@ internal sealed class CredentialRepository : ICredentialRepository
         return null;
     }
 
-    public async Task<List<Credential>> Get(string username)
+    public async Task<List<Credential>> Get(string username, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(username))
         {
             return [];
         }
 
-        var serialized = await _cache.GetStringAsync(GetUsernameKey(username));
+        var serialized = await _cache.GetStringAsync(GetUsernameKey(username), cancellationToken);
 
         if (!string.IsNullOrWhiteSpace(serialized))
         {
@@ -59,16 +59,16 @@ internal sealed class CredentialRepository : ICredentialRepository
         return [];
     }
 
-    public async Task Add(Credential credential)
+    public async Task Add(Credential credential, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(credential);
 
-        await _operationLock.WaitAsync();
+        await _operationLock.WaitAsync(cancellationToken);
 
         try
         {
-            await AddOrUpdateForCredentialId(credential);
-            await AddForUsername(credential);
+            await AddOrUpdateForCredentialId(credential, cancellationToken);
+            await AddForUsername(credential, cancellationToken);
         }
         finally
         {
@@ -76,16 +76,16 @@ internal sealed class CredentialRepository : ICredentialRepository
         }
     }
 
-    public async Task UpdateSignCount(Credential credential, uint signCount)
+    public async Task UpdateSignCount(Credential credential, uint signCount, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(credential);
 
-        await _operationLock.WaitAsync();
+        await _operationLock.WaitAsync(cancellationToken);
 
         try
         {
-            await UpdateForCredentialId(credential, signCount);
-            await UpdateForUsername(credential, signCount);
+            await UpdateForCredentialId(credential, signCount, cancellationToken);
+            await UpdateForUsername(credential, signCount, cancellationToken);
         }
         finally
         {
@@ -93,31 +93,31 @@ internal sealed class CredentialRepository : ICredentialRepository
         }
     }
 
-    private async Task AddOrUpdateForCredentialId(Credential credential)
+    private async Task AddOrUpdateForCredentialId(Credential credential, CancellationToken cancellationToken)
     {
         var serialized = JsonSerializer.Serialize(credential, _jsonOptions);
-        await _cache.SetStringAsync(GetCredentialKey(credential.CredentialId), serialized);
+        await _cache.SetStringAsync(GetCredentialKey(credential.CredentialId), serialized, cancellationToken);
     }
 
-    private async Task AddForUsername(Credential credential)
+    private async Task AddForUsername(Credential credential, CancellationToken cancellationToken)
     {
-        var credentials = await Get(credential.Username);
+        var credentials = await Get(credential.Username, cancellationToken);
         credentials.Add(credential);
 
         var serialized = JsonSerializer.Serialize(credentials, _jsonOptions);
-        await _cache.SetStringAsync(GetUsernameKey(credential.Username), serialized);
+        await _cache.SetStringAsync(GetUsernameKey(credential.Username), serialized, cancellationToken);
     }
 
-    private async Task UpdateForCredentialId(Credential credential, uint signCount)
+    private async Task UpdateForCredentialId(Credential credential, uint signCount, CancellationToken cancellationToken)
     {
         credential.SignCount = signCount;
 
-        await AddOrUpdateForCredentialId(credential);
+        await AddOrUpdateForCredentialId(credential, cancellationToken);
     }
 
-    private async Task UpdateForUsername(Credential credential, uint signCount)
+    private async Task UpdateForUsername(Credential credential, uint signCount, CancellationToken cancellationToken)
     {
-        var credentials = await Get(credential.Username);
+        var credentials = await Get(credential.Username, cancellationToken);
 
         var targetCredential = credentials.FirstOrDefault(c => c.CredentialId.SequenceEqual(credential.CredentialId));
         if (targetCredential != null)
@@ -125,7 +125,7 @@ internal sealed class CredentialRepository : ICredentialRepository
             targetCredential!.SignCount = signCount;
 
             var serializedCredentials = JsonSerializer.Serialize(credentials, _jsonOptions);
-            await _cache.SetStringAsync(GetUsernameKey(credential.Username), serializedCredentials);
+            await _cache.SetStringAsync(GetUsernameKey(credential.Username), serializedCredentials, cancellationToken);
         }
     }
 

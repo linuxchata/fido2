@@ -74,7 +74,7 @@ public class AssertionTests
 
         _credentialRepositoryMock = new Mock<ICredentialRepository>();
         _credentialRepositoryMock
-            .Setup(a => a.Get(It.IsAny<byte[]>()))
+            .Setup(a => a.Get(It.IsAny<byte[]>(), CancellationToken.None))
             .ReturnsAsync((Credential?)null);
 
         _fido2Configuration = new Fido2Configuration
@@ -166,7 +166,7 @@ public class AssertionTests
 
         var credentials = new List<Credential>
         {
-            new Credential
+            new()
             {
                 CredentialId = [5, 6, 7, 8],
                 Username = UserName,
@@ -176,7 +176,7 @@ public class AssertionTests
             },
         };
 
-        _credentialRepositoryMock.Setup(a => a.Get(UserName)).ReturnsAsync(credentials);
+        _credentialRepositoryMock.Setup(a => a.Get(UserName, CancellationToken.None)).ReturnsAsync(credentials);
 
         // Act
         var result = await _sut.RequestOptions(request);
@@ -187,7 +187,7 @@ public class AssertionTests
         Assert.That(result.Timeout, Is.EqualTo(60000));
         Assert.That(result.RpId, Is.EqualTo("localhost"));
         Assert.That(result.AllowCredentials, Is.Not.Null);
-        Assert.That(result.AllowCredentials!.Length, Is.EqualTo(1));
+        Assert.That(result.AllowCredentials!, Has.Length.EqualTo(1));
         Assert.That(result.AllowCredentials![0].Id, Is.EqualTo(new byte[] { 5, 6, 7, 8 }));
         Assert.That(result.AllowCredentials![0].Transports, Is.EquivalentTo([AuthenticatorTransport.Internal, AuthenticatorTransport.Usb]));
         Assert.That(result.Username, Is.EqualTo(UserName));
@@ -327,7 +327,7 @@ public class AssertionTests
         };
 
         _credentialRepositoryMock
-            .Setup(a => a.Get(It.Is<byte[]>(b => BytesArrayComparer.CompareNullable(b, new byte[] { 1, 2, 3, 4 }))))
+            .Setup(a => a.Get(It.IsAny<byte[]>(), CancellationToken.None))
             .ReturnsAsync((Credential?)null);
 
         // Act
@@ -352,7 +352,7 @@ public class AssertionTests
         };
 
         _credentialRepositoryMock
-            .Setup(a => a.Get(It.Is<byte[]>(b => BytesArrayComparer.CompareNullable(b, new byte[] { 1, 2, 3, 4 }))))
+            .Setup(a => a.Get(It.IsAny<byte[]>(), CancellationToken.None))
             .ReturnsAsync(credential);
 
         _userHandlerValidatorMock
@@ -381,7 +381,7 @@ public class AssertionTests
         };
 
         _credentialRepositoryMock
-            .Setup(a => a.Get(It.Is<byte[]>(b => BytesArrayComparer.CompareNullable(b, new byte[] { 1, 2, 3, 4 }))))
+            .Setup(a => a.Get(It.IsAny<byte[]>(), CancellationToken.None))
             .ReturnsAsync(credential);
 
         _userHandlerValidatorMock
@@ -410,7 +410,7 @@ public class AssertionTests
         };
 
         _credentialRepositoryMock
-            .Setup(a => a.Get(It.Is<byte[]>(b => BytesArrayComparer.CompareNullable(b, new byte[] { 1, 2, 3, 4 }))))
+            .Setup(a => a.Get(It.IsAny<byte[]>(), CancellationToken.None))
             .ReturnsAsync(credential);
 
         _clientDataHandlerMock
@@ -439,7 +439,7 @@ public class AssertionTests
         };
 
         _credentialRepositoryMock
-            .Setup(a => a.Get(It.Is<byte[]>(b => BytesArrayComparer.CompareNullable(b, new byte[] { 1, 2, 3, 4 }))))
+            .Setup(a => a.Get(It.IsAny<byte[]>(), CancellationToken.None))
             .ReturnsAsync(credential);
 
         _assertionObjectHandlerMock
@@ -474,7 +474,7 @@ public class AssertionTests
         };
 
         _credentialRepositoryMock
-            .Setup(a => a.Get(It.Is<byte[]>(b => BytesArrayComparer.CompareNullable(b, new byte[] { 1, 2, 3, 4 }))))
+            .Setup(a => a.Get(It.IsAny<byte[]>(), CancellationToken.None))
             .ReturnsAsync(credential);
 
         // Act
@@ -500,7 +500,7 @@ public class AssertionTests
         };
 
         _credentialRepositoryMock
-            .Setup(a => a.Get(It.Is<byte[]>(b => BytesArrayComparer.CompareNullable(b, new byte[] { 1, 2, 3, 4 }))))
+            .Setup(a => a.Get(It.IsAny<byte[]>(), CancellationToken.None))
             .ReturnsAsync(credential);
 
         // Act
@@ -511,7 +511,7 @@ public class AssertionTests
         Assert.That(result.IsValid, Is.True);
         Assert.That(result.Message, Is.Null);
 
-        _credentialRepositoryMock.Verify(a => a.UpdateSignCount(credential, 2), Times.Once);
+        _credentialRepositoryMock.Verify(a => a.UpdateSignCount(credential, 2, CancellationToken.None), Times.Once);
     }
 
     [Test]
@@ -528,7 +528,7 @@ public class AssertionTests
         };
 
         _credentialRepositoryMock
-            .Setup(a => a.Get(It.Is<byte[]>(b => BytesArrayComparer.CompareNullable(b, new byte[] { 1, 2, 3, 4 }))))
+            .Setup(a => a.Get(It.IsAny<byte[]>(), CancellationToken.None))
             .ReturnsAsync(credential);
 
         _assertionObjectHandlerMock
@@ -553,7 +553,8 @@ public class AssertionTests
         Assert.That(result.Message, Is.Null);
 
         // Verify that UpdateSignCount was not called
-        _credentialRepositoryMock.Verify(a => a.UpdateSignCount(It.IsAny<Credential>(), It.IsAny<uint>()), Times.Never);
+        _credentialRepositoryMock.Verify(
+            a => a.UpdateSignCount(It.IsAny<Credential>(), It.IsAny<uint>(), CancellationToken.None), Times.Never);
     }
 
     #endregion
