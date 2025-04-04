@@ -7,6 +7,13 @@ This repository provides a server-side implementation of the FIDO2 protocol, ena
 | GitHub Actions | Build | [![build](https://github.com/linuxchata/fido2/actions/workflows/build.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build.yml) |
 | GitHub Actions | NuGet | [![nuget](https://github.com/linuxchata/fido2/actions/workflows/build_push_nuget_sdk.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build_push_nuget_sdk.yml) |
 
+# Packages
+| Package Source | Package Name | Status |
+|-|-|-|
+| NuGet | Shark.Fido2.Core | [![NuGet](https://img.shields.io/nuget/v/Shark.Fido2.Core.svg)](https://www.nuget.org/packages/Shark.Fido2.Core/) |
+| NuGet | Shark.Fido2.InMemory | [![NuGet](https://img.shields.io/nuget/v/Shark.Fido2.InMemory.svg)](https://www.nuget.org/packages/Shark.Fido2.InMemory/) |
+| NuGet | Shark.Fido2.Models | [![NuGet](https://img.shields.io/nuget/v/Shark.Fido2.Models.svg)](https://www.nuget.org/packages/Shark.Fido2.Models/) |
+
 # Specification
 ## Web Authentication
 - [Web Authentication: An API for accessing Public Key Credentials Level 2](https://www.w3.org/TR/webauthn-2/)
