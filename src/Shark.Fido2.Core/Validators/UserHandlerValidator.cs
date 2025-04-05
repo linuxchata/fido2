@@ -20,21 +20,19 @@ internal sealed class UserHandlerValidator : IUserHandlerValidator
         // Step 6
         // Identify the user being authenticated and verify that this user is the owner of the public key credential
         // source credentialSource identified by credential.id
-        if (AreAllowCredentialsPresent(requestOptions))
+        if (!string.Equals(requestOptions.Username, credential.Username, StringComparison.OrdinalIgnoreCase))
+        {
+            return ValidatorInternalResult.Invalid(UserIsNotTheOwnerOfTheCredential);
+        }
+
+        if (requestOptions.AllowCredentials != null && requestOptions.AllowCredentials.Length != 0)
         {
             // - If the user was identified before the authentication ceremony was initiated, e.g., via a username or
-            // cookie, verify that the identified user is the owner of credentialSource. If response.userHandle is present,
-            // let userHandle be its value. Verify that userHandle also maps to the same user.
+            // cookie, verify that the identified user is the owner of credentialSource. If response.userHandle is
+            // present, let userHandle be its value. Verify that userHandle also maps to the same user.
             if (userHandle != null && userHandle.Length != 0)
             {
-                if (!BytesArrayComparer.CompareNullable(credential.UserHandle, userHandle))
-                {
-                    return ValidatorInternalResult.Invalid(UserIsNotTheOwnerOfTheCredential);
-                }
-            }
-            else
-            {
-                if (!string.Equals(credential.Username, requestOptions.Username, StringComparison.OrdinalIgnoreCase))
+                if (IsUserHandleValid(userHandle, credential))
                 {
                     return ValidatorInternalResult.Invalid(UserIsNotTheOwnerOfTheCredential);
                 }
@@ -49,7 +47,7 @@ internal sealed class UserHandlerValidator : IUserHandlerValidator
                 return ValidatorInternalResult.Invalid("User handle is not present");
             }
 
-            if (!BytesArrayComparer.CompareNullable(credential.UserHandle, userHandle))
+            if (IsUserHandleValid(userHandle, credential))
             {
                 return ValidatorInternalResult.Invalid(UserIsNotTheOwnerOfTheCredential);
             }
@@ -58,8 +56,8 @@ internal sealed class UserHandlerValidator : IUserHandlerValidator
         return ValidatorInternalResult.Valid();
     }
 
-    private static bool AreAllowCredentialsPresent(PublicKeyCredentialRequestOptions requestOptions)
+    private static bool IsUserHandleValid(byte[] userHandle, Credential credential)
     {
-        return requestOptions.AllowCredentials != null && requestOptions.AllowCredentials.Length != 0;
+        return !BytesArrayComparer.CompareNullable(userHandle, credential.UserHandle);
     }
 }
