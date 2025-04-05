@@ -80,7 +80,8 @@ async function fetchAssertionResult(credentials) {
             toastr.info('Authentication was successful', toastrAuthenticationTitle);
         }
         else {
-            toastr.error("Authentication has failed", toastrAuthenticationTitle);
+            const responseBody = await response.json();
+            toastr.error(`Authentication has failed. ${responseBody.errorMessage}`, toastrAuthenticationTitle);
         }
     } catch (error) {
         toastr.error(error.message, toastrAuthenticationTitle);
