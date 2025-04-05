@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Shark.Fido2.Core" Version="0.0.36" />
-    <PackageReference Include="Shark.Fido2.InMemory" Version="0.0.36" />
-    <PackageReference Include="Shark.Fido2.Models" Version="0.0.36" />
+    <PackageReference Include="Shark.Fido2.Core" Version="0.9.0.3" />
+    <PackageReference Include="Shark.Fido2.InMemory" Version="0.9.0.3" />
+    <PackageReference Include="Shark.Fido2.Models" Version="0.9.0.3" />
   </ItemGroup>
 
 </Project>
