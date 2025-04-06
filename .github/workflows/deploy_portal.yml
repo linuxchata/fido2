@@ -1,6 +1,11 @@
 name: Deploy Portal
 
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - src/Shark.Portal.Fido2/**
   workflow_dispatch:
 
 jobs:
