@@ -1,4 +1,24 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿document.addEventListener('DOMContentLoaded', function() {
+    // Sign up button event listener
+    document.getElementById('signupButton').addEventListener('click', function() {
+        const username = document.getElementById('signupUsername').value;
+        const displayName = document.getElementById('displayName').value;
 
-// Write your JavaScript code.
+        if (username && displayName) {
+            requestCreateCredentialOptions(username, displayName);
+        } else {
+            notify.error('Please fill in all required fields', 'Validation Error');
+        }
+    });
+
+    // Sign in button event listener
+    document.getElementById('signinButton').addEventListener('click', function() {
+        const username = document.getElementById('signinUsername').value;
+
+        if (username) {
+            requestVerifyCredentialOptions(username);
+        } else {
+            notify.error('Please enter your username', 'Validation Error');
+        }
+    });
+});

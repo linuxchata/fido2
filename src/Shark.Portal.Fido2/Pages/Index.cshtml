@@ -36,27 +36,3 @@
         </form>
     </div>
 </div>
-
-<script>
-    // JavaScript can be added here for FIDO2 authentication functionality
-    document.getElementById('signupButton').addEventListener('click', function() {
-        // Handle sign up logic
-        const username = document.getElementById('signupUsername').value;
-        const displayName = document.getElementById('displayName').value;
-
-        if (username && displayName) {
-            console.log('Sign up initiated for: ', username, displayName);
-            requestCreateCredentialOptions(username, displayName);
-        }
-    });
-
-    document.getElementById('signinButton').addEventListener('click', function() {
-        // Handle sign in logic
-        const username = document.getElementById('signinUsername').value;
-
-        if (username) {
-            console.log('Sign in initiated for: ', username);
-            requestVerifyCredentialOptions(username);
-        }
-    });
-</script>

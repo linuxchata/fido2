@@ -1,6 +1,6 @@
 ﻿// Registration
 
-const toastrRegistrationTitle = 'Web Authentication';
+const registrationTitle = 'Web Authentication';
 
 async function requestCreateCredentialOptions(username, displayName) {
     const optionsRequest = {
@@ -44,7 +44,7 @@ async function createCredential(options) {
         attestation = await navigator.credentials.create(credentialCreationOptions);
     }
     catch (error) {
-        toastr.error(error.message, toastrRegistrationTitle);
+        notify.error(error.message, registrationTitle);
         return;
     }
 
@@ -77,10 +77,10 @@ async function fetchAttestationOptions(optionsRequest) {
             return await response.json();
         }
         else {
-            toastr.error("Error creating registration options", toastrRegistrationTitle);
+            notify.error("Error creating registration options", registrationTitle);
         }
     } catch (error) {
-        toastr.error(error.message, toastrRegistrationTitle);
+        notify.error(error.message, registrationTitle);
     }
 }
 
@@ -95,14 +95,14 @@ async function fetchAttestationResult(credentials) {
         });
 
         if (response.ok) {
-            toastr.info('Registration was successful', toastrRegistrationTitle);
+            notify.info('Registration was successful', registrationTitle);
         }
         else {
             const responseBody = await response.json();
-            toastr.error(`Registration has failed. ${responseBody.errorMessage}`, toastrRegistrationTitle);
+            notify.error(`Registration has failed. ${responseBody.errorMessage}`, registrationTitle);
         }
     } catch (error) {
-        toastr.error(error.message, toastrRegistrationTitle);
+        notify.error(error.message, registrationTitle);
     }
 }
 
