@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography.X509Certificates;
 using Shark.Fido2.Metadata.Core.Abstractions;
 
-namespace Shark.Fido2.Metadata.Core;
+namespace Shark.Fido2.Metadata.Core.Validators;
 
 internal sealed class CertificateValidator : ICertificateValidator
 {

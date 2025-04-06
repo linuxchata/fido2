@@ -7,12 +7,12 @@ using Shark.Fido2.Metadata.Core.Domain;
 using Shark.Fido2.Metadata.Core.Mappers;
 using Shark.Fido2.Metadata.Core.Models;
 
-namespace Shark.Fido2.Metadata.Core;
+namespace Shark.Fido2.Metadata.Core.Services;
 
 /// <summary>
 /// Local blob test service is used for conformance testing for make creadentials and get assertion test cases.
 /// </summary>
-public sealed class MetadataLocalBlobTestService : IMetadataCachedService
+internal sealed class MetadataLocalBlobTestService : IMetadataCachedService
 {
     private const string KeyPrefix = "md";
     private const int DefaultExpirationInMinutes = 5;

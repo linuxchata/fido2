@@ -6,13 +6,13 @@ using Shark.Fido2.Metadata.Core.Domain;
 using Shark.Fido2.Metadata.Core.Mappers;
 using Shark.Fido2.Metadata.Core.Models;
 
-namespace Shark.Fido2.Metadata.Core;
+namespace Shark.Fido2.Metadata.Core.Services;
 
 /// <summary>
 /// Remote blob test service is used for conformance testing for metadata service test cases.
 /// See: https://github.com/fido-alliance/conformance-test-tools-resources/issues/422#issuecomment-508959572
 /// </summary>
-public sealed class MetadataRemoteBlobTestService : IMetadataCachedService
+internal sealed class MetadataRemoteBlobTestService : IMetadataCachedService
 {
     private const string KeyPrefix = "md";
     private const int DefaultExpirationInMinutes = 5;

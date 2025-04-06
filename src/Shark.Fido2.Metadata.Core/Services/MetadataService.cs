@@ -2,9 +2,9 @@
 using Shark.Fido2.Metadata.Core.Abstractions.Repositories;
 using Shark.Fido2.Metadata.Core.Models;
 
-namespace Shark.Fido2.Metadata.Core;
+namespace Shark.Fido2.Metadata.Core.Services;
 
-public sealed class MetadataService : IMetadataService
+internal sealed class MetadataService : IMetadataService
 {
     private readonly IHttpClientRepository _httpClientRepository;
     private readonly IMetadataReaderService _metadataReaderService;
