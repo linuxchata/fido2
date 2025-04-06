@@ -35,7 +35,7 @@ public class AssertionController(IAssertion assertion) : ControllerBase
     }
 
     /// <summary>
-    /// Validate credential.
+    /// Validates credential.
     /// </summary>
     /// <param name="request">The request.</param>
     /// <returns>The HTTP response.</returns>
