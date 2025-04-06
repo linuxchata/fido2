@@ -10,7 +10,7 @@ const notyf = new Notyf({
         {
             type: 'info',
             background: '#34a853',
-            duration: 600000,
+            duration: 4000,
             icon: {
                 className: 'notyf__icon fa-solid fa-circle-info',
                 tagName: 'i'
@@ -48,7 +48,7 @@ const notyf = new Notyf({
 });
 
 const notify = {
-    info: function(message, title) {
+    info: function (message, title) {
         if (title) {
             message = `<strong>${title}</strong><br>${message}`;
         }
@@ -57,13 +57,13 @@ const notify = {
             message: message
         });
     },
-    success: function(message, title) {
+    success: function (message, title) {
         if (title) {
             message = `<strong>${title}</strong><br>${message}`;
         }
         notyf.success(message);
     },
-    warning: function(message, title) {
+    warning: function (message, title) {
         if (title) {
             message = `<strong>${title}</strong><br>${message}`;
         }
@@ -72,7 +72,7 @@ const notify = {
             message: message
         });
     },
-    error: function(message, title) {
+    error: function (message, title) {
         if (title) {
             message = `<strong>${title}</strong><br>${message}`;
         }
