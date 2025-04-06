@@ -4,6 +4,8 @@ using Shark.Fido2.Metadata.Core.Abstractions;
 using Shark.Fido2.Metadata.Core.Abstractions.Repositories;
 using Shark.Fido2.Metadata.Core.Configurations;
 using Shark.Fido2.Metadata.Core.Repositories;
+using Shark.Fido2.Metadata.Core.Services;
+using Shark.Fido2.Metadata.Core.Validators;
 
 namespace Shark.Fido2.Metadata.Core;
 
@@ -19,7 +21,6 @@ public static class DependencyInjection
         services.AddDistributedMemoryCache();
 
         services.AddTransient<IHttpClientRepository, HttpClientRepository>();
-        services.AddTransient<IMetadataBlobService, MetadataBlobService>();
         services.AddTransient<ICertificateValidator, CertificateValidator>();
         services.AddTransient<IMetadataService, MetadataService>();
         services.AddTransient<IMetadataReaderService, MetadataReaderService>();
@@ -35,6 +36,11 @@ public static class DependencyInjection
             services.AddTransient<IHttpClientConformanceTestRepository, HttpClientConformanceTestRepository>();
             services.AddTransient<IMetadataCachedService, MetadataRemoteBlobTestService>();
         }
+    }
+
+    public static void AddNullMetadataService(this IServiceCollection services)
+    {
+        services.AddTransient<IMetadataCachedService, MetadataCachedNullService>();
     }
 
     private static bool IsConformanceTestWithLocalMetadataBlob()

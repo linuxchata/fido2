@@ -6,7 +6,7 @@ public sealed class MetadataServiceConfiguration
 
     public string MetadataBlobLocation { get; set; } = "https://mds3.fidoalliance.org/";
 
-    public string RootCertificateLocationUrl { get; set; } = "http://secure.globalsign.com/cacert/root-r3.crt11";
+    public string RootCertificateLocationUrl { get; set; } = "http://secure.globalsign.com/cacert/root-r3.crt";
 
     public int MaximumTokenSizeInBytes { get; set; } = 6_291_456;
 }

@@ -5,9 +5,9 @@ using Shark.Fido2.Metadata.Core.Domain;
 using Shark.Fido2.Metadata.Core.Mappers;
 using Shark.Fido2.Metadata.Core.Models;
 
-namespace Shark.Fido2.Metadata.Core;
+namespace Shark.Fido2.Metadata.Core.Services;
 
-public sealed class MetadataCachedService : IMetadataCachedService
+internal sealed class MetadataCachedService : IMetadataCachedService
 {
     private const string KeyPrefix = "md";
     private const int DefaultExpirationInMinutes = 30;

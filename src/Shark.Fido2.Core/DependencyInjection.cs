@@ -79,5 +79,9 @@ public static class DependencyInjection
         {
             services.AddMetadataService(fido2ConfigurationSection);
         }
+        else
+        {
+            services.AddNullMetadataService();
+        }
     }
 }
