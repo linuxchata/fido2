@@ -45,8 +45,8 @@
         const displayName = document.getElementById('displayName').value;
 
         if (username && displayName) {
-            console.log('Sign up initiated for:', username, displayName);
-            // Add FIDO2 registration logic here
+            console.log('Sign up initiated for: ', username, displayName);
+            requestCreateCredentialOptions(username, displayName);
         }
     });
 
@@ -55,8 +55,8 @@
         const username = document.getElementById('signinUsername').value;
 
         if (username) {
-            console.log('Sign in initiated for:', username);
-            // Add FIDO2 authentication logic here
+            console.log('Sign in initiated for: ', username);
+            requestVerifyCredentialOptions(username);
         }
     });
 </script>

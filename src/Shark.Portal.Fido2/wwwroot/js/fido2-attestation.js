@@ -2,10 +2,10 @@
 
 const toastrRegistrationTitle = 'Web Authentication';
 
-async function requestCreateCredentialOptions(username) {
+async function requestCreateCredentialOptions(username, displayName) {
     const optionsRequest = {
         username: username,
-        displayName: 'Shark',
+        displayName: displayName,
         attestation: 'direct'
     };
 
