@@ -58,15 +58,15 @@ public async Task<IActionResult> Result(ServerPublicKeyCredentialAssertion reque
 ```
 
 ## Client-side (JavaScript)
-To complete the FIDO2 implementation, you need to add JavaScript code to your application that communicates with the Web Authentication API (WebAuthn) in the browser. The WebAuthn API is part of the FIDO2 specification and provides the client-side functionality for secure authentication. Below you can find sample implementation for communication with WebAuthn:
+To complete the FIDO2 implementation, you need to add JavaScript code that communicates with the Web Authentication API (WebAuthn) in the browser. The WebAuthn API is part of the FIDO2 specification and provides the client-side functionality for secure authentication. Below you can find sample implementation for communication with WebAuthn:
 
 - [fido2-attestation.js](https://github.com/linuxchata/fido2/blob/main/src/Shark.Portal.Fido2/wwwroot/js/fido2-attestation.js) - Handles the registration process using the Web Authentication API (navigator.credentials.create)
 - [fido2-assertion.js](https://github.com/linuxchata/fido2/blob/main/src/Shark.Portal.Fido2/wwwroot/js/fido2-assertion.js) - Handles the authentication process using the Web Authentication API (navigator.credentials.get)
 
-The JavaScript code connects the browser's WebAuthn API with the server endpoints implemented in the ASP.NET Core controllers described above.
+This JavaScript code bridges the browser's WebAuthn API with the server-side REST API endpoints provided by the ASP.NET Core controllers described above.
 
 # Build Status
-| Build server | Target |  Status |
+| Build server | Target | Status |
 |-|-|-|
 | GitHub Actions | Build | [![build](https://github.com/linuxchata/fido2/actions/workflows/build.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build.yml) |
 | GitHub Actions | NuGet | [![nuget](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_packages.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_packages.yml) |
