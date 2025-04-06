@@ -1,10 +1,62 @@
 ﻿@page
 @model IndexModel
-@{
-    ViewData["Title"] = "Home page";
-}
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="auth-container">
+    <!-- Sign Up Section -->
+    <div class="auth-section signup-section">
+        <div class="auth-header">
+            <h2>Create Account</h2>
+            <p>Sign up with FIDO2 for enhanced security</p>
+        </div>
+        <form id="signupForm">
+            <div class="form-group">
+                <label for="signupUsername">Username</label>
+                <input type="text" id="signupUsername" class="form-control" placeholder="Enter your username" required>
+            </div>
+            <div class="form-group">
+                <label for="displayName">Display Name</label>
+                <input type="text" id="displayName" class="form-control" placeholder="Enter your display name" required>
+            </div>
+            <button type="button" id="signupButton" class="btn btn-secondary btn-block">Sign Up</button>
+        </form>
+    </div>
+
+    <!-- Sign In Section -->
+    <div class="auth-section signin-section">
+        <div class="auth-header">
+            <h2>Welcome Back</h2>
+            <p>Sign in with your FIDO2 credentials</p>
+        </div>
+        <form id="signinForm">
+            <div class="form-group">
+                <label for="signinUsername">Username</label>
+                <input type="text" id="signinUsername" class="form-control" placeholder="Enter your username" required>
+            </div>
+            <button type="button" id="signinButton" class="btn btn-primary btn-block">Sign In</button>
+        </form>
+    </div>
 </div>
+
+<script>
+    // JavaScript can be added here for FIDO2 authentication functionality
+    document.getElementById('signupButton').addEventListener('click', function() {
+        // Handle sign up logic
+        const username = document.getElementById('signupUsername').value;
+        const displayName = document.getElementById('displayName').value;
+
+        if (username && displayName) {
+            console.log('Sign up initiated for:', username, displayName);
+            // Add FIDO2 registration logic here
+        }
+    });
+
+    document.getElementById('signinButton').addEventListener('click', function() {
+        // Handle sign in logic
+        const username = document.getElementById('signinUsername').value;
+
+        if (username) {
+            console.log('Sign in initiated for:', username);
+            // Add FIDO2 authentication logic here
+        }
+    });
+</script>
