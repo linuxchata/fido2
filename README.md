@@ -1,8 +1,13 @@
 # Overview
-This repository provides a server-side implementation of the FIDO2 protocol, enabling secure passwordless authentication and multi-factor authentication (MFA) for web applications. It handles key FIDO2 operations, including credential registration and authentication, ensuring compliance with modern authentication standards. Designed for scalability and security, this implementation is ideal for integrating FIDO2-based authentication into server-side applications.
+This repository provides a server-side implementation of the FIDO2 protocol, enabling secure passwordless authentication and multi-factor authentication (MFA) for web applications. It handles key FIDO2 operations, including credential registration and authentication, ensuring compliance with modern authentication standards.
 
 # Usage
-## Attestation (registration)
+The following examples demonstrate how to implement FIDO2 authentication in your application.
+
+## Server-side (ASP.NET Core Controllers)
+The sample C# code below is designed for ASP.NET Core controllers.
+
+### Attestation (registration)
 1. Get creation options.
 ```csharp
 [HttpPost("options")]
@@ -22,12 +27,12 @@ public async Task<IActionResult> Result(ServerPublicKeyCredentialAttestation req
 {
     var creationOptionsString = HttpContext.Session.GetString("CreationOptions");
     var creationOptions = JsonSerializer.Deserialize<PublicKeyCredentialCreationOptions>(creationOptionsString!);
-    var response = await _attestation.Complete(request.Map(), creationOptions!);
+    await _attestation.Complete(request.Map(), creationOptions!);
     return Ok(ServerResponse.Create());
 }
 ```
 
-## Assertion (authentication)
+### Assertion (authentication)
 1. Get request options.
 ```csharp
 [HttpPost("options")]
@@ -47,10 +52,18 @@ public async Task<IActionResult> Result(ServerPublicKeyCredentialAssertion reque
 {
     var requestOptionsString = HttpContext.Session.GetString("RequestOptions");
     var requestOptions = JsonSerializer.Deserialize<PublicKeyCredentialRequestOptions>(requestOptionsString!);
-    var response = await _assertion.Complete(request.Map(), requestOptions!);
+    await _assertion.Complete(request.Map(), requestOptions!);
     return Ok(ServerResponse.Create());
 }
 ```
+
+## Client-side (JavaScript)
+To complete the FIDO2 implementation, you need to add JavaScript code to your application that communicates with the Web Authentication API (WebAuthn) in the browser. The WebAuthn API is part of the FIDO2 specification and provides the client-side functionality for secure authentication. Below you can find sample implementation for communication with WebAuthn:
+
+- [fido2-attestation.js](https://github.com/linuxchata/fido2/blob/main/src/Shark.Portal.Fido2/wwwroot/js/fido2-attestation.js) - Handles the registration process using the Web Authentication API (navigator.credentials.create)
+- [fido2-assertion.js](https://github.com/linuxchata/fido2/blob/main/src/Shark.Portal.Fido2/wwwroot/js/fido2-assertion.js) - Handles the authentication process using the Web Authentication API (navigator.credentials.get)
+
+The JavaScript code connects the browser's WebAuthn API with the server endpoints implemented in the ASP.NET Core controllers described above.
 
 # Build Status
 | Build server | Target |  Status |
