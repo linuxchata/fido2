@@ -9,21 +9,11 @@ const notyf = new Notyf({
     types: [
         {
             type: 'info',
-            background: '#0d6efd',
-            icon: {
-                className: 'fas fa-info-circle',
-                tagName: 'span',
-                color: '#fff'
-            }
+            background: '#3dc763'
         },
         {
             type: 'warning',
-            background: '#ffc107',
-            icon: {
-                className: 'fas fa-exclamation-circle',
-                tagName: 'span',
-                color: '#fff'
-            }
+            background: '#ffc107'
         },
         {
             type: 'error',
