@@ -19,6 +19,7 @@ public static class DependencyInjection
         services.Configure<MetadataServiceConfiguration>(metadataServiceConfigurationSection);
 
         services.AddDistributedMemoryCache();
+        services.AddMemoryCache();
 
         services.AddTransient<IHttpClientRepository, HttpClientRepository>();
         services.AddTransient<ICertificateValidator, CertificateValidator>();

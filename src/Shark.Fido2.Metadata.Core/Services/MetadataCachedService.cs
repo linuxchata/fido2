@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Memory;
 using Shark.Fido2.Metadata.Core.Abstractions;
 using Shark.Fido2.Metadata.Core.Domain;
 using Shark.Fido2.Metadata.Core.Mappers;
@@ -10,48 +11,67 @@ namespace Shark.Fido2.Metadata.Core.Services;
 internal sealed class MetadataCachedService : IMetadataCachedService
 {
     private const string KeyPrefix = "md";
-    private const int DefaultExpirationInMinutes = 30;
+    private const int DefaultDistributedCacheExpirationInMinutes = 30;
+    private const int DefaultMemoryCacheExpirationInMinutes = 10;
 
-    private static readonly SemaphoreSlim _semaphore = new(1, 1);
+    private static readonly SemaphoreSlim _operationLock = new(1, 1);
 
     private readonly IMetadataService _metadataService;
     private readonly IDistributedCache _cache;
+    private readonly IMemoryCache _memoryCache;
     private readonly TimeProvider _timeProvider;
 
     public MetadataCachedService(
         IMetadataService metadataService,
         IDistributedCache cache,
+        IMemoryCache memoryCache,
         TimeProvider timeProvider)
     {
         _metadataService = metadataService;
         _cache = cache;
+        _memoryCache = memoryCache;
         _timeProvider = timeProvider;
     }
 
     public async Task<MetadataPayloadItem?> Get(Guid aaguid, CancellationToken cancellationToken = default)
     {
-        await _semaphore.WaitAsync(cancellationToken);
+        // Check memory cache
+        var memoryCacheKey = $"{KeyPrefix}_{aaguid}";
+        if (_memoryCache.TryGetValue(memoryCacheKey, out MetadataPayloadItem? cachedItem))
+        {
+            return cachedItem;
+        }
+
+        // Then check distributed cache
+        await _operationLock.WaitAsync(cancellationToken);
 
         string? serializedPayload = null;
 
         try
         {
             serializedPayload = await _cache.GetStringAsync(KeyPrefix, cancellationToken);
-            serializedPayload ??= await Cache(cancellationToken);
+            serializedPayload ??= await StoreCacheInDistributedCache(cancellationToken);
         }
         finally
         {
-            _semaphore.Release();
+            _operationLock.Release();
         }
 
-        var payload = JsonSerializer.Deserialize<List<MetadataBlobPayloadEntry>>(serializedPayload);
+        var metadataPayloadItem = GetMetadataPayloadItem(serializedPayload, aaguid);
 
-        var map = payload!.Where(p => p.Aaguid.HasValue).ToDictionary(p => p.Aaguid!.Value, p => p);
-        map.TryGetValue(aaguid, out var entry);
-        return entry?.ToDomain();
+        // Cache the result in memory if found
+        if (metadataPayloadItem != null)
+        {
+            var cacheOptions = new MemoryCacheEntryOptions()
+                .SetAbsoluteExpiration(DateTime.UtcNow.AddMinutes(DefaultMemoryCacheExpirationInMinutes));
+
+            _memoryCache.Set(memoryCacheKey, metadataPayloadItem, cacheOptions);
+        }
+
+        return metadataPayloadItem;
     }
 
-    private async Task<string> Cache(CancellationToken cancellationToken)
+    private async Task<string> StoreCacheInDistributedCache(CancellationToken cancellationToken)
     {
         var metadata = await _metadataService.Get(cancellationToken);
 
@@ -77,9 +97,17 @@ internal sealed class MetadataCachedService : IMetadataCachedService
         var now = _timeProvider.GetUtcNow();
         if (nextUpdate.Date == now.Date)
         {
-            expiration = now.AddMinutes(DefaultExpirationInMinutes);
+            expiration = now.AddMinutes(DefaultDistributedCacheExpirationInMinutes);
         }
 
         return expiration;
+    }
+
+    private MetadataPayloadItem? GetMetadataPayloadItem(string serializedPayload, Guid aaguid)
+    {
+        var payload = JsonSerializer.Deserialize<List<MetadataBlobPayloadEntry>>(serializedPayload);
+        var map = payload!.Where(p => p.Aaguid.HasValue).ToDictionary(p => p.Aaguid!.Value, p => p);
+        map.TryGetValue(aaguid, out var item);
+        return item?.ToDomain();
     }
 }
