@@ -1,6 +1,57 @@
 # Overview
 This repository provides a server-side implementation of the FIDO2 protocol, enabling secure passwordless authentication and multi-factor authentication (MFA) for web applications. It handles key FIDO2 operations, including credential registration and authentication, ensuring compliance with modern authentication standards. Designed for scalability and security, this implementation is ideal for integrating FIDO2-based authentication into server-side applications.
 
+# Usage
+## Attestation (registration)
+1. Get creation options.
+```csharp
+[HttpPost("options")]
+public async Task<IActionResult> Options(ServerPublicKeyCredentialCreationOptionsRequest request)
+{
+    var creationOptions = await _attestation.GetOptions(request.Map());
+    var response = creationOptions.Map();
+    HttpContext.Session.SetString("CreationOptions", JsonSerializer.Serialize(creationOptions));
+    return Ok(response);
+}
+```
+
+2. Create credential.
+```csharp
+[HttpPost("result")]
+public async Task<IActionResult> Result(ServerPublicKeyCredentialAttestation request)
+{
+    var creationOptionsString = HttpContext.Session.GetString("CreationOptions");
+    var creationOptions = JsonSerializer.Deserialize<PublicKeyCredentialCreationOptions>(creationOptionsString!);
+    var response = await _attestation.Complete(request.Map(), creationOptions!);
+    return Ok(ServerResponse.Create());
+}
+```
+
+## Assertion (authentication)
+1. Get request options.
+```csharp
+[HttpPost("options")]
+public async Task<IActionResult> Options(ServerPublicKeyCredentialGetOptionsRequest request)
+{
+    var requestOptions = await _assertion.RequestOptions(request.Map());
+    var response = requestOptions.Map();
+    HttpContext.Session.SetString("RequestOptions", JsonSerializer.Serialize(requestOptions));
+    return Ok(response);
+}
+```
+
+2. Validate credential.
+```csharp
+[HttpPost("result")]
+public async Task<IActionResult> Result(ServerPublicKeyCredentialAssertion request)
+{
+    var requestOptionsString = HttpContext.Session.GetString("RequestOptions");
+    var requestOptions = JsonSerializer.Deserialize<PublicKeyCredentialRequestOptions>(requestOptionsString!);
+    var response = await _assertion.Complete(request.Map(), requestOptions!);
+    return Ok(ServerResponse.Create());
+}
+```
+
 # Build Status
 | Build server | Target |  Status |
 |-|-|-|
