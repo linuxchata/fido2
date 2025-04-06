@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "Shark.Fido2": {
+    "Shark.Sample.Fido2": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {

@@ -1,22 +1,19 @@
-﻿using System.Net.Mime;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Domain;
 using Shark.Fido2.Models.Mappers;
 using Shark.Fido2.Models.Requests;
 using Shark.Fido2.Models.Responses;
-using Shark.Sample.Fido2.Swagger;
-using Swashbuckle.AspNetCore.Filters;
 
-namespace Shark.Sample.Fido2.Controllers;
+namespace Shark.Portal.Fido2.Controllers;
 
 /// <summary>
 /// Assertion (authentication).
 /// </summary>
 [Route("[controller]")]
 [ApiController]
-public class AssertionController(IAssertion assertion, ILogger<AttestationController> logger) : ControllerBase
+public class AssertionController(IAssertion assertion) : ControllerBase
 {
     private readonly IAssertion _assertion = assertion;
 
@@ -26,11 +23,6 @@ public class AssertionController(IAssertion assertion, ILogger<AttestationContro
     /// <param name="request">The request.</param>
     /// <returns>The HTTP response.</returns>
     [HttpPost("options")]
-    [Produces(MediaTypeNames.Application.Json)]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [SwaggerRequestExample(
-        typeof(ServerPublicKeyCredentialGetOptionsRequest),
-        typeof(ServerPublicKeyCredentialGetOptionsRequestExample))]
     public async Task<IActionResult> Options(ServerPublicKeyCredentialGetOptionsRequest request)
     {
         var requestOptions = await _assertion.RequestOptions(request.Map());
@@ -43,15 +35,11 @@ public class AssertionController(IAssertion assertion, ILogger<AttestationContro
     }
 
     /// <summary>
-    /// Validates credential.
+    /// Validate credential.
     /// </summary>
     /// <param name="request">The request.</param>
     /// <returns>The HTTP response.</returns>
     [HttpPost("result")]
-    [Consumes(MediaTypeNames.Application.Json)]
-    [Produces(MediaTypeNames.Application.Json)]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Result(ServerPublicKeyCredentialAssertion request)
     {
         if (request == null)
@@ -71,7 +59,6 @@ public class AssertionController(IAssertion assertion, ILogger<AttestationContro
         }
         else
         {
-            logger.LogWarning("{Message}", response.Message);
             return BadRequest(ServerResponse.CreateFailed(response.Message));
         }
     }

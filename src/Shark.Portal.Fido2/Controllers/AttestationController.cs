@@ -1,5 +1,4 @@
-﻿using System.Net.Mime;
-using System.Text;
+﻿using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Shark.Fido2.Core.Abstractions;
@@ -7,17 +6,15 @@ using Shark.Fido2.Domain;
 using Shark.Fido2.Models.Mappers;
 using Shark.Fido2.Models.Requests;
 using Shark.Fido2.Models.Responses;
-using Shark.Sample.Fido2.Swagger;
-using Swashbuckle.AspNetCore.Filters;
 
-namespace Shark.Sample.Fido2.Controllers;
+namespace Shark.Portal.Fido2.Controllers;
 
 /// <summary>
 /// Attestation (registration).
 /// </summary>
 [Route("[controller]")]
 [ApiController]
-public class AttestationController(IAttestation attestation, ILogger<AttestationController> logger) : ControllerBase
+public class AttestationController(IAttestation attestation) : ControllerBase
 {
     private readonly IAttestation _attestation = attestation;
 
@@ -27,11 +24,6 @@ public class AttestationController(IAttestation attestation, ILogger<Attestation
     /// <param name="request">The request.</param>
     /// <returns>The HTTP response.</returns>
     [HttpPost("options")]
-    [Produces(MediaTypeNames.Application.Json)]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [SwaggerRequestExample(
-        typeof(ServerPublicKeyCredentialCreationOptionsRequest),
-        typeof(ServerPublicKeyCredentialCreationOptionsRequestExample))]
     public async Task<IActionResult> Options(ServerPublicKeyCredentialCreationOptionsRequest request)
     {
         var creationOptions = await _attestation.GetOptions(request.Map());
@@ -49,10 +41,6 @@ public class AttestationController(IAttestation attestation, ILogger<Attestation
     /// <param name="request">The request.</param>
     /// <returns>The HTTP response.</returns>
     [HttpPost("result")]
-    [Consumes(MediaTypeNames.Application.Json)]
-    [Produces(MediaTypeNames.Application.Json)]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Result(ServerPublicKeyCredentialAttestation request)
     {
         if (request == null || request.Response == null)
@@ -72,7 +60,6 @@ public class AttestationController(IAttestation attestation, ILogger<Attestation
         }
         else
         {
-            logger.LogWarning("{Message}", response.Message);
             return BadRequest(ServerResponse.CreateFailed(response.Message));
         }
     }
