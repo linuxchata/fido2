@@ -33,47 +33,53 @@ internal sealed class AuthenticatorDataParserService : IAuthenticatorDataParserS
         // Relying Party Identifier Hash
         var rpIdHashArray = authenticatorDataArray.AsSpan(startIndex, RpIdHashLength);
         authenticatorData.RpIdHash = rpIdHashArray.ToArray();
+        startIndex += RpIdHashLength;
 
         // Flags
-        startIndex += RpIdHashLength;
         var flagsArray = authenticatorDataArray.AsSpan(startIndex, FlagsLength);
         GetAndSetFlags(flagsArray[0], authenticatorData);
         authenticatorData.Flags = flagsArray[0];
+        startIndex += FlagsLength;
 
         // Signature Counter
-        startIndex += FlagsLength;
         var signCountArray = authenticatorDataArray.AsSpan(startIndex, SignCountLength);
         var signCount = BinaryPrimitives.ReadUInt32BigEndian(signCountArray);
         authenticatorData.SignCount = signCount;
+        startIndex += SignCountLength;
 
         if (authenticatorData.AttestedCredentialDataIncluded)
         {
             // AAGUID of the authenticator
-            startIndex += SignCountLength;
             var aaguidArray = authenticatorDataArray.AsSpan(startIndex, AaguidLength);
             authenticatorData.AttestedCredentialData.AaGuid = new Guid(aaguidArray, bigEndian: true);
+            startIndex += AaguidLength;
 
             // Credential ID Length
-            startIndex += AaguidLength;
             var credentialIdLengthArray = authenticatorDataArray.AsSpan(startIndex, CredentialIdLengthLength);
             var credentialIdLength = BinaryPrimitives.ReadUInt16BigEndian(credentialIdLengthArray);
+            startIndex += CredentialIdLengthLength;
 
             // Credential ID
-            startIndex += CredentialIdLengthLength;
             var credentialId = authenticatorDataArray.AsSpan(startIndex, credentialIdLength);
             authenticatorData.AttestedCredentialData.CredentialId = credentialId.ToArray();
+            startIndex += credentialIdLength;
 
             // Credential Public Key
-            startIndex += credentialIdLength;
             var credentialPublicKeyLength = authenticatorDataArray.Length - startIndex;
             var credentialPublicKeyArray = authenticatorDataArray.AsSpan(startIndex, credentialPublicKeyLength);
             var credentialPublicKey = GetCredentialPublicKey(credentialPublicKeyArray);
             authenticatorData.AttestedCredentialData.CredentialPublicKey = credentialPublicKey;
+            startIndex += credentialPublicKeyLength;
         }
 
         if (authenticatorData.ExtensionDataIncluded)
         {
             // TODO: Read extension data
+        }
+
+        if (startIndex != authenticatorDataArray.Length)
+        {
+            //// throw new ArgumentException("Attestation data contains leftover bytes");
         }
 
         return authenticatorData;
