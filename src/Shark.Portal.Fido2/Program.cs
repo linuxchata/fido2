@@ -3,6 +3,12 @@ using Shark.Fido2.InMemory;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddWebOptimizer(pipeline =>
+{
+    pipeline.AddCssBundle("/css/site.min.css", "css/site.css").MinifyCss();
+    pipeline.AddJavaScriptBundle("/js/site.min.js", "js/*.js").MinifyJavaScript();
+});
+
 builder.Services.AddRazorPages();
 builder.Services.AddControllers();
 
@@ -23,6 +29,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseWebOptimizer();
 app.UseStaticFiles();
 
 app.UseRouting();
