@@ -2,5 +2,13 @@
 
 public sealed class AuthenticationExtensionsClientInputs
 {
-    public bool? CredentialProperties { get; set; }
+    public string? AppId { get; init; }
+
+    public string? AppIdExclude { get; init; }
+
+    public bool? UserVerificationMethod { get; init; }
+
+    public bool? CredentialProperties { get; init; }
+
+    public AuthenticationExtensionsLargeBlobInputs? LargeBlob { get; init; }
 }

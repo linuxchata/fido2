@@ -13,11 +13,18 @@ async function requestVerifyCredentialOptions(username) {
 }
 
 async function requestCredential(options) {
+    let extensions = {
+        ...(options.extensions.appid && { appid: options.extensions.appid }),
+        ...(options.extensions.uvm && { uvm: options.extensions.uvm }),
+        ...(options.extensions.largeBlob && { largeBlob: options.extensions.largeBlob })
+    }
+
     const credentialRequestOptions = {
         publicKey: {
             challenge: toUint8Array(options.challenge),
             timeout: options.timeout,
-            rpId: options.rpId
+            rpId: options.rpId,
+            extensions: extensions
         },
     };
 
@@ -40,6 +47,7 @@ async function requestCredential(options) {
             userHandle: toBase64Url(assertion.response.userHandle),
         },
         type: assertion.type,
+        extensions: assertion.getClientExtensionResults(),
     };
 
     await fetchAssertionResult(credentials);
