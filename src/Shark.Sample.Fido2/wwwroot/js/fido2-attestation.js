@@ -15,7 +15,12 @@ async function requestCreateCredentialOptions(username) {
 }
 
 async function createCredential(options) {
-    const extensions = options.extensions.credProps ? { 'credProps': options.extensions.credProps } : {};
+    let extensions = {
+        ...(options.extensions.appidExclude && { appidExclude: options.extensions.appidExclude }),
+        ...(options.extensions.uvm && { uvm: options.extensions.uvm }),
+        ...(options.extensions.credProps && { credProps: options.extensions.credProps }),
+        ...(options.extensions.largeBlob && { largeBlob: options.extensions.largeBlob })
+    }
 
     const credentialCreationOptions = {
         publicKey: {
