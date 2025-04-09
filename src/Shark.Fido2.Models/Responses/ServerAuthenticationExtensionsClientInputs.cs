@@ -8,9 +8,25 @@ namespace Shark.Fido2.Models.Responses;
 /// </summary>
 public sealed class ServerAuthenticationExtensionsClientInputs
 {
+    [JsonPropertyName("appid")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? AppId { get; init; }
+
+    [JsonPropertyName("appidExclude")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public string? AppIdExclude { get; init; }
+
+    [JsonPropertyName("uvm")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public bool? UserVerificationMethod { get; init; }
+
     [JsonPropertyName("credProps")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public bool? CredentialProperties { get; init; }
+
+    [JsonPropertyName("largeBlob")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public ServerAuthenticationExtensionsLargeBlobInputs? LargeBlob { get; init; }
 
     [JsonPropertyName("example.extension.bool")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
