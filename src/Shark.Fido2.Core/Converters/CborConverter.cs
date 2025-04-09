@@ -18,7 +18,17 @@ public static class CborConverter
         return result ?? throw new ArgumentException("Failed to decode data from CBOR format");
     }
 
-    public static Dictionary<int, object> DecodeToCoseKeyFormat(byte[] input)
+    public static Dictionary<string, object> Decode(byte[] input, ref int bytesRemaining)
+    {
+        var reader = new CborReader(input);
+        var result = Read(reader) as Dictionary<string, object>;
+
+        bytesRemaining = reader.BytesRemaining;
+
+        return result ?? [];
+    }
+
+    public static Dictionary<int, object> DecodeToCoseKeyFormat(byte[] input, ref int bytesRemaining)
     {
         var result = new Dictionary<int, object>();
 
@@ -55,6 +65,9 @@ public static class CborConverter
         }
 
         reader.ReadEndMap();
+
+        bytesRemaining = reader.BytesRemaining;
+
         return result;
     }
 

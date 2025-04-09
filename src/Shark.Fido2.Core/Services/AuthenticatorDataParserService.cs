@@ -65,21 +65,32 @@ internal sealed class AuthenticatorDataParserService : IAuthenticatorDataParserS
             startIndex += credentialIdLength;
 
             // Credential Public Key
+            var credentialPublicKeyBytesRemaining = 0;
             var credentialPublicKeyLength = authenticatorDataArray.Length - startIndex;
             var credentialPublicKeyArray = authenticatorDataArray.AsSpan(startIndex, credentialPublicKeyLength);
-            var credentialPublicKey = GetCredentialPublicKey(credentialPublicKeyArray);
+            var credentialPublicKey = GetCredentialPublicKey(credentialPublicKeyArray, ref credentialPublicKeyBytesRemaining);
             authenticatorData.AttestedCredentialData.CredentialPublicKey = credentialPublicKey;
-            startIndex += credentialPublicKeyLength;
+            startIndex += credentialPublicKeyLength - credentialPublicKeyBytesRemaining;
         }
 
+        var extensionDataBytesRemaining = 0;
         if (authenticatorData.ExtensionDataIncluded)
         {
-            // TODO: Read extension data
+            var leftoverBytes = authenticatorDataArray.Length - startIndex;
+            var extensionLength = authenticatorDataArray.AsSpan(startIndex, leftoverBytes);
+            if (extensionLength.Length > 0)
+            {
+                CborConverter.Decode(extensionLength.ToArray(), ref extensionDataBytesRemaining);
+            }
+
+            startIndex += extensionLength.Length - extensionDataBytesRemaining;
         }
 
         if (startIndex != authenticatorDataArray.Length)
         {
-            //// throw new ArgumentException("Attestation data contains leftover bytes");
+            throw new ArgumentOutOfRangeException(
+                nameof(authenticatorDataArray),
+                "Attestation data contains leftover bytes");
         }
 
         return authenticatorData;
@@ -93,9 +104,9 @@ internal sealed class AuthenticatorDataParserService : IAuthenticatorDataParserS
         authenticatorData.ExtensionDataIncluded = (flags & 0b10000000) != 0; // Bit 7
     }
 
-    private CredentialPublicKey GetCredentialPublicKey(Span<byte> credentialPublicKeyArray)
+    private CredentialPublicKey GetCredentialPublicKey(Span<byte> credentialPublicKeyArray, ref int bytesRemaining)
     {
-        var coseKeyFormat = CborConverter.DecodeToCoseKeyFormat(credentialPublicKeyArray.ToArray());
+        var coseKeyFormat = CborConverter.DecodeToCoseKeyFormat(credentialPublicKeyArray.ToArray(), ref bytesRemaining);
 
         var credentialPublicKey = new CredentialPublicKey
         {
