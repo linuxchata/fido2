@@ -5,7 +5,6 @@ using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Logger
 builder.Logging.AddSimpleConsole(options =>
 {
     options.IncludeScopes = false;
@@ -25,7 +24,6 @@ builder.Services.AddSession(options =>
     options.Cookie.SameSite = SameSiteMode.Unspecified;
 });
 
-// Swagger
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
