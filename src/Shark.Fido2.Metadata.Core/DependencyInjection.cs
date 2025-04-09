@@ -27,15 +27,10 @@ public static class DependencyInjection
         services.AddTransient<IMetadataReaderService, MetadataReaderService>();
         services.AddTransient<IMetadataCachedService, MetadataCachedService>();
 
-        if (IsConformanceTestWithLocalMetadataBlob())
+        if (IsConformanceTest())
         {
             services.AddTransient<IHttpClientConformanceTestRepository, HttpClientConformanceTestRepository>();
-            services.AddTransient<IMetadataCachedService, MetadataLocalBlobTestService>();
-        }
-        else if (IsConformanceTestWithRemoteMetadataBlob())
-        {
-            services.AddTransient<IHttpClientConformanceTestRepository, HttpClientConformanceTestRepository>();
-            services.AddTransient<IMetadataCachedService, MetadataRemoteBlobTestService>();
+            services.AddTransient<IMetadataCachedService, MetadataCachedTestService>();
         }
     }
 
@@ -44,15 +39,9 @@ public static class DependencyInjection
         services.AddTransient<IMetadataCachedService, MetadataCachedNullService>();
     }
 
-    private static bool IsConformanceTestWithLocalMetadataBlob()
+    private static bool IsConformanceTest()
     {
         var environment = Environment.GetEnvironmentVariable(EnvironmentVariableName);
-        return string.Equals(environment, "TestLocalMetadataBlob", StringComparison.OrdinalIgnoreCase);
-    }
-
-    private static bool IsConformanceTestWithRemoteMetadataBlob()
-    {
-        var environment = Environment.GetEnvironmentVariable(EnvironmentVariableName);
-        return string.Equals(environment, "TestRemoteMetadataBlob", StringComparison.OrdinalIgnoreCase);
+        return string.Equals(environment, "Test", StringComparison.OrdinalIgnoreCase);
     }
 }
