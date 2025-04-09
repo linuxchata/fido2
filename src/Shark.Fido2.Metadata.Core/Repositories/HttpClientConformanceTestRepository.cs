@@ -16,13 +16,13 @@ internal class HttpClientConformanceTestRepository : IHttpClientConformanceTestR
         _configuration = options.Value;
     }
 
-    public async Task<List<string>> GetMetadataBlobEndpoints(CancellationToken cancellationToken)
+    public async Task<List<string>> GetMetadataBlobEndpoints(string remoteUrl, CancellationToken cancellationToken)
     {
         using var client = new HttpClient();
 
         var payload = new { endpoint = "https://localhost:8082/" };
 
-        using var response = await client.PostAsJsonAsync(_configuration.MetadataBlobLocation, payload, cancellationToken);
+        using var response = await client.PostAsJsonAsync(remoteUrl, payload, cancellationToken);
         var content = await response.Content.ReadAsStringAsync(cancellationToken);
 
         var apiResponse = JsonSerializer.Deserialize<ApiResponse>(content);
@@ -42,10 +42,8 @@ internal class HttpClientConformanceTestRepository : IHttpClientConformanceTestR
         return reader.ReadToEnd();
     }
 
-    public async Task<X509Certificate2> GetRootCertificate(CancellationToken cancellationToken)
+    public async Task<X509Certificate2> GetRootCertificate(string url, CancellationToken cancellationToken)
     {
-        var url = _configuration.RootCertificateLocationUrl;
-
         using var client = new HttpClient();
         var response = await client.GetByteArrayAsync(url, cancellationToken);
         if (response == null || response.Length == 0)
