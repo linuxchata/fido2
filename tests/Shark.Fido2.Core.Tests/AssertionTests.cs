@@ -149,7 +149,7 @@ public class AssertionTests
         Assert.That(result.Timeout, Is.EqualTo(60000));
         Assert.That(result.RpId, Is.EqualTo("localhost"));
         Assert.That(result.AllowCredentials, Is.Null);
-        Assert.That(result.Username, Is.EqualTo(username));
+        Assert.That(result.Username, Is.EqualTo(username?.Trim()));
         Assert.That(result.UserVerification, Is.EqualTo(UserVerificationRequirement.Required));
     }
 

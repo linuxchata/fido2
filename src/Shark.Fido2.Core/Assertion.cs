@@ -42,10 +42,12 @@ public sealed class Assertion : IAssertion
     {
         ArgumentNullException.ThrowIfNull(request);
 
+        var username = request.Username?.Trim();
+
         List<Credential>? credentials = null;
-        if (!string.IsNullOrWhiteSpace(request.Username))
+        if (!string.IsNullOrWhiteSpace(username))
         {
-            credentials = await _credentialRepository.Get(request.Username);
+            credentials = await _credentialRepository.Get(username);
         }
 
         return new PublicKeyCredentialRequestOptions
@@ -60,7 +62,7 @@ public sealed class Assertion : IAssertion
                     Transports = c.Transports?.Select(t => t.ToEnum<AuthenticatorTransport>()).ToArray() ?? [],
                 })
                 .ToArray(),
-            Username = request.Username,
+            Username = username,
             UserVerification = request.UserVerification ?? UserVerificationRequirement.Preferred,
             Extensions = new AuthenticationExtensionsClientInputs(),
         };
