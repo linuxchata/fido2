@@ -40,7 +40,9 @@ public sealed class Attestation : IAttestation
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        var credentials = await _credentialRepository.Get(request.Username);
+        var username = request.Username.Trim();
+
+        var credentials = await _credentialRepository.Get(username);
         PublicKeyCredentialDescriptor[]? excludeCredentials = null;
         if (credentials != null && credentials.Count > 0)
         {
@@ -63,9 +65,9 @@ public sealed class Attestation : IAttestation
             },
             User = new PublicKeyCredentialUserEntity
             {
-                Id = request.Username.FromBase64Url(),
-                Name = request.Username,
-                DisplayName = request.DisplayName,
+                Id = username.FromBase64Url(),
+                Name = username,
+                DisplayName = request.DisplayName.Trim(),
             },
             Challenge = _challengeGenerator.Get(),
             PublicKeyCredentialParams = PublicKeyAlgorithms.Extended
