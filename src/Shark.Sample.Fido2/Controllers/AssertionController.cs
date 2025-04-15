@@ -1,5 +1,6 @@
 ﻿using System.Net.Mime;
 using System.Text.Json;
+using System.Threading;
 using Microsoft.AspNetCore.Mvc;
 using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Domain;
@@ -16,7 +17,7 @@ namespace Shark.Sample.Fido2.Controllers;
 /// </summary>
 [Route("[controller]")]
 [ApiController]
-public class AssertionController(IAssertion assertion, ILogger<AttestationController> logger) : ControllerBase
+public class AssertionController(IAssertion assertion, ILogger<AssertionController> logger) : ControllerBase
 {
     private readonly IAssertion _assertion = assertion;
 
@@ -24,6 +25,7 @@ public class AssertionController(IAssertion assertion, ILogger<AttestationContro
     /// Gets credential request options.
     /// </summary>
     /// <param name="request">The request.</param>
+    /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>The HTTP response.</returns>
     [HttpPost("options")]
     [Produces(MediaTypeNames.Application.Json)]
@@ -31,9 +33,11 @@ public class AssertionController(IAssertion assertion, ILogger<AttestationContro
     [SwaggerRequestExample(
         typeof(ServerPublicKeyCredentialGetOptionsRequest),
         typeof(ServerPublicKeyCredentialGetOptionsRequestExample))]
-    public async Task<IActionResult> Options(ServerPublicKeyCredentialGetOptionsRequest request)
+    public async Task<IActionResult> Options(
+        ServerPublicKeyCredentialGetOptionsRequest request,
+        CancellationToken cancellationToken)
     {
-        var requestOptions = await _assertion.RequestOptions(request.Map());
+        var requestOptions = await _assertion.RequestOptions(request.Map(), cancellationToken);
 
         var response = requestOptions.Map();
 
@@ -46,13 +50,16 @@ public class AssertionController(IAssertion assertion, ILogger<AttestationContro
     /// Validates credential.
     /// </summary>
     /// <param name="request">The request.</param>
+    /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>The HTTP response.</returns>
     [HttpPost("result")]
     [Consumes(MediaTypeNames.Application.Json)]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Result(ServerPublicKeyCredentialAssertion request)
+    public async Task<IActionResult> Result(
+        ServerPublicKeyCredentialAssertion request,
+        CancellationToken cancellationToken)
     {
         if (request == null)
         {
@@ -63,7 +70,7 @@ public class AssertionController(IAssertion assertion, ILogger<AttestationContro
 
         var requestOptions = JsonSerializer.Deserialize<PublicKeyCredentialRequestOptions>(requestOptionsString!);
 
-        var response = await _assertion.Complete(request.Map(), requestOptions!);
+        var response = await _assertion.Complete(request.Map(), requestOptions!, cancellationToken);
 
         if (response.IsValid)
         {
