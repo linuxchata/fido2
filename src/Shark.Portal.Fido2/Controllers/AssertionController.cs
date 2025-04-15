@@ -21,11 +21,14 @@ public class AssertionController(IAssertion assertion) : ControllerBase
     /// Gets credential request options.
     /// </summary>
     /// <param name="request">The request.</param>
+    /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>The HTTP response.</returns>
     [HttpPost("options")]
-    public async Task<IActionResult> Options(ServerPublicKeyCredentialGetOptionsRequest request)
+    public async Task<IActionResult> Options(
+        ServerPublicKeyCredentialGetOptionsRequest request,
+        CancellationToken cancellationToken)
     {
-        var requestOptions = await _assertion.RequestOptions(request.Map());
+        var requestOptions = await _assertion.RequestOptions(request.Map(), cancellationToken);
 
         var response = requestOptions.Map();
 
@@ -38,9 +41,12 @@ public class AssertionController(IAssertion assertion) : ControllerBase
     /// Validates credential.
     /// </summary>
     /// <param name="request">The request.</param>
+    /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>The HTTP response.</returns>
     [HttpPost("result")]
-    public async Task<IActionResult> Result(ServerPublicKeyCredentialAssertion request)
+    public async Task<IActionResult> Result(
+        ServerPublicKeyCredentialAssertion request,
+        CancellationToken cancellationToken)
     {
         if (request == null)
         {
@@ -51,7 +57,7 @@ public class AssertionController(IAssertion assertion) : ControllerBase
 
         var requestOptions = JsonSerializer.Deserialize<PublicKeyCredentialRequestOptions>(requestOptionsString!);
 
-        var response = await _assertion.Complete(request.Map(), requestOptions!);
+        var response = await _assertion.Complete(request.Map(), requestOptions!, cancellationToken);
 
         if (response.IsValid)
         {
