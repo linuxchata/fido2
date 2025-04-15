@@ -36,13 +36,14 @@ public sealed class Attestation : IAttestation
     }
 
     public async Task<PublicKeyCredentialCreationOptions> GetOptions(
-        PublicKeyCredentialCreationOptionsRequest request)
+        PublicKeyCredentialCreationOptionsRequest request,
+        CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(request);
 
         var username = request.Username.Trim();
 
-        var credentials = await _credentialRepository.Get(username);
+        var credentials = await _credentialRepository.Get(username, cancellationToken);
         PublicKeyCredentialDescriptor[]? excludeCredentials = null;
         if (credentials != null && credentials.Count > 0)
         {
@@ -85,7 +86,8 @@ public sealed class Attestation : IAttestation
 
     public async Task<AttestationCompleteResult> Complete(
         PublicKeyCredentialAttestation publicKeyCredentialAttestation,
-        PublicKeyCredentialCreationOptions creationOptions)
+        PublicKeyCredentialCreationOptions creationOptions,
+        CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(publicKeyCredentialAttestation);
         ArgumentNullException.ThrowIfNull(creationOptions);
@@ -138,7 +140,7 @@ public sealed class Attestation : IAttestation
         // ceremony, or it MAY decide to accept the registration, e.g. while deleting the older registration.
         var attestedCredentialData = attestationResult.Value!.AuthenticatorData!.AttestedCredentialData;
         var credentialId = attestedCredentialData!.CredentialId;
-        var credential = await _credentialRepository.Get(credentialId);
+        var credential = await _credentialRepository.Get(credentialId, cancellationToken);
         if (credential != null)
         {
             return AttestationCompleteResult.CreateFailure("Credential has already been registered");
@@ -165,7 +167,7 @@ public sealed class Attestation : IAttestation
             Transports = publicKeyCredentialAttestation.Response.Transports?.Select(t => t.GetValue()).ToArray() ?? [],
         };
 
-        await _credentialRepository.Add(credential);
+        await _credentialRepository.Add(credential, cancellationToken);
 
         return AttestationCompleteResult.Create();
     }

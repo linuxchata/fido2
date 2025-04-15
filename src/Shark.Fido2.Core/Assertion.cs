@@ -38,7 +38,8 @@ public sealed class Assertion : IAssertion
     }
 
     public async Task<PublicKeyCredentialRequestOptions> RequestOptions(
-        PublicKeyCredentialRequestOptionsRequest request)
+        PublicKeyCredentialRequestOptionsRequest request,
+        CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(request);
 
@@ -47,7 +48,7 @@ public sealed class Assertion : IAssertion
         List<Credential>? credentials = null;
         if (!string.IsNullOrWhiteSpace(username))
         {
-            credentials = await _credentialRepository.Get(username);
+            credentials = await _credentialRepository.Get(username, cancellationToken);
         }
 
         return new PublicKeyCredentialRequestOptions
@@ -70,7 +71,8 @@ public sealed class Assertion : IAssertion
 
     public async Task<AssertionCompleteResult> Complete(
         PublicKeyCredentialAssertion publicKeyCredentialAssertion,
-        PublicKeyCredentialRequestOptions requestOptions)
+        PublicKeyCredentialRequestOptions requestOptions,
+        CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(publicKeyCredentialAssertion);
         ArgumentNullException.ThrowIfNull(requestOptions);
@@ -109,7 +111,7 @@ public sealed class Assertion : IAssertion
             }
         }
 
-        var credential = await _credentialRepository.Get(credentialId);
+        var credential = await _credentialRepository.Get(credentialId, cancellationToken);
         if (credential == null)
         {
             return AssertionCompleteResult.CreateFailure("Registered credential is not found");
@@ -168,7 +170,10 @@ public sealed class Assertion : IAssertion
             if (assertionResult.Value!.SignCount > credential.SignCount)
             {
                 // Update storedSignCount to be the value of authData.signCount.
-                await _credentialRepository.UpdateSignCount(credential, assertionResult.Value!.SignCount);
+                await _credentialRepository.UpdateSignCount(
+                    credential,
+                    assertionResult.Value!.SignCount,
+                    cancellationToken);
             }
             else
             {
