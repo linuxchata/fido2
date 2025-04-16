@@ -78,7 +78,11 @@ public sealed class Attestation : IAttestation
             ExcludeCredentials = excludeCredentials ?? [],
             AuthenticatorSelection = GetAuthenticatorSelection(request),
             Attestation = GetAttestation(request.Attestation),
-            Extensions = new AuthenticationExtensionsClientInputs(),
+            Extensions = new AuthenticationExtensionsClientInputs
+            {
+                UserVerificationMethod = true,
+                CredentialProperties = true,
+            },
         };
 
         return credentialCreationOptions;

@@ -1,6 +1,5 @@
 ﻿using System.Net.Mime;
 using System.Text.Json;
-using System.Threading;
 using Microsoft.AspNetCore.Mvc;
 using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Domain;

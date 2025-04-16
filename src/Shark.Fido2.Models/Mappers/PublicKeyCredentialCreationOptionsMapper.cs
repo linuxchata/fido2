@@ -96,7 +96,7 @@ public static class PublicKeyCredentialCreationOptionsMapper
         {
             AppIdExclude = extensions.AppIdExclude,
             UserVerificationMethod = extensions.UserVerificationMethod,
-            CredentialProperties = null,
+            CredentialProperties = extensions.CredentialProperties,
             LargeBlob = extensions.LargeBlob != null ? new ServerAuthenticationExtensionsLargeBlobInputs
             {
                 Support = extensions.LargeBlob.Support,
