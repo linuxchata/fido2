@@ -51,6 +51,8 @@ public sealed class Assertion : IAssertion
             credentials = await _credentialRepository.Get(username, cancellationToken);
         }
 
+        var appId = _configuration.AppId;
+
         return new PublicKeyCredentialRequestOptions
         {
             Challenge = _challengeGenerator.Get(),
@@ -67,7 +69,7 @@ public sealed class Assertion : IAssertion
             UserVerification = request.UserVerification ?? UserVerificationRequirement.Preferred,
             Extensions = new AuthenticationExtensionsClientInputs
             {
-                AppId = !string.IsNullOrWhiteSpace(_configuration.AppId) ? _configuration.AppId : null,
+                AppId = !string.IsNullOrWhiteSpace(appId) ? appId : null,
                 UserVerificationMethod = true,
             },
         };

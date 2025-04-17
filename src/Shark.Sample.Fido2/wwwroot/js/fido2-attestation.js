@@ -22,6 +22,7 @@ async function createCredential(options) {
         ...(options.extensions.largeBlob && { largeBlob: options.extensions.largeBlob })
     }
 
+    // https://developer.mozilla.org/en-US/docs/Web/API/PublicKeyCredentialCreationOptions
     const credentialCreationOptions = {
         publicKey: {
             rp: {
@@ -38,6 +39,11 @@ async function createCredential(options) {
                 alg: param.alg,
             })),
             challenge: toUint8Array(options.challenge),
+            excludeCredentials: options.excludeCredentials.map(credential => ({
+                id: toUint8Array(credential.id),
+                transports: credential.transports,
+                type: credential.type,
+            })),
             timeout: options.timeout,
             attestation: options.attestation,
             extensions: extensions

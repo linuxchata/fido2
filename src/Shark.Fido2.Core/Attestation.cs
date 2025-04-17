@@ -57,6 +57,8 @@ public sealed class Attestation : IAttestation
                 .ToArray();
         }
 
+        var appIdExclude = _configuration.AppIdExclude;
+
         var credentialCreationOptions = new PublicKeyCredentialCreationOptions
         {
             RelyingParty = new PublicKeyCredentialRpEntity
@@ -80,6 +82,7 @@ public sealed class Attestation : IAttestation
             Attestation = GetAttestation(request.Attestation),
             Extensions = new AuthenticationExtensionsClientInputs
             {
+                AppIdExclude = !string.IsNullOrWhiteSpace(appIdExclude) ? appIdExclude : null,
                 UserVerificationMethod = true,
                 CredentialProperties = true,
             },

@@ -42,4 +42,9 @@ public sealed class Fido2Configuration
     /// Gets or sets a FIDO AppID extension.
     /// </summary>
     public string? AppId { get; set; }
+
+    /// <summary>
+    /// Gets or sets a FIDO AppID Exclusion extension.
+    /// </summary>
+    public string? AppIdExclude { get; set; }
 }

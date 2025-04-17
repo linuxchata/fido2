@@ -19,11 +19,17 @@ async function requestCredential(options) {
         ...(options.extensions.largeBlob && { largeBlob: options.extensions.largeBlob })
     }
 
+    // https://developer.mozilla.org/en-US/docs/Web/API/PublicKeyCredentialRequestOptions
     const credentialRequestOptions = {
         publicKey: {
-            challenge: toUint8Array(options.challenge),
-            timeout: options.timeout,
             rpId: options.rpId,
+            challenge: toUint8Array(options.challenge),
+            allowCredentials: options.allowCredentials.map(credential => ({
+                id: toUint8Array(credential.id),
+                transports: credential.transports,
+                type: credential.type,
+            })),
+            timeout: options.timeout,
             extensions: extensions
         },
     };

@@ -15,8 +15,6 @@ async function requestCreateCredentialOptions(username, displayName) {
 }
 
 async function createCredential(options) {
-    const extensions = options.extensions.credProps ? { 'credProps': options.extensions.credProps } : {};
-
     const credentialCreationOptions = {
         publicKey: {
             rp: {
@@ -33,9 +31,13 @@ async function createCredential(options) {
                 alg: param.alg,
             })),
             challenge: toUint8Array(options.challenge),
+            excludeCredentials: options.excludeCredentials.map(credential => ({
+                id: toUint8Array(credential.id),
+                transports: credential.transports,
+                type: credential.type,
+            })),
             timeout: options.timeout,
-            attestation: options.attestation,
-            extensions: extensions
+            attestation: options.attestation
         },
     };
 
