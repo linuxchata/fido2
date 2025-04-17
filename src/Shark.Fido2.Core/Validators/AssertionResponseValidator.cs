@@ -25,11 +25,12 @@ internal class AssertionResponseValidator : IAssertionObjectValidator
     }
 
     public ValidatorInternalResult Validate(
-        byte[] authenticatorRawData,
         AuthenticatorData? authenticatorData,
+        byte[] authenticatorRawData,
+        byte[]? clientDataHash,
         string signature,
-        ClientData clientData,
         CredentialPublicKey credentialPublicKey,
+        AuthenticationExtensionsClientOutputs extensionsClientOutputs,
         PublicKeyCredentialRequestOptions requestOptions)
     {
         if (authenticatorData == null)
@@ -46,7 +47,9 @@ internal class AssertionResponseValidator : IAssertionObjectValidator
 
         // Step 15
         // Verify that the rpIdHash in authData is the SHA-256 hash of the RP ID expected by the Relying Party.
-        var rpIdHash = HashProvider.GetSha256Hash(_configuration.RelyingPartyId);
+        // With AppId set to true, expect that the rpIdHash MAY be the hash of the AppID instead of the RP ID
+        var rpId = extensionsClientOutputs.AppId == true ? requestOptions.Extensions!.AppId : requestOptions.RpId;
+        var rpIdHash = HashProvider.GetSha256Hash(rpId ?? _configuration.RelyingPartyId);
         if (!BytesArrayComparer.CompareAsSpan(rpIdHash, authenticatorData.RpIdHash))
         {
             return ValidatorInternalResult.Invalid("RP ID hash mismatch");
@@ -81,7 +84,7 @@ internal class AssertionResponseValidator : IAssertionObjectValidator
         // Using credentialPublicKey, verify that sig is a valid signature over the binary concatenation of authData
         // and hash.
         var signatureRawData = signature.FromBase64Url();
-        var concatenatedData = BytesArrayHelper.Concatenate(authenticatorRawData, clientData.ClientDataHash);
+        var concatenatedData = BytesArrayHelper.Concatenate(authenticatorRawData, clientDataHash);
         var result = _signatureAttestationStatementValidator.Validate(concatenatedData, signatureRawData, credentialPublicKey);
         if (!result.IsValid)
         {

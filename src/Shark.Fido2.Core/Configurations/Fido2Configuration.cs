@@ -37,4 +37,9 @@ public sealed class Fido2Configuration
     /// Gets or sets a value indicating whether the Relying Party requires strict verification of authenticators.
     /// </summary>
     public bool EnableStrictAuthenticatorVerification { get; set; } = false;
+
+    /// <summary>
+    /// Gets or sets a FIDO AppID extension.
+    /// </summary>
+    public string? AppId { get; set; }
 }

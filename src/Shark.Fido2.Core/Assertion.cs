@@ -67,6 +67,7 @@ public sealed class Assertion : IAssertion
             UserVerification = request.UserVerification ?? UserVerificationRequirement.Preferred,
             Extensions = new AuthenticationExtensionsClientInputs
             {
+                AppId = !string.IsNullOrWhiteSpace(_configuration.AppId) ? _configuration.AppId : null,
                 UserVerificationMethod = true,
             },
         };
@@ -155,6 +156,7 @@ public sealed class Assertion : IAssertion
             publicKeyCredentialAssertion.Response.Signature,
             clientDataHandlerResult.Value!,
             credential.CredentialPublicKey,
+            publicKeyCredentialAssertion.Extensions,
             requestOptions);
         if (assertionResult.HasError)
         {
