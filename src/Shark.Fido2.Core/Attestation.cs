@@ -186,7 +186,8 @@ public sealed class Attestation : IAttestation
             new AuthenticatorSelectionCriteria
             {
                 AuthenticatorAttachment = request.AuthenticatorSelection.AuthenticatorAttachment,
-                ResidentKey = request.AuthenticatorSelection.ResidentKey,
+                ResidentKey = request.AuthenticatorSelection.ResidentKey != 0 ?
+                    request.AuthenticatorSelection.ResidentKey : ResidentKeyRequirement.Discouraged,
                 RequireResidentKey = request.AuthenticatorSelection.ResidentKey == ResidentKeyRequirement.Required,
                 UserVerification = request.AuthenticatorSelection.UserVerification ??
                     UserVerificationRequirement.Preferred,
