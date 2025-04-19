@@ -4,13 +4,25 @@ public sealed class Fido2Configuration
 {
     public const string Name = nameof(Fido2Configuration);
 
-    public required string Origin { get; set; }
+    /// <summary>
+    /// Gets the Relying Party origin.
+    /// </summary>
+    public required string Origin { get; init; }
 
-    public required string RelyingPartyId { get; set; }
+    /// <summary>
+    /// Gets a valid domain string identifying the Relying Party.
+    /// </summary>
+    public required string RelyingPartyId { get; init; }
 
-    public required string RelyingPartyIdName { get; set; }
+    /// <summary>
+    /// Gets a name of the Relying Party.
+    /// </summary>
+    public required string RelyingPartyIdName { get; init; }
 
-    public ulong? Timeout { get; set; }
+    /// <summary>
+    /// Gets a time, in milliseconds, that the caller is willing to wait for the call to complete.
+    /// </summary>
+    public ulong? Timeout { get; init; }
 
     /// <summary>
     /// Gets or sets a value indicating whether None attestation type is acceptable under Relying Party policy.
@@ -37,4 +49,34 @@ public sealed class Fido2Configuration
     /// Gets or sets a value indicating whether the Relying Party requires strict verification of authenticators.
     /// </summary>
     public bool EnableStrictAuthenticatorVerification { get; set; } = false;
+
+    /// <summary>
+    /// Gets a FIDO AppID extension.
+    /// </summary>
+    public string? AppId { get; init; }
+
+    /// <summary>
+    /// Gets a FIDO AppID Exclusion extension.
+    /// </summary>
+    public string? AppIdExclude { get; init; }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether User Verification Method Extension (uvm) must be used.
+    /// </summary>
+    public bool UseUserVerificationMethod { get; set; } = false;
+
+    /// <summary>
+    /// Gets or sets a value indicating whether Credential Properties Extension (credProps) must be used.
+    /// </summary>
+    public bool UseCredentialProperties { get; set; } = false;
+
+    /// <summary>
+    /// Gets or sets a value indicating whether Large blob storage extension (largeBlob) must be used.
+    /// </summary>
+    public bool UseLargeBlob { get; set; } = false;
+
+    /// <summary>
+    /// Gets or sets a value of the large blob support. Large blob storage extension (largeBlob) must be used.
+    /// </summary>
+    public string LargeBlobSupport { get; set; } = Constants.LargeBlobSupport.Preferred;
 }

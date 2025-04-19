@@ -6,10 +6,11 @@ namespace Shark.Fido2.Core.Abstractions.Validators;
 public interface IAssertionObjectValidator
 {
     ValidatorInternalResult Validate(
-        byte[] authenticatorRawData,
         AuthenticatorData? authenticatorData,
+        byte[] authenticatorRawData,
+        byte[]? clientDataHash,
         string signature,
-        ClientData clientData,
         CredentialPublicKey credentialPublicKey,
+        AuthenticationExtensionsClientOutputs extensionsClientOutputs,
         PublicKeyCredentialRequestOptions requestOptions);
 }

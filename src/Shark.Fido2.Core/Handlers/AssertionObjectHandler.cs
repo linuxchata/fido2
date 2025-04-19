@@ -25,6 +25,7 @@ internal class AssertionObjectHandler : IAssertionObjectHandler
         string signature,
         ClientData clientData,
         CredentialPublicKey credentialPublicKey,
+        AuthenticationExtensionsClientOutputs extensionsClientOutputs,
         PublicKeyCredentialRequestOptions requestOptions)
     {
         if (string.IsNullOrWhiteSpace(authenticatorDataString))
@@ -41,11 +42,12 @@ internal class AssertionObjectHandler : IAssertionObjectHandler
         var authenticatorData = _authenticatorDataParserService.Parse(authenticatorRawData);
 
         var result = _assertionObjectValidator.Validate(
-            authenticatorRawData,
             authenticatorData,
+            authenticatorRawData,
+            clientData.ClientDataHash,
             signature,
-            clientData,
             credentialPublicKey,
+            extensionsClientOutputs,
             requestOptions);
         if (!result.IsValid)
         {

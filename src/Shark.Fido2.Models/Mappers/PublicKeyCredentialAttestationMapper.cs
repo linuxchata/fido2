@@ -34,17 +34,25 @@ public static class PublicKeyCredentialAttestationMapper
 
     private static AuthenticationExtensionsClientOutputs Map(ServerAuthenticationExtensionsClientOutputs? extensions)
     {
-        if (extensions == null || extensions.CredentialProperties == null)
+        if (extensions == null)
         {
             return new AuthenticationExtensionsClientOutputs();
         }
 
         return new AuthenticationExtensionsClientOutputs
         {
+            AppIdExclude = extensions.AppIdExclude,
+            UserVerificationMethod = extensions.UserVerificationMethod,
             CredentialProperties = new CredentialPropertiesOutput
             {
-                RequireResidentKey = extensions.CredentialProperties.RequireResidentKey,
+                RequireResidentKey = extensions.CredentialProperties?.RequireResidentKey,
             },
+            LargeBlob = extensions.LargeBlob != null ? new AuthenticationExtensionsLargeBlobOutputs
+            {
+                Supported = extensions.LargeBlob.Supported,
+                Blob = extensions.LargeBlob.Blob,
+            }
+            : null,
         };
     }
 }

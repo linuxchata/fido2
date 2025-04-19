@@ -51,6 +51,7 @@ public class AssertionTests
                 It.IsAny<string>(),
                 It.IsAny<ClientData>(),
                 It.IsAny<CredentialPublicKey>(),
+                It.IsAny<AuthenticationExtensionsClientOutputs>(),
                 It.IsAny<PublicKeyCredentialRequestOptions>()))
             .Returns(new InternalResult<AuthenticatorData>(new AuthenticatorData
             {
@@ -447,6 +448,7 @@ public class AssertionTests
                 It.IsAny<string>(),
                 It.IsAny<ClientData>(),
                 It.IsAny<CredentialPublicKey>(),
+                It.IsAny<AuthenticationExtensionsClientOutputs>(),
                 It.IsAny<PublicKeyCredentialRequestOptions>()))
             .Returns(new InternalResult<AuthenticatorData>("Assertion object validation failed"));
 
@@ -536,6 +538,7 @@ public class AssertionTests
                 It.IsAny<string>(),
                 It.IsAny<ClientData>(),
                 It.IsAny<CredentialPublicKey>(),
+                It.IsAny<AuthenticationExtensionsClientOutputs>(),
                 It.IsAny<PublicKeyCredentialRequestOptions>()))
             .Returns(new InternalResult<AuthenticatorData>(new AuthenticatorData
             {

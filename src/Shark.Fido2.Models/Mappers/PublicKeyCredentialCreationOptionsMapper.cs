@@ -94,7 +94,14 @@ public static class PublicKeyCredentialCreationOptionsMapper
 
         return new ServerAuthenticationExtensionsClientInputs
         {
-            CredentialProperties = null,
+            AppIdExclude = extensions.AppIdExclude,
+            UserVerificationMethod = extensions.UserVerificationMethod,
+            CredentialProperties = extensions.CredentialProperties,
+            LargeBlob = extensions.LargeBlob != null ? new ServerAuthenticationExtensionsLargeBlobInputs
+            {
+                Support = extensions.LargeBlob.Support,
+            }
+            : null,
             Example = true,
         };
     }

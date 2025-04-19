@@ -57,6 +57,8 @@ public sealed class Attestation : IAttestation
                 .ToArray();
         }
 
+        var appIdExclude = _configuration.AppIdExclude;
+
         var credentialCreationOptions = new PublicKeyCredentialCreationOptions
         {
             RelyingParty = new PublicKeyCredentialRpEntity
@@ -78,7 +80,18 @@ public sealed class Attestation : IAttestation
             ExcludeCredentials = excludeCredentials ?? [],
             AuthenticatorSelection = GetAuthenticatorSelection(request),
             Attestation = GetAttestation(request.Attestation),
-            Extensions = new AuthenticationExtensionsClientInputs(),
+            Extensions = new AuthenticationExtensionsClientInputs
+            {
+                AppIdExclude = !string.IsNullOrWhiteSpace(appIdExclude) ? appIdExclude : null,
+                UserVerificationMethod = _configuration.UseUserVerificationMethod,
+                CredentialProperties = _configuration.UseCredentialProperties,
+                LargeBlob = _configuration.UseLargeBlob ?
+                new AuthenticationExtensionsLargeBlobInputs
+                {
+                    Support = _configuration.LargeBlobSupport,
+                }
+                : null,
+            },
         };
 
         return credentialCreationOptions;
@@ -179,7 +192,8 @@ public sealed class Attestation : IAttestation
             new AuthenticatorSelectionCriteria
             {
                 AuthenticatorAttachment = request.AuthenticatorSelection.AuthenticatorAttachment,
-                ResidentKey = request.AuthenticatorSelection.ResidentKey,
+                ResidentKey = request.AuthenticatorSelection.ResidentKey != 0 ?
+                    request.AuthenticatorSelection.ResidentKey : ResidentKeyRequirement.Discouraged,
                 RequireResidentKey = request.AuthenticatorSelection.ResidentKey == ResidentKeyRequirement.Required,
                 UserVerification = request.AuthenticatorSelection.UserVerification ??
                     UserVerificationRequirement.Preferred,

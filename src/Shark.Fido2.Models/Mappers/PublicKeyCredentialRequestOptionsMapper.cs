@@ -43,7 +43,14 @@ public static class PublicKeyCredentialRequestOptionsMapper
 
         return new ServerAuthenticationExtensionsClientInputs
         {
-            CredentialProperties = null,
+            AppId = extensions.AppId,
+            UserVerificationMethod = extensions.UserVerificationMethod,
+            LargeBlob = extensions.LargeBlob != null ? new ServerAuthenticationExtensionsLargeBlobInputs
+            {
+                Read = extensions.LargeBlob.Read,
+                Write = extensions.LargeBlob.Write,
+            }
+            : null,
             Example = true,
         };
     }

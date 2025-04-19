@@ -22,7 +22,27 @@ public static class PublicKeyCredentialAssertionMapper
                 UserHandle = assertion.Response.UserHandle,
             },
             Type = assertion.Type,
-            Extensions = new AuthenticationExtensionsClientOutputs(),
+            Extensions = Map(assertion.Extensions),
+        };
+    }
+
+    private static AuthenticationExtensionsClientOutputs Map(ServerAuthenticationExtensionsClientOutputs? extensions)
+    {
+        if (extensions == null)
+        {
+            return new AuthenticationExtensionsClientOutputs();
+        }
+
+        return new AuthenticationExtensionsClientOutputs
+        {
+            AppId = extensions.AppId,
+            UserVerificationMethod = extensions.UserVerificationMethod,
+            LargeBlob = extensions.LargeBlob != null ? new AuthenticationExtensionsLargeBlobOutputs
+            {
+                Blob = extensions.LargeBlob.Blob,
+                Written = extensions.LargeBlob.Written,
+            }
+            : null,
         };
     }
 }

@@ -19,4 +19,7 @@ public sealed class ServerPublicKeyCredentialAssertion
 
     [JsonPropertyName("type")]
     public required string Type { get; init; }
+
+    [JsonPropertyName("extensions")]
+    public ServerAuthenticationExtensionsClientOutputs? Extensions { get; init; }
 }

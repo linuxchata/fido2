@@ -15,9 +15,14 @@ async function requestVerifyCredentialOptions(username) {
 async function requestCredential(options) {
     const credentialRequestOptions = {
         publicKey: {
+            rpId: options.rpId,
             challenge: toUint8Array(options.challenge),
-            timeout: options.timeout,
-            rpId: options.rpId
+            allowCredentials: options.allowCredentials.map(credential => ({
+                id: toUint8Array(credential.id),
+                transports: credential.transports,
+                type: credential.type,
+            })),
+            timeout: options.timeout
         },
     };
 

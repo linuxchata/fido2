@@ -2,5 +2,13 @@
 
 public sealed class AuthenticationExtensionsClientOutputs
 {
-    public CredentialPropertiesOutput? CredentialProperties { get; set; }
+    public bool? AppId { get; init; }
+
+    public bool? AppIdExclude { get; init; }
+
+    public IEnumerable<ulong[]>? UserVerificationMethod { get; init; }
+
+    public CredentialPropertiesOutput? CredentialProperties { get; init; }
+
+    public AuthenticationExtensionsLargeBlobOutputs? LargeBlob { get; init; }
 }

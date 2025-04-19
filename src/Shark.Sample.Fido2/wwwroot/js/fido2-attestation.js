@@ -6,7 +6,8 @@ async function requestCreateCredentialOptions(username) {
     const optionsRequest = {
         username: username,
         displayName: 'Shark',
-        attestation: 'direct'
+        attestation: 'direct',
+        authenticatorSelection: { userVerification: 'required' }
     };
 
     const options = await fetchAttestationOptions(optionsRequest);
@@ -15,8 +16,14 @@ async function requestCreateCredentialOptions(username) {
 }
 
 async function createCredential(options) {
-    const extensions = options.extensions.credProps ? { 'credProps': options.extensions.credProps } : {};
+    let extensions = {
+        ...(options.extensions.appidExclude && { appidExclude: options.extensions.appidExclude }),
+        ...(options.extensions.uvm && { uvm: options.extensions.uvm }),
+        ...(options.extensions.credProps && { credProps: options.extensions.credProps }),
+        ...(options.extensions.largeBlob && { largeBlob: options.extensions.largeBlob })
+    }
 
+    // https://developer.mozilla.org/en-US/docs/Web/API/PublicKeyCredentialCreationOptions
     const credentialCreationOptions = {
         publicKey: {
             rp: {
@@ -32,7 +39,13 @@ async function createCredential(options) {
                 type: param.type,
                 alg: param.alg,
             })),
+            authenticatorSelection: options.authenticatorSelection,
             challenge: toUint8Array(options.challenge),
+            excludeCredentials: options.excludeCredentials.map(credential => ({
+                id: toUint8Array(credential.id),
+                transports: credential.transports,
+                type: credential.type,
+            })),
             timeout: options.timeout,
             attestation: options.attestation,
             extensions: extensions

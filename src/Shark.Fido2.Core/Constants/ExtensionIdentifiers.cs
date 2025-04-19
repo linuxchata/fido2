@@ -2,7 +2,7 @@
 
 /// <summary>
 /// WebAuthn Extension Identifiers
-/// https://www.iana.org/assignments/webauthn/webauthn.xhtml
+/// https://www.iana.org/assignments/webauthn/webauthn.xhtml.
 /// </summary>
 internal static class ExtensionIdentifiers
 {

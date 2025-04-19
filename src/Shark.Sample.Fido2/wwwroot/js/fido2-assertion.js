@@ -4,7 +4,8 @@ const toastrAuthenticationTitle = 'Web Authentication';
 
 async function requestVerifyCredentialOptions(username) {
     const optionsRequest = {
-        username: username
+        username: username,
+        userVerification: 'required'
     };
 
     const options = await fetchAssertionOptions(optionsRequest);
@@ -13,11 +14,25 @@ async function requestVerifyCredentialOptions(username) {
 }
 
 async function requestCredential(options) {
+    let extensions = {
+        ...(options.extensions.appid && { appid: options.extensions.appid }),
+        ...(options.extensions.uvm && { uvm: options.extensions.uvm }),
+        ...(options.extensions.largeBlob && { largeBlob: options.extensions.largeBlob })
+    }
+
+    // https://developer.mozilla.org/en-US/docs/Web/API/PublicKeyCredentialRequestOptions
     const credentialRequestOptions = {
         publicKey: {
+            rpId: options.rpId,
+            userVerification: options.userVerification,
             challenge: toUint8Array(options.challenge),
+            allowCredentials: options.allowCredentials.map(credential => ({
+                id: toUint8Array(credential.id),
+                transports: credential.transports,
+                type: credential.type,
+            })),
             timeout: options.timeout,
-            rpId: options.rpId
+            extensions: extensions
         },
     };
 
@@ -40,6 +55,7 @@ async function requestCredential(options) {
             userHandle: toBase64Url(assertion.response.userHandle),
         },
         type: assertion.type,
+        extensions: assertion.getClientExtensionResults(),
     };
 
     await fetchAssertionResult(credentials);

@@ -51,7 +51,9 @@ public sealed class Assertion : IAssertion
             credentials = await _credentialRepository.Get(username, cancellationToken);
         }
 
-        return new PublicKeyCredentialRequestOptions
+        var appId = _configuration.AppId;
+
+        var publicKeyCredentialRequestOptions = new PublicKeyCredentialRequestOptions
         {
             Challenge = _challengeGenerator.Get(),
             Timeout = _configuration.Timeout,
@@ -65,8 +67,20 @@ public sealed class Assertion : IAssertion
                 .ToArray(),
             Username = username,
             UserVerification = request.UserVerification ?? UserVerificationRequirement.Preferred,
-            Extensions = new AuthenticationExtensionsClientInputs(),
+            Extensions = new AuthenticationExtensionsClientInputs
+            {
+                AppId = !string.IsNullOrWhiteSpace(appId) ? appId : null,
+                UserVerificationMethod = _configuration.UseUserVerificationMethod,
+                LargeBlob = _configuration.UseLargeBlob ?
+                new AuthenticationExtensionsLargeBlobInputs
+                {
+                    Read = true,
+                }
+                : null,
+            },
         };
+
+        return publicKeyCredentialRequestOptions;
     }
 
     public async Task<AssertionCompleteResult> Complete(
@@ -152,6 +166,7 @@ public sealed class Assertion : IAssertion
             publicKeyCredentialAssertion.Response.Signature,
             clientDataHandlerResult.Value!,
             credential.CredentialPublicKey,
+            publicKeyCredentialAssertion.Extensions,
             requestOptions);
         if (assertionResult.HasError)
         {
