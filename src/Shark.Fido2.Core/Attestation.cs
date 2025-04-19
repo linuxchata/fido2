@@ -85,6 +85,12 @@ public sealed class Attestation : IAttestation
                 AppIdExclude = !string.IsNullOrWhiteSpace(appIdExclude) ? appIdExclude : null,
                 UserVerificationMethod = _configuration.UseUserVerificationMethod,
                 CredentialProperties = _configuration.UseCredentialProperties,
+                LargeBlob = _configuration.UseLargeBlob ?
+                new AuthenticationExtensionsLargeBlobInputs
+                {
+                    Support = _configuration.LargeBlobSupport,
+                }
+                : null,
             },
         };
 

@@ -51,7 +51,6 @@ public static class PublicKeyCredentialAttestationMapper
             {
                 Supported = extensions.LargeBlob.Supported,
                 Blob = extensions.LargeBlob.Blob,
-                Written = extensions.LargeBlob.Written,
             }
             : null,
         };

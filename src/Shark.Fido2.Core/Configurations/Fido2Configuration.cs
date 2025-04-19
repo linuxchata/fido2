@@ -69,4 +69,14 @@ public sealed class Fido2Configuration
     /// Gets or sets a value indicating whether Credential Properties Extension (credProps) must be used.
     /// </summary>
     public bool UseCredentialProperties { get; set; } = false;
+
+    /// <summary>
+    /// Gets or sets a value indicating whether Large blob storage extension (largeBlob) must be used.
+    /// </summary>
+    public bool UseLargeBlob { get; set; } = false;
+
+    /// <summary>
+    /// Gets or sets a value of the large blob support. Large blob storage extension (largeBlob) must be used.
+    /// </summary>
+    public string LargeBlobSupport { get; set; } = Constants.LargeBlobSupport.Preferred;
 }

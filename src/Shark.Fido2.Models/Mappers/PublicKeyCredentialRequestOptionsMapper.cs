@@ -47,7 +47,6 @@ public static class PublicKeyCredentialRequestOptionsMapper
             UserVerificationMethod = extensions.UserVerificationMethod,
             LargeBlob = extensions.LargeBlob != null ? new ServerAuthenticationExtensionsLargeBlobInputs
             {
-                Support = extensions.LargeBlob.Support,
                 Read = extensions.LargeBlob.Read,
                 Write = extensions.LargeBlob.Write,
             }

@@ -5,11 +5,14 @@ namespace Shark.Fido2.Models.Responses;
 public sealed class ServerAuthenticationExtensionsLargeBlobInputs
 {
     [JsonPropertyName("support")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string? Support { get; set; }
 
     [JsonPropertyName("read")]
-    public bool Read { get; set; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public bool? Read { get; set; }
 
     [JsonPropertyName("write")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public byte[]? Write { get; set; }
 }

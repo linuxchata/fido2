@@ -100,8 +100,6 @@ public static class PublicKeyCredentialCreationOptionsMapper
             LargeBlob = extensions.LargeBlob != null ? new ServerAuthenticationExtensionsLargeBlobInputs
             {
                 Support = extensions.LargeBlob.Support,
-                Read = extensions.LargeBlob.Read,
-                Write = extensions.LargeBlob.Write,
             }
             : null,
             Example = true,

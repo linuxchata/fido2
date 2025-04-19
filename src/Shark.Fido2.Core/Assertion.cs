@@ -53,7 +53,7 @@ public sealed class Assertion : IAssertion
 
         var appId = _configuration.AppId;
 
-        return new PublicKeyCredentialRequestOptions
+        var publicKeyCredentialRequestOptions = new PublicKeyCredentialRequestOptions
         {
             Challenge = _challengeGenerator.Get(),
             Timeout = _configuration.Timeout,
@@ -71,8 +71,16 @@ public sealed class Assertion : IAssertion
             {
                 AppId = !string.IsNullOrWhiteSpace(appId) ? appId : null,
                 UserVerificationMethod = _configuration.UseUserVerificationMethod,
+                LargeBlob = _configuration.UseLargeBlob ?
+                new AuthenticationExtensionsLargeBlobInputs
+                {
+                    Read = true,
+                }
+                : null,
             },
         };
+
+        return publicKeyCredentialRequestOptions;
     }
 
     public async Task<AssertionCompleteResult> Complete(

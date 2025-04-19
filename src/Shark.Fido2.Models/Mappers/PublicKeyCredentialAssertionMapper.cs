@@ -39,7 +39,6 @@ public static class PublicKeyCredentialAssertionMapper
             UserVerificationMethod = extensions.UserVerificationMethod,
             LargeBlob = extensions.LargeBlob != null ? new AuthenticationExtensionsLargeBlobOutputs
             {
-                Supported = extensions.LargeBlob.Supported,
                 Blob = extensions.LargeBlob.Blob,
                 Written = extensions.LargeBlob.Written,
             }
