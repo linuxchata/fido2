@@ -59,7 +59,6 @@ async function createCredential(options) {
             transports: attestation.response.getTransports(),
         },
         type: attestation.type,
-        extensions: attestation.getClientExtensionResults(),
     };
 
     await fetchAttestationResult(credentials);

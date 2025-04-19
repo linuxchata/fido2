@@ -45,7 +45,6 @@ async function requestCredential(options) {
             userHandle: toBase64Url(assertion.response.userHandle),
         },
         type: assertion.type,
-        extensions: assertion.getClientExtensionResults(),
     };
 
     await fetchAssertionResult(credentials);
