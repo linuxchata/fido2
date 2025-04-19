@@ -83,8 +83,8 @@ public sealed class Attestation : IAttestation
             Extensions = new AuthenticationExtensionsClientInputs
             {
                 AppIdExclude = !string.IsNullOrWhiteSpace(appIdExclude) ? appIdExclude : null,
-                UserVerificationMethod = true,
-                CredentialProperties = true,
+                UserVerificationMethod = _configuration.UseUserVerificationMethod,
+                CredentialProperties = _configuration.UseCredentialProperties,
             },
         };
 

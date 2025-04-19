@@ -70,7 +70,7 @@ public sealed class Assertion : IAssertion
             Extensions = new AuthenticationExtensionsClientInputs
             {
                 AppId = !string.IsNullOrWhiteSpace(appId) ? appId : null,
-                UserVerificationMethod = true,
+                UserVerificationMethod = _configuration.UseUserVerificationMethod,
             },
         };
     }
