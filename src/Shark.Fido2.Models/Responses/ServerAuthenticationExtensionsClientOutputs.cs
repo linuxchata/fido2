@@ -15,7 +15,7 @@ public sealed class ServerAuthenticationExtensionsClientOutputs
     public bool? AppIdExclude { get; init; }
 
     [JsonPropertyName("uvm")]
-    public ServerUserVerificationMethodOutput? UserVerificationMethod { get; init; }
+    public IEnumerable<ulong[]>? UserVerificationMethod { get; init; }
 
     [JsonPropertyName("credProps")]
     public ServerCredentialPropertiesOutput? CredentialProperties { get; init; }

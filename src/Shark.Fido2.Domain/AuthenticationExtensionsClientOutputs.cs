@@ -6,7 +6,7 @@ public sealed class AuthenticationExtensionsClientOutputs
 
     public bool? AppIdExclude { get; init; }
 
-    public UserVerificationMethodOutput? UserVerificationMethod { get; init; }
+    public IEnumerable<ulong[]>? UserVerificationMethod { get; init; }
 
     public CredentialPropertiesOutput? CredentialProperties { get; init; }
 

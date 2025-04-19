@@ -4,7 +4,8 @@ const toastrAuthenticationTitle = 'Web Authentication';
 
 async function requestVerifyCredentialOptions(username) {
     const optionsRequest = {
-        username: username
+        username: username,
+        userVerification: 'required'
     };
 
     const options = await fetchAssertionOptions(optionsRequest);
@@ -23,6 +24,7 @@ async function requestCredential(options) {
     const credentialRequestOptions = {
         publicKey: {
             rpId: options.rpId,
+            userVerification: options.userVerification,
             challenge: toUint8Array(options.challenge),
             allowCredentials: options.allowCredentials.map(credential => ({
                 id: toUint8Array(credential.id),

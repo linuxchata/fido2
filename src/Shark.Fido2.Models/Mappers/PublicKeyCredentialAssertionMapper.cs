@@ -36,10 +36,7 @@ public static class PublicKeyCredentialAssertionMapper
         return new AuthenticationExtensionsClientOutputs
         {
             AppId = extensions.AppId,
-            UserVerificationMethod = new UserVerificationMethodOutput
-            {
-                Entries = extensions.UserVerificationMethod?.Entries,
-            },
+            UserVerificationMethod = extensions.UserVerificationMethod,
             LargeBlob = extensions.LargeBlob != null ? new AuthenticationExtensionsLargeBlobOutputs
             {
                 Supported = extensions.LargeBlob.Supported,
