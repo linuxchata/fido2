@@ -12,9 +12,9 @@ public interface IAttestationTrustworthinessValidator
     /// Validates the attestation statement trustworthiness.
     /// </summary>
     /// <param name="attestationStatementResult">The result from attestation statement validation.</param>
-    /// <param name="authenticatorMetadata">The authenticator metadata.</param>
+    /// <param name="metadataPayloadItem">The authenticator metadata.</param>
     /// <returns>A ValidatorInternalResult indicating whether the attestation is trustworthy.</returns>
     ValidatorInternalResult Validate(
         AttestationStatementInternalResult attestationStatementResult,
-        MetadataPayloadItem? authenticatorMetadata);
+        MetadataPayloadItem? metadataPayloadItem);
 }

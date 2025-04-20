@@ -146,7 +146,8 @@ internal sealed class MetadataCachedTestService : IMetadataCachedService
                 new MetadataBlobPayloadEntry
                 {
                     Aaguid = e.Aaguid,
-                    MetadataStatement = e, StatusReports = [],
+                    MetadataStatement = e,
+                    StatusReports = [],
                     TimeOfLastStatusChange = DateTime.UtcNow.Date.ToShortDateString(),
                 })
             .ToList();
