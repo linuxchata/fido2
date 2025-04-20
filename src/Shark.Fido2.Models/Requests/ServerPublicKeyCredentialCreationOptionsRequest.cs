@@ -10,11 +10,11 @@ public sealed class ServerPublicKeyCredentialCreationOptionsRequest
 {
     [JsonPropertyName("username")]
     [JsonRequired]
-    public string Username { get; init; } = null!;
+    public required string Username { get; init; }
 
     [JsonPropertyName("displayName")]
     [JsonRequired]
-    public string DisplayName { get; init; } = null!;
+    public required string DisplayName { get; init; }
 
     [JsonPropertyName("authenticatorSelection")]
     public ServerAuthenticatorSelectionCriteriaRequest? AuthenticatorSelection { get; init; }

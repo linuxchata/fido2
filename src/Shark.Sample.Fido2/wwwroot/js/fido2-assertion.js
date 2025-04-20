@@ -18,7 +18,7 @@ async function requestCredential(options) {
         ...(options.extensions.appid && { appid: options.extensions.appid }),
         ...(options.extensions.uvm && { uvm: options.extensions.uvm }),
         ...(options.extensions.largeBlob && { largeBlob: options.extensions.largeBlob })
-    }
+    };
 
     // https://developer.mozilla.org/en-US/docs/Web/API/PublicKeyCredentialRequestOptions
     const credentialRequestOptions = {

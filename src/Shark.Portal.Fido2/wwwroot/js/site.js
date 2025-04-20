@@ -15,10 +15,6 @@
     document.getElementById('signinButton').addEventListener('click', function () {
         const username = document.getElementById('signinUsername').value;
 
-        if (username) {
-            requestVerifyCredentialOptions(username);
-        } else {
-            notify.error('Please enter your username', 'Validation Error');
-        }
+        requestVerifyCredentialOptions(username);
     });
 });
