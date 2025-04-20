@@ -20,7 +20,8 @@ internal sealed class UserHandlerValidator : IUserHandlerValidator
         // Step 6
         // Identify the user being authenticated and verify that this user is the owner of the public key credential
         // source credentialSource identified by credential.id
-        if (!string.Equals(requestOptions.Username, credential.Username, StringComparison.OrdinalIgnoreCase))
+        if (!string.IsNullOrWhiteSpace(requestOptions.Username) &&
+            !string.Equals(requestOptions.Username, credential.Username, StringComparison.OrdinalIgnoreCase))
         {
             return ValidatorInternalResult.Invalid(UserIsNotTheOwnerOfTheCredential);
         }
@@ -32,7 +33,7 @@ internal sealed class UserHandlerValidator : IUserHandlerValidator
             // present, let userHandle be its value. Verify that userHandle also maps to the same user.
             if (userHandle != null && userHandle.Length != 0)
             {
-                if (IsUserHandleValid(userHandle, credential))
+                if (IsUserHandleInvalid(userHandle, credential))
                 {
                     return ValidatorInternalResult.Invalid(UserIsNotTheOwnerOfTheCredential);
                 }
@@ -47,7 +48,7 @@ internal sealed class UserHandlerValidator : IUserHandlerValidator
                 return ValidatorInternalResult.Invalid("User handle is not present");
             }
 
-            if (IsUserHandleValid(userHandle, credential))
+            if (IsUserHandleInvalid(userHandle, credential))
             {
                 return ValidatorInternalResult.Invalid(UserIsNotTheOwnerOfTheCredential);
             }
@@ -56,7 +57,7 @@ internal sealed class UserHandlerValidator : IUserHandlerValidator
         return ValidatorInternalResult.Valid();
     }
 
-    private static bool IsUserHandleValid(byte[] userHandle, Credential credential)
+    private static bool IsUserHandleInvalid(byte[] userHandle, Credential credential)
     {
         return !BytesArrayComparer.CompareNullable(userHandle, credential.UserHandle);
     }

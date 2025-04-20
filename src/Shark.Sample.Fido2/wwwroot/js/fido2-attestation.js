@@ -2,10 +2,10 @@
 
 const toastrRegistrationTitle = 'Web Authentication';
 
-async function requestCreateCredentialOptions(username) {
+async function requestCreateCredentialOptions(username, displayName) {
     const optionsRequest = {
         username: username,
-        displayName: 'Shark',
+        displayName: displayName,
         attestation: 'direct',
         authenticatorSelection: { userVerification: 'required' }
     };
@@ -21,7 +21,7 @@ async function createCredential(options) {
         ...(options.extensions.uvm && { uvm: options.extensions.uvm }),
         ...(options.extensions.credProps && { credProps: options.extensions.credProps }),
         ...(options.extensions.largeBlob && { largeBlob: options.extensions.largeBlob })
-    }
+    };
 
     // https://developer.mozilla.org/en-US/docs/Web/API/PublicKeyCredentialCreationOptions
     const credentialCreationOptions = {

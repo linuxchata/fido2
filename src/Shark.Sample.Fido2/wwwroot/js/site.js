@@ -11,29 +11,39 @@
 $(function () {
     $(".btn-primary").on("click", function (event) {
         let actionType = $(this).data("action");
-        let userNameInput = $("#username");
+        let usernameInput = $("#username");
+        let displayNameInput = $("#displayName");
         let messageSpan = $("#message");
-        let username = userNameInput.val();
+        let username = usernameInput.val();
+        let displayName = displayNameInput.val();
 
-        if (!isValidInput(username)) {
+        if (isRegister(actionType) && !isValidInput(username)) {
             messageSpan.text("Please input a username");
             return;
         }
 
-        userNameInput.prop("readonly", true);
+        usernameInput.prop("readonly", true);
+        displayNameInput.prop("readonly", true);
         messageSpan.text("");
 
         let button = event.target;
         let previousText = button.innerHTML;
         disableButton(button);
 
-        (actionType === "register" ? requestCreateCredentialOptions(username) : requestVerifyCredentialOptions(username))
+        (isRegister(actionType) ?
+            requestCreateCredentialOptions(username, displayName) :
+            requestVerifyCredentialOptions(username))
             .finally(() => {
-                userNameInput.prop("readonly", false);
+                usernameInput.prop("readonly", false);
+                displayNameInput.prop("readonly", false);
                 enableButton(button, previousText);
             });
     });
 });
+
+function isRegister(actionType) {
+    return actionType === "register";
+}
 
 function isValidInput(value) {
     return value && value.trim().length > 0;
