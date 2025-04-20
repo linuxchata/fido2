@@ -46,8 +46,8 @@ internal class AttestationTrustworthinessValidator : IAttestationTrustworthiness
         }
 
         // Self attestation cannot contains full attestation (trust path)
-        if (authenticatorMetadata?.AttestationTypes?.Length == 1 &&
-            authenticatorMetadata.AttestationTypes.First() == AttestationType.BasicSurrogate &&
+        if (metadataPayloadItem?.AttestationTypes?.Length == 1 &&
+            metadataPayloadItem.AttestationTypes.First() == AttestationType.BasicSurrogate &&
             attestationStatementResult.TrustPath?.Length > 0)
         {
             return ValidatorInternalResult.Invalid(
