@@ -22,7 +22,7 @@ internal class AttestationTrustworthinessValidator : IAttestationTrustworthiness
 
     public ValidatorInternalResult Validate(
         AttestationStatementInternalResult attestationStatementResult,
-        MetadataPayloadItem? authenticatorMetadata)
+        MetadataPayloadItem? metadataPayloadItem)
     {
         if (attestationStatementResult == null)
         {
