@@ -33,7 +33,7 @@ body {
 
 .auth-container {
     display: flex;
-    min-height: 600px;
+    min-height: 580px;
     max-width: 1000px;
     margin: 40px auto;
     border-radius: var(--border-radius);
@@ -174,3 +174,29 @@ body {
 .notyf__icon {
     color: white !important;
 }
+
+.disclaimer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+    .disclaimer p {
+        margin: 0;
+        font-size: 14px;
+    }
+
+.footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+    .footer p {
+        margin: 0;
+        margin-top: 10px;
+        font-size: 14px;
+        color: #6c757d;
+    }
