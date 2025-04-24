@@ -19,6 +19,10 @@ internal sealed class CredentialRepository : ICredentialRepository
     };
 
     private readonly IDistributedCache _cache;
+    private readonly DistributedCacheEntryOptions _options = new()
+    {
+        AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(24),
+    };
 
     public CredentialRepository(IDistributedCache cache)
     {
@@ -96,7 +100,7 @@ internal sealed class CredentialRepository : ICredentialRepository
     private async Task AddOrUpdateForCredentialId(Credential credential, CancellationToken cancellationToken)
     {
         var serialized = JsonSerializer.Serialize(credential, _jsonOptions);
-        await _cache.SetStringAsync(GetCredentialKey(credential.CredentialId), serialized, cancellationToken);
+        await _cache.SetStringAsync(GetCredentialKey(credential.CredentialId), serialized, _options, cancellationToken);
     }
 
     private async Task AddForUsername(Credential credential, CancellationToken cancellationToken)
@@ -105,7 +109,7 @@ internal sealed class CredentialRepository : ICredentialRepository
         credentials.Add(credential);
 
         var serialized = JsonSerializer.Serialize(credentials, _jsonOptions);
-        await _cache.SetStringAsync(GetUsernameKey(credential.Username), serialized, cancellationToken);
+        await _cache.SetStringAsync(GetUsernameKey(credential.Username), serialized, _options, cancellationToken);
     }
 
     private async Task UpdateForCredentialId(Credential credential, uint signCount, CancellationToken cancellationToken)
@@ -124,8 +128,8 @@ internal sealed class CredentialRepository : ICredentialRepository
         {
             targetCredential!.SignCount = signCount;
 
-            var serializedCredentials = JsonSerializer.Serialize(credentials, _jsonOptions);
-            await _cache.SetStringAsync(GetUsernameKey(credential.Username), serializedCredentials, cancellationToken);
+            var serialized = JsonSerializer.Serialize(credentials, _jsonOptions);
+            await _cache.SetStringAsync(GetUsernameKey(credential.Username), serialized, _options, cancellationToken);
         }
     }
 
