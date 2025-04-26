@@ -9,10 +9,10 @@
     <link rel="stylesheet" href="~/lib/font-awesome/dist/css/all.min.css" />
     <link rel="stylesheet" href="~/lib/notyf/dist/css/notyf.min.css" />
     <environment include="Development">
-        <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/site.css" />
     </environment>
     <environment exclude="Development">
-        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/site.min.css" />
     </environment>
 </head>
 <body>
@@ -32,14 +32,14 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/notyf/dist/js/notyf.min.js"></script>
     <environment include="Development">
-        <script src="~/js/site.js" asp-append-version="true"></script>
-        <script src="~/js/utilities.js" asp-append-version="true"></script>
-        <script src="~/js/notifications.js" asp-append-version="true"></script>
-        <script src="~/js/fido2-assertion.js" asp-append-version="true"></script>
-        <script src="~/js/fido2-attestation.js" asp-append-version="true"></script>
+        <script src="~/js/site.js"></script>
+        <script src="~/js/utilities.js"></script>
+        <script src="~/js/notifications.js"></script>
+        <script src="~/js/fido2-assertion.js"></script>
+        <script src="~/js/fido2-attestation.js"></script>
     </environment>
     <environment exclude="Development">
-        <script src="~/js/site.min.js" asp-append-version="true"></script>
+        <script src="~/js/site.min.js"></script>
     </environment>
 
     @await RenderSectionAsync("Scripts", required: false)
