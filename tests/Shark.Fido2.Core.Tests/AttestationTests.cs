@@ -74,8 +74,8 @@ public class AttestationTests
 
         _credentialRepositoryMock = new Mock<ICredentialRepository>();
         _credentialRepositoryMock
-            .Setup(a => a.Get(It.IsAny<byte[]>(), CancellationToken.None))
-            .ReturnsAsync((Credential?)null);
+            .Setup(a => a.Exists(It.IsAny<byte[]>(), CancellationToken.None))
+            .ReturnsAsync(false);
 
         _fido2Configuration = new Fido2Configuration
         {
@@ -381,18 +381,8 @@ public class AttestationTests
     {
         // Arrange
         _credentialRepositoryMock
-            .Setup(a => a.Get(It.IsAny<byte[]>(), CancellationToken.None))
-            .ReturnsAsync(new Credential
-            {
-                CredentialId = [1, 2, 3, 4],
-                Username = UserName,
-                UserHandle = Encoding.UTF8.GetBytes(UserName),
-                CredentialPublicKey = new CredentialPublicKey
-                {
-                    KeyType = 2,
-                    Algorithm = -7,
-                },
-            });
+            .Setup(a => a.Exists(It.IsAny<byte[]>(), CancellationToken.None))
+            .ReturnsAsync(true);
 
         // Act
         var result = await _sut.Complete(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions);

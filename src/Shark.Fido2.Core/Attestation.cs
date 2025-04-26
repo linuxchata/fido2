@@ -153,8 +153,7 @@ public sealed class Attestation : IAttestation
         // ceremony, or it MAY decide to accept the registration, e.g. while deleting the older registration.
         var attestedCredentialData = attestationResult.Value!.AuthenticatorData!.AttestedCredentialData;
         var credentialId = attestedCredentialData!.CredentialId;
-        var credential = await _credentialRepository.Get(credentialId, cancellationToken);
-        if (credential != null)
+        if (await _credentialRepository.Exists(credentialId, cancellationToken))
         {
             return AttestationCompleteResult.CreateFailure("Credential has already been registered");
         }
@@ -170,7 +169,7 @@ public sealed class Attestation : IAttestation
         // This value SHOULD NOT be modified before or after storing it. It is RECOMMENDED to use this value to
         // populate the transports of the allowCredentials option in future get() calls to help the client know how
         // to find a suitable authenticator.
-        credential = new Credential
+        var credential = new Credential
         {
             CredentialId = credentialId!,
             UserHandle = creationOptions.User.Id,

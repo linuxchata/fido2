@@ -8,9 +8,9 @@ namespace Shark.Fido2.Core.Abstractions.Repositories;
 public interface ICredentialRepository
 {
     /// <summary>
-    /// Gets a credential by identifier.
+    /// Gets a credential by credential identifier.
     /// </summary>
-    /// <param name="credentialId">The identifier of the credential to retrieve.</param>
+    /// <param name="credentialId">The identifier of the credential.</param>
     /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>The credential if found; otherwise, null.</returns>
     Task<Credential?> Get(byte[]? credentialId, CancellationToken cancellationToken = default);
@@ -18,10 +18,18 @@ public interface ICredentialRepository
     /// <summary>
     /// Gets a list of credentials associated with a username.
     /// </summary>
-    /// <param name="username">The username associated with the credentials to retrieve.</param>
+    /// <param name="username">The username associated with the credentials.</param>
     /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>A list of credentials.</returns>
     Task<List<Credential>> Get(string username, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Checks whether a credential exists by credential identifier.
+    /// </summary>
+    /// <param name="id">The identifier of the credential.</param>
+    /// <param name="cancellationToken">A cancellation token.</param>
+    /// <returns>True if a credential exists; otherwise, false.</returns>
+    Task<bool> Exists(byte[]? id, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Adds a new credential.
