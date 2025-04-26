@@ -63,6 +63,18 @@ internal sealed class CredentialRepository : ICredentialRepository
         return [];
     }
 
+    public async Task<bool> Exists(byte[]? id, CancellationToken cancellationToken = default)
+    {
+        if (id == null || id.Length == 0)
+        {
+            return false;
+        }
+
+        var serialized = await _cache.GetStringAsync(GetCredentialKey(id), cancellationToken);
+
+        return serialized != null;
+    }
+
     public async Task Add(Credential credential, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(credential);
