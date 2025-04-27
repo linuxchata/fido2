@@ -66,7 +66,7 @@ To complete the FIDO2 implementation, you need to add JavaScript code that commu
 This JavaScript code bridges the browser's WebAuthn API with the server-side REST API endpoints provided by the ASP.NET Core controllers described above.
 
 # Build Status
-[![build](https://github.com/linuxchata/fido2/actions/workflows/build.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build.yml) [![nuget](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_packages.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_packages.yml)
+[![build](https://github.com/linuxchata/fido2/actions/workflows/build.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build.yml) [![nuget](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_core_packages.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_core_packages.yml) [![nuget](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_models_packages.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_models_packages.yml) [![nuget](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_inmemory_packages.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_inmemory_packages.yml)
 
 # Packages
 | Package Name | Status |
