@@ -1,6 +1,6 @@
 ﻿using Shark.Fido2.Domain.Enums;
 
-namespace Shark.Fido2.Domain;
+namespace Shark.Fido2.Domain.Options;
 
 /// <summary>
 /// 5.5. Options for Assertion Generation (dictionary PublicKeyCredentialRequestOptions)

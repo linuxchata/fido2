@@ -1,7 +1,7 @@
 ﻿using Shark.Fido2.Domain.Constants;
 using Shark.Fido2.Domain.Enums;
 
-namespace Shark.Fido2.Domain;
+namespace Shark.Fido2.Domain.Options;
 
 /// <summary>
 /// 5.8.3. Credential Descriptor (dictionary PublicKeyCredentialDescriptor)

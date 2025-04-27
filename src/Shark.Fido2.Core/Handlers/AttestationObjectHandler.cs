@@ -5,6 +5,7 @@ using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Converters;
 using Shark.Fido2.Core.Results.Attestation;
 using Shark.Fido2.Domain;
+using Shark.Fido2.Domain.Options;
 
 namespace Shark.Fido2.Core.Handlers;
 

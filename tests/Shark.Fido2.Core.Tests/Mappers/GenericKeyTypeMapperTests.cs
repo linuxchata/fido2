@@ -1,8 +1,8 @@
 using System.Security.Cryptography;
+using Shark.Fido2.Core.Mappers;
 using Shark.Fido2.Domain.Enums;
-using Shark.Fido2.Domain.Mappers;
 
-namespace Shark.Fido2.Domain.Tests.Mappers;
+namespace Shark.Fido2.Core.Tests.Mappers;
 
 [TestFixture]
 internal class GenericKeyTypeMapperTests
