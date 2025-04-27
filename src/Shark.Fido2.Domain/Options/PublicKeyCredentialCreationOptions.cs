@@ -1,4 +1,4 @@
-﻿namespace Shark.Fido2.Domain;
+﻿namespace Shark.Fido2.Domain.Options;
 
 /// <summary>
 /// 5.4. Options for Credential Creation (dictionary PublicKeyCredentialCreationOptions)

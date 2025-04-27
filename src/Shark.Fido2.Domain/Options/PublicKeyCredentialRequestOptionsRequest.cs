@@ -1,6 +1,6 @@
 ﻿using Shark.Fido2.Domain.Enums;
 
-namespace Shark.Fido2.Domain;
+namespace Shark.Fido2.Domain.Options;
 
 public sealed class PublicKeyCredentialRequestOptionsRequest
 {

@@ -1,8 +1,8 @@
 ﻿using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using Shark.Fido2.Core.Abstractions.Validators;
+using Shark.Fido2.Core.Mappers;
 using Shark.Fido2.Domain;
-using Shark.Fido2.Domain.Mappers;
 
 namespace Shark.Fido2.Core.Validators;
 

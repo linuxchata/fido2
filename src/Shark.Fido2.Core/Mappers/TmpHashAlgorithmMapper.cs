@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using Shark.Fido2.Domain.Enums;
 
-namespace Shark.Fido2.Domain.Mappers;
+namespace Shark.Fido2.Core.Mappers;
 
 public sealed class TmpHashAlgorithmMapper
 {
