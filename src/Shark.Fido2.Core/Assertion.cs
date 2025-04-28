@@ -46,7 +46,7 @@ public sealed class Assertion : IAssertion
 
         var username = request.Username?.Trim();
 
-        List<Credential>? credentials = null;
+        List<CredentialDescriptor>? credentials = null;
         if (!string.IsNullOrWhiteSpace(username))
         {
             credentials = await _credentialRepository.Get(username, cancellationToken);

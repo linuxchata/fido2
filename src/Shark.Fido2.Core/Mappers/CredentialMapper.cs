@@ -55,4 +55,18 @@ public static class CredentialMapper
             Transports = entity.Transports,
         };
     }
+
+    public static CredentialDescriptor? ToLightweightDomain(this CredentialEntity? entity)
+    {
+        if (entity == null)
+        {
+            return null;
+        }
+
+        return new CredentialDescriptor
+        {
+            CredentialId = entity.CredentialId,
+            Transports = entity.Transports,
+        };
+    }
 }

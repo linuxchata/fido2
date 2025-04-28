@@ -49,11 +49,11 @@ internal sealed class CredentialRepository : ICredentialRepository
         return null;
     }
 
-    public async Task<List<Credential>> Get(string username, CancellationToken cancellationToken = default)
+    public async Task<List<CredentialDescriptor>> Get(string username, CancellationToken cancellationToken = default)
     {
         var entities = await GetInternal(username, cancellationToken);
 
-        return entities.Select(e => e.ToDomain()!).ToList();
+        return entities.Select(e => e.ToLightweightDomain()!).ToList();
     }
 
     public async Task<bool> Exists(byte[]? id, CancellationToken cancellationToken = default)
