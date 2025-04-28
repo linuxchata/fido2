@@ -165,14 +165,11 @@ public class AssertionTests
             UserVerification = UserVerificationRequirement.Required,
         };
 
-        var credentials = new List<Credential>
+        var credentials = new List<CredentialDescriptor>
         {
             new()
             {
                 CredentialId = [5, 6, 7, 8],
-                Username = UserName,
-                UserHandle = _userHandle,
-                CredentialPublicKey = new CredentialPublicKey(),
                 Transports = ["internal", "usb"],
             },
         };
