@@ -53,7 +53,6 @@ public sealed class Attestation : IAttestation
                 {
                     Id = c.CredentialId,
                     Transports = c.Transports?.Select(t => t.ToEnum<AuthenticatorTransport>()).ToArray() ?? [],
-                    Type = PublicKeyCredentialType.PublicKey,
                 })
                 .ToArray();
         }

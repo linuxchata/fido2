@@ -178,16 +178,10 @@ public class AttestationTests
     public async Task GetOptions_WhenCredentialExists_ThenReturnsOptions()
     {
         // Arrange
-        var credential = new Credential
+        var credential = new CredentialDescriptor
         {
             CredentialId = [7, 6, 1],
-            CredentialPublicKey = new CredentialPublicKey
-            {
-                KeyType = 2,
-                Algorithm = -7,
-            },
-            UserHandle = Encoding.UTF8.GetBytes(UserName),
-            Username = UserName,
+            Transports = ["internal", "usb"],
         };
 
         _credentialRepositoryMock
