@@ -10,7 +10,9 @@ public sealed class CredentialEntity
 
     public required CredentialPublicKeyEntity CredentialPublicKey { get; set; }
 
+    public string CredentialPublicKeyJson { get; set; } = null!;
+
     public uint SignCount { get; set; }
 
-    public string[]? Transports { get; set; }
+    public string? Transports { get; set; }
 }

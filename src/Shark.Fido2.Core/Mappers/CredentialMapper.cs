@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Shark.Fido2.Core.Entities;
 using Shark.Fido2.Domain;
 
@@ -7,7 +8,7 @@ public static class CredentialMapper
 {
     public static CredentialEntity ToEntity(this Credential credential)
     {
-        return new CredentialEntity
+        var entity = new CredentialEntity
         {
             CredentialId = credential.CredentialId,
             UserHandle = credential.UserHandle,
@@ -24,8 +25,12 @@ public static class CredentialMapper
                 Key = credential.CredentialPublicKey.Key,
             },
             SignCount = credential.SignCount,
-            Transports = credential.Transports,
+            Transports = string.Join(';', credential.Transports ?? []),
         };
+
+        entity.CredentialPublicKeyJson = JsonSerializer.Serialize(entity.CredentialPublicKey);
+
+        return entity;
     }
 
     public static Credential? ToDomain(this CredentialEntity? entity)
@@ -35,6 +40,8 @@ public static class CredentialMapper
             return null;
         }
 
+        var credentialPublicKey = JsonSerializer.Deserialize<CredentialPublicKeyEntity>(entity.CredentialPublicKeyJson);
+
         return new Credential
         {
             CredentialId = entity.CredentialId,
@@ -42,17 +49,17 @@ public static class CredentialMapper
             Username = entity.Username,
             CredentialPublicKey = new CredentialPublicKey
             {
-                KeyType = entity.CredentialPublicKey.KeyType,
-                Algorithm = entity.CredentialPublicKey.Algorithm,
-                Modulus = entity.CredentialPublicKey.Modulus,
-                Exponent = entity.CredentialPublicKey.Exponent,
-                Curve = entity.CredentialPublicKey.Curve,
-                XCoordinate = entity.CredentialPublicKey.XCoordinate,
-                YCoordinate = entity.CredentialPublicKey.YCoordinate,
-                Key = entity.CredentialPublicKey.Key,
+                KeyType = credentialPublicKey!.KeyType,
+                Algorithm = credentialPublicKey.Algorithm,
+                Modulus = credentialPublicKey.Modulus,
+                Exponent = credentialPublicKey.Exponent,
+                Curve = credentialPublicKey.Curve,
+                XCoordinate = credentialPublicKey.XCoordinate,
+                YCoordinate = credentialPublicKey.YCoordinate,
+                Key = credentialPublicKey.Key,
             },
             SignCount = entity.SignCount,
-            Transports = entity.Transports,
+            Transports = entity.Transports?.Split(';'),
         };
     }
 
@@ -66,7 +73,7 @@ public static class CredentialMapper
         return new CredentialDescriptor
         {
             CredentialId = entity.CredentialId,
-            Transports = entity.Transports,
+            Transports = entity.Transports?.Split(';'),
         };
     }
 }
