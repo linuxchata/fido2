@@ -1,5 +1,6 @@
 using Shark.Fido2.Core;
 using Shark.Fido2.InMemory;
+using Shark.Fido2.SqlServer;
 using Shark.Sample.Fido2.Swagger;
 using Swashbuckle.AspNetCore.Filters;
 
@@ -33,7 +34,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 builder.Services.AddSwaggerExamplesFromAssemblyOf<ServerPublicKeyCredentialCreationOptionsRequestExample>();
 
-builder.Services.RegisterInMemoryRepositories();
+builder.Services.UseFido2InMemoryStore();
 builder.Services.AddFido2(builder.Configuration);
 
 var app = builder.Build();

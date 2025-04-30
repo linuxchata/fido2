@@ -66,7 +66,7 @@ To complete the FIDO2 implementation, you need to add JavaScript code that commu
 This JavaScript code bridges the browser's WebAuthn API with the server-side REST API endpoints provided by the ASP.NET Core controllers described above.
 
 # Build Status
-[![build](https://github.com/linuxchata/fido2/actions/workflows/build.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build.yml) [![nuget](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_core_packages.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_core_packages.yml) [![nuget](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_models_packages.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_models_packages.yml) [![nuget](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_inmemory_packages.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_inmemory_packages.yml)
+[![build](https://github.com/linuxchata/fido2/actions/workflows/build.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build.yml) [![nuget](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_core_packages.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_core_packages.yml) [![nuget](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_models_packages.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_models_packages.yml) [![nuget](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_inmemory_packages.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_inmemory_packages.yml) [![nuget](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_sqlserver_packages.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_sqlserver_packages.yml)
 
 # Packages
 | Package Name | Status |
@@ -74,6 +74,7 @@ This JavaScript code bridges the browser's WebAuthn API with the server-side RES
 | Shark.Fido2.Core | [![NuGet](https://img.shields.io/nuget/v/Shark.Fido2.Core.svg)](https://www.nuget.org/packages/Shark.Fido2.Core/) |
 | Shark.Fido2.InMemory | [![NuGet](https://img.shields.io/nuget/v/Shark.Fido2.InMemory.svg)](https://www.nuget.org/packages/Shark.Fido2.InMemory/) |
 | Shark.Fido2.Models | [![NuGet](https://img.shields.io/nuget/v/Shark.Fido2.Models.svg)](https://www.nuget.org/packages/Shark.Fido2.Models/) |
+| Shark.Fido2.Models | [![NuGet](https://img.shields.io/nuget/v/Shark.Fido2.SqlServer.svg)](https://www.nuget.org/packages/Shark.Fido2.SqlServer/) |
 
 # Specification
 ## Web Authentication

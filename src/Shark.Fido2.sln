@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.Metadata.Core",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Portal.Fido2", "Shark.Portal.Fido2\Shark.Portal.Fido2.csproj", "{C247B935-3422-42FF-8E8E-DF34A018B89B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.SqlServer", "Shark.Fido2.SqlServer\Shark.Fido2.SqlServer.csproj", "{D540F937-D674-408B-B5BE-54C5BAED77EF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,6 +79,10 @@ Global
 		{C247B935-3422-42FF-8E8E-DF34A018B89B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C247B935-3422-42FF-8E8E-DF34A018B89B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C247B935-3422-42FF-8E8E-DF34A018B89B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D540F937-D674-408B-B5BE-54C5BAED77EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D540F937-D674-408B-B5BE-54C5BAED77EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D540F937-D674-408B-B5BE-54C5BAED77EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D540F937-D674-408B-B5BE-54C5BAED77EF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -25,6 +25,7 @@
     <ProjectReference Include="..\Shark.Fido2.Domain\Shark.Fido2.Domain.csproj" />
     <ProjectReference Include="..\Shark.Fido2.Models\Shark.Fido2.Models.csproj" />
     <ProjectReference Include="..\Shark.Fido2.InMemory\Shark.Fido2.InMemory.csproj" />
+    <ProjectReference Include="..\Shark.Fido2.SqlServer\Shark.Fido2.SqlServer.csproj" />
   </ItemGroup>
 
 </Project>
