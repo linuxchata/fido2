@@ -40,7 +40,8 @@ public static class CredentialMapper
             return null;
         }
 
-        var credentialPublicKey = JsonSerializer.Deserialize<CredentialPublicKeyEntity>(entity.CredentialPublicKeyJson);
+        var credentialPublicKey = entity.CredentialPublicKey ??
+            JsonSerializer.Deserialize<CredentialPublicKeyEntity>(entity.CredentialPublicKeyJson);
 
         return new Credential
         {
