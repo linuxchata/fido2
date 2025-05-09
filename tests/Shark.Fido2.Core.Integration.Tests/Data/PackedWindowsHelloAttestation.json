@@ -1,0 +1,17 @@
+{
+  "Id": "TEyp5LajO9-Qffgw-Nent9usMQMeWqEejpmjY6EHPwA",
+  "RawId": "TEyp5LajO9-Qffgw-Nent9usMQMeWqEejpmjY6EHPwA",
+  "Response": {
+    "ClientDataJson": "eyJ0eXBlIjoid2ViYXV0aG4uY3JlYXRlIiwiY2hhbGxlbmdlIjoicHNCT0tGWmlWdEJlZmdjTkFxRmZRdGU1T3RKcWY2cnkiLCJvcmlnaW4iOiJodHRwczovL2xvY2FsaG9zdDo4MDgyIiwiY3Jvc3NPcmlnaW4iOmZhbHNlfQ",
+    "AttestationObject": "o2NmbXRmcGFja2VkZ2F0dFN0bXSiY2FsZzkBAGNzaWdZAQC3Jl5uMBeIl71U2dDk6qWwTgD_YStr5wqB4xP40cnlVeLK2T89LiYv2g35hiNVnHUcmUtqaaEsQv9LP9nplIPQUcxdghUPaZ77A2wNNX67SX1-lXQVi9WeMHpU_mIaES-6LzYyRNCdi3OPQf0R94hnvjRIR_WGXUGsSZ7jv_bBeGZPmvo178KAuftZv00c_vdJHVJidges0welK3_Wvtyfr_m1-ATtO7Ltrpdqgx4DsCtowwvXTkk8hUVEb6Lc7VYj9M8ONQLe_Dz58i2m4Xh8Y8adoF5dShdMXm1Xya1NgyI5C48Di5gHNljVq-93XtK_4LbjtM_MuFzfBYhqlEbMaGF1dGhEYXRhWQFnSZYN5YgOjGh0NBcPZHZgW4_krrmihjLHmVzzuoMdl2NFAAAAAGAosBex1EwCtLOvza_Ja7IAIExMqeS2ozvfkH34MPjXp7fbrDEDHlqhHo6Zo2OhBz8ApAEDAzkBACBZAQDw_2PplUPxwtiO_u223IhqY6LIk_gNmdpMgCVv60Ue7KP8o7oGioj8jjWrfTq-y-Ywt8UZeYsznd-ochPMlOjIXIm8IVbhsR1riq1fS0A6Sxq77RlhxLniurtbbt1vgvYsWfSC_wy97mK5Sl9nQIF1-0SCnrVTMDqTdbsNxTTNPLNb-mcOh-IlpbJCm2zvFfVvvC37mvC9VV0FZhXbNmIPPp7xb10-jZh8MT3krx9luDH3BuGCQtaJye03MwLugmdrzzkVZbYJqyD-KR29jwM950ZVXxtcSIkYGCBa74ev-sSXEHPUyPvTw38bc4PhLRG_zTN3hK7-YREAvRkdC2zVIUMBAAE",
+    "Transports": [ 4 ]
+  },
+  "Type": "public-key",
+  "Extensions": {
+    "AppId": null,
+    "AppIdExclude": null,
+    "UserVerificationMethod": null,
+    "CredentialProperties": { "RequireResidentKey": null },
+    "LargeBlob": null
+  }
+}

@@ -99,6 +99,23 @@ public class AttestationTrustworthinessValidatorTests
     }
 
     [Test]
+    public void Validate_WhenAttCaAttestationWithTrustPathWithAppleAnonymousCertificates_ThenReturnsValid()
+    {
+        // Arrange
+        var fileName = "AppleAnonymous.pem";
+        var certificateData = CertificateDataReader.Read(fileName);
+
+        var attestationResult = new AttestationStatementInternalResult(AttestationTypeEnum.AnonCA, certificateData);
+
+        // Act
+        var result = _sut.Validate(attestationResult, null);
+
+        // Assert
+        Assert.That(result.IsValid, Is.False);
+        Assert.That(result.Message, Is.EqualTo("A certificate chain could not be built to a trusted root authority. A required certificate is not within its validity period when verifying against the current system clock or the timestamp in the signed file."));
+    }
+
+    [Test]
     public void Validate_WhenAttCaAttestationWithTrustPathWithTpmCertificates_ThenReturnsValid()
     {
         // Arrange

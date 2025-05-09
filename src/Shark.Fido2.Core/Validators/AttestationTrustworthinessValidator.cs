@@ -94,7 +94,8 @@ internal class AttestationTrustworthinessValidator : IAttestationTrustworthiness
         var isValid = chain.Build(leafCertificate);
         if (!isValid)
         {
-            return ValidatorInternalResult.Invalid(string.Join('.', chain.ChainStatus));
+            var statuses = chain.ChainStatus.Select(a => a.StatusInformation);
+            return ValidatorInternalResult.Invalid(string.Join(' ', statuses.ToList()));
         }
 
         return ValidatorInternalResult.Valid();
