@@ -6,7 +6,7 @@ namespace Shark.Fido2.SqlServer;
 
 public static class DependencyInjection
 {
-    public static void UseFido2SqlServer(
+    public static void AddFido2SqlServer(
         this IServiceCollection services,
         string connectionStringName = "DefaultConnection")
     {
