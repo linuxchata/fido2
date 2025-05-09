@@ -99,6 +99,23 @@ public class AttestationTrustworthinessValidatorTests
     }
 
     [Test]
+    public void Validate_WhenAttCaAttestationWithTrustPathWithAppleAnonymousCertificates_ThenReturnsValid()
+    {
+        // Arrange
+        var fileName = "AppleAnonymous.pem";
+        var certificateData = CertificateDataReader.Read(fileName);
+
+        var attestationResult = new AttestationStatementInternalResult(AttestationTypeEnum.AnonCA, certificateData);
+
+        // Act
+        var result = _sut.Validate(attestationResult, null);
+
+        // Assert
+        Assert.That(result.IsValid, Is.False);
+        Assert.That(result.Message, Is.Not.Null);
+    }
+
+    [Test]
     public void Validate_WhenAttCaAttestationWithTrustPathWithTpmCertificates_ThenReturnsValid()
     {
         // Arrange
@@ -112,6 +129,7 @@ public class AttestationTrustworthinessValidatorTests
 
         // Assert
         Assert.That(result.IsValid, Is.True);
+        Assert.That(result.Message, Is.Null);
     }
 
     [Test]
@@ -128,6 +146,7 @@ public class AttestationTrustworthinessValidatorTests
 
         // Assert
         Assert.That(result.IsValid, Is.True);
+        Assert.That(result.Message, Is.Null);
     }
 
     [Test]
@@ -144,6 +163,7 @@ public class AttestationTrustworthinessValidatorTests
 
         // Assert
         Assert.That(result.IsValid, Is.False);
+        Assert.That(result.Message, Is.Not.Null);
     }
 
     [Test]
@@ -160,5 +180,6 @@ public class AttestationTrustworthinessValidatorTests
 
         // Assert
         Assert.That(result.IsValid, Is.True);
+        Assert.That(result.Message, Is.Null);
     }
 }
