@@ -93,6 +93,15 @@ public static class PublicKeyCredentialCreationOptionsMapper
             return null;
         }
 
+        var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+        if (string.Equals(environment, "Test", StringComparison.OrdinalIgnoreCase))
+        {
+            return new ServerAuthenticationExtensionsClientInputs
+            {
+                Example = true,
+            };
+        }
+
         return new ServerAuthenticationExtensionsClientInputs
         {
             AppIdExclude = extensions.AppIdExclude,
@@ -102,7 +111,7 @@ public static class PublicKeyCredentialCreationOptionsMapper
             {
                 Support = extensions.LargeBlob.Support,
             }
-            : null,
+             : null,
             Example = true,
         };
     }

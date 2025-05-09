@@ -60,7 +60,7 @@ public static class CredentialMapper
                 Key = credentialPublicKey.Key,
             },
             SignCount = entity.SignCount,
-            Transports = entity.Transports?.Split(';'),
+            Transports = MapTransports(entity.Transports),
         };
     }
 
@@ -74,7 +74,17 @@ public static class CredentialMapper
         return new CredentialDescriptor
         {
             CredentialId = entity.CredentialId,
-            Transports = entity.Transports?.Split(';'),
+            Transports = MapTransports(entity.Transports),
         };
+    }
+
+    private static string[]? MapTransports(string? transports)
+    {
+        if (string.IsNullOrWhiteSpace(transports))
+        {
+            return [];
+        }
+
+        return transports?.Split(';');
     }
 }

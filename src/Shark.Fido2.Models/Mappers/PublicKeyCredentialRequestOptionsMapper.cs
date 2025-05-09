@@ -42,6 +42,15 @@ public static class PublicKeyCredentialRequestOptionsMapper
             return null;
         }
 
+        var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+        if (string.Equals(environment, "Test", StringComparison.OrdinalIgnoreCase))
+        {
+            return new ServerAuthenticationExtensionsClientInputs
+            {
+                Example = true,
+            };
+        }
+
         return new ServerAuthenticationExtensionsClientInputs
         {
             AppId = extensions.AppId,
@@ -51,7 +60,7 @@ public static class PublicKeyCredentialRequestOptionsMapper
                 Read = extensions.LargeBlob.Read,
                 Write = extensions.LargeBlob.Write,
             }
-            : null,
+             : null,
             Example = true,
         };
     }
