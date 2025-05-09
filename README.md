@@ -76,6 +76,10 @@ This JavaScript code bridges the browser's WebAuthn API with the server-side RES
 | Shark.Fido2.Models | [![NuGet](https://img.shields.io/nuget/v/Shark.Fido2.Models.svg)](https://www.nuget.org/packages/Shark.Fido2.Models/) |
 | Shark.Fido2.SqlServer | [![NuGet](https://img.shields.io/nuget/v/Shark.Fido2.SqlServer.svg)](https://www.nuget.org/packages/Shark.Fido2.SqlServer/) |
 
+# FIDO Conformance Tests
+All test cases successfully passed using the FIDO Conformance Tool.
+![image](https://github.com/user-attachments/assets/993b3dc5-7600-4e4f-8176-a5bbff8aa4b7)
+
 # Specification
 ## Web Authentication
 - [Web Authentication: An API for accessing Public Key Credentials Level 2](https://www.w3.org/TR/webauthn-2/)
