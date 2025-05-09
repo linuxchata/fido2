@@ -21,7 +21,7 @@ internal class AttestationIntegrationTests
 
         var services = new ServiceCollection();
         services.AddFido2(configuration);
-        services.UseFido2InMemoryStore();
+        services.AddFido2InMemoryStore();
         _serviceProvider = services.BuildServiceProvider();
     }
 

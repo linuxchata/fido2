@@ -5,7 +5,7 @@ namespace Shark.Fido2.InMemory;
 
 public static class DependencyInjection
 {
-    public static void UseFido2InMemoryStore(this IServiceCollection services)
+    public static void AddFido2InMemoryStore(this IServiceCollection services)
     {
         if (services.Any(s => s.ServiceType == typeof(CredentialRepository)))
         {
