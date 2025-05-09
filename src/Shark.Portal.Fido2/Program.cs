@@ -17,7 +17,7 @@ builder.Services.AddSession(options =>
     options.Cookie.SameSite = SameSiteMode.Unspecified;
 });
 
-builder.Services.RegisterInMemoryRepositories();
+builder.Services.AddFido2InMemoryStore();
 builder.Services.AddFido2(builder.Configuration);
 
 var app = builder.Build();
