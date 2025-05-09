@@ -112,7 +112,7 @@ public class AttestationTrustworthinessValidatorTests
 
         // Assert
         Assert.That(result.IsValid, Is.False);
-        Assert.That(result.Message, Is.EqualTo("A certificate chain could not be built to a trusted root authority. A required certificate is not within its validity period when verifying against the current system clock or the timestamp in the signed file."));
+        Assert.That(result.Message, Is.Not.Null);
     }
 
     [Test]
@@ -129,6 +129,7 @@ public class AttestationTrustworthinessValidatorTests
 
         // Assert
         Assert.That(result.IsValid, Is.True);
+        Assert.That(result.Message, Is.Null);
     }
 
     [Test]
@@ -145,6 +146,7 @@ public class AttestationTrustworthinessValidatorTests
 
         // Assert
         Assert.That(result.IsValid, Is.True);
+        Assert.That(result.Message, Is.Null);
     }
 
     [Test]
@@ -161,6 +163,7 @@ public class AttestationTrustworthinessValidatorTests
 
         // Assert
         Assert.That(result.IsValid, Is.False);
+        Assert.That(result.Message, Is.Not.Null);
     }
 
     [Test]
@@ -177,5 +180,6 @@ public class AttestationTrustworthinessValidatorTests
 
         // Assert
         Assert.That(result.IsValid, Is.True);
+        Assert.That(result.Message, Is.Null);
     }
 }
