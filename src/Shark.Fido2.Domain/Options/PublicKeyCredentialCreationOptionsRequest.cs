@@ -2,7 +2,7 @@
 
 public sealed class PublicKeyCredentialCreationOptionsRequest
 {
-    public required string Username { get; init; }
+    public required string UserName { get; init; }
 
     public required string DisplayName { get; init; }
 

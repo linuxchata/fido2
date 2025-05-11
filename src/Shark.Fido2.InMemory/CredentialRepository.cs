@@ -131,11 +131,11 @@ internal sealed class CredentialRepository : ICredentialRepository
 
     private async Task AddForUsername(CredentialEntity entity, CancellationToken cancellationToken)
     {
-        var entities = await GetInternal(entity.Username, cancellationToken);
+        var entities = await GetInternal(entity.UserName, cancellationToken);
         entities.Add(entity);
 
         var serialized = JsonSerializer.Serialize(entities, _jsonOptions);
-        await _cache.SetStringAsync(GetUsernameKey(entity.Username), serialized, _options, cancellationToken);
+        await _cache.SetStringAsync(GetUsernameKey(entity.UserName), serialized, _options, cancellationToken);
     }
 
     private async Task UpdateForCredentialId(CredentialEntity entity, uint signCount, CancellationToken cancellationToken)
@@ -147,7 +147,7 @@ internal sealed class CredentialRepository : ICredentialRepository
 
     private async Task UpdateForUsername(CredentialEntity entity, uint signCount, CancellationToken cancellationToken)
     {
-        var entities = await GetInternal(entity.Username, cancellationToken);
+        var entities = await GetInternal(entity.UserName, cancellationToken);
 
         var targetEntity = entities.FirstOrDefault(c => c.CredentialId.SequenceEqual(entity.CredentialId));
         if (targetEntity != null)
@@ -155,7 +155,7 @@ internal sealed class CredentialRepository : ICredentialRepository
             targetEntity.SignCount = signCount;
 
             var serialized = JsonSerializer.Serialize(entities, _jsonOptions);
-            await _cache.SetStringAsync(GetUsernameKey(entity.Username), serialized, _options, cancellationToken);
+            await _cache.SetStringAsync(GetUsernameKey(entity.UserName), serialized, _options, cancellationToken);
         }
     }
 

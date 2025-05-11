@@ -25,7 +25,7 @@ internal sealed class CredentialRepository : ICredentialRepository
         }
 
         const string sql = @"
-            SELECT CredentialId, UserHandle, Username, CredentialPublicKeyJson, SignCount, Transports
+            SELECT CredentialId, UserHandle, UserName, UserDisplayName, CredentialPublicKeyJson, SignCount, Transports
             FROM Credential
             WHERE CredentialId = @CredentialId"
         ;
@@ -49,11 +49,11 @@ internal sealed class CredentialRepository : ICredentialRepository
         const string sql = @"
             SELECT CredentialId, Transports
             FROM Credential
-            WHERE Username = @Username";
+            WHERE UserName = @username";
 
         using var connection = SqlConnectionFactory.GetConnection(_connectionString);
 
-        var entities = await connection.QueryAsync<CredentialEntity>(sql, new { Username = username });
+        var entities = await connection.QueryAsync<CredentialEntity>(sql, new { username });
 
         return entities.Select(e => e.ToLightweightDomain()!).ToList();
     }
@@ -82,8 +82,8 @@ internal sealed class CredentialRepository : ICredentialRepository
         ArgumentNullException.ThrowIfNull(credential);
 
         const string sql = @"
-            INSERT INTO Credential (CredentialId, UserHandle, Username, CredentialPublicKeyJson, SignCount, Transports)
-            VALUES (@CredentialId, @UserHandle, @Username, @CredentialPublicKeyJson, @SignCount, @Transports)";
+            INSERT INTO Credential (CredentialId, UserHandle, UserName, UserDisplayName, CredentialPublicKeyJson, SignCount, Transports)
+            VALUES (@CredentialId, @UserHandle, @UserName, @UserDisplayName, @CredentialPublicKeyJson, @SignCount, @Transports)";
 
         var entity = credential.ToEntity();
 
@@ -95,7 +95,8 @@ internal sealed class CredentialRepository : ICredentialRepository
             {
                 entity.CredentialId,
                 entity.UserHandle,
-                entity.Username,
+                entity.UserName,
+                entity.UserDisplayName,
                 entity.CredentialPublicKeyJson,
                 SignCount = (long)entity.SignCount,
                 entity.Transports,

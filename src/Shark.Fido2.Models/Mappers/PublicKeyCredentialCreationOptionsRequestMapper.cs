@@ -12,7 +12,7 @@ public static class PublicKeyCredentialCreationOptionsRequestMapper
     {
         var request = new PublicKeyCredentialCreationOptionsRequest
         {
-            Username = serverRequest.Username,
+            UserName = serverRequest.Username,
             DisplayName = serverRequest.DisplayName,
             AuthenticatorSelection = Map(serverRequest.AuthenticatorSelection),
             Attestation = serverRequest.Attestation,

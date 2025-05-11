@@ -18,8 +18,9 @@ namespace Shark.Fido2.Core.Tests;
 [TestFixture]
 public class AssertionTests
 {
-    private const string UserName = "testuser";
-    private const string CredentialId = "AQIDBA=="; // Base64 for [1,2,3,4]
+    private const string UserName = "johndoe@exaple.com";
+    private const string UserDisplayName = "John Doe";
+    private const string CredentialIdBase64 = "AQIDBA=="; // Base64 for [1,2,3,4]
     private const string CredentialRawId = "AQIDBA==";
 
     private Mock<IClientDataHandler> _clientDataHandlerMock = null!;
@@ -28,6 +29,7 @@ public class AssertionTests
     private Mock<IChallengeGenerator> _challengeGeneratorMock = null!;
     private Mock<ICredentialRepository> _credentialRepositoryMock = null!;
 
+    private byte[] _credentialId = [1, 2, 3, 4];
     private byte[] _userHandle;
     private PublicKeyCredentialAssertion _publicKeyCredentialAssertion = null!;
     private PublicKeyCredentialRequestOptions _publicKeyCredentialRequestOptions = null!;
@@ -69,9 +71,7 @@ public class AssertionTests
             .Returns(ValidatorInternalResult.Valid());
 
         _challengeGeneratorMock = new Mock<IChallengeGenerator>();
-        _challengeGeneratorMock
-            .Setup(a => a.Get())
-            .Returns([1, 2, 3, 4]);
+        _challengeGeneratorMock.Setup(a => a.Get()).Returns([1, 2, 3, 4]);
 
         _credentialRepositoryMock = new Mock<ICredentialRepository>();
         _credentialRepositoryMock
@@ -88,7 +88,7 @@ public class AssertionTests
 
         _publicKeyCredentialAssertion = new PublicKeyCredentialAssertion
         {
-            Id = CredentialId,
+            Id = CredentialIdBase64,
             RawId = CredentialRawId,
             Type = PublicKeyCredentialType.PublicKey,
             Response = new AuthenticatorAssertionResponse
@@ -318,7 +318,7 @@ public class AssertionTests
             [
                 new PublicKeyCredentialDescriptor
                 {
-                    Id = [1, 2, 3, 4], // Matching credential identifiers
+                    Id = _credentialId, // Matching credential identifiers
                     Transports = [AuthenticatorTransport.Internal],
                 },
             ],
@@ -343,9 +343,10 @@ public class AssertionTests
         // Arrange
         var credential = new Credential
         {
-            CredentialId = [1, 2, 3, 4],
-            Username = UserName,
+            CredentialId = _credentialId,
             UserHandle = _userHandle,
+            UserName = UserName,
+            UserDisplayName = UserDisplayName,
             CredentialPublicKey = new CredentialPublicKey(),
         };
 
@@ -372,9 +373,10 @@ public class AssertionTests
         // Arrange
         var credential = new Credential
         {
-            CredentialId = [1, 2, 3, 4],
-            Username = UserName,
+            CredentialId = _credentialId,
             UserHandle = _userHandle,
+            UserName = UserName,
+            UserDisplayName = UserDisplayName,
             CredentialPublicKey = null!,
         };
 
@@ -401,9 +403,10 @@ public class AssertionTests
         // Arrange
         var credential = new Credential
         {
-            CredentialId = [1, 2, 3, 4],
-            Username = UserName,
+            CredentialId = _credentialId,
             UserHandle = _userHandle,
+            UserName = UserName,
+            UserDisplayName = UserDisplayName,
             CredentialPublicKey = new CredentialPublicKey(),
         };
 
@@ -430,9 +433,10 @@ public class AssertionTests
         // Arrange
         var credential = new Credential
         {
-            CredentialId = [1, 2, 3, 4],
-            Username = UserName,
+            CredentialId = _credentialId,
             UserHandle = _userHandle,
+            UserName = UserName,
+            UserDisplayName = UserDisplayName,
             CredentialPublicKey = new CredentialPublicKey(),
         };
 
@@ -465,9 +469,10 @@ public class AssertionTests
         // Arrange
         var credential = new Credential
         {
-            CredentialId = [1, 2, 3, 4],
-            Username = UserName,
+            CredentialId = _credentialId,
             UserHandle = _userHandle,
+            UserName = UserName,
+            UserDisplayName = UserDisplayName,
             CredentialPublicKey = new CredentialPublicKey(),
             SignCount = 3, // Higher than the authenticator's sign count (2)
         };
@@ -491,9 +496,10 @@ public class AssertionTests
         // Arrange
         var credential = new Credential
         {
-            CredentialId = [1, 2, 3, 4],
-            Username = UserName,
+            CredentialId = _credentialId,
             UserHandle = _userHandle,
+            UserName = UserName,
+            UserDisplayName = UserDisplayName,
             CredentialPublicKey = new CredentialPublicKey(),
             SignCount = 1, // Lower than the authenticator's sign count (2)
         };
@@ -519,9 +525,10 @@ public class AssertionTests
         // Arrange
         var credential = new Credential
         {
-            CredentialId = [1, 2, 3, 4],
-            Username = UserName,
+            CredentialId = _credentialId,
             UserHandle = _userHandle,
+            UserName = UserName,
+            UserDisplayName = UserDisplayName,
             CredentialPublicKey = new CredentialPublicKey(),
             SignCount = 0, // Zero sign count
         };

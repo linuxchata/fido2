@@ -32,7 +32,7 @@ public class PublicKeyCredentialCreationOptionsRequestMapperTests
 
         // Assert
         Assert.That(result, Is.Not.Null);
-        Assert.That(result.Username, Is.EqualTo(serverRequest.Username));
+        Assert.That(result.UserName, Is.EqualTo(serverRequest.Username));
         Assert.That(result.DisplayName, Is.EqualTo(serverRequest.DisplayName));
         Assert.That(result.Attestation, Is.EqualTo(serverRequest.Attestation));
         Assert.That(result.AuthenticatorSelection, Is.Not.Null);
@@ -59,7 +59,7 @@ public class PublicKeyCredentialCreationOptionsRequestMapperTests
 
         // Assert
         Assert.That(result, Is.Not.Null);
-        Assert.That(result.Username, Is.EqualTo(serverRequest.Username));
+        Assert.That(result.UserName, Is.EqualTo(serverRequest.Username));
         Assert.That(result.DisplayName, Is.EqualTo(serverRequest.DisplayName));
         Assert.That(result.Attestation, Is.EqualTo(serverRequest.Attestation));
         Assert.That(result.AuthenticatorSelection, Is.Null);
