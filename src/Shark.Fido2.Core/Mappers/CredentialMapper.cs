@@ -12,7 +12,8 @@ public static class CredentialMapper
         {
             CredentialId = credential.CredentialId,
             UserHandle = credential.UserHandle,
-            Username = credential.Username,
+            UserName = credential.UserName,
+            UserDisplayName = credential.UserDisplayName,
             CredentialPublicKey = new CredentialPublicKeyEntity
             {
                 KeyType = credential.CredentialPublicKey.KeyType,
@@ -47,7 +48,8 @@ public static class CredentialMapper
         {
             CredentialId = entity.CredentialId,
             UserHandle = entity.UserHandle,
-            Username = entity.Username,
+            UserName = entity.UserName,
+            UserDisplayName = entity.UserDisplayName,
             CredentialPublicKey = new CredentialPublicKey
             {
                 KeyType = credentialPublicKey!.KeyType,

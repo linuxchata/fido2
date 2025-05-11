@@ -173,7 +173,8 @@ public sealed class Attestation : IAttestation
         {
             CredentialId = credentialId!,
             UserHandle = creationOptions.User.Id,
-            Username = creationOptions.User.Name,
+            UserName = creationOptions.User.Name,
+            UserDisplayName = creationOptions.User.DisplayName,
             CredentialPublicKey = attestedCredentialData.CredentialPublicKey!,
             SignCount = attestationResult.Value.AuthenticatorData!.SignCount,
             Transports = publicKeyCredentialAttestation.Response.Transports?.Select(t => t.GetValue()).ToArray() ?? [],

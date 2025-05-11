@@ -22,7 +22,7 @@ internal sealed class UserHandlerValidator : IUserHandlerValidator
         // Identify the user being authenticated and verify that this user is the owner of the public key credential
         // source credentialSource identified by credential.id
         if (!string.IsNullOrWhiteSpace(requestOptions.Username) &&
-            !string.Equals(requestOptions.Username, credential.Username, StringComparison.OrdinalIgnoreCase))
+            !string.Equals(requestOptions.Username, credential.UserName, StringComparison.OrdinalIgnoreCase))
         {
             return ValidatorInternalResult.Invalid(UserIsNotTheOwnerOfTheCredential);
         }

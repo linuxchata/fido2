@@ -9,8 +9,8 @@ internal class UserHandlerValidatorTests
 {
     private const string DefaultUserHandleBase64 = "dXNlckhhbmRsZQ=="; // "userHandle" in base64
     private const string DifferentUserHandleBase64 = "ZGlmZmVyZW50VXNlckhhbmRsZQ=="; // "differentUserHandle" in base64
-    private const string DefaultUsername = "testUser";
-    private const string DifferentUsername = "differentUser";
+    private const string DefaultUserName = "johndoe@example.com";
+    private const string DifferentUsername = "johnoliver@example.com";
 
     private UserHandlerValidator _sut = null!;
 
@@ -139,13 +139,14 @@ internal class UserHandlerValidatorTests
         Assert.That(result.Message, Is.Null);
     }
 
-    private static Credential CreateCredential(string username = DefaultUsername)
+    private static Credential CreateCredential(string userName = DefaultUserName)
     {
         return new Credential
         {
             CredentialId = [1, 2, 3, 4],
             UserHandle = Convert.FromBase64String(DefaultUserHandleBase64),
-            Username = username,
+            UserName = userName,
+            UserDisplayName = "John Doe",
             CredentialPublicKey = new CredentialPublicKey(),
         };
     }
@@ -171,7 +172,7 @@ internal class UserHandlerValidatorTests
 
     private static PublicKeyCredentialRequestOptions CreatePublicKeyCredentialRequestOptions(
         bool includeAllowCredentials = true,
-        string username = DefaultUsername)
+        string userName = DefaultUserName)
     {
         return new PublicKeyCredentialRequestOptions
         {
@@ -179,7 +180,7 @@ internal class UserHandlerValidatorTests
             AllowCredentials = includeAllowCredentials
                 ? [new PublicKeyCredentialDescriptor { Id = [1, 2, 3, 4] }]
                 : null,
-            Username = username,
+            Username = userName,
         };
     }
 }

@@ -8,7 +8,9 @@ public sealed class CredentialEntity
 
     public required byte[] UserHandle { get; set; }
 
-    public required string Username { get; set; }
+    public required string UserName { get; set; }
+
+    public required string UserDisplayName { get; set; }
 
     public required CredentialPublicKeyEntity CredentialPublicKey { get; set; }
 
