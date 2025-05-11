@@ -137,7 +137,7 @@ public class AttestationTests
         // Arrange
         var request = new PublicKeyCredentialCreationOptionsRequest
         {
-            Username = UserName,
+            UserName = UserName,
             DisplayName = DisplayName,
             AuthenticatorSelection = null,
             Attestation = AttestationConveyancePreference.Direct,
@@ -160,7 +160,7 @@ public class AttestationTests
         // Arrange
         var request = new PublicKeyCredentialCreationOptionsRequest
         {
-            Username = UserName,
+            UserName = UserName,
             DisplayName = DisplayName,
             AuthenticatorSelection = null,
             Attestation = null,
@@ -190,7 +190,7 @@ public class AttestationTests
 
         var request = new PublicKeyCredentialCreationOptionsRequest
         {
-            Username = UserName,
+            UserName = UserName,
             DisplayName = DisplayName,
             AuthenticatorSelection = null,
             Attestation = AttestationConveyancePreference.Direct,
@@ -216,7 +216,7 @@ public class AttestationTests
         // Arrange
         var request = new PublicKeyCredentialCreationOptionsRequest
         {
-            Username = UserName,
+            UserName = UserName,
             DisplayName = DisplayName,
             AuthenticatorSelection = new AuthenticatorSelectionCriteria
             {
@@ -235,9 +235,9 @@ public class AttestationTests
         Assert.That(result, Is.Not.Null);
         Assert.That(result.RelyingParty.Id, Is.EqualTo(_fido2Configuration.RelyingPartyId));
         Assert.That(result.RelyingParty.Name, Is.EqualTo(_fido2Configuration.RelyingPartyIdName));
-        Assert.That(result.User.Name, Is.EqualTo(request.Username));
+        Assert.That(result.User.Name, Is.EqualTo(request.UserName));
         Assert.That(result.User.DisplayName, Is.EqualTo(request.DisplayName));
-        Assert.That(result.User.Id, Is.EqualTo(request.Username.FromBase64Url()));
+        Assert.That(result.User.Id, Is.EqualTo(request.UserName.FromBase64Url()));
         Assert.That(result.Challenge, Is.EqualTo(new byte[] { 1, 2, 3, 4 }));
         Assert.That(result.PublicKeyCredentialParams, Has.Length.EqualTo(12));
         Assert.That(result.Timeout, Is.EqualTo(60000));
