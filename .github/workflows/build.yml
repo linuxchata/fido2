@@ -5,11 +5,14 @@ on:
     branches:
       - main
     paths:
+      - .github/**
       - src/**
+      - tests/**
   pull_request:
     branches:
       - main
     paths:
+      - .github/**
       - src/**
       - tests/**
 
@@ -24,7 +27,36 @@ jobs:
         dotnet-version: 8.0.x
     - name: Restore dependencies
       run: dotnet restore ./src/Shark.Fido2.sln
+
     - name: Build
       run: dotnet build ./src/Shark.Fido2.sln --configuration Release --no-restore
+
     - name: Test
-      run: dotnet test ./src/Shark.Fido2.sln --configuration Release --no-build --verbosity normal
+      run: dotnet test ./src/Shark.Fido2.sln --collect:"XPlat Code Coverage;Format=json,lcov,cobertura" --results-directory "TestResults" --configuration Release --no-build --verbosity normal
+
+    - name: Add .NET global tools to PATH
+      run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+
+    - name: Install ReportGenerator
+      run: dotnet tool install -g dotnet-reportgenerator-globaltool
+
+    - name: Generate Code Coverage Report (HTML & Cobertura XML)
+      run: reportgenerator "-reports:TestResults/**/coverage.cobertura.xml" "-targetdir:coverage-report" "-reporttypes:Html;Cobertura;TextSummary"
+
+    - name: Upload Test Results as Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results
+        path: TestResults/
+
+    - name: Upload Code Coverage Report (HTML) as Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: code-coverage-html-report
+        path: coverage-report/
+
+    - name: Append Coverage Summary to GitHub Job Summary
+      run: |
+        echo "### Code Coverage Summary" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        grep -E 'Line coverage|Branch coverage' coverage-report/Summary.txt >> $GITHUB_STEP_SUMMARY
