@@ -55,11 +55,3 @@ jobs:
       run: |
         COVERAGE_PERCENTAGE=$(xmllint --xpath "string(//coverage/@line-rate * 100)" coverage-report/Cobertura.xml)
         echo "COVERAGE_PERCENTAGE=$COVERAGE_PERCENTAGE" >> $GITHUB_OUTPUT
-
-    - name: Create and Update Coverage Badge
-      uses: tj-actions/readme-badge@v3
-      with:
-        name: 'code coverage'
-        value: '${{ steps.get-coverage-percentage.outputs.COVERAGE_PERCENTAGE }}%'
-        label_color: '202330'
-        color: 'brightgreen'
