@@ -26,26 +26,37 @@ jobs:
         dotnet-version: 8.0.x
     - name: Restore dependencies
       run: dotnet restore ./src/Shark.Fido2.sln
+
     - name: Build
       run: dotnet build ./src/Shark.Fido2.sln --configuration Release --no-restore
+
     - name: Test
       run: dotnet test ./src/Shark.Fido2.sln --collect:"XPlat Code Coverage;Format=json,lcov,cobertura" --results-directory "TestResults" --configuration Release --no-build --verbosity normal
+
     - name: Add .NET global tools to PATH
       run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+
     - name: Install ReportGenerator
       run: dotnet tool install -g dotnet-reportgenerator-globaltool
+
     - name: Generate Code Coverage Report (HTML & Cobertura XML)
       run: reportgenerator "-reports:TestResults/**/coverage.cobertura.xml" "-targetdir:coverage-report" "-reporttypes:Html;Cobertura"
+
     - name: Upload Test Results as Artifact
       uses: actions/upload-artifact@v4
       with:
         name: test-results
         path: TestResults/
+
+    - name: Install libxml2-utils (for xmllint)
+      run: sudo apt-get update && sudo apt-get install libxml2-utils -y
+
     - name: Upload Code Coverage Report (HTML) as Artifact
       uses: actions/upload-artifact@v4
       with:
         name: code-coverage-html-report
         path: coverage-report/
+
     - name: Get Code Coverage Percentage for Badge/PR Comment
       id: get-coverage-percentage
       run: |
