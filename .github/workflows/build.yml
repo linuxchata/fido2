@@ -54,8 +54,19 @@ jobs:
         name: code-coverage-html-report
         path: coverage-report/
 
-    - name: Append coverage summary to GitHub Job Summary
+    - name: Append Coverage Summary to GitHub Job Summary
       run: |
         echo "### Code Coverage Summary" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         grep -E 'Line coverage|Branch coverage' coverage-report/Summary.txt >> $GITHUB_STEP_SUMMARY
+
+    - name: Generate Code Coverage Badge
+      uses: tj-actions/coverage-badge@v2
+      with:
+        coverage-file: TestResults/**/coverage.lcov
+
+    - name: Commit coverage badge
+      uses: stefanzweifel/git-auto-commit-action@v5
+      with:
+        commit_message: Update coverage badge
+        file_pattern: coverage-badge.svg
