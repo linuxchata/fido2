@@ -32,17 +32,13 @@ jobs:
       run: dotnet test ./src/Shark.Fido2.sln --collect:"XPlat Code Coverage;Format=json,lcov,cobertura" --results-directory "TestResults" --configuration Release --no-build --verbosity normal
 
     - name: Install ReportGenerator
-      run: dotnet tool install dotnet-reportgenerator-globaltool
+      run: dotnet tool install -g dotnet-reportgenerator-globaltool
 
     - name: Add .NET global tools to PATH
       run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
-      # This line appends the global tools directory to the PATH for subsequent steps.
-      # $HOME expands to /home/runner on Linux, which is where global tools are installed.
-      # $GITHUB_PATH is a special GitHub Actions environment file that updates the PATH.
 
     - name: Generate Code Coverage Report (HTML & Cobertura XML)
-      run: |
-        dotnet reportgenerator "-reports:TestResults/**/coverage.cobertura.xml" "-targetdir:coverage-report" -reporttypes:Html;Cobertura
+      run: dotnet reportgenerator "-reports:TestResults/**/coverage.cobertura.xml" "-targetdir:coverage-report" -reporttypes:Html;Cobertura
 
     - name: Upload Test Results as Artifact
       uses: actions/upload-artifact@v4
