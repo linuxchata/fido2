@@ -5,7 +5,9 @@ on:
     branches:
       - main
     paths:
+      - .github/**
       - src/**
+      - tests/**
   pull_request:
     branches:
       - main
@@ -13,7 +15,6 @@ on:
       - .github/**
       - src/**
       - tests/**
-  workflow_dispatch:
 
 jobs:
   build:
@@ -59,14 +60,3 @@ jobs:
         echo "### Code Coverage Summary" >> $GITHUB_STEP_SUMMARY
         echo "" >> $GITHUB_STEP_SUMMARY
         grep -E 'Line coverage|Branch coverage' coverage-report/Summary.txt >> $GITHUB_STEP_SUMMARY
-
-    - name: Generate Code Coverage Badge
-      uses: tj-actions/coverage-badge@v2
-      with:
-        coverage-file: TestResults/**/coverage.lcov
-
-    - name: Commit coverage badge
-      uses: stefanzweifel/git-auto-commit-action@v5
-      with:
-        commit_message: Update coverage badge
-        file_pattern: coverage-badge.svg
