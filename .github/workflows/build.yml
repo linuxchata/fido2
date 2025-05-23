@@ -48,17 +48,14 @@ jobs:
         name: test-results
         path: TestResults/
 
-    - name: Install libxml2-utils (for xmllint)
-      run: sudo apt-get update && sudo apt-get install libxml2-utils -y
-
     - name: Upload Code Coverage Report (HTML) as Artifact
       uses: actions/upload-artifact@v4
       with:
         name: code-coverage-html-report
         path: coverage-report/
 
-    - name: Get Code Coverage Percentage for Badge/PR Comment
-      id: get-coverage-percentage
+    - name: Append coverage summary to GitHub Job Summary
       run: |
-        COVERAGE_PERCENTAGE=$(xmllint --xpath "string(//coverage/@line-rate * 100)" coverage-report/Cobertura.xml)
-        echo "COVERAGE_PERCENTAGE=$COVERAGE_PERCENTAGE" >> $GITHUB_OUTPUT
+        echo "### Code Coverage Summary" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        grep -E 'Line coverage|Branch coverage' coverage-report/Summary.txt >> $GITHUB_STEP_SUMMARY
