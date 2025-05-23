@@ -35,7 +35,7 @@ jobs:
 
     - name: Generate Code Coverage Report (HTML & Cobertura XML)
       run: |
-        dotnet reportgenerator "-reports:TestResults/**/coverage.cobertura.xml" "-targetdir:coveragereport" -reporttypes:Html;Cobertura
+        dotnet reportgenerator "-reports:TestResults/**/coverage.cobertura.xml" "-targetdir:coverage-report" -reporttypes:Html;Cobertura
 
     - name: Upload Test Results as Artifact
       uses: actions/upload-artifact@v4
@@ -54,3 +54,11 @@ jobs:
       run: |
         COVERAGE_PERCENTAGE=$(xmllint --xpath "string(//coverage/@line-rate * 100)" coverage-report/Cobertura.xml)
         echo "COVERAGE_PERCENTAGE=$COVERAGE_PERCENTAGE" >> $GITHUB_OUTPUT
+
+    - name: Create and Update Coverage Badge
+      uses: tj-actions/readme-badge@v3
+      with:
+        name: 'code coverage'
+        value: '${{ steps.get-coverage-percentage.outputs.COVERAGE_PERCENTAGE }}%'
+        label_color: '202330'
+        color: 'brightgreen'
