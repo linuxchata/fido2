@@ -32,7 +32,7 @@ jobs:
       run: dotnet test ./src/Shark.Fido2.sln --collect:"XPlat Code Coverage;Format=json,lcov,cobertura" --results-directory "TestResults" --configuration Release --no-build --verbosity normal
 
     - name: Install ReportGenerator
-      run: dotnet tool install -g dotnet-reportgenerator-globaltool
+      run: dotnet tool install dotnet-reportgenerator-globaltool
 
     - name: Add .NET global tools to PATH
       run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
