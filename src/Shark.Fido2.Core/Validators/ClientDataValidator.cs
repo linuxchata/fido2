@@ -126,7 +126,7 @@ internal class ClientDataValidator : IClientDataValidator
                     "Token binding identifier is not found for 'present' token binding status");
             }
 
-            //// TODO: Implement
+            // Since browser support for Token Binding remains limited, further validation is not performed.
         }
 
         return ValidatorInternalResult.Valid();
