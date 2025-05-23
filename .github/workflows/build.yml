@@ -12,6 +12,7 @@ on:
     paths:
       - src/**
       - tests/**
+  workflow_dispatch:
 
 jobs:
   build:
