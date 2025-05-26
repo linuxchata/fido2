@@ -1,5 +1,4 @@
-﻿using System.Text;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Domain.Options;
@@ -7,58 +6,58 @@ using Shark.Fido2.Models.Mappers;
 using Shark.Fido2.Models.Requests;
 using Shark.Fido2.Models.Responses;
 
-namespace Shark.Portal.Fido2.Controllers;
+namespace Shark.Fido2.Portal.Controllers;
 
 /// <summary>
-/// Attestation (registration).
+/// Assertion (authentication).
 /// </summary>
 [Route("[controller]")]
 [ApiController]
-public class AttestationController(IAttestation attestation) : ControllerBase
+public class AssertionController(IAssertion assertion) : ControllerBase
 {
-    private readonly IAttestation _attestation = attestation;
+    private readonly IAssertion _assertion = assertion;
 
     /// <summary>
-    /// Gets credential creation options.
+    /// Gets credential request options.
     /// </summary>
     /// <param name="request">The request.</param>
     /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>The HTTP response.</returns>
     [HttpPost("options")]
     public async Task<IActionResult> Options(
-        ServerPublicKeyCredentialCreationOptionsRequest request,
+        ServerPublicKeyCredentialGetOptionsRequest request,
         CancellationToken cancellationToken)
     {
-        var creationOptions = await _attestation.GetOptions(request.Map(), cancellationToken);
+        var requestOptions = await _assertion.RequestOptions(request.Map(), cancellationToken);
 
-        var response = creationOptions.Map();
+        var response = requestOptions.Map();
 
-        HttpContext.Session.SetString("CreationOptions", JsonSerializer.Serialize(creationOptions));
+        HttpContext.Session.SetString("RequestOptions", JsonSerializer.Serialize(requestOptions));
 
         return Ok(response);
     }
 
     /// <summary>
-    /// Creates credential.
+    /// Validates credential.
     /// </summary>
     /// <param name="request">The request.</param>
     /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>The HTTP response.</returns>
     [HttpPost("result")]
     public async Task<IActionResult> Result(
-        ServerPublicKeyCredentialAttestation request,
+        ServerPublicKeyCredentialAssertion request,
         CancellationToken cancellationToken)
     {
-        if (request == null || request.Response == null)
+        if (request == null)
         {
             return Ok(ServerResponse.CreateFailed());
         }
 
-        var creationOptionsString = HttpContext.Session.GetString("CreationOptions");
+        var requestOptionsString = HttpContext.Session.GetString("RequestOptions");
 
-        var creationOptions = JsonSerializer.Deserialize<PublicKeyCredentialCreationOptions>(creationOptionsString!);
+        var requestOptions = JsonSerializer.Deserialize<PublicKeyCredentialRequestOptions>(requestOptionsString!);
 
-        var response = await _attestation.Complete(request.Map(), creationOptions!, cancellationToken);
+        var response = await _assertion.Complete(request.Map(), requestOptions!, cancellationToken);
 
         if (response.IsValid)
         {

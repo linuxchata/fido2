@@ -1,7 +1,6 @@
 using Shark.Fido2.Core;
 using Shark.Fido2.InMemory;
-using Shark.Fido2.SqlServer;
-using Shark.Sample.Fido2.Swagger;
+using Shark.Fido2.Sample.Swagger;
 using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,7 +29,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.ExampleFilters();
-    c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "Shark.Sample.Fido2.xml"));
+    c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "Shark.Fido2.Sample.xml"));
 });
 builder.Services.AddSwaggerExamplesFromAssemblyOf<ServerPublicKeyCredentialCreationOptionsRequestExample>();
 

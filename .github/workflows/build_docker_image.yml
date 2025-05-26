@@ -15,6 +15,6 @@ jobs:
     - uses: actions/checkout@v4
     - name: Build the Docker image for API project
       run: |
-        docker build . --file ./src/Shark.Sample.Fido2/Dockerfile --tag ${{ secrets.ACR_SERVER }}/sharkfido2webapi:latest
+        docker build . --file ./src/Shark.Fido2.Sample/Dockerfile --tag ${{ secrets.ACR_SERVER }}/sharkfido2webapi:latest
         docker push ${{ secrets.ACR_SERVER }}/sharkfido2webapi:latest
 
