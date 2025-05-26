@@ -7,7 +7,7 @@ using Shark.Fido2.Models.Mappers;
 using Shark.Fido2.Models.Requests;
 using Shark.Fido2.Models.Responses;
 
-namespace Shark.Portal.Fido2.Controllers;
+namespace Shark.Fido2.Portal.Controllers;
 
 /// <summary>
 /// Attestation (registration).

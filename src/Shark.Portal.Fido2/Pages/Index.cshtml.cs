@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Shark.Portal.Fido2.Pages;
+namespace Shark.Fido2.Portal.Pages;
 
 public class IndexModel : PageModel
 {
