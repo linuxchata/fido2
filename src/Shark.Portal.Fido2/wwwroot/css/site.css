@@ -18,7 +18,7 @@ html {
 }
 
 body {
-    margin-bottom: 60px;
+    margin-bottom: 20px;
 }
 
 :root {
@@ -33,9 +33,9 @@ body {
 
 .auth-container {
     display: flex;
-    min-height: 580px;
+    min-height: 540px;
     max-width: 1000px;
-    margin: 40px auto;
+    margin: 20px auto;
     border-radius: var(--border-radius);
     overflow: hidden;
     box-shadow: var(--box-shadow);
@@ -43,7 +43,7 @@ body {
 
 .auth-section {
     flex: 1;
-    padding: 40px;
+    padding: 25px;
     display: flex;
     flex-direction: column;
 }
@@ -58,7 +58,7 @@ body {
 }
 
 .auth-header {
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     text-align: center;
 }
 
@@ -74,7 +74,7 @@ body {
     }
 
 .form-group {
-    margin-bottom: 24px;
+    margin-bottom: 16px;
 }
 
     .form-group label {
