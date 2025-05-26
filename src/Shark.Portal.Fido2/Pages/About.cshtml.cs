@@ -1,12 +1,10 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Shark.Portal.Fido2.Pages
+namespace Shark.Fido2.Portal.Pages;
+
+public class AboutModel : PageModel
 {
-    public class AboutModel : PageModel
+    public void OnGet()
     {
-        public void OnGet()
-        {
-        }
     }
-} 
+}

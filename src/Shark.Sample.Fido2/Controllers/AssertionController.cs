@@ -6,10 +6,10 @@ using Shark.Fido2.Domain.Options;
 using Shark.Fido2.Models.Mappers;
 using Shark.Fido2.Models.Requests;
 using Shark.Fido2.Models.Responses;
-using Shark.Sample.Fido2.Swagger;
+using Shark.Fido2.Sample.Swagger;
 using Swashbuckle.AspNetCore.Filters;
 
-namespace Shark.Sample.Fido2.Controllers;
+namespace Shark.Fido2.Sample.Controllers;
 
 /// <summary>
 /// Assertion (authentication).

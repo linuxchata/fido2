@@ -1,7 +1,7 @@
 ﻿using Shark.Fido2.Models.Requests;
 using Swashbuckle.AspNetCore.Filters;
 
-namespace Shark.Sample.Fido2.Swagger;
+namespace Shark.Fido2.Sample.Swagger;
 
 public class ServerPublicKeyCredentialGetOptionsRequestExample :
     IExamplesProvider<ServerPublicKeyCredentialGetOptionsRequest>
