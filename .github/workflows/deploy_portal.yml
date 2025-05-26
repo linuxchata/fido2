@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - src/Shark.Portal.Fido2/**
+      - src/Shark.Fido2.Portal/**
   workflow_dispatch:
 
 jobs:
@@ -21,10 +21,10 @@ jobs:
           dotnet-version: '8.x'
 
       - name: Build with dotnet
-        run: dotnet build ./src/Shark.Portal.Fido2/Shark.Portal.Fido2.csproj --configuration Release
+        run: dotnet build ./src/Shark.Fido2.Portal/Shark.Fido2.Portal.csproj --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish ./src/Shark.Portal.Fido2/Shark.Portal.Fido2.csproj --configuration Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish ./src/Shark.Fido2.Portal/Shark.Fido2.Portal.csproj --configuration Release -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4

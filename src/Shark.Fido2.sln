@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.12.35506.116
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.Sample", "Shark.Sample.Fido2\Shark.Fido2.Sample.csproj", "{AAF934D8-96F0-4D60-8E26-82E22F23A9D4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.Sample", "Shark.Fido2.Sample\Shark.Fido2.Sample.csproj", "{AAF934D8-96F0-4D60-8E26-82E22F23A9D4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.Core", "Shark.Fido2.Core\Shark.Fido2.Core.csproj", "{5A381B36-3E6E-4BAB-A64A-ED20F8B7DDAF}"
 EndProject
@@ -25,7 +25,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.Common", "Shark
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.Metadata.Core", "Shark.Fido2.Metadata.Core\Shark.Fido2.Metadata.Core.csproj", "{09F40C48-8F5D-4807-A957-9532BE969685}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.Portal", "Shark.Portal.Fido2\Shark.Fido2.Portal.csproj", "{C247B935-3422-42FF-8E8E-DF34A018B89B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.Portal", "Shark.Fido2.Portal\Shark.Fido2.Portal.csproj", "{C247B935-3422-42FF-8E8E-DF34A018B89B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.SqlServer", "Shark.Fido2.SqlServer\Shark.Fido2.SqlServer.csproj", "{D540F937-D674-408B-B5BE-54C5BAED77EF}"
 EndProject
