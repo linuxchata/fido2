@@ -1,6 +1,22 @@
 # Overview
 This repository provides a server-side implementation of the FIDO2 protocol, enabling secure passwordless authentication and multi-factor authentication (MFA) for web applications. It handles key FIDO2 operations, including credential registration and authentication, ensuring compliance with modern authentication standards.
 
+## Supported Features
+- **Attestation flow** for credentials registration
+- **Assertion flow** for credentials verification
+- **Supported attestation statement formats**:
+  - Packed
+  - TPM
+  - Android Key
+  - Android SafetyNet
+  - FIDO U2F
+  - None
+  - Apple Anonymous
+- **Built-in storage providers**:
+  - Microsoft SQL Server
+  - In-memory storage
+ - **FIDO metadata service**
+
 # Usage
 The following examples demonstrate how to implement FIDO2 authentication in your application.
 
