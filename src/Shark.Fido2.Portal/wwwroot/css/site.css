@@ -204,3 +204,7 @@ body {
         font-size: 14px;
         color: #6c757d;
     }
+
+.hide {
+    display: none;
+}

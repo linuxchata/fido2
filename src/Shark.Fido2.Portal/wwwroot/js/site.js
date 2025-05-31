@@ -9,12 +9,23 @@
         button.textContent = originalText;
     }
 
-    function showCredentialDetails() {
-        const credentialIdInput = document.getElementById('credentialId');
+    function showCredentialDetailsButton() {
         const credentialDetailsButton = document.getElementById('credentialDetailsButton');
 
-        if (credentialIdInput && credentialDetailsButton) {
-            credentialDetailsButton.style.display = credentialIdInput.value ? 'block' : 'none';
+        if (credentialDetailsButton) {
+            const credentialIdInput = document.getElementById('credentialId');
+
+            if (credentialIdInput) {
+                if (credentialIdInput.value) {
+                    credentialDetailsButton.classList.remove('hide');
+                }
+                else {
+                    credentialDetailsButton.classList.add('hide');
+                }
+            }
+            else {
+                credentialDetailsButton.classList.add('hide');
+            }
         }
     }
 
@@ -51,7 +62,7 @@
                 originalText
             );
 
-            showCredentialDetails();
+            showCredentialDetailsButton();
         });
     }
 });
