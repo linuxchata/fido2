@@ -21,10 +21,16 @@ public class CredentialsDetailsModel : PageModel
     public required byte[] UserHandle { get; set; }
 
     [BindProperty]
-    public required string Username { get; set; }
+    public required string UserName { get; set; }
+
+    [BindProperty]
+    public required string UserDisplayName { get; set; }
 
     [BindProperty]
     public uint SignCount { get; set; }
+
+    [BindProperty]
+    public int Algorithm { get; set; }
 
     [BindProperty]
     public string[]? Transports { get; set; }
@@ -45,8 +51,10 @@ public class CredentialsDetailsModel : PageModel
 
         CredentialId = credential.CredentialId;
         UserHandle = credential.UserHandle;
-        Username = credential.Username;
+        UserName = credential.UserName;
+        UserDisplayName = credential.UserDisplayName;
         SignCount = credential.SignCount;
+        Algorithm = credential.CredentialPublicKey.Algorithm;
         Transports = credential.Transports;
     }
 }
