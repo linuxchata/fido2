@@ -8,9 +8,9 @@
 
   <ItemGroup>
     <PackageReference Include="LigerShark.WebOptimizer.Core" Version="3.0.436" />
-    <PackageReference Include="Shark.Fido2.Core" Version="1.0.1.4" />
-    <PackageReference Include="Shark.Fido2.InMemory" Version="1.0.1.4" />
-    <PackageReference Include="Shark.Fido2.Models" Version="1.0.1.3" />
+    <PackageReference Include="Shark.Fido2.Core" Version="1.0.1.5" />
+    <PackageReference Include="Shark.Fido2.InMemory" Version="1.0.1.5" />
+    <PackageReference Include="Shark.Fido2.Models" Version="1.0.1.4" />
   </ItemGroup>
 
 </Project>
