@@ -1,5 +1,6 @@
 using Shark.Fido2.Core;
 using Shark.Fido2.InMemory;
+using Shark.Fido2.Portal.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +20,7 @@ builder.Services.AddSession(options =>
 
 builder.Services.AddFido2InMemoryStore();
 builder.Services.AddFido2(builder.Configuration);
+builder.Services.AddTransient<ICredentialService, CredentialService>();
 
 var app = builder.Build();
 

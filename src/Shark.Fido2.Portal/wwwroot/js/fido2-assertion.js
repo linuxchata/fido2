@@ -82,6 +82,7 @@ async function fetchAssertionResult(credentials) {
         });
 
         if (response.ok) {
+            document.getElementById('credentialId').value = credentials.id;
             notify.info('Authentication was successful', authenticationTitle);
         }
         else {

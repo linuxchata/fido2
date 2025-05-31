@@ -9,6 +9,15 @@
         button.textContent = originalText;
     }
 
+    function showCredentialDetails() {
+        const credentialIdInput = document.getElementById('credentialId');
+        const credentialDetailsButton = document.getElementById('credentialDetailsButton');
+
+        if (credentialIdInput && credentialDetailsButton) {
+            credentialDetailsButton.style.display = credentialIdInput.value ? 'block' : 'none';
+        }
+    }
+
     // Sign up button event listener
     var signupButton = document.getElementById('signupButton');
     if (signupButton && signupButton.addEventListener) {
@@ -41,6 +50,8 @@
                 () => requestVerifyCredentialOptions(username),
                 originalText
             );
+
+            showCredentialDetails();
         });
     }
 });
