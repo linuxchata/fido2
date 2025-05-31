@@ -43,7 +43,7 @@ public class CredentialsDetailsModel : PageModel
             return;
         }
 
-        CredentialId = credential!.CredentialId;
+        CredentialId = credential.CredentialId;
         UserHandle = credential.UserHandle;
         Username = credential.Username;
         SignCount = credential.SignCount;
