@@ -9,6 +9,26 @@
         button.textContent = originalText;
     }
 
+    function showCredentialDetailsButton() {
+        const credentialDetailsButton = document.getElementById('credentialDetailsButton');
+
+        if (credentialDetailsButton) {
+            const credentialIdInput = document.getElementById('credentialId');
+
+            if (credentialIdInput) {
+                if (credentialIdInput.value) {
+                    credentialDetailsButton.classList.remove('hide');
+                }
+                else {
+                    credentialDetailsButton.classList.add('hide');
+                }
+            }
+            else {
+                credentialDetailsButton.classList.add('hide');
+            }
+        }
+    }
+
     // Sign up button event listener
     var signupButton = document.getElementById('signupButton');
     if (signupButton && signupButton.addEventListener) {
@@ -41,6 +61,16 @@
                 () => requestVerifyCredentialOptions(username),
                 originalText
             );
+
+            showCredentialDetailsButton();
+        });
+    }
+
+    // Credential details button event listener
+    var credentialDetailsButton = document.getElementById('credentialDetailsButton');
+    if (credentialDetailsButton && signinButton.addEventListener) {
+        credentialDetailsButton.addEventListener('click', function () {
+            window.location.href = '/CredentialsDetails?credentialId=' + document.getElementById('credentialId').value
         });
     }
 });
