@@ -65,4 +65,12 @@
             showCredentialDetailsButton();
         });
     }
+
+    // Credential details button event listener
+    var credentialDetailsButton = document.getElementById('credentialDetailsButton');
+    if (credentialDetailsButton && signinButton.addEventListener) {
+        credentialDetailsButton.addEventListener('click', function () {
+            window.location.href = '/CredentialsDetails?credentialId=' + document.getElementById('credentialId').value
+        });
+    }
 });
