@@ -1,3 +1,4 @@
+using System.Net;
 using System.Text.Json;
 using Shark.Fido2.Core.Entities;
 using Shark.Fido2.Domain;
@@ -27,6 +28,8 @@ public static class CredentialMapper
             },
             SignCount = credential.SignCount,
             Transports = string.Join(';', credential.Transports ?? []),
+            CreatedAt = credential.CreatedAt,
+            UpdatedAt = credential.UpdatedAt,
         };
 
         entity.CredentialPublicKeyJson = JsonSerializer.Serialize(entity.CredentialPublicKey);
@@ -63,6 +66,8 @@ public static class CredentialMapper
             },
             SignCount = entity.SignCount,
             Transports = MapTransports(entity.Transports),
+            CreatedAt = entity.CreatedAt,
+            UpdatedAt = entity.UpdatedAt,
         };
     }
 
