@@ -25,7 +25,7 @@ internal sealed class CredentialRepository : ICredentialRepository
         }
 
         const string sql = @"
-            SELECT CredentialId, UserHandle, UserName, UserDisplayName, CredentialPublicKeyJson, SignCount, Transports
+            SELECT CredentialId, UserHandle, UserName, UserDisplayName, CredentialPublicKeyJson, SignCount, Transports, CreatedAt, UpdatedAt
             FROM Credential
             WHERE CredentialId = @CredentialId"
         ;
@@ -109,7 +109,7 @@ internal sealed class CredentialRepository : ICredentialRepository
 
         const string sql = @"
             UPDATE Credential
-            SET SignCount = @SignCount
+            SET SignCount = @SignCount, UpdatedAt = GETUTCDATE()
             WHERE CredentialId = @CredentialId";
 
         using var connection = SqlConnectionFactory.GetConnection(_connectionString);

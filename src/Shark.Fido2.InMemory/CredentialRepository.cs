@@ -74,6 +74,8 @@ internal sealed class CredentialRepository : ICredentialRepository
 
         var entity = credential.ToEntity();
 
+        entity.CreatedAt = DateTime.UtcNow;
+
         await _operationLock.WaitAsync(cancellationToken);
 
         try
@@ -92,6 +94,8 @@ internal sealed class CredentialRepository : ICredentialRepository
         ArgumentNullException.ThrowIfNull(credential);
 
         var entity = credential.ToEntity();
+
+        entity.UpdatedAt = DateTime.UtcNow;
 
         await _operationLock.WaitAsync(cancellationToken);
 
