@@ -66,6 +66,6 @@ public class CredentialsDetailsModel : PageModel
         Algorithm = credential.CredentialPublicKey.Algorithm;
         Transports = credential.Transports;
         CreatedAt = credential.CreatedAt.ToString(DateTimeFormat, CultureInfo.InvariantCulture);
-        UpdatedAt = credential.UpdatedAt.ToString(DateTimeFormat, CultureInfo.InvariantCulture) ?? "-";
+        UpdatedAt = credential.UpdatedAt?.ToString(DateTimeFormat, CultureInfo.InvariantCulture) ?? "-";
     }
 }
