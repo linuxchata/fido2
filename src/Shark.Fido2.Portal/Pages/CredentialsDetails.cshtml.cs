@@ -1,3 +1,4 @@
+using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Shark.Fido2.Common.Extensions;
@@ -7,6 +8,8 @@ namespace Shark.Fido2.Portal.Pages;
 
 public class CredentialsDetailsModel : PageModel
 {
+    private const string DateTimeFormat = "yyyy-MM-dd HH:mm:ss";
+
     private readonly ICredentialService _credentialService;
 
     public CredentialsDetailsModel(ICredentialService credentialService)
@@ -35,6 +38,12 @@ public class CredentialsDetailsModel : PageModel
     [BindProperty]
     public string[]? Transports { get; set; }
 
+    [BindProperty]
+    public string? CreatedAt { get; set; }
+
+    [BindProperty]
+    public string? UpdatedAt { get; set; }
+
     public async Task OnGet(string credentialId, CancellationToken cancellationToken)
     {
         if (string.IsNullOrEmpty(credentialId))
@@ -56,5 +65,7 @@ public class CredentialsDetailsModel : PageModel
         SignCount = credential.SignCount;
         Algorithm = credential.CredentialPublicKey.Algorithm;
         Transports = credential.Transports;
+        CreatedAt = credential.CreatedAt.ToString(DateTimeFormat, CultureInfo.InvariantCulture);
+        UpdatedAt = credential.UpdatedAt?.ToString(DateTimeFormat, CultureInfo.InvariantCulture) ?? "-";
     }
 }
