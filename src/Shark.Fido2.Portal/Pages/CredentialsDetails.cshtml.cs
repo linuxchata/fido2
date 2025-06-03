@@ -33,13 +33,13 @@ public class CredentialsDetailsModel : PageModel
     public uint SignCount { get; set; }
 
     [BindProperty]
-    public int Algorithm { get; set; }
+    public required string Algorithm { get; set; }
 
     [BindProperty]
     public string[]? Transports { get; set; }
 
     [BindProperty]
-    public string? CreatedAt { get; set; }
+    public required string CreatedAt { get; set; }
 
     [BindProperty]
     public string? UpdatedAt { get; set; }
@@ -63,7 +63,7 @@ public class CredentialsDetailsModel : PageModel
         UserName = credential.UserName;
         UserDisplayName = credential.UserDisplayName;
         SignCount = credential.SignCount;
-        Algorithm = credential.CredentialPublicKey.Algorithm;
+        Algorithm = PublicKeyAlgorithms.Get(credential.CredentialPublicKey.Algorithm);
         Transports = credential.Transports;
         CreatedAt = credential.CreatedAt.ToString(DateTimeFormat, CultureInfo.InvariantCulture);
         UpdatedAt = credential.UpdatedAt?.ToString(DateTimeFormat, CultureInfo.InvariantCulture) ?? "-";
