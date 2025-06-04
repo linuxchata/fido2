@@ -3,13 +3,16 @@
         button.disabled = true;
         button.textContent = 'Processing...';
 
-        await asyncAction();
-
-        button.disabled = false;
-        button.textContent = originalText;
+        try {
+            await asyncAction();
+        } finally {
+            button.disabled = false;
+            button.textContent = originalText;
+        }
     }
 
-    function showCredentialDetailsButton() {
+    // Credential details button
+    function toggleCredentialDetailsButton() {
         const credentialDetailsButton = document.getElementById('credentialDetailsButton');
 
         if (credentialDetailsButton) {
@@ -33,7 +36,7 @@
     var signupButton = document.getElementById('signupButton');
     if (signupButton && signupButton.addEventListener) {
         signupButton.addEventListener('click', async function () {
-            const originalText = this.textContent; // this is the button
+            const originalText = this.textContent; // 'this' is the button
             const username = document.getElementById('signupUsername').value;
             const displayName = document.getElementById('displayName').value;
 
@@ -53,7 +56,7 @@
     var signinButton = document.getElementById('signinButton');
     if (signinButton && signinButton.addEventListener) {
         signinButton.addEventListener('click', async function () {
-            const originalText = this.textContent; // this is the button
+            const originalText = this.textContent; // 'this' is the button
             const username = document.getElementById('signinUsername').value;
 
             await handleAsyncAction(
@@ -62,7 +65,7 @@
                 originalText
             );
 
-            showCredentialDetailsButton();
+            toggleCredentialDetailsButton();
         });
     }
 
