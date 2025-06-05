@@ -1,4 +1,3 @@
-using System.Net;
 using System.Text.Json;
 using Shark.Fido2.Core.Entities;
 using Shark.Fido2.Domain;
