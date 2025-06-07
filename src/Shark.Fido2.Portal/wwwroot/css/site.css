@@ -26,9 +26,14 @@ body {
     --secondary-color: #34a853;
     --dark-color: #202124;
     --light-color: #f8f9fa;
+    --border-color: #dadce0;
     --border-radius: 8px;
-    --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 0 2px rgba(0, 0, 0, 0.08);
     --transition: all 0.3s ease;
+}
+
+.navbar {
+    border-bottom: 1px solid var(--border-color);
 }
 
 .auth-container {
@@ -37,8 +42,7 @@ body {
     max-width: 1000px;
     margin: 20px auto;
     border-radius: var(--border-radius);
-    overflow: hidden;
-    box-shadow: var(--box-shadow);
+    gap: 20px;
 }
 
 .auth-section {
@@ -50,11 +54,12 @@ body {
 
 .signup-section {
     background-color: var(--light-color);
-    border-right: 1px solid #e0e0e0;
+    box-shadow: var(--box-shadow);
 }
 
 .signin-section {
-    background-color: white;
+    background-color: var(--light-color);
+    box-shadow: var(--box-shadow);
 }
 
 .auth-header {
@@ -92,7 +97,7 @@ body {
     width: 100%;
     padding: 12px 16px;
     font-size: 16px;
-    border: 1px solid #dadce0;
+    border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
     transition: var(--transition);
 }
@@ -163,7 +168,7 @@ body {
         left: 0;
         right: 0;
         height: 1px;
-        background-color: #dadce0;
+        background-color: var(--border-color);
     }
 
     .divider span {
