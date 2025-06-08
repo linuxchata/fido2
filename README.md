@@ -20,7 +20,7 @@ This repository provides a server-side implementation of the FIDO2 protocol, ena
 # Usage
 The following examples demonstrate how to implement FIDO2 authentication in your application.
 
-## Server-side (ASP.NET Core Controllers)
+## Server side (ASP.NET Core Controllers)
 The sample C# code below is designed for ASP.NET Core controllers.
 
 ### Attestation (registration)
@@ -74,11 +74,11 @@ public async Task<IActionResult> Result(ServerPublicKeyCredentialAssertion reque
 ```
 
 ### Configuration
-The server-side can be customized using the following configuration options. You can set these options in a `appsettings.json` file
+The server side can be customized using the following configuration options. You can set these options in an `appsettings.json` file.
 
 | Option | Default | Description |
 |-|-|-|
-| `RelyingPartyId` |  | Valid domain string identifying the Relying Party on whose behalf a given registration or authentication ceremony is being performed. This is a critical parameter in the WebAuthn protocol. It defines the security scope within which credentials are valid. Therefore, careful selection is essential, as an incorrect or overly broad can lead to unintended credential reuse or security vulnerabilities. |
+| `RelyingPartyId` |  | Valid domain string identifying the Relying Party on whose behalf a given registration or authentication ceremony is being performed. This is a critical parameter in the WebAuthn protocol. It defines the security scope within which credentials are valid. Therefore, careful selection is essential, as an incorrect or overly broad value can lead to unintended credential reuse or security vulnerabilities. |
 | `RelyingPartyIdName` |  | Human-palatable identifier for the Relying Party, intended only for display. |
 | `Origin` |  | Fully qualified origin of the site making the request, passed to the authenticator by the browser. |
 | `Timeout` | `60000` | Time, in milliseconds, that the Relying Party is willing to wait for the call to complete.  |
@@ -92,11 +92,11 @@ The server-side can be customized using the following configuration options. You
 |-|-|-|
 | `MetadataBlobLocation` | `https://mds3.fidoalliance.org/` | Location of the centralized and trusted source of information about FIDO authenticators (Metadata Service BLOB). |
 | `RootCertificateLocationUrl` | `http://secure.globalsign.com/cacert/root-r3.crt` | Location of GlobalSign Root R3 for Metadata Service BLOB. |
-| `MaximumTokenSizeInBytes` | `6291456` | Maximum token size in bytes that will be processed. This configuration related to Metadata Service BLOB size. |
+| `MaximumTokenSizeInBytes` | `6291456` | Maximum token size in bytes that will be processed. This configuration is related to the Metadata Service BLOB size. |
 
 Example `appsettings.json` file: [appsettings.Production.json](https://github.com/linuxchata/fido2/blob/main/src/Shark.Fido2.Portal/appsettings.Production.json)
 
-## Client-side (JavaScript)
+## Client side (JavaScript)
 To complete the FIDO2 implementation, you need to add JavaScript code that communicates with the Web Authentication API (WebAuthn) in the browser. The WebAuthn API is part of the FIDO2 specification and provides the client-side functionality for secure authentication. Below you can find sample implementation for communication with WebAuthn:
 
 - [fido2-attestation.js](https://github.com/linuxchata/fido2/blob/main/src/Shark.Fido2.Portal/wwwroot/js/fido2-attestation.js) - Handles the registration process using the Web Authentication API (navigator.credentials.create)
