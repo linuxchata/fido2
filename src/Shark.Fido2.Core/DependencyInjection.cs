@@ -26,6 +26,7 @@ public static class DependencyInjection
         services.AddSingleton(TimeProvider.System);
 
         services.AddTransient<IChallengeGenerator, ChallengeGenerator>();
+        services.AddTransient<IUserIdGenerator, UserIdGenerator>();
 
         services.AddTransient<IClientDataValidator, ClientDataValidator>();
         services.AddTransient<IClientDataHandler, ClientDataHandler>();

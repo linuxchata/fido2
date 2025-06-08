@@ -25,6 +25,7 @@ public class AttestationTests
     private Mock<IClientDataHandler> _clientDataHandlerMock = null!;
     private Mock<IAttestationObjectHandler> _attestationObjectHandlerMock = null!;
     private Mock<IChallengeGenerator> _challengeGeneratorMock = null!;
+    private Mock<IUserIdGenerator> _userIdGeneratorMock = null!;
     private Mock<ICredentialRepository> _credentialRepositoryMock = null!;
 
     private PublicKeyCredentialAttestation _publicKeyCredentialAttestation = null!;
@@ -73,6 +74,11 @@ public class AttestationTests
             .Setup(a => a.Get())
             .Returns([1, 2, 3, 4]);
 
+        _userIdGeneratorMock = new Mock<IUserIdGenerator>();
+        _userIdGeneratorMock
+            .Setup(a => a.Get(UserName))
+            .Returns([181, 235, 45, 186, 199, 171]);
+
         _credentialRepositoryMock = new Mock<ICredentialRepository>();
         _credentialRepositoryMock
             .Setup(a => a.Exists(It.IsAny<byte[]>(), CancellationToken.None))
@@ -115,6 +121,7 @@ public class AttestationTests
             _clientDataHandlerMock.Object,
             _attestationObjectHandlerMock.Object,
             _challengeGeneratorMock.Object,
+            _userIdGeneratorMock.Object,
             _credentialRepositoryMock.Object,
             Options.Create(_fido2Configuration));
     }
