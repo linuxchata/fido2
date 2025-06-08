@@ -19,6 +19,7 @@ public sealed class Attestation : IAttestation
     private readonly IClientDataHandler _clientDataHandler;
     private readonly IAttestationObjectHandler _attestationObjectHandler;
     private readonly IChallengeGenerator _challengeGenerator;
+    private readonly IUserIdGenerator _userIdGenerator;
     private readonly ICredentialRepository _credentialRepository;
     private readonly Fido2Configuration _configuration;
 
@@ -26,12 +27,14 @@ public sealed class Attestation : IAttestation
         IClientDataHandler clientDataHandler,
         IAttestationObjectHandler attestationObjectHandler,
         IChallengeGenerator challengeGenerator,
+        IUserIdGenerator userIdGenerator,
         ICredentialRepository credentialRepository,
         IOptions<Fido2Configuration> options)
     {
         _clientDataHandler = clientDataHandler;
         _attestationObjectHandler = attestationObjectHandler;
         _challengeGenerator = challengeGenerator;
+        _userIdGenerator = userIdGenerator;
         _credentialRepository = credentialRepository;
         _configuration = options.Value;
     }
@@ -68,7 +71,7 @@ public sealed class Attestation : IAttestation
             },
             User = new PublicKeyCredentialUserEntity
             {
-                Id = userName.FromBase64Url(),
+                Id = _userIdGenerator.Get(userName),
                 Name = userName,
                 DisplayName = request.DisplayName.Trim(),
             },
