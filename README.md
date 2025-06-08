@@ -73,6 +73,29 @@ public async Task<IActionResult> Result(ServerPublicKeyCredentialAssertion reque
 }
 ```
 
+### Configuration
+The server-side can be customized using the following configuration options. You can set these options in a `appsettings.json` file
+
+| Option | Default | Description |
+|-|-|-|
+| `RelyingPartyId` |  | Valid domain string identifying the Relying Party on whose behalf a given registration or authentication ceremony is being performed. This is a critical parameter in the WebAuthn protocol. It defines the security scope within which credentials are valid. Therefore, careful selection is essential, as an incorrect or overly broad can lead to unintended credential reuse or security vulnerabilities. |
+| `RelyingPartyIdName` |  | Human-palatable identifier for the Relying Party, intended only for display. |
+| `Origin` |  | Fully qualified origin of the site making the request, passed to the authenticator by the browser. |
+| `Timeout` | `60000` | Time, in milliseconds, that the Relying Party is willing to wait for the call to complete.  |
+| `AllowNoneAttestation` | `true` | Value indicating whether None attestation type is acceptable under Relying Party policy. [None attestation](https://www.w3.org/TR/webauthn-2/#none) is used when the authenticator doesn't have any attestation information available. |
+| `AllowSelfAttestation` | `true` | Value indicating whether Self attestation type is acceptable under Relying Party policy. [Self attestation](https://www.w3.org/TR/webauthn-2/#self-attestation) is used when the authenticator doesn't have a dedicated attestation key pair or a vendor-issued certificate. |
+| `EnableTrustedExecutionEnvironmentOnly` | `true` | Value indicating whether the Relying Party trusts only keys that are securely generated and stored in a Trusted Execution Environment (Android Key Attestation). |
+| `EnableMetadataService` | `true` | Value indicating whether the Relying Party uses the Metadata Service to verify the attestation object. |
+| `EnableStrictAuthenticatorVerification` | `false` | Value indicating whether the Relying Party requires strict verification of authenticators. If enabled, missing metadata for the authenticator would cause attestation to fail. |
+
+| Option | Default | Description |
+|-|-|-|
+| `MetadataBlobLocation` | `https://mds3.fidoalliance.org/` | Location of the centralized and trusted source of information about FIDO authenticators (Metadata Service BLOB). |
+| `RootCertificateLocationUrl` | `http://secure.globalsign.com/cacert/root-r3.crt` | Location of GlobalSign Root R3 for Metadata Service BLOB. |
+| `MaximumTokenSizeInBytes` | `6291456` | Maximum token size in bytes that will be processed. This configuration related to Metadata Service BLOB size. |
+
+Example `appsettings.json` file: [appsettings.Production.json](https://github.com/linuxchata/fido2/blob/main/src/Shark.Fido2.Portal/appsettings.Production.json)
+
 ## Client-side (JavaScript)
 To complete the FIDO2 implementation, you need to add JavaScript code that communicates with the Web Authentication API (WebAuthn) in the browser. The WebAuthn API is part of the FIDO2 specification and provides the client-side functionality for secure authentication. Below you can find sample implementation for communication with WebAuthn:
 
