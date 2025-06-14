@@ -31,14 +31,14 @@ internal sealed class CredentialRepository : ICredentialRepository
         _cache = cache;
     }
 
-    public async Task<Credential?> Get(byte[]? id, CancellationToken cancellationToken = default)
+    public async Task<Credential?> Get(byte[]? credentialId, CancellationToken cancellationToken = default)
     {
-        if (id == null || id.Length == 0)
+        if (credentialId == null || credentialId.Length == 0)
         {
             return null;
         }
 
-        var serialized = await _cache.GetStringAsync(GetCredentialKey(id), cancellationToken);
+        var serialized = await _cache.GetStringAsync(GetCredentialKey(credentialId), cancellationToken);
 
         if (!string.IsNullOrWhiteSpace(serialized))
         {
@@ -56,14 +56,14 @@ internal sealed class CredentialRepository : ICredentialRepository
         return entities.Select(e => e.ToLightweightDomain()!).ToList();
     }
 
-    public async Task<bool> Exists(byte[]? id, CancellationToken cancellationToken = default)
+    public async Task<bool> Exists(byte[]? credentialId, CancellationToken cancellationToken = default)
     {
-        if (id == null || id.Length == 0)
+        if (credentialId == null || credentialId.Length == 0)
         {
             return false;
         }
 
-        var serialized = await _cache.GetStringAsync(GetCredentialKey(id), cancellationToken);
+        var serialized = await _cache.GetStringAsync(GetCredentialKey(credentialId), cancellationToken);
 
         return serialized != null;
     }

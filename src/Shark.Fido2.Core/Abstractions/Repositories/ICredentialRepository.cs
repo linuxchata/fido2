@@ -26,10 +26,10 @@ public interface ICredentialRepository
     /// <summary>
     /// Checks whether a credential exists by credential identifier.
     /// </summary>
-    /// <param name="id">The identifier of the credential.</param>
+    /// <param name="credentialId">The identifier of the credential.</param>
     /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>True if a credential exists; otherwise, false.</returns>
-    Task<bool> Exists(byte[]? id, CancellationToken cancellationToken = default);
+    Task<bool> Exists(byte[]? credentialId, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Adds a new credential.
