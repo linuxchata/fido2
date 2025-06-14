@@ -24,14 +24,14 @@ The following examples demonstrate how to implement FIDO2 authentication in your
 The sample C# code below is designed for ASP.NET Core controllers.
 
 ### Attestation (registration)
-1. Get creation options.
+1. Get create options.
 ```csharp
 [HttpPost("options")]
 public async Task<IActionResult> Options(ServerPublicKeyCredentialCreationOptionsRequest request)
 {
-    var creationOptions = await _attestation.GetOptions(request.Map());
-    var response = creationOptions.Map();
-    HttpContext.Session.SetString("CreationOptions", JsonSerializer.Serialize(creationOptions));
+    var createOptions = await _attestation.CreateOptions(request.Map());
+    var response = createOptions.Map();
+    HttpContext.Session.SetString("CreateOptions", JsonSerializer.Serialize(createOptions));
     return Ok(response);
 }
 ```
@@ -41,9 +41,9 @@ public async Task<IActionResult> Options(ServerPublicKeyCredentialCreationOption
 [HttpPost("result")]
 public async Task<IActionResult> Result(ServerPublicKeyCredentialAttestation request)
 {
-    var creationOptionsString = HttpContext.Session.GetString("CreationOptions");
-    var creationOptions = JsonSerializer.Deserialize<PublicKeyCredentialCreationOptions>(creationOptionsString!);
-    await _attestation.Complete(request.Map(), creationOptions!);
+    var createOptionsString = HttpContext.Session.GetString("CreateOptions");
+    var createOptions = JsonSerializer.Deserialize<PublicKeyCredentialCreationOptions>(createOptionsString!);
+    await _attestation.Complete(request.Map(), createOptions!);
     return Ok(ServerResponse.Create());
 }
 ```
@@ -76,6 +76,7 @@ public async Task<IActionResult> Result(ServerPublicKeyCredentialAssertion reque
 ### Configuration
 The server side can be customized using the following configuration options. You can set these options in an `appsettings.json` file.
 
+### Core Configuration
 | Option | Default | Description |
 |-|-|-|
 | `RelyingPartyId` |  | Valid domain string identifying the Relying Party on whose behalf a given registration or authentication ceremony is being performed. This is a critical parameter in the WebAuthn protocol. It defines the security scope within which credentials are valid. Therefore, careful selection is essential, as an incorrect or overly broad value can lead to unintended credential reuse or security vulnerabilities. |
@@ -88,6 +89,7 @@ The server side can be customized using the following configuration options. You
 | `EnableMetadataService` | `true` | Value indicating whether the Relying Party uses the Metadata Service to verify the attestation object. |
 | `EnableStrictAuthenticatorVerification` | `false` | Value indicating whether the Relying Party requires strict verification of authenticators. If enabled, missing metadata for the authenticator would cause attestation to fail. |
 
+### Metadata Service Configuration
 | Option | Default | Description |
 |-|-|-|
 | `MetadataBlobLocation` | `https://mds3.fidoalliance.org/` | Location of the centralized and trusted source of information about FIDO authenticators (Metadata Service BLOB). |
