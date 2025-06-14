@@ -126,20 +126,20 @@ public class AttestationTests
             Options.Create(_fido2Configuration));
     }
 
-    #region GetOptions Tests
+    #region CreateOptions Tests
 
     [Test]
-    public void GetOptions_WhenRequestIsNull_ThenReturnsOptions()
+    public void CreateOptions_WhenRequestIsNull_ThenReturnsOptions()
     {
         // Arrange
         PublicKeyCredentialCreationOptionsRequest? request = null;
 
         // Act & Assert
-        Assert.ThrowsAsync<ArgumentNullException>(() => _sut.GetOptions(request!));
+        Assert.ThrowsAsync<ArgumentNullException>(() => _sut.CreateOptions(request!));
     }
 
     [Test]
-    public async Task GetOptions_WhenAuthenticatorSelectionIsNull_ThenReturnsOptions()
+    public async Task CreateOptions_WhenAuthenticatorSelectionIsNull_ThenReturnsOptions()
     {
         // Arrange
         var request = new PublicKeyCredentialCreationOptionsRequest
@@ -151,7 +151,7 @@ public class AttestationTests
         };
 
         // Act
-        var result = await _sut.GetOptions(request);
+        var result = await _sut.CreateOptions(request);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -162,7 +162,7 @@ public class AttestationTests
     }
 
     [Test]
-    public async Task GetOptions_WhenAttestationIsNull_ThenReturnsOptions()
+    public async Task CreateOptions_WhenAttestationIsNull_ThenReturnsOptions()
     {
         // Arrange
         var request = new PublicKeyCredentialCreationOptionsRequest
@@ -174,7 +174,7 @@ public class AttestationTests
         };
 
         // Act
-        var result = await _sut.GetOptions(request);
+        var result = await _sut.CreateOptions(request);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -182,7 +182,7 @@ public class AttestationTests
     }
 
     [Test]
-    public async Task GetOptions_WhenCredentialExists_ThenReturnsOptions()
+    public async Task CreateOptions_WhenCredentialExists_ThenReturnsOptions()
     {
         // Arrange
         var credential = new CredentialDescriptor
@@ -204,7 +204,7 @@ public class AttestationTests
         };
 
         // Act
-        var result = await _sut.GetOptions(request);
+        var result = await _sut.CreateOptions(request);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -218,7 +218,7 @@ public class AttestationTests
     [TestCase(AttestationConveyancePreference.Indirect)]
     [TestCase(AttestationConveyancePreference.Direct)]
     [TestCase(AttestationConveyancePreference.Enterprise)]
-    public async Task GetOptions_WhenRequestIsValid_ThenReturnsOptions(string attestationConveyancePreference)
+    public async Task CreateOptions_WhenRequestIsValid_ThenReturnsOptions(string attestationConveyancePreference)
     {
         // Arrange
         var request = new PublicKeyCredentialCreationOptionsRequest
@@ -236,7 +236,7 @@ public class AttestationTests
         };
 
         // Act
-        var result = await _sut.GetOptions(request);
+        var result = await _sut.CreateOptions(request);
 
         // Assert
         Assert.That(result, Is.Not.Null);

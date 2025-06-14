@@ -20,7 +20,7 @@ public class ServerPublicKeyCredentialCreationOptionsRequestExample :
                 RequireResidentKey = false,
                 UserVerification = "required",
             },
-            Attestation = AttestationConveyancePreference.None,
+            Attestation = AttestationConveyancePreference.Direct,
         };
     }
 }

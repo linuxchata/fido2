@@ -39,7 +39,7 @@ public sealed class Attestation : IAttestation
         _configuration = options.Value;
     }
 
-    public async Task<PublicKeyCredentialCreationOptions> GetOptions(
+    public async Task<PublicKeyCredentialCreationOptions> CreateOptions(
         PublicKeyCredentialCreationOptionsRequest request,
         CancellationToken cancellationToken = default)
     {

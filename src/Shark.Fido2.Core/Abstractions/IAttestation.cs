@@ -15,7 +15,7 @@ public interface IAttestation
     /// <param name="request">The request containing parameters for generating credential creation options.</param>
     /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>Credential creation options to be sent to the client.</returns>
-    Task<PublicKeyCredentialCreationOptions> GetOptions(
+    Task<PublicKeyCredentialCreationOptions> CreateOptions(
         PublicKeyCredentialCreationOptionsRequest request,
         CancellationToken cancellationToken = default);
 
