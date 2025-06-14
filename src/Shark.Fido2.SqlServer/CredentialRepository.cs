@@ -58,9 +58,9 @@ internal sealed class CredentialRepository : ICredentialRepository
         return entities.Select(e => e.ToLightweightDomain()!).ToList();
     }
 
-    public async Task<bool> Exists(byte[]? id, CancellationToken cancellationToken = default)
+    public async Task<bool> Exists(byte[]? credentialId, CancellationToken cancellationToken = default)
     {
-        if (id == null)
+        if (credentialId == null)
         {
             return false;
         }
@@ -72,7 +72,7 @@ internal sealed class CredentialRepository : ICredentialRepository
 
         using var connection = SqlConnectionFactory.GetConnection(_connectionString);
 
-        var count = await connection.ExecuteScalarAsync<int>(sql, new { CredentialId = id });
+        var count = await connection.ExecuteScalarAsync<int>(sql, new { CredentialId = credentialId });
 
         return count > 0;
     }
