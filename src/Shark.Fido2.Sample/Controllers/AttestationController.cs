@@ -22,7 +22,7 @@ public class AttestationController(IAttestation attestation, ILogger<Attestation
     private readonly IAttestation _attestation = attestation;
 
     /// <summary>
-    /// Gets credential creation options.
+    /// Gets credential create options.
     /// </summary>
     /// <param name="request">The request.</param>
     /// <param name="cancellationToken">A cancellation token.</param>
@@ -37,11 +37,11 @@ public class AttestationController(IAttestation attestation, ILogger<Attestation
         ServerPublicKeyCredentialCreationOptionsRequest request,
         CancellationToken cancellationToken)
     {
-        var creationOptions = await _attestation.GetOptions(request.Map(), cancellationToken);
+        var createOptions = await _attestation.CreateOptions(request.Map(), cancellationToken);
 
-        var response = creationOptions.Map();
+        var response = createOptions.Map();
 
-        HttpContext.Session.SetString("CreationOptions", JsonSerializer.Serialize(creationOptions));
+        HttpContext.Session.SetString("CreateOptions", JsonSerializer.Serialize(createOptions));
 
         return Ok(response);
     }
@@ -66,11 +66,11 @@ public class AttestationController(IAttestation attestation, ILogger<Attestation
             return Ok(ServerResponse.CreateFailed());
         }
 
-        var creationOptionsString = HttpContext.Session.GetString("CreationOptions");
+        var createOptionsString = HttpContext.Session.GetString("CreateOptions");
 
-        var creationOptions = JsonSerializer.Deserialize<PublicKeyCredentialCreationOptions>(creationOptionsString!);
+        var createOptions = JsonSerializer.Deserialize<PublicKeyCredentialCreationOptions>(createOptionsString!);
 
-        var response = await _attestation.Complete(request.Map(), creationOptions!, cancellationToken);
+        var response = await _attestation.Complete(request.Map(), createOptions!, cancellationToken);
 
         if (response.IsValid)
         {

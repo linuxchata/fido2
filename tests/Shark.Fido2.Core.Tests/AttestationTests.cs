@@ -135,7 +135,7 @@ public class AttestationTests
         PublicKeyCredentialCreationOptionsRequest? request = null;
 
         // Act & Assert
-        Assert.ThrowsAsync<ArgumentNullException>(() => _sut.GetOptions(request!));
+        Assert.ThrowsAsync<ArgumentNullException>(() => _sut.CreateOptions(request!));
     }
 
     [Test]
@@ -151,7 +151,7 @@ public class AttestationTests
         };
 
         // Act
-        var result = await _sut.GetOptions(request);
+        var result = await _sut.CreateOptions(request);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -174,7 +174,7 @@ public class AttestationTests
         };
 
         // Act
-        var result = await _sut.GetOptions(request);
+        var result = await _sut.CreateOptions(request);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -204,7 +204,7 @@ public class AttestationTests
         };
 
         // Act
-        var result = await _sut.GetOptions(request);
+        var result = await _sut.CreateOptions(request);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -236,7 +236,7 @@ public class AttestationTests
         };
 
         // Act
-        var result = await _sut.GetOptions(request);
+        var result = await _sut.CreateOptions(request);
 
         // Assert
         Assert.That(result, Is.Not.Null);
