@@ -11,7 +11,7 @@ internal sealed class CredentialRepository : ICredentialRepository
 {
     private const string TableName = "Credential";
     private const string UserNameIndex = "UserNameIndex";
-    private const string PartitionKey = "CredentialId";
+    private const string PartitionKey = "cid";
 
     private readonly AmazonDynamoDBClient _client;
 
