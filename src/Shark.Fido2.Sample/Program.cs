@@ -1,4 +1,5 @@
 using Shark.Fido2.Core;
+using Shark.Fido2.DynamoDB;
 using Shark.Fido2.InMemory;
 using Shark.Fido2.Sample.Swagger;
 using Shark.Fido2.SqlServer;
@@ -34,7 +35,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 builder.Services.AddSwaggerExamplesFromAssemblyOf<ServerPublicKeyCredentialCreationOptionsRequestExample>();
 
-builder.Services.AddFido2InMemoryStore();
+builder.Services.AddFido2DynamoDB();
 builder.Services.AddFido2(builder.Configuration);
 
 var app = builder.Build();
