@@ -1,6 +1,8 @@
 ﻿using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
 using Shark.Fido2.Core.Abstractions.Repositories;
+using Shark.Fido2.Core.Entities;
+using Shark.Fido2.Core.Mappers;
 using Shark.Fido2.Domain;
 using Shark.Fido2.DynamoDB.Abstractions;
 
@@ -25,35 +27,17 @@ internal sealed class CredentialRepository : ICredentialRepository
             return null;
         }
 
-        var request = new GetItemRequest
+        var request = GetGetItemRequest(credentialId);
+
+        var response = await _client.GetItemAsync(request, cancellationToken);
+
+        if (response.Item != null && response.Item.Count > 0)
         {
-            TableName = TableName,
-            Key = new Dictionary<string, AttributeValue>
-            {
-                { PartitionKey, new AttributeValue { B = new MemoryStream(credentialId!) } },
-            },
-        };
+            var entity = response.Item.ToEntity();
 
-        try
-        {
-            var response = await _client.GetItemAsync(request, cancellationToken);
-
-            if (response.Item != null && response.Item.Count > 0)
-            {
-                Console.WriteLine("Item found:");
-                foreach (var kvp in response.Item)
-                {
-                    Console.WriteLine($"{kvp.Key}: {kvp.Value.S ?? kvp.Value.N}");
-                }
-
-                return null;
-            }
-            else
-            {
-                return null;
-            }
+            return entity.ToDomain();
         }
-        catch (Exception)
+        else
         {
             return null;
         }
@@ -64,18 +48,57 @@ internal sealed class CredentialRepository : ICredentialRepository
         return Task.FromResult(new List<CredentialDescriptor>());
     }
 
-    public Task<bool> Exists(byte[]? credentialId, CancellationToken cancellationToken = default)
+    public async Task<bool> Exists(byte[]? credentialId, CancellationToken cancellationToken = default)
     {
-        return Task.FromResult(false);
+        if (credentialId == null)
+        {
+            return false;
+        }
+
+        var request = GetGetItemRequest(credentialId);
+
+        var response = await _client.GetItemAsync(request, cancellationToken);
+
+        return response.Item != null && response.Item.Count > 0;
     }
 
-    public Task Add(Credential credential, CancellationToken cancellationToken = default)
+    public async Task Add(Credential credential, CancellationToken cancellationToken = default)
     {
-        return Task.CompletedTask;
+        ArgumentNullException.ThrowIfNull(credential);
+
+        var entity = credential.ToEntity();
+
+        var item = entity.FromEntity();
+
+        var request = new PutItemRequest
+        {
+            TableName = TableName,
+            Item = item,
+        };
+
+        var response = await _client.PutItemAsync(request, cancellationToken);
+
+        if (response.HttpStatusCode != System.Net.HttpStatusCode.OK)
+        {
+            throw new Exception();
+        }
     }
 
     public Task UpdateSignCount(Credential credential, uint signCount, CancellationToken cancellationToken = default)
     {
         return Task.CompletedTask;
+    }
+
+    private static GetItemRequest GetGetItemRequest(byte[] credentialId)
+    {
+        return new GetItemRequest
+        {
+            TableName = TableName,
+            Key = new Dictionary<string, AttributeValue>
+            {
+                { PartitionKey, new AttributeValue { B = new MemoryStream(credentialId!) } },
+            },
+            ConsistentRead = true,
+        };
     }
 }
