@@ -24,7 +24,7 @@ internal static class CredentialEntityMapper
         };
     }
 
-    internal static Dictionary<string, AttributeValue> FromEntity(this CredentialEntity entity)
+    internal static Dictionary<string, AttributeValue> ToItem(this CredentialEntity entity)
     {
         return new Dictionary<string, AttributeValue>
         {

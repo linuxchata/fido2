@@ -91,12 +91,10 @@ internal sealed class CredentialRepository : ICredentialRepository
 
         var entity = credential.ToEntity();
 
-        var item = entity.FromEntity();
-
         var request = new PutItemRequest
         {
             TableName = TableName,
-            Item = item,
+            Item = entity.ToItem(),
         };
 
         var response = await _client.PutItemAsync(request, cancellationToken);
