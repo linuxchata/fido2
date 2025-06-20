@@ -6,6 +6,8 @@ public sealed class MetadataPayloadItem
 {
     public Guid Aaguid { get; init; }
 
+    public required string? Description { get; init; }
+
     public required StatusReport[] StatusReports { get; init; }
 
     public required string[] AttestationTypes { get; init; }

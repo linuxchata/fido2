@@ -35,6 +35,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Web", "Web", "{02EA681E-C7D
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Storages", "Storages", "{06FE717D-4AC9-4959-A179-260EE0DBCB27}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.Metadata.Core.Tests", "..\tests\Shark.Fido2.Metadata.Core.Tests\Shark.Fido2.Metadata.Core.Tests.csproj", "{5759F018-C30F-492A-9A85-F1B1FFED9241}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +95,10 @@ Global
 		{235ECDC5-C002-475E-BAEF-9590948C7CCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{235ECDC5-C002-475E-BAEF-9590948C7CCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{235ECDC5-C002-475E-BAEF-9590948C7CCB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5759F018-C30F-492A-9A85-F1B1FFED9241}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5759F018-C30F-492A-9A85-F1B1FFED9241}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5759F018-C30F-492A-9A85-F1B1FFED9241}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5759F018-C30F-492A-9A85-F1B1FFED9241}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -106,6 +112,7 @@ Global
 		{C247B935-3422-42FF-8E8E-DF34A018B89B} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{D540F937-D674-408B-B5BE-54C5BAED77EF} = {06FE717D-4AC9-4959-A179-260EE0DBCB27}
 		{235ECDC5-C002-475E-BAEF-9590948C7CCB} = {0DBAB265-1DF6-444B-BC5F-7A47857979BB}
+		{5759F018-C30F-492A-9A85-F1B1FFED9241} = {0DBAB265-1DF6-444B-BC5F-7A47857979BB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6595BEFB-D38C-43C0-BC2E-48B8A742FC45}
