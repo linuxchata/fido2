@@ -89,13 +89,17 @@ internal sealed class CredentialRepository : ICredentialRepository
         }
     }
 
-    public async Task UpdateSignCount(Credential credential, uint signCount, CancellationToken cancellationToken = default)
+    public async Task UpdateSignCount(byte[] credentialId, uint signCount, CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(credential);
+        ArgumentNullException.ThrowIfNull(credentialId);
 
-        var entity = credential.ToEntity();
+        var serialized = await _cache.GetStringAsync(GetCredentialKey(credentialId), cancellationToken);
 
-        entity.UpdatedAt = DateTime.UtcNow;
+        ArgumentNullException.ThrowIfNullOrWhiteSpace(serialized);
+
+        var entity = JsonSerializer.Deserialize<CredentialEntity>(serialized!, _jsonOptions);
+
+        entity!.UpdatedAt = DateTime.UtcNow;
 
         await _operationLock.WaitAsync(cancellationToken);
 
