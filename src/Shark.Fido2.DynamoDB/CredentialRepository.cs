@@ -105,7 +105,7 @@ internal sealed class CredentialRepository : ICredentialRepository
         }
     }
 
-    public Task UpdateSignCount(Credential credential, uint signCount, CancellationToken cancellationToken = default)
+    public Task UpdateSignCount(byte[] credentialId, uint signCount, CancellationToken cancellationToken = default)
     {
         return Task.CompletedTask;
     }
