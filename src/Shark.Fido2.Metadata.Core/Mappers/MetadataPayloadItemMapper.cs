@@ -15,25 +15,11 @@ internal static class MetadataPayloadItemMapper
         return new MetadataPayloadItem
         {
             Aaguid = entry.Aaguid!.Value,
+            Description = entry.MetadataStatement?.Description,
             StatusReports = entry.StatusReports
                 .Select(s => new Domain.StatusReport { Status = s.Status, EffectiveDate = s.EffectiveDate, })
                 .ToArray(),
             AttestationTypes = entry.MetadataStatement?.AttestationTypes ?? [],
-        };
-    }
-
-    public static MetadataPayloadItem? ToDomain(this MetadataStatement? entry)
-    {
-        if (entry == null)
-        {
-            return null;
-        }
-
-        return new MetadataPayloadItem
-        {
-            Aaguid = entry.Aaguid!,
-            StatusReports = [],
-            AttestationTypes = entry.AttestationTypes,
         };
     }
 }
