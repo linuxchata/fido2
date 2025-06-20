@@ -42,9 +42,9 @@ public interface ICredentialRepository
     /// <summary>
     /// Updates the signature counter of an existing credential.
     /// </summary>
-    /// <param name="credential">The credential.</param>
+    /// <param name="credentialId">The identifier of the credential.</param>
     /// <param name="signCount">The new signature counter value.</param>
     /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    Task UpdateSignCount(Credential credential, uint signCount, CancellationToken cancellationToken = default);
+    Task UpdateSignCount(byte[] credentialId, uint signCount, CancellationToken cancellationToken = default);
 }

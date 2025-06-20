@@ -103,9 +103,9 @@ internal sealed class CredentialRepository : ICredentialRepository
             });
     }
 
-    public async Task UpdateSignCount(Credential credential, uint signCount, CancellationToken cancellationToken = default)
+    public async Task UpdateSignCount(byte[] credentialId, uint signCount, CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(credential);
+        ArgumentNullException.ThrowIfNull(credentialId);
 
         const string sql = @"
             UPDATE Credential
@@ -119,7 +119,7 @@ internal sealed class CredentialRepository : ICredentialRepository
             new
             {
                 SignCount = (long)signCount,
-                credential.CredentialId,
+                CredentialId = credentialId,
             });
     }
 }

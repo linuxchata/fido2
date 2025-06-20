@@ -516,7 +516,7 @@ public class AssertionTests
         Assert.That(result.IsValid, Is.True);
         Assert.That(result.Message, Is.Null);
 
-        _credentialRepositoryMock.Verify(a => a.UpdateSignCount(credential, 2, CancellationToken.None), Times.Once);
+        _credentialRepositoryMock.Verify(a => a.UpdateSignCount(credential.CredentialId, 2, CancellationToken.None), Times.Once);
     }
 
     [Test]
@@ -561,7 +561,7 @@ public class AssertionTests
 
         // Verify that UpdateSignCount was not called
         _credentialRepositoryMock.Verify(
-            a => a.UpdateSignCount(It.IsAny<Credential>(), It.IsAny<uint>(), CancellationToken.None), Times.Never);
+            a => a.UpdateSignCount(It.IsAny<byte[]>(), It.IsAny<uint>(), CancellationToken.None), Times.Never);
     }
 
     #endregion

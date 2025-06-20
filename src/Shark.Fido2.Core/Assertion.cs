@@ -187,7 +187,7 @@ public sealed class Assertion : IAssertion
             {
                 // Update storedSignCount to be the value of authData.signCount.
                 await _credentialRepository.UpdateSignCount(
-                    credential,
+                    credential.CredentialId,
                     assertionResult.Value!.SignCount,
                     cancellationToken);
             }
