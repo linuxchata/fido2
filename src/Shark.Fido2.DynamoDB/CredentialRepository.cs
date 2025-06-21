@@ -37,22 +37,25 @@ internal sealed class CredentialRepository : ICredentialRepository
 
             return entity.ToDomain();
         }
-        else
-        {
-            return null;
-        }
+
+        return null;
     }
 
     public async Task<List<CredentialDescriptor>> Get(string username, CancellationToken cancellationToken = default)
     {
+        if (string.IsNullOrEmpty(username))
+        {
+            return [];
+        }
+
         var request = new QueryRequest
         {
             TableName = TableName,
             IndexName = UserNameIndex,
-            KeyConditionExpression = "UserName = :v_userName",
+            KeyConditionExpression = "un = :val",
             ExpressionAttributeValues = new Dictionary<string, AttributeValue>
             {
-                { ":v_userName", new AttributeValue { S = username } },
+                { ":val", new AttributeValue { S = username } },
             },
             ConsistentRead = false, // GSIs do not support consistent reads
         };
@@ -61,14 +64,12 @@ internal sealed class CredentialRepository : ICredentialRepository
 
         if (response.Items.Count > 0)
         {
-            var item = response.Items[0];
-        }
-        else
-        {
-            // Item not found
+            var entities = response.Items.Select(e => e.ToDescriptorEntity());
+
+            return entities.Select(e => e.ToLightweightDomain()!).ToList();
         }
 
-        return new List<CredentialDescriptor>();
+        return [];
     }
 
     public async Task<bool> Exists(byte[]? credentialId, CancellationToken cancellationToken = default)
@@ -101,13 +102,35 @@ internal sealed class CredentialRepository : ICredentialRepository
 
         if (response.HttpStatusCode != System.Net.HttpStatusCode.OK)
         {
-            throw new Exception();
+            throw new InvalidOperationException("Failed to add credential");
         }
     }
 
-    public Task UpdateSignCount(byte[] credentialId, uint signCount, CancellationToken cancellationToken = default)
+    public async Task UpdateSignCount(byte[] credentialId, uint signCount, CancellationToken cancellationToken = default)
     {
-        return Task.CompletedTask;
+        ArgumentNullException.ThrowIfNull(credentialId);
+
+        var request = new UpdateItemRequest
+        {
+            TableName = TableName,
+            Key = new Dictionary<string, AttributeValue>
+            {
+                { PartitionKey, new AttributeValue { B = new MemoryStream(credentialId) } },
+            },
+            UpdateExpression = "SET sc = :signCount, uat = :updatedAt",
+            ExpressionAttributeValues = new Dictionary<string, AttributeValue>
+            {
+                { ":signCount", new AttributeValue { N = signCount.ToString() } },
+                { ":updatedAt", new AttributeValue { S = DateTime.UtcNow.ToString("O") } },
+            },
+        };
+
+        var response = await _client.UpdateItemAsync(request, cancellationToken);
+
+        if (response.HttpStatusCode != System.Net.HttpStatusCode.OK)
+        {
+            throw new InvalidOperationException("Failed to update sign count for a credential");
+        }
     }
 
     private static GetItemRequest GetGetItemRequest(byte[] credentialId)
