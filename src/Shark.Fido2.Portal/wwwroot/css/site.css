@@ -18,6 +18,9 @@ html {
 }
 
 body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 :root {
@@ -140,7 +143,7 @@ body {
     }
 
 .btn-block {
-    width: 100%;
+    width: 150px;
 }
 
 .resource-link {
@@ -214,6 +217,7 @@ body {
     text-align: center;
     background-color: #111827;
     padding: 1.5rem 0;
+    margin-top: auto;
 }
 
     .footer p {

@@ -11,23 +11,23 @@
         }
     }
 
-    // Credential details button
-    function toggleCredentialDetailsButton() {
-        const credentialDetailsButton = document.getElementById('credentialDetailsButton');
+    // Credentials button
+    function toggleCredentialsButton() {
+        const credentialsButton = document.getElementById('credentialsButton');
 
-        if (credentialDetailsButton) {
+        if (credentialsButton) {
             const credentialIdInput = document.getElementById('credentialId');
 
             if (credentialIdInput) {
                 if (credentialIdInput.value) {
-                    credentialDetailsButton.classList.remove('hide');
+                    credentialsButton.classList.remove('hide');
                 }
                 else {
-                    credentialDetailsButton.classList.add('hide');
+                    credentialsButton.classList.add('hide');
                 }
             }
             else {
-                credentialDetailsButton.classList.add('hide');
+                credentialsButton.classList.add('hide');
             }
         }
     }
@@ -65,14 +65,14 @@
                 originalText
             );
 
-            toggleCredentialDetailsButton();
+            toggleCredentialsButton();
         });
     }
 
     // Credential details button event listener
-    var credentialDetailsButton = document.getElementById('credentialDetailsButton');
-    if (credentialDetailsButton && signinButton.addEventListener) {
-        credentialDetailsButton.addEventListener('click', function () {
+    var credentialsButton = document.getElementById('credentialsButton');
+    if (credentialsButton && signinButton.addEventListener) {
+        credentialsButton.addEventListener('click', function () {
             window.location.href = '/CredentialsDetails?credentialId=' + document.getElementById('credentialId').value
         });
     }
