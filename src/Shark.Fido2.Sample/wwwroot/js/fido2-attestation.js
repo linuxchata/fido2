@@ -90,10 +90,12 @@ async function fetchAttestationOptions(optionsRequest) {
             return await response.json();
         }
         else {
-            toastr.error("Error creating registration options", toastrRegistrationTitle);
+            const errorMessage = await response.text();
+            throw new Error(`Server responded with status code ${response.status}: ${errorMessage}`);
         }
     } catch (error) {
-        toastr.error(error.message, toastrRegistrationTitle);
+        toastr.error("Error creating registration options", toastrRegistrationTitle);
+        throw error;
     }
 }
 
@@ -112,10 +114,10 @@ async function fetchAttestationResult(credentials) {
         }
         else {
             const responseBody = await response.json();
-            toastr.error(`Registration has failed. ${responseBody.errorMessage}`, toastrRegistrationTitle);
+            throw new Error(responseBody.errorMessage);
         }
     } catch (error) {
-        toastr.error(error.message, toastrRegistrationTitle);
+        toastr.error(`Registration has failed. ${error.message}`, toastrRegistrationTitle);
     }
 }
 
