@@ -75,10 +75,12 @@ async function fetchAssertionOptions(optionsRequest) {
             return await response.json();
         }
         else {
-            toastr.error("Error creating authentication options", toastrAuthenticationTitle);
+            const errorMessage = await response.text();
+            throw new Error(`Server responded with status code ${response.status}: ${errorMessage}`);
         }
     } catch (error) {
-        toastr.error(error.message, toastrAuthenticationTitle);
+        toastr.error("Error creating authentication options", toastrAuthenticationTitle);
+        throw error;
     }
 }
 
@@ -97,10 +99,10 @@ async function fetchAssertionResult(credentials) {
         }
         else {
             const responseBody = await response.json();
-            toastr.error(`Authentication has failed. ${responseBody.errorMessage}`, toastrAuthenticationTitle);
+            throw new Error(responseBody.errorMessage);
         }
     } catch (error) {
-        toastr.error(error.message, toastrAuthenticationTitle);
+        toastr.error(`Authentication has failed. ${error.message}`, toastrAuthenticationTitle);
     }
 }
 
