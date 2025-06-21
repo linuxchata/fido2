@@ -1,5 +1,5 @@
 html {
-    font-size: 14px;
+    font-size: 1rem;
 }
 
 @media (min-width: 768px) {
@@ -18,17 +18,16 @@ html {
 }
 
 body {
-    margin-bottom: 20px;
 }
 
 :root {
-    --primary-color: #4285f4;
+    --primary-color: #2563eb;
     --secondary-color: #34a853;
     --dark-color: #202124;
-    --light-color: #f8f9fa;
+    --light-color: white;
     --border-color: #dadce0;
     --border-radius: 8px;
-    --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 0 2px rgba(0, 0, 0, 0.08);
+    --box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
     --transition: all 0.3s ease;
 }
 
@@ -36,16 +35,16 @@ body {
     border-bottom: 1px solid var(--border-color);
 }
 
-.auth-container {
+.main-container {
     display: flex;
-    min-height: 540px;
+    min-height: 500px;
     max-width: 1000px;
     margin: 20px auto;
     border-radius: var(--border-radius);
-    gap: 20px;
+    gap: 40px;
 }
 
-.auth-section {
+.main-section {
     flex: 1;
     padding: 25px;
     display: flex;
@@ -180,7 +179,7 @@ body {
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-    .auth-container {
+    .main-container {
         flex-direction: column;
         margin: 20px;
     }
@@ -204,7 +203,8 @@ body {
 
     .disclaimer p {
         margin: 0;
-        font-size: 14px;
+        font-size: 1rem;
+        color: #6b7280;
     }
 
 .footer {
@@ -212,13 +212,14 @@ body {
     justify-content: center;
     align-items: center;
     text-align: center;
+    background-color: #111827;
+    padding: 1.5rem 0;
 }
 
     .footer p {
         margin: 0;
-        margin-top: 10px;
-        font-size: 14px;
-        color: #6c757d;
+        font-size: 1rem;
+        color: white;
     }
 
 .hide {
