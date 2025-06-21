@@ -68,20 +68,20 @@ body {
     box-shadow: var(--box-shadow);
 }
 
-.auth-header {
+.main-header {
     margin-bottom: 20px;
     text-align: center;
 }
 
-    .auth-header h2 {
+    .main-header h2 {
         font-size: 28px;
         color: var(--dark-color);
         margin-bottom: 10px;
     }
 
-    .auth-header p {
+    .main-header p {
         color: #5f6368;
-        font-size: 16px;
+        font-size: 1.125rem;
     }
 
 .card {
