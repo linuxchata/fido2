@@ -31,7 +31,7 @@ internal sealed class TpmtPublicAreaParserService : ITpmtPublicAreaParserService
             var authPolicySize = ReadUInt16(reader);
             var authPolicy = reader.ReadBytes(authPolicySize);
 
-            /// TPMT_SYM_DEF_OBJECT
+            // TPMT_SYM_DEF_OBJECT
             var symmetric = ReadUInt16(reader);
 
             // TPMT_RSA_SCHEME or TPMT_ECC_SCHEME

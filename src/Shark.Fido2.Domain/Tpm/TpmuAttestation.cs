@@ -7,12 +7,12 @@
 public sealed class TpmuAttestation
 {
     /// <summary>
-    /// Type is TPM2B_NAME.
+    /// Gets name. Type is TPM2B_NAME.
     /// </summary>
     public required byte[] Name { get; init; }
 
     /// <summary>
-    /// Type is TPM2B_NAME.
+    /// Gets qualified name. Type is TPM2B_NAME.
     /// </summary>
     public required byte[] QualifiedName { get; init; }
 }

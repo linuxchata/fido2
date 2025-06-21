@@ -7,7 +7,7 @@ namespace Shark.Fido2.Core.Services;
 
 /// <summary>
 /// Key and ID attestation parser
-/// https://source.android.com/docs/security/features/keystore/attestation
+/// https://source.android.com/docs/security/features/keystore/attestation.
 /// </summary>
 internal sealed class AndroidKeyAttestationExtensionParserService : IAndroidKeyAttestationExtensionParserService
 {

@@ -2,7 +2,7 @@
 
 /// <summary>
 /// WebAuthn Attestation Statement Format Identifiers
-/// https://www.iana.org/assignments/webauthn/webauthn.xhtml
+/// https://www.iana.org/assignments/webauthn/webauthn.xhtml.
 /// </summary>
 internal static class AttestationStatementFormatIdentifier
 {

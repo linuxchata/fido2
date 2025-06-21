@@ -2,7 +2,7 @@
 
 /// <summary>
 /// 5.2.2. Web Authentication Assertion (interface AuthenticatorAssertionResponse)
-/// See: https://www.w3.org/TR/webauthn-2/#iface-authenticatorassertionresponse
+/// See: https://www.w3.org/TR/webauthn-2/#iface-authenticatorassertionresponse.
 /// </summary>
 public sealed class AuthenticatorAssertionResponse
 {

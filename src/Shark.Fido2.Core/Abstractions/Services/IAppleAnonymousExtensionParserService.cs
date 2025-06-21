@@ -1,7 +1,7 @@
 namespace Shark.Fido2.Core.Abstractions.Services;
 
 /// <summary>
-/// Apple Anonymous attestation extension parser service
+/// Apple Anonymous attestation extension parser service.
 /// </summary>
 public interface IAppleAnonymousExtensionParserService
 {

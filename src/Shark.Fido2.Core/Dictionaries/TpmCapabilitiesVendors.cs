@@ -3,7 +3,7 @@
 /// <summary>
 /// https://trustedcomputinggroup.org/resource/vendor-id-registry/
 /// TCG TPM Vendor ID Registry Family 1.2 and 2.0
-/// https://trustedcomputinggroup.org/wp-content/uploads/TCG-TPM-Vendor-ID-Registry-Family-1.2-and-2.0-Version-1.07-Revision-0.02_pub.pdf
+/// https://trustedcomputinggroup.org/wp-content/uploads/TCG-TPM-Vendor-ID-Registry-Family-1.2-and-2.0-Version-1.07-Revision-0.02_pub.pdf.
 /// </summary>
 internal static class TpmCapabilitiesVendors
 {
