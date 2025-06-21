@@ -133,23 +133,10 @@ internal class CredentialMapperTests
     public void ToLightweightDomain_WhenValidEntity_ThenReturnsCorrectDomainModel()
     {
         // Arrange
-        var entity = new CredentialEntity
+        var entity = new CredentialDescriptorEntity
         {
             CredentialId = [1, 2, 3],
-            UserHandle = [4, 5, 6],
             UserName = "testuser",
-            UserDisplayName = "Test User",
-            CredentialPublicKey = new CredentialPublicKeyEntity
-            {
-                KeyType = 1,
-                Algorithm = 2,
-                Modulus = [7, 8, 9],
-                Exponent = [10, 11, 12],
-                Curve = 13,
-                XCoordinate = [14, 15, 16],
-                YCoordinate = [17, 18, 19],
-                Key = [20, 21, 22],
-            },
             Transports = "usb;nfc",
         };
 
@@ -169,7 +156,7 @@ internal class CredentialMapperTests
     public void ToLightweightDomain_WhenEntityIsNull_ReturnsNull()
     {
         // Arrange
-        CredentialEntity? entity = null;
+        CredentialDescriptorEntity? entity = null;
 
         // Act
         var result = entity.ToLightweightDomain();

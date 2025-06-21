@@ -70,7 +70,7 @@ public static class CredentialMapper
         };
     }
 
-    public static CredentialDescriptor? ToLightweightDomain(this CredentialEntity? entity)
+    public static CredentialDescriptor? ToLightweightDomain(this CredentialDescriptorEntity? entity)
     {
         if (entity == null)
         {
@@ -86,11 +86,6 @@ public static class CredentialMapper
 
     private static string[]? MapTransports(string? transports)
     {
-        if (string.IsNullOrWhiteSpace(transports))
-        {
-            return [];
-        }
-
-        return transports?.Split(';');
+        return string.IsNullOrWhiteSpace(transports) ? [] : transports.Split(';');
     }
 }
