@@ -29,13 +29,17 @@ body {
     --dark-color: #202124;
     --light-color: white;
     --border-color: #dadce0;
-    --border-radius: 8px;
+    --border-radius: 0.375rem;
     --box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
     --transition: all 0.3s ease;
 }
 
 .navbar {
-    border-bottom: 1px solid var(--border-color);
+    background-color: #f6f8fa;
+}
+
+.navbar-toggler {
+    border: none;
 }
 
 .main-container {
@@ -153,6 +157,15 @@ body {
     display: inline-flex;
     align-items: center;
 }
+
+    /* Remove the browser's default focus outline */
+    .btn-github:hover,
+    .btn-github:focus,
+    .btn-github:active,
+    .btn-github:visited {
+        outline: none !important;
+        box-shadow: none !important;
+    }
 
 .resource-link {
     color: var(--bs-primary);
