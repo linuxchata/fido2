@@ -212,6 +212,10 @@ body {
         border-right: none;
         border-bottom: 1px solid #e0e0e0;
     }
+
+    .btn-block {
+        width: auto;
+    }
 }
 
 .notyf__icon {
