@@ -24,6 +24,16 @@ internal static class CredentialEntityMapper
         };
     }
 
+    internal static CredentialDescriptorEntity ToDescriptorEntity(this Dictionary<string, AttributeValue> item)
+    {
+        return new CredentialDescriptorEntity
+        {
+            CredentialId = item["cid"].B.ToArray(),
+            UserName = item["un"].S,
+            Transports = item["tsp"].S,
+        };
+    }
+
     internal static Dictionary<string, AttributeValue> ToItem(this CredentialEntity entity)
     {
         return new Dictionary<string, AttributeValue>

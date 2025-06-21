@@ -70,7 +70,7 @@ public static class CredentialMapper
         };
     }
 
-    public static CredentialDescriptor? ToLightweightDomain(this CredentialEntity? entity)
+    public static CredentialDescriptor? ToLightweightDomain(this CredentialDescriptorEntity? entity)
     {
         if (entity == null)
         {

@@ -27,8 +27,7 @@ internal sealed class CredentialRepository : ICredentialRepository
         const string sql = @"
             SELECT CredentialId, UserHandle, UserName, UserDisplayName, CredentialPublicKeyJson, SignCount, Transports, CreatedAt, UpdatedAt
             FROM Credential
-            WHERE CredentialId = @CredentialId"
-        ;
+            WHERE CredentialId = @CredentialId";
 
         using var connection = SqlConnectionFactory.GetConnection(_connectionString);
 
@@ -53,7 +52,7 @@ internal sealed class CredentialRepository : ICredentialRepository
 
         using var connection = SqlConnectionFactory.GetConnection(_connectionString);
 
-        var entities = await connection.QueryAsync<CredentialEntity>(sql, new { username });
+        var entities = await connection.QueryAsync<CredentialDescriptorEntity>(sql, new { username });
 
         return entities.Select(e => e.ToLightweightDomain()!).ToList();
     }

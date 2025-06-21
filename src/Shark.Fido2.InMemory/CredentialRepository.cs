@@ -51,9 +51,21 @@ internal sealed class CredentialRepository : ICredentialRepository
 
     public async Task<List<CredentialDescriptor>> Get(string username, CancellationToken cancellationToken = default)
     {
-        var entities = await GetInternal(username, cancellationToken);
+        if (string.IsNullOrWhiteSpace(username))
+        {
+            return [];
+        }
 
-        return entities.Select(e => e.ToLightweightDomain()!).ToList();
+        var serialized = await _cache.GetStringAsync(GetUsernameKey(username), cancellationToken);
+
+        if (!string.IsNullOrWhiteSpace(serialized))
+        {
+            var entities = JsonSerializer.Deserialize<List<CredentialDescriptorEntity>>(serialized, _jsonOptions) ?? [];
+
+            return entities.Select(e => e.ToLightweightDomain()!).ToList();
+        }
+
+        return [];
     }
 
     public async Task<bool> Exists(byte[]? credentialId, CancellationToken cancellationToken = default)
