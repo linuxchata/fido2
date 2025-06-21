@@ -1,10 +1,10 @@
 ﻿@page
 @model IndexModel
 
-<div class="auth-container">
+<div class="main-container">
     <!-- Sign Up Section -->
-    <div class="auth-section signup-section">
-        <div class="auth-header">
+    <div class="main-section signup-section">
+        <div class="main-header">
             <h2>Create Account</h2>
             <p>Sign up with FIDO2 for enhanced security</p>
         </div>
@@ -22,8 +22,8 @@
     </div>
 
     <!-- Sign In Section -->
-    <div class="auth-section signin-section">
-        <div class="auth-header">
+    <div class="main-section signin-section">
+        <div class="main-header">
             <h2>Welcome Back</h2>
             <p>Sign in with your FIDO2 credentials</p>
         </div>
@@ -34,7 +34,7 @@
             </div>
             <input type="hidden" id="credentialId" name="credentialId" />
             <button type="button" id="signinButton" class="btn btn-primary btn-block">Sign In</button>
-            <button type="button" id="credentialDetailsButton" class="btn btn-secondary btn-block mt-2 hide">Get Credential Details</button>
+            <button type="button" id="credentialsButton" class="btn btn-secondary btn-block hide">Credentials</button>
         </form>
     </div>
 </div>
