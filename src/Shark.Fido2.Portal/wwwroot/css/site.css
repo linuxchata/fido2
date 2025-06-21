@@ -146,6 +146,14 @@ body {
     width: 150px;
 }
 
+.btn-github {
+    color: #374151;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    display: inline-flex;
+    align-items: center;
+}
+
 .resource-link {
     color: var(--bs-primary);
     text-decoration-line: underline;
