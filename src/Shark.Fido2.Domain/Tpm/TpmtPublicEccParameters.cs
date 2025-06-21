@@ -7,12 +7,12 @@
 public class TpmtPublicEccParameters
 {
     /// <summary>
-    /// Type is TPMI_ECC_CURVE.
+    /// Gets curve id. Type is TPMI_ECC_CURVE.
     /// </summary>
     public ushort CurveId { get; init; }
 
     /// <summary>
-    /// Type is TPMT_KDF_SCHEME.
+    /// Gets KDF. Type is TPMT_KDF_SCHEME.
     /// </summary>
     public ushort Kdf { get; init; }
 }

@@ -7,12 +7,12 @@
 public sealed class TpmtPublicRsaParameters
 {
     /// <summary>
-    /// Type is TPMI_RSA_KEY_BITS.
+    /// Gets key bits. Type is TPMI_RSA_KEY_BITS.
     /// </summary>
     public ushort KeyBits { get; init; }
 
     /// <summary>
-    /// Type is UINT32.
+    /// Gets exponent. Type is UINT32.
     /// </summary>
     public uint Exponent { get; init; }
 }

@@ -10,7 +10,7 @@ namespace Shark.Fido2.Core.Abstractions.Validators;
 public interface IAttestationObjectValidator
 {
     /// <summary>
-    /// Validates the attestation object
+    /// Validates the attestation object.
     /// </summary>
     /// <param name="attestationObjectData">The attestation object data to validate.</param>
     /// <param name="clientData">The client data associated with the registration ceremony.</param>
