@@ -18,13 +18,24 @@ This repository provides a server-side implementation of the FIDO2 protocol, ena
   - In-memory storage
  - **FIDO metadata service**
 
+# Build Status
+[![build](https://github.com/linuxchata/fido2/actions/workflows/build.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build.yml) [![nuget](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_core_packages.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_core_packages.yml) [![nuget](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_models_packages.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_models_packages.yml) [![nuget](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_inmemory_packages.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_inmemory_packages.yml) [![nuget](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_sqlserver_packages.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_sqlserver_packages.yml)
+
 # Usage
 The following examples demonstrate how to implement FIDO2 authentication in your application.
 
 ## Server side (ASP.NET Core Controllers)
 The sample C# code below is designed for ASP.NET Core controllers.
 
+### Registration
+Registers both the credential store (in-memory or alternative) and the core FIDO2 dependencies.
+```csharp
+builder.Services.AddFido2InMemoryStore();
+builder.Services.AddFido2(builder.Configuration);
+```
+
 ### Attestation (registration)
+Attestation controller
 1. Get create options.
 ```csharp
 [HttpPost("options")]
@@ -50,6 +61,7 @@ public async Task<IActionResult> Result(ServerPublicKeyCredentialAttestation req
 ```
 
 ### Assertion (authentication)
+Assertion controller
 1. Get request options.
 ```csharp
 [HttpPost("options")]
@@ -77,7 +89,7 @@ public async Task<IActionResult> Result(ServerPublicKeyCredentialAssertion reque
 ### Configuration
 The server side can be customized using the following configuration options. You can set these options in an `appsettings.json` file.
 
-### Core Configuration
+#### Core Configuration
 | Option | Default | Description |
 |-|-|-|
 | `RelyingPartyId` |  | Valid domain string identifying the Relying Party on whose behalf a given registration or authentication ceremony is being performed. This is a critical parameter in the WebAuthn protocol. It defines the security scope within which credentials are valid. Therefore, careful selection is essential, as an incorrect or overly broad value can lead to unintended credential reuse or security vulnerabilities. |
@@ -90,7 +102,7 @@ The server side can be customized using the following configuration options. You
 | `EnableMetadataService` | `true` | Value indicating whether the Relying Party uses the Metadata Service to verify the attestation object. |
 | `EnableStrictAuthenticatorVerification` | `false` | Value indicating whether the Relying Party requires strict verification of authenticators. If enabled, missing metadata for the authenticator would cause attestation to fail. |
 
-### Metadata Service Configuration
+#### Metadata Service Configuration
 | Option | Default | Description |
 |-|-|-|
 | `MetadataBlobLocation` | `https://mds3.fidoalliance.org/` | Location of the centralized and trusted source of information about FIDO authenticators (Metadata Service BLOB). |
@@ -107,9 +119,6 @@ To complete the FIDO2 implementation, you need to add JavaScript code that commu
 
 This JavaScript code bridges the browser's WebAuthn API with the server-side REST API endpoints provided by the ASP.NET Core controllers described above.
 
-# Build Status
-[![build](https://github.com/linuxchata/fido2/actions/workflows/build.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build.yml) [![nuget](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_core_packages.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_core_packages.yml) [![nuget](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_models_packages.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_models_packages.yml) [![nuget](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_inmemory_packages.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_inmemory_packages.yml) [![nuget](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_sqlserver_packages.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_sqlserver_packages.yml)
-
 # Packages
 | Package Name | Status |
 |-|-|
@@ -121,6 +130,9 @@ This JavaScript code bridges the browser's WebAuthn API with the server-side RES
 # FIDO Conformance Tests
 All test cases successfully passed using the FIDO Conformance Tool.
 ![image](https://github.com/user-attachments/assets/993b3dc5-7600-4e4f-8176-a5bbff8aa4b7)
+
+## License
+This project is licensed under the [BSD 3-Clause License](LICENSE).
 
 # Contributing
 See [Contributing](https://github.com/linuxchata/fido2/blob/main/CONTRIBUTING.md) for information about contributing to the project.
