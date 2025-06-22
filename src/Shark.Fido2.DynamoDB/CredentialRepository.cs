@@ -95,14 +95,14 @@ internal sealed class CredentialRepository : ICredentialRepository
         var request = new PutItemRequest
         {
             TableName = TableName,
-            Item = entity.ToItem(),
+            Item = entity.ToItem(GetDateTime()),
         };
 
         var response = await _client.PutItemAsync(request, cancellationToken);
 
         if (response.HttpStatusCode != System.Net.HttpStatusCode.OK)
         {
-            throw new InvalidOperationException("Failed to add credential");
+            throw new InvalidOperationException("Failed to add a credential");
         }
     }
 
@@ -121,7 +121,7 @@ internal sealed class CredentialRepository : ICredentialRepository
             ExpressionAttributeValues = new Dictionary<string, AttributeValue>
             {
                 { ":signCount", new AttributeValue { N = signCount.ToString() } },
-                { ":updatedAt", new AttributeValue { S = DateTime.UtcNow.ToString("O") } },
+                { ":updatedAt", new AttributeValue { S = GetDateTime() } },
             },
         };
 
@@ -144,5 +144,10 @@ internal sealed class CredentialRepository : ICredentialRepository
             },
             ConsistentRead = true,
         };
+    }
+
+    private static string GetDateTime()
+    {
+        return DateTime.UtcNow.ToString("o");
     }
 }

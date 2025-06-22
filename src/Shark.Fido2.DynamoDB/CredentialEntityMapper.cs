@@ -34,7 +34,7 @@ internal static class CredentialEntityMapper
         };
     }
 
-    internal static Dictionary<string, AttributeValue> ToItem(this CredentialEntity entity)
+    internal static Dictionary<string, AttributeValue> ToItem(this CredentialEntity entity, string createdAt)
     {
         return new Dictionary<string, AttributeValue>
         {
@@ -45,7 +45,7 @@ internal static class CredentialEntityMapper
             { "cpk", new AttributeValue { S = entity.CredentialPublicKeyJson } },
             { "sc", new AttributeValue { N = $"{entity.SignCount}" } },
             { "tsp", new AttributeValue { S = entity.Transports } },
-            { "cat", new AttributeValue { S = DateTime.UtcNow.ToString("o") } },
+            { "cat", new AttributeValue { S = createdAt } },
             { "uat", new AttributeValue { NULL = true } },
         };
     }
