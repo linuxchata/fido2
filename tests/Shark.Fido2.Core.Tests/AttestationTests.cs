@@ -11,6 +11,7 @@ using Shark.Fido2.Domain;
 using Shark.Fido2.Domain.Constants;
 using Shark.Fido2.Domain.Enums;
 using Shark.Fido2.Domain.Options;
+using static Org.BouncyCastle.Asn1.Cmp.Challenge;
 
 namespace Shark.Fido2.Core.Tests;
 
@@ -129,13 +130,81 @@ public class AttestationTests
     #region CreateOptions Tests
 
     [Test]
-    public void CreateOptions_WhenRequestIsNull_ThenReturnsOptions()
+    public void CreateOptions_WhenRequestIsNull_ThenThrowsArgumentNullException()
     {
         // Arrange
         PublicKeyCredentialCreationOptionsRequest? request = null;
 
         // Act & Assert
         Assert.ThrowsAsync<ArgumentNullException>(() => _sut.CreateOptions(request!));
+    }
+
+    [Test]
+    public void CreateOptions_WhenUserNameIsNull_ThenThrowsArgumentNullException()
+    {
+        // Arrange
+        var request = new PublicKeyCredentialCreationOptionsRequest
+        {
+            UserName = null!,
+            DisplayName = DisplayName,
+            AuthenticatorSelection = null,
+            Attestation = AttestationConveyancePreference.Direct,
+        };
+
+        // Act & Assert
+        Assert.ThrowsAsync<ArgumentNullException>(() => _sut.CreateOptions(request));
+    }
+
+    [Test]
+    [TestCase("")]
+    [TestCase("   ")]
+    public void CreateOptions_WhenUserNameIsEmpty_ThenThrowsArgumentException(string userName)
+    {
+        // Arrange
+        var request = new PublicKeyCredentialCreationOptionsRequest
+        {
+            UserName = userName,
+            DisplayName = DisplayName,
+            AuthenticatorSelection = null,
+            Attestation = AttestationConveyancePreference.Direct,
+        };
+
+        // Act & Assert
+        Assert.ThrowsAsync<ArgumentException>(() => _sut.CreateOptions(request));
+    }
+
+    [Test]
+    public void CreateOptions_WhenDisplayNameIsNull_ThenThrowsArgumentNullException()
+    {
+        // Arrange
+        var request = new PublicKeyCredentialCreationOptionsRequest
+        {
+            UserName = UserName,
+            DisplayName = null!,
+            AuthenticatorSelection = null,
+            Attestation = AttestationConveyancePreference.Direct,
+        };
+
+        // Act & Assert
+        Assert.ThrowsAsync<ArgumentNullException>(() => _sut.CreateOptions(request));
+    }
+
+    [Test]
+    [TestCase("")]
+    [TestCase("   ")]
+    public void CreateOptions_WhenDisplayNameIsEmpty_ThenThrowsArgumentException(string displayName)
+    {
+        // Arrange
+        var request = new PublicKeyCredentialCreationOptionsRequest
+        {
+            UserName = UserName,
+            DisplayName = displayName,
+            AuthenticatorSelection = null,
+            Attestation = AttestationConveyancePreference.Direct,
+        };
+
+        // Act & Assert
+        Assert.ThrowsAsync<ArgumentException>(() => _sut.CreateOptions(request));
     }
 
     [Test]
@@ -272,6 +341,54 @@ public class AttestationTests
     }
 
     [Test]
+    public void Complete_WhenIdIsNull_ThenThrowsArgumentNullException()
+    {
+        // Arrange
+        _publicKeyCredentialAttestation.Id = null!;
+
+        // Act & Assert
+        Assert.ThrowsAsync<ArgumentNullException>(() =>
+            _sut.Complete(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions));
+    }
+
+    [Test]
+    [TestCase("")]
+    [TestCase("   ")]
+    public void Complete_WhenIdIsEmpty_ThenThrowsArgumentException(string id)
+    {
+        // Arrange
+        _publicKeyCredentialAttestation.Id = id;
+
+        // Act & Assert
+        Assert.ThrowsAsync<ArgumentException>(() =>
+            _sut.Complete(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions));
+    }
+
+    [Test]
+    public void Complete_WhenRawIdIsNull_ThenThrowsArgumentNullException()
+    {
+        // Arrange
+        _publicKeyCredentialAttestation.RawId = null!;
+
+        // Act & Assert
+        Assert.ThrowsAsync<ArgumentNullException>(() =>
+            _sut.Complete(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions));
+    }
+
+    [Test]
+    [TestCase("")]
+    [TestCase("   ")]
+    public void Complete_WhenRawIdIsEmpty_ThenThrowsArgumentException(string rawId)
+    {
+        // Arrange
+        _publicKeyCredentialAttestation.RawId = rawId;
+
+        // Act & Assert
+        Assert.ThrowsAsync<ArgumentException>(() =>
+            _sut.Complete(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions));
+    }
+
+    [Test]
     public void Complete_WhenPublicKeyCredentialCreationOptionsIsNull_ThenThrowsArgumentNullException()
     {
         // Arrange
@@ -280,6 +397,85 @@ public class AttestationTests
         // Act & Assert
         Assert.ThrowsAsync<ArgumentNullException>(() =>
             _sut.Complete(_publicKeyCredentialAttestation, creationOptions!));
+    }
+
+    [Test]
+    public void Complete_WhenRelyingPartyIsNull_ThenThrowsArgumentNullException()
+    {
+        // Arrange
+        _publicKeyCredentialCreationOptions.RelyingParty = null!;
+
+        // Act & Assert
+        Assert.ThrowsAsync<ArgumentNullException>(() =>
+            _sut.Complete(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions));
+    }
+
+    [Test]
+    public void Complete_WhenUserIsNull_ThenThrowsArgumentNullException()
+    {
+        // Arrange
+        _publicKeyCredentialCreationOptions.User = null!;
+
+        // Act & Assert
+        Assert.ThrowsAsync<ArgumentNullException>(() =>
+            _sut.Complete(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions));
+    }
+
+    [Test]
+    public void Complete_WhenPublicKeyCredentialParamsAreNull_ThenThrowsArgumentNullException()
+    {
+        // Arrange
+        _publicKeyCredentialCreationOptions.PublicKeyCredentialParams = null!;
+
+        // Act & Assert
+        Assert.ThrowsAsync<ArgumentNullException>(() =>
+            _sut.Complete(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions));
+    }
+
+    [Test]
+    public void Complete_WhenExcludeCredentialsAreNull_ThenThrowsArgumentNullException()
+    {
+        // Arrange
+        _publicKeyCredentialCreationOptions.ExcludeCredentials = null!;
+
+        // Act & Assert
+        Assert.ThrowsAsync<ArgumentNullException>(() =>
+            _sut.Complete(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions));
+    }
+
+    [Test]
+    public void Complete_WhenAuthenticatorSelectionIsNull_ThenThrowsArgumentNullException()
+    {
+        // Arrange
+        _publicKeyCredentialCreationOptions.AuthenticatorSelection = null!;
+
+        // Act & Assert
+        Assert.ThrowsAsync<ArgumentNullException>(() =>
+            _sut.Complete(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions));
+    }
+
+    [Test]
+    public void Complete_WhenAttestationIsNull_ThenThrowsArgumentNullException()
+    {
+        // Arrange
+        _publicKeyCredentialCreationOptions.Attestation = null!;
+
+        // Act & Assert
+        Assert.ThrowsAsync<ArgumentNullException>(() =>
+            _sut.Complete(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions));
+    }
+
+    [Test]
+    [TestCase("")]
+    [TestCase("   ")]
+    public void Complete_WhenAttestationIsEmpty_ThenThrowsArgumentException(string attestation)
+    {
+        // Arrange
+        _publicKeyCredentialCreationOptions.Attestation = attestation;
+
+        // Act & Assert
+        Assert.ThrowsAsync<ArgumentException>(() =>
+            _sut.Complete(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions));
     }
 
     [Test]

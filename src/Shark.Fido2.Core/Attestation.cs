@@ -44,6 +44,8 @@ public sealed class Attestation : IAttestation
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(request);
+        ArgumentNullException.ThrowIfNullOrWhiteSpace(request.UserName);
+        ArgumentNullException.ThrowIfNullOrWhiteSpace(request.DisplayName);
 
         var userName = request.UserName.Trim();
 
@@ -106,7 +108,16 @@ public sealed class Attestation : IAttestation
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(publicKeyCredentialAttestation);
+        ArgumentNullException.ThrowIfNullOrWhiteSpace(publicKeyCredentialAttestation.Id);
+        ArgumentNullException.ThrowIfNullOrWhiteSpace(publicKeyCredentialAttestation.RawId);
+
         ArgumentNullException.ThrowIfNull(creationOptions);
+        ArgumentNullException.ThrowIfNull(creationOptions.RelyingParty);
+        ArgumentNullException.ThrowIfNull(creationOptions.User);
+        ArgumentNullException.ThrowIfNull(creationOptions.PublicKeyCredentialParams);
+        ArgumentNullException.ThrowIfNull(creationOptions.ExcludeCredentials);
+        ArgumentNullException.ThrowIfNull(creationOptions.AuthenticatorSelection);
+        ArgumentNullException.ThrowIfNullOrWhiteSpace(creationOptions.Attestation);
 
         //// 7.1. Registering a New Credential
 
