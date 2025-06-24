@@ -10,10 +10,8 @@
         </div>
         <form id="signupForm">
             <div class="form-group">
-                <!-- Hidden dummy email input to catch Chrome autofill -->
-                <input type="email" style="position: absolute; opacity: 0; height: 0; width: 0; pointer-events: none;" autocomplete="email" tabindex="-1" aria-hidden="true">
                 <label for="signUpIdentifier">Username</label>
-                <input type="text" id="signUpIdentifier" name="signUpIdentifier" class="form-control" placeholder="Enter your username" required autocomplete="username">
+                <input type="text" id="signUpIdentifier" name="username" class="form-control" placeholder="Enter your username" required autocomplete="username">
             </div>
             <div class="form-group">
                 <label for="signUpAlias">Display Name</label>
@@ -31,10 +29,8 @@
         </div>
         <form id="signinForm">
             <div class="form-group">
-                <!-- Hidden dummy email input to catch Chrome autofill -->
-                <input type="email" style="position: absolute; opacity: 0; height: 0; width: 0; pointer-events: none;" autocomplete="email" tabindex="-1" aria-hidden="true">
                 <label for="signInIdentifier">Username</label>
-                <input type="text" id="signInIdentifier" name="signInIdentifier" class="form-control" placeholder="Enter your username" required autocomplete="username">
+                <input type="text" id="signInIdentifier" name="username" class="form-control" placeholder="Enter your username" required autocomplete="username">
             </div>
             <input type="hidden" id="credentialId" name="credentialId" />
             <button type="button" id="signInButton" class="btn btn-primary btn-block">Sign In</button>
