@@ -52,8 +52,6 @@
                 credentialIdInput.value = '';
             }
 
-            toggleCredentialsButtonVisibility();
-
             const userName = signInUserNameInput?.value;
 
             await handleAsyncAction(
@@ -70,12 +68,8 @@
         credentialsButton.addEventListener('click', () => {
             if (credentialIdInput) {
                 const credentialId = credentialIdInput?.value;
-                credentialIdInput.value = '';
 
                 if (credentialId) {
-                    setTimeout(() => {
-                        toggleCredentialsButtonVisibility();
-                    }, 100);
                     window.location.href = `/CredentialsDetails?credentialId=${encodeURIComponent(credentialId)}`;
                 }
             }
