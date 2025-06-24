@@ -38,8 +38,6 @@
                 return;
             }
 
-            toggleCredentialsButtonVisibility();
-
             await handleAsyncAction(
                 this,
                 () => requestCreateCredentialOptions(userName, displayName),
@@ -53,6 +51,8 @@
             if (credentialIdInput) {
                 credentialIdInput.value = '';
             }
+
+            toggleCredentialsButtonVisibility();
 
             const userName = signInUserNameInput?.value;
 
