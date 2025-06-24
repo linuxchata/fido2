@@ -11,13 +11,13 @@
         <form id="signupForm">
             <div class="form-group">
                 <label for="signUpIdentifier">Username</label>
-                <input type="text" id="signUpIdentifier" class="form-control" placeholder="Enter your username" required autocomplete="username">
+                <input type="text" id="signUpIdentifier" name="signUpIdentifier" class="form-control" placeholder="Enter your username" required autocomplete="username">
             </div>
             <div class="form-group">
                 <label for="signUpAlias">Display Name</label>
                 <input type="text" id="signUpAlias" class="form-control" placeholder="Enter your display name" required autocomplete="name">
             </div>
-            <button type="button" id="signUpButton" class="btn btn-primary btn-block">Sign Up</button>
+            <button type="button" id="signUpButton" name="signUpButton" class="btn btn-primary btn-block">Sign Up</button>
         </form>
     </div>
 
@@ -30,7 +30,7 @@
         <form id="signinForm">
             <div class="form-group">
                 <label for="signInIdentifier">Username</label>
-                <input type="text" id="signInIdentifier" class="form-control" placeholder="Enter your username" required autocomplete="username">
+                <input type="text" id="signInIdentifier" name="signInIdentifier" class="form-control" placeholder="Enter your username" required autocomplete="username">
             </div>
             <input type="hidden" id="credentialId" name="credentialId" />
             <button type="button" id="signInButton" class="btn btn-primary btn-block">Sign In</button>
