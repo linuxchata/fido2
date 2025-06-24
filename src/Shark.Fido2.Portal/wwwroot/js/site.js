@@ -28,8 +28,6 @@
         }
     }
 
-    toggleCredentialsButtonVisibility();
-
     if (signUpButton) {
         signUpButton.addEventListener('click', async function () {
             const userName = signUpUserNameInput?.value;
@@ -75,6 +73,9 @@
                 credentialIdInput.value = '';
 
                 if (credentialId) {
+                    setTimeout(() => {
+                        toggleCredentialsButtonVisibility();
+                    }, 100);
                     window.location.href = `/CredentialsDetails?credentialId=${encodeURIComponent(credentialId)}`;
                 }
             }
