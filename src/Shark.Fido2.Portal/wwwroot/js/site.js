@@ -1,8 +1,9 @@
-﻿document.addEventListener('DOMContentLoaded', function () {
+﻿document.addEventListener('DOMContentLoaded', () => {
+    const getById = (id) => document.getElementById(id);
+
     async function handleAsyncAction(button, asyncAction, originalText) {
         button.disabled = true;
         button.textContent = 'Processing...';
-
         try {
             await asyncAction();
         } finally {
@@ -11,69 +12,66 @@
         }
     }
 
-    // Credentials button
-    function toggleCredentialsButton() {
-        const credentialsButton = document.getElementById('credentialsButton');
+    function toggleCredentialsButtonVisibility() {
+        const credentialsButton = getById('credentialsButton');
+        const credentialIdInput = getById('credentialId');
 
-        if (credentialsButton) {
-            const credentialIdInput = document.getElementById('credentialId');
-
-            if (credentialIdInput) {
-                if (credentialIdInput.value) {
-                    credentialsButton.classList.remove('hide');
-                }
-                else {
-                    credentialsButton.classList.add('hide');
-                }
-            }
-            else {
-                credentialsButton.classList.add('hide');
-            }
+        if (credentialsButton && credentialIdInput) {
+            credentialsButton.classList.toggle('hide', !credentialIdInput.value);
         }
     }
 
-    // Sign up button event listener
-    var signupButton = document.getElementById('signupButton');
-    if (signupButton && signupButton.addEventListener) {
+    const signupButton = getById('signupButton');
+    if (signupButton) {
         signupButton.addEventListener('click', async function () {
-            const originalText = this.textContent; // 'this' is the button
-            const username = document.getElementById('signupUsername').value;
-            const displayName = document.getElementById('displayName').value;
+            const username = getById('signupUsername')?.value;
+            const displayName = getById('signupDisplayName')?.value;
 
-            if (username && displayName) {
-                await handleAsyncAction(
-                    this,
-                    () => requestCreateCredentialOptions(username, displayName),
-                    originalText
-                );
-            } else {
+            if (!username || !displayName) {
                 notify.error('Please fill in all required fields', 'Validation Error');
+                return;
             }
+
+            await handleAsyncAction(
+                this,
+                () => requestCreateCredentialOptions(username, displayName),
+                this.textContent
+            );
         });
     }
 
-    // Sign in button event listener
-    var signinButton = document.getElementById('signinButton');
-    if (signinButton && signinButton.addEventListener) {
+    const signinButton = getById('signinButton');
+    if (signinButton) {
         signinButton.addEventListener('click', async function () {
-            const originalText = this.textContent; // 'this' is the button
-            const username = document.getElementById('signinUsername').value;
+            const credentialIdInput = getById('credentialId');
+            if (credentialIdInput) {
+                 credentialIdInput.value = '';
+            }
+
+            toggleCredentialsButtonVisibility();
+
+            const username = getById('signinUsername')?.value;
 
             await handleAsyncAction(
                 this,
                 () => requestVerifyCredentialOptions(username),
-                originalText
+                this.textContent
             );
 
-            toggleCredentialsButton();
+            toggleCredentialsButtonVisibility();
         });
     }
 
-    // Credential details button event listener
-    var credentialsButton = document.getElementById('credentialsButton');
-    if (credentialsButton && signinButton.addEventListener) {
-        credentialsButton.addEventListener('click', function () {
-            window.location.href = '/CredentialsDetails?credentialId=' + document.getElementById('credentialId').value
+    const credentialsButton = getById('credentialsButton');
+    if (credentialsButton) {
+        credentialsButton.addEventListener('click', () => {
+            const credentialIdInput = getById('credentialId');
+            const credentialId = credentialIdInput?.value;
+            if (credentialIdInput) credentialIdInput.value = '';
+
+            if (credentialId) {
+                window.location.href = `/CredentialsDetails?credentialId=${encodeURIComponent(credentialId)}`;
+            }
         });
     }
 });
