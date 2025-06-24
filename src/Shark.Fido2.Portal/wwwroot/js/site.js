@@ -5,7 +5,7 @@
     const signUpDisplayNameInput = getById('signUpDisplayName');
     const signUpButton = getById('signUpButton');
 
-    const signInUserNameInput = getById('signInIdentifier');
+    const signInUserNameInput = getById('signInUserName');
     const signInButton = getById('signInButton');
 
     const credentialIdInput = getById('credentialId');
