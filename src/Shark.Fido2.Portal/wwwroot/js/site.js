@@ -1,11 +1,11 @@
 ﻿document.addEventListener('DOMContentLoaded', () => {
     const getById = (id) => document.getElementById(id);
 
-    const signUpUserNameInput = getById('signUpUserName');
-    const signUpDisplayNameInput = getById('signUpDisplayName');
+    const signUpUserNameInput = getById('signUpIdentifier');
+    const signUpDisplayNameInput = getById('signUpAlias');
     const signUpButton = getById('signUpButton');
 
-    const signInUserNameInput = getById('signInUserName');
+    const signInUserNameInput = getById('signInIdentifier');
     const signInButton = getById('signInButton');
 
     const credentialIdInput = getById('credentialId');
