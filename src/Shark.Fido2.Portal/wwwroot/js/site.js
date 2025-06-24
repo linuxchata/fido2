@@ -1,6 +1,16 @@
 ﻿document.addEventListener('DOMContentLoaded', () => {
     const getById = (id) => document.getElementById(id);
 
+    const signUpUserNameInput = getById('signUpUserName');
+    const signUpDisplayNameInput = getById('signUpDisplayName');
+    const signUpButton = getById('signUpButton');
+
+    const signInUserNameInput = getById('signInUserName');
+    const signInButton = getById('signInButton');
+
+    const credentialIdInput = getById('credentialId');
+    const credentialsButton = getById('credentialsButton');
+
     async function handleAsyncAction(button, asyncAction, originalText) {
         button.disabled = true;
         button.textContent = 'Processing...';
@@ -13,48 +23,44 @@
     }
 
     function toggleCredentialsButtonVisibility() {
-        const credentialsButton = getById('credentialsButton');
-        const credentialIdInput = getById('credentialId');
-
         if (credentialsButton && credentialIdInput) {
             credentialsButton.classList.toggle('hide', !credentialIdInput.value);
         }
     }
 
-    const signupButton = getById('signupButton');
-    if (signupButton) {
-        signupButton.addEventListener('click', async function () {
-            const username = getById('signupUsername')?.value;
-            const displayName = getById('signupDisplayName')?.value;
+    toggleCredentialsButtonVisibility();
 
-            if (!username || !displayName) {
+    if (signUpButton) {
+        signUpButton.addEventListener('click', async function () {
+            const userName = signUpUserNameInput?.value;
+            const displayName = signUpDisplayNameInput?.value;
+
+            if (!userName || !displayName) {
                 notify.error('Please fill in all required fields', 'Validation Error');
                 return;
             }
 
             await handleAsyncAction(
                 this,
-                () => requestCreateCredentialOptions(username, displayName),
+                () => requestCreateCredentialOptions(userName, displayName),
                 this.textContent
             );
         });
     }
 
-    const signinButton = getById('signinButton');
-    if (signinButton) {
-        signinButton.addEventListener('click', async function () {
-            const credentialIdInput = getById('credentialId');
+    if (signInButton) {
+        signInButton.addEventListener('click', async function () {
             if (credentialIdInput) {
-                 credentialIdInput.value = '';
+                credentialIdInput.value = '';
             }
 
             toggleCredentialsButtonVisibility();
 
-            const username = getById('signinUsername')?.value;
+            const userName = signInUserNameInput?.value;
 
             await handleAsyncAction(
                 this,
-                () => requestVerifyCredentialOptions(username),
+                () => requestVerifyCredentialOptions(userName),
                 this.textContent
             );
 
@@ -62,18 +68,15 @@
         });
     }
 
-    const credentialsButton = getById('credentialsButton');
     if (credentialsButton) {
         credentialsButton.addEventListener('click', () => {
-            const credentialIdInput = getById('credentialId');
-            const credentialId = credentialIdInput?.value;
             if (credentialIdInput) {
+                const credentialId = credentialIdInput?.value;
                 credentialIdInput.value = '';
-                toggleCredentialsButtonVisibility();
-            }
 
-            if (credentialId) {
-                window.location.href = `/CredentialsDetails?credentialId=${encodeURIComponent(credentialId)}`;
+                if (credentialId) {
+                    window.location.href = `/CredentialsDetails?credentialId=${encodeURIComponent(credentialId)}`;
+                }
             }
         });
     }
