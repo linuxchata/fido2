@@ -67,7 +67,10 @@
         credentialsButton.addEventListener('click', () => {
             const credentialIdInput = getById('credentialId');
             const credentialId = credentialIdInput?.value;
-            if (credentialIdInput) credentialIdInput.value = '';
+            if (credentialIdInput) {
+                credentialIdInput.value = '';
+                toggleCredentialsButtonVisibility();
+            }
 
             if (credentialId) {
                 window.location.href = `/CredentialsDetails?credentialId=${encodeURIComponent(credentialId)}`;
