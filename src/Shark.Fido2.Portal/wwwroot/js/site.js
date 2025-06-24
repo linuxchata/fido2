@@ -38,6 +38,8 @@
                 return;
             }
 
+            toggleCredentialsButtonVisibility();
+
             await handleAsyncAction(
                 this,
                 () => requestCreateCredentialOptions(userName, displayName),
