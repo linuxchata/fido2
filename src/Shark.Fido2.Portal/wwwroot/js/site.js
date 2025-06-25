@@ -1,16 +1,6 @@
 ﻿document.addEventListener('DOMContentLoaded', () => {
     const getById = (id) => document.getElementById(id);
 
-    const signUpUserNameInput = getById('signUpUserName');
-    const signUpDisplayNameInput = getById('signUpDisplayName');
-    const signUpButton = getById('signUpButton');
-
-    const signInUserNameInput = getById('signInUserName');
-    const signInButton = getById('signInButton');
-
-    const credentialIdInput = getById('credentialId');
-    const credentialsButton = getById('credentialsButton');
-
     async function handleAsyncAction(button, asyncAction, originalText) {
         button.disabled = true;
         button.textContent = 'Processing...';
@@ -22,14 +12,21 @@
         }
     }
 
+    const credentialIdInput = getById('credentialId');
+    const credentialsButton = getById('credentialsButton');
+
     function toggleCredentialsButtonVisibility() {
         if (credentialsButton && credentialIdInput) {
             credentialsButton.classList.toggle('hide', !credentialIdInput.value);
         }
     }
 
+    const signUpButton = getById('signUpButton');
+
     if (signUpButton) {
         signUpButton.addEventListener('click', async function () {
+            const signUpUserNameInput = getById('signUpUserName');
+            const signUpDisplayNameInput = getById('signUpDisplayName');
             const userName = signUpUserNameInput?.value;
             const displayName = signUpDisplayNameInput?.value;
 
@@ -46,14 +43,16 @@
         });
     }
 
+    const signInButton = getById('signInButton');
+
     if (signInButton) {
         signInButton.addEventListener('click', async function () {
             if (credentialIdInput) {
                 credentialIdInput.value = '';
+                toggleCredentialsButtonVisibility();
             }
 
-            toggleCredentialsButtonVisibility();
-
+            const signInUserNameInput = getById('signInUserName');
             const userName = signInUserNameInput?.value;
 
             await handleAsyncAction(
