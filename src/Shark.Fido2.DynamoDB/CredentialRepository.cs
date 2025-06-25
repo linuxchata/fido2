@@ -52,10 +52,10 @@ internal sealed class CredentialRepository : ICredentialRepository
         {
             TableName = TableName,
             IndexName = UserNameIndex,
-            KeyConditionExpression = "un = :val",
+            KeyConditionExpression = "un = :userName",
             ExpressionAttributeValues = new Dictionary<string, AttributeValue>
             {
-                { ":val", new AttributeValue { S = username } },
+                { ":userName", new AttributeValue { S = username } },
             },
             ConsistentRead = false, // GSIs do not support consistent reads
         };
@@ -120,7 +120,7 @@ internal sealed class CredentialRepository : ICredentialRepository
             UpdateExpression = "SET sc = :signCount, uat = :updatedAt",
             ExpressionAttributeValues = new Dictionary<string, AttributeValue>
             {
-                { ":signCount", new AttributeValue { N = signCount.ToString() } },
+                { ":signCount", new AttributeValue { N = $"{signCount}" } },
                 { ":updatedAt", new AttributeValue { S = GetDateTime() } },
             },
         };
