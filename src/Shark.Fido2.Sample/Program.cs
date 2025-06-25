@@ -1,4 +1,5 @@
 using Shark.Fido2.Core;
+using Shark.Fido2.DynamoDB;
 using Shark.Fido2.InMemory;
 using Shark.Fido2.Sample.Swagger;
 using Shark.Fido2.SqlServer;
