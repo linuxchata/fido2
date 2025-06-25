@@ -20,7 +20,7 @@ jobs:
       run: dotnet build ./src/Shark.Fido2.SqlServer/Shark.Fido2.SqlServer.csproj --configuration Release --no-restore
 
     - name: Pack
-      run: dotnet pack ./src/Shark.Fido2.SqlServer/Shark.Fido2.SqlServer.csproj --configuration Release --no-restore --output ./nupkg /p:Version=1.0.2.${{ github.run_number }}
+      run: dotnet pack ./src/Shark.Fido2.SqlServer/Shark.Fido2.SqlServer.csproj --configuration Release --no-restore --output ./nupkg /p:Version=1.0.3.${{ github.run_number }}
 
     - name: Add nuget source
       run: dotnet nuget add source --username linuxchata --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/linuxchata/index.json"
