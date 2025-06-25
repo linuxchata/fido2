@@ -35,7 +35,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 builder.Services.AddSwaggerExamplesFromAssemblyOf<ServerPublicKeyCredentialCreationOptionsRequestExample>();
 
-builder.Services.AddFido2DynamoDB();
+builder.Services.AddFido2InMemoryStore();
 builder.Services.AddFido2(builder.Configuration);
 
 var app = builder.Build();
