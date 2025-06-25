@@ -29,7 +29,7 @@ public class AttestationController(IAttestation attestation) : ControllerBase
         ServerPublicKeyCredentialCreationOptionsRequest request,
         CancellationToken cancellationToken)
     {
-        var createOptions = await _attestation.GetOptions(request.Map(), cancellationToken);
+        var createOptions = await _attestation.CreateOptions(request.Map(), cancellationToken);
 
         var response = createOptions.Map();
 
