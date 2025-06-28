@@ -7,7 +7,7 @@ This document outlines how to get started, coding conventions, and how to submit
 1. **Fork** the repository on GitHub.
 2. In your fork, click the **<> Code** button above the file list.
 3. Copy the URL for the repository.
-2. **Clone** your fork:
+4. **Clone** your fork:
 
    `git clone https://github.com/YOUR-USERNAME/fido2.git`
 
