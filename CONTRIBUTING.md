@@ -5,11 +5,13 @@ This document outlines how to get started, coding conventions, and how to submit
 
 ## Getting Started
 1. **Fork** the repository on GitHub.
-2. **Clone** your fork:
-   
-   `git clone https://github.com/linuxchata/fido2.git`
+2. In your fork, click the **<> Code** button above the list of files.
+3. Copy the URL for the repository.
+4. **Clone** your fork:
 
-   `cd .\fido2\src\`
+   `git clone https://github.com/YOUR-USERNAME/fido2.git`
+
+   `cd fido2/src`
 
 4. **Build the project**:
 
