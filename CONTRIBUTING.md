@@ -5,7 +5,7 @@ This document outlines how to get started, coding conventions, and how to submit
 
 ## Getting Started
 1. **Fork** the repository on GitHub.
-2. In your fork, click the **<> Code** button above the file list.
+2. In your fork, click the **<> Code** button above the list of files.
 3. Copy the URL for the repository.
 4. **Clone** your fork:
 
