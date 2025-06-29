@@ -20,6 +20,9 @@ internal sealed class CredentialRepository : ICredentialRepository, IDisposable
     private const string TableName = "Credential";
     private const string UserNameIndex = "UserNameIndex";
     private const string PartitionKey = "cid";
+    private const string UserNameExpressionName = ":userName";
+    private const string SignCountExpressionName = ":signCount";
+    private const string UpdatedAtExpressionName = ":updatedAt";
     private const int QueryLimit = 100;
 
     private readonly AmazonDynamoDBClient _client;
@@ -36,7 +39,15 @@ internal sealed class CredentialRepository : ICredentialRepository, IDisposable
             return null;
         }
 
-        var request = GetGetItemRequest(credentialId);
+        var request = new GetItemRequest
+        {
+            TableName = TableName,
+            Key = new Dictionary<string, AttributeValue>
+            {
+                { PartitionKey, new AttributeValue { B = new MemoryStream(credentialId) } },
+            },
+            ConsistentRead = true,
+        };
 
         var response = await _client.GetItemAsync(request, cancellationToken);
 
@@ -63,10 +74,10 @@ internal sealed class CredentialRepository : ICredentialRepository, IDisposable
         {
             TableName = TableName,
             IndexName = UserNameIndex,
-            KeyConditionExpression = "un = :userName",
+            KeyConditionExpression = $"un = {UserNameExpressionName}",
             ExpressionAttributeValues = new Dictionary<string, AttributeValue>
             {
-                { ":userName", new AttributeValue { S = username } },
+                { UserNameExpressionName, new AttributeValue { S = username } },
             },
             ConsistentRead = false, // GSIs do not support consistent reads
             Limit = QueryLimit,
@@ -93,7 +104,16 @@ internal sealed class CredentialRepository : ICredentialRepository, IDisposable
             return false;
         }
 
-        var request = GetGetItemRequest(credentialId);
+        var request = new GetItemRequest
+        {
+            TableName = TableName,
+            Key = new Dictionary<string, AttributeValue>
+            {
+                { PartitionKey, new AttributeValue { B = new MemoryStream(credentialId) } },
+            },
+            ProjectionExpression = PartitionKey,
+            ConsistentRead = true,
+        };
 
         var response = await _client.GetItemAsync(request, cancellationToken);
 
@@ -134,11 +154,11 @@ internal sealed class CredentialRepository : ICredentialRepository, IDisposable
             {
                 { PartitionKey, new AttributeValue { B = new MemoryStream(credentialId) } },
             },
-            UpdateExpression = "SET sc = :signCount, uat = :updatedAt",
+            UpdateExpression = $"SET sc = {SignCountExpressionName}, uat = {UpdatedAtExpressionName}",
             ExpressionAttributeValues = new Dictionary<string, AttributeValue>
             {
-                { ":signCount", new AttributeValue { N = $"{signCount}" } },
-                { ":updatedAt", new AttributeValue { S = GetDateTimeString() } },
+                { SignCountExpressionName, new AttributeValue { N = $"{signCount}" } },
+                { UpdatedAtExpressionName, new AttributeValue { S = GetDateTimeString() } },
             },
         };
 
@@ -150,19 +170,6 @@ internal sealed class CredentialRepository : ICredentialRepository, IDisposable
     public void Dispose()
     {
         _client.Dispose();
-    }
-
-    private static GetItemRequest GetGetItemRequest(byte[] credentialId)
-    {
-        return new GetItemRequest
-        {
-            TableName = TableName,
-            Key = new Dictionary<string, AttributeValue>
-            {
-                { PartitionKey, new AttributeValue { B = new MemoryStream(credentialId) } },
-            },
-            ConsistentRead = true,
-        };
     }
 
     private static string GetDateTimeString()

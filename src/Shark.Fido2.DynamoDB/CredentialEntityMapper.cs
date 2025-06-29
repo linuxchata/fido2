@@ -1,7 +1,5 @@
-﻿using System.Net;
-using Amazon.DynamoDBv2.Model;
+﻿using Amazon.DynamoDBv2.Model;
 using Shark.Fido2.Core.Entities;
-using Shark.Fido2.Domain;
 
 namespace Shark.Fido2.DynamoDB;
 
