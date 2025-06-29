@@ -1,5 +1,6 @@
 ﻿using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
+using Amazon.Runtime;
 using Shark.Fido2.Core.Abstractions.Repositories;
 using Shark.Fido2.Core.Mappers;
 using Shark.Fido2.Domain;
@@ -7,11 +8,19 @@ using Shark.Fido2.DynamoDB.Abstractions;
 
 namespace Shark.Fido2.DynamoDB;
 
+/// <summary>
+/// Amazon DynamoDB implementation of the credential repository.
+/// </summary>
+/// <remarks>
+/// This implementation uses Amazon DynamoDB as the backing store for FIDO2 credentials.
+/// The table structure uses 'cid' as the partition key and includes a GSI on 'un' (username).
+/// </remarks>
 internal sealed class CredentialRepository : ICredentialRepository
 {
     private const string TableName = "Credential";
     private const string UserNameIndex = "UserNameIndex";
     private const string PartitionKey = "cid";
+    private const int QueryLimit = 100;
 
     private readonly AmazonDynamoDBClient _client;
 
@@ -22,14 +31,18 @@ internal sealed class CredentialRepository : ICredentialRepository
 
     public async Task<Credential?> Get(byte[]? credentialId, CancellationToken cancellationToken = default)
     {
-        if (credentialId == null)
+        if (credentialId == null || credentialId.Length == 0)
         {
             return null;
         }
 
-        var request = GetGetItemRequest(credentialId);
+        using var credentialIdStream = new MemoryStream(credentialId);
+
+        var request = GetGetItemRequest(credentialIdStream);
 
         var response = await _client.GetItemAsync(request, cancellationToken);
+
+        ValidateResponse(response);
 
         if (response.Item != null && response.Item.Count > 0)
         {
@@ -58,9 +71,12 @@ internal sealed class CredentialRepository : ICredentialRepository
                 { ":userName", new AttributeValue { S = username } },
             },
             ConsistentRead = false, // GSIs do not support consistent reads
+            Limit = QueryLimit,
         };
 
         var response = await _client.QueryAsync(request, cancellationToken);
+
+        ValidateResponse(response);
 
         if (response.Items.Count > 0)
         {
@@ -74,14 +90,18 @@ internal sealed class CredentialRepository : ICredentialRepository
 
     public async Task<bool> Exists(byte[]? credentialId, CancellationToken cancellationToken = default)
     {
-        if (credentialId == null)
+        if (credentialId == null || credentialId.Length == 0)
         {
             return false;
         }
 
-        var request = GetGetItemRequest(credentialId);
+        using var credentialIdStream = new MemoryStream(credentialId);
+
+        var request = GetGetItemRequest(credentialIdStream);
 
         var response = await _client.GetItemAsync(request, cancellationToken);
+
+        ValidateResponse(response);
 
         return response.Item != null && response.Item.Count > 0;
     }
@@ -89,65 +109,76 @@ internal sealed class CredentialRepository : ICredentialRepository
     public async Task Add(Credential credential, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(credential);
+        ArgumentNullException.ThrowIfNull(credential.CredentialId);
+        ArgumentNullException.ThrowIfNullOrEmpty(credential.UserName);
+        ArgumentNullException.ThrowIfNull(credential.UserHandle);
+        ArgumentNullException.ThrowIfNull(credential.CredentialPublicKey);
 
         var entity = credential.ToEntity();
+
+        using var credentialIdStream = new MemoryStream(credential.CredentialId);
+        using var userHandleStream = new MemoryStream(credential.UserHandle);
 
         var request = new PutItemRequest
         {
             TableName = TableName,
-            Item = entity.ToItem(GetDateTime()),
+            Item = entity.ToItem(credentialIdStream, userHandleStream, GetDateTimeString()),
         };
 
         var response = await _client.PutItemAsync(request, cancellationToken);
 
-        if (response.HttpStatusCode != System.Net.HttpStatusCode.OK)
-        {
-            throw new InvalidOperationException("Failed to add a credential");
-        }
+        ValidateResponse(response);
     }
 
     public async Task UpdateSignCount(byte[] credentialId, uint signCount, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(credentialId);
 
+        using var credentialIdStream = new MemoryStream(credentialId);
+
         var request = new UpdateItemRequest
         {
             TableName = TableName,
             Key = new Dictionary<string, AttributeValue>
             {
-                { PartitionKey, new AttributeValue { B = new MemoryStream(credentialId) } },
+                { PartitionKey, new AttributeValue { B = credentialIdStream } },
             },
             UpdateExpression = "SET sc = :signCount, uat = :updatedAt",
             ExpressionAttributeValues = new Dictionary<string, AttributeValue>
             {
                 { ":signCount", new AttributeValue { N = $"{signCount}" } },
-                { ":updatedAt", new AttributeValue { S = GetDateTime() } },
+                { ":updatedAt", new AttributeValue { S = GetDateTimeString() } },
             },
         };
 
         var response = await _client.UpdateItemAsync(request, cancellationToken);
 
-        if (response.HttpStatusCode != System.Net.HttpStatusCode.OK)
-        {
-            throw new InvalidOperationException("Failed to update sign count for a credential");
-        }
+        ValidateResponse(response);
     }
 
-    private static GetItemRequest GetGetItemRequest(byte[] credentialId)
+    private static GetItemRequest GetGetItemRequest(MemoryStream credentialIdStream)
     {
         return new GetItemRequest
         {
             TableName = TableName,
             Key = new Dictionary<string, AttributeValue>
             {
-                { PartitionKey, new AttributeValue { B = new MemoryStream(credentialId!) } },
+                { PartitionKey, new AttributeValue { B = credentialIdStream } },
             },
             ConsistentRead = true,
         };
     }
 
-    private static string GetDateTime()
+    private static string GetDateTimeString()
     {
         return DateTime.UtcNow.ToString("o");
+    }
+
+    private void ValidateResponse(AmazonWebServiceResponse response)
+    {
+        if (response.HttpStatusCode != System.Net.HttpStatusCode.OK)
+        {
+            throw new InvalidOperationException("Request to DynamoDB did not complete successfully");
+        }
     }
 }

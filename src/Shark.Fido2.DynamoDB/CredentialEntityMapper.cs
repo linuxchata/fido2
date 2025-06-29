@@ -34,12 +34,16 @@ internal static class CredentialEntityMapper
         };
     }
 
-    internal static Dictionary<string, AttributeValue> ToItem(this CredentialEntity entity, string createdAt)
+    internal static Dictionary<string, AttributeValue> ToItem(
+        this CredentialEntity entity,
+        MemoryStream credentialIdStream,
+        MemoryStream userHandleStream,
+        string createdAt)
     {
         return new Dictionary<string, AttributeValue>
         {
-            { "cid", new AttributeValue { B = new MemoryStream(entity.CredentialId) } },
-            { "uh", new AttributeValue { B = new MemoryStream(entity.UserHandle) } },
+            { "cid", new AttributeValue { B = credentialIdStream } },
+            { "uh", new AttributeValue { B = userHandleStream } },
             { "un", new AttributeValue { S = entity.UserName } },
             { "udn", new AttributeValue { S = entity.UserDisplayName } },
             { "cpk", new AttributeValue { S = entity.CredentialPublicKeyJson } },
