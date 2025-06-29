@@ -9,17 +9,17 @@ internal static class CredentialEntityMapper
     {
         return new CredentialEntity
         {
-            CredentialId = item["cid"].B.ToArray(),
-            UserHandle = item["uh"].B.ToArray(),
-            UserName = item["un"].S,
-            UserDisplayName = item["udn"].S,
+            CredentialId = item[AttributeNames.CredentialId].B.ToArray(),
+            UserHandle = item[AttributeNames.UserHandle].B.ToArray(),
+            UserName = item[AttributeNames.UserName].S,
+            UserDisplayName = item[AttributeNames.UserDisplayName].S,
             CredentialPublicKey = null!,
-            CredentialPublicKeyJson = item["cpk"].S,
-            SignCount = uint.Parse(item["sc"].N),
-            Transports = item["tsp"].S,
-            CreatedAt = DateTime.Parse(item["cat"].S),
-            UpdatedAt = item.ContainsKey("uat") && !item["uat"].NULL == true
-                ? DateTime.Parse(item["uat"].S)
+            CredentialPublicKeyJson = item[AttributeNames.CredentialPublicKeyJson].S,
+            SignCount = uint.Parse(item[AttributeNames.SignCount].N),
+            Transports = item[AttributeNames.Transports].S,
+            CreatedAt = DateTime.Parse(item[AttributeNames.CreatedAt].S),
+            UpdatedAt = item.ContainsKey(AttributeNames.UpdatedAt) && !item[AttributeNames.UpdatedAt].NULL == true
+                ? DateTime.Parse(item[AttributeNames.UpdatedAt].S)
                 : null,
         };
     }
@@ -28,9 +28,9 @@ internal static class CredentialEntityMapper
     {
         return new CredentialDescriptorEntity
         {
-            CredentialId = item["cid"].B.ToArray(),
-            UserName = item["un"].S,
-            Transports = item["tsp"].S,
+            CredentialId = item[AttributeNames.CredentialId].B.ToArray(),
+            UserName = item[AttributeNames.UserName].S,
+            Transports = item[AttributeNames.Transports].S,
         };
     }
 
@@ -38,15 +38,15 @@ internal static class CredentialEntityMapper
     {
         return new Dictionary<string, AttributeValue>
         {
-            { "cid", new AttributeValue { B = new MemoryStream(entity.CredentialId) } },
-            { "uh", new AttributeValue { B = new MemoryStream(entity.UserHandle) } },
-            { "un", new AttributeValue { S = entity.UserName } },
-            { "udn", new AttributeValue { S = entity.UserDisplayName } },
-            { "cpk", new AttributeValue { S = entity.CredentialPublicKeyJson } },
-            { "sc", new AttributeValue { N = $"{entity.SignCount}" } },
-            { "tsp", new AttributeValue { S = entity.Transports } },
-            { "cat", new AttributeValue { S = createdAt } },
-            { "uat", new AttributeValue { NULL = true } },
+            { AttributeNames.CredentialId, new AttributeValue { B = new MemoryStream(entity.CredentialId) } },
+            { AttributeNames.UserHandle, new AttributeValue { B = new MemoryStream(entity.UserHandle) } },
+            { AttributeNames.UserName, new AttributeValue { S = entity.UserName } },
+            { AttributeNames.UserDisplayName, new AttributeValue { S = entity.UserDisplayName } },
+            { AttributeNames.CredentialPublicKeyJson, new AttributeValue { S = entity.CredentialPublicKeyJson } },
+            { AttributeNames.SignCount, new AttributeValue { N = $"{entity.SignCount}" } },
+            { AttributeNames.Transports, new AttributeValue { S = entity.Transports } },
+            { AttributeNames.CreatedAt, new AttributeValue { S = createdAt } },
+            { AttributeNames.UpdatedAt, new AttributeValue { NULL = true } },
         };
     }
 }

@@ -19,7 +19,6 @@ internal sealed class CredentialRepository : ICredentialRepository, IDisposable
 {
     private const string TableName = "Credential";
     private const string UserNameIndex = "UserNameIndex";
-    private const string PartitionKey = "cid";
     private const string UserNameExpressionName = ":userName";
     private const string SignCountExpressionName = ":signCount";
     private const string UpdatedAtExpressionName = ":updatedAt";
@@ -44,7 +43,7 @@ internal sealed class CredentialRepository : ICredentialRepository, IDisposable
             TableName = TableName,
             Key = new Dictionary<string, AttributeValue>
             {
-                { PartitionKey, new AttributeValue { B = new MemoryStream(credentialId) } },
+                { AttributeNames.CredentialId, new AttributeValue { B = new MemoryStream(credentialId) } },
             },
             ConsistentRead = true,
         };
@@ -74,7 +73,7 @@ internal sealed class CredentialRepository : ICredentialRepository, IDisposable
         {
             TableName = TableName,
             IndexName = UserNameIndex,
-            KeyConditionExpression = $"un = {UserNameExpressionName}",
+            KeyConditionExpression = $"{AttributeNames.UserName} = {UserNameExpressionName}",
             ExpressionAttributeValues = new Dictionary<string, AttributeValue>
             {
                 { UserNameExpressionName, new AttributeValue { S = username } },
@@ -109,9 +108,9 @@ internal sealed class CredentialRepository : ICredentialRepository, IDisposable
             TableName = TableName,
             Key = new Dictionary<string, AttributeValue>
             {
-                { PartitionKey, new AttributeValue { B = new MemoryStream(credentialId) } },
+                { AttributeNames.CredentialId, new AttributeValue { B = new MemoryStream(credentialId) } },
             },
-            ProjectionExpression = PartitionKey,
+            ProjectionExpression = AttributeNames.CredentialId,
             ConsistentRead = true,
         };
 
@@ -152,9 +151,9 @@ internal sealed class CredentialRepository : ICredentialRepository, IDisposable
             TableName = TableName,
             Key = new Dictionary<string, AttributeValue>
             {
-                { PartitionKey, new AttributeValue { B = new MemoryStream(credentialId) } },
+                { AttributeNames.CredentialId, new AttributeValue { B = new MemoryStream(credentialId) } },
             },
-            UpdateExpression = $"SET sc = {SignCountExpressionName}, uat = {UpdatedAtExpressionName}",
+            UpdateExpression = $"SET {AttributeNames.SignCount} = {SignCountExpressionName}, {AttributeNames.UpdatedAt} = {UpdatedAtExpressionName}",
             ExpressionAttributeValues = new Dictionary<string, AttributeValue>
             {
                 { SignCountExpressionName, new AttributeValue { N = $"{signCount}" } },
