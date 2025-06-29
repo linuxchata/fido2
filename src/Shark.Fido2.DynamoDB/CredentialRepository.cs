@@ -15,7 +15,7 @@ namespace Shark.Fido2.DynamoDB;
 /// This implementation uses Amazon DynamoDB as the backing store for FIDO2 credentials.
 /// The table structure uses 'cid' as the partition key and includes a GSI on 'un' (username).
 /// </remarks>
-internal sealed class CredentialRepository : ICredentialRepository
+internal sealed class CredentialRepository : ICredentialRepository, IDisposable
 {
     private const string TableName = "Credential";
     private const string UserNameIndex = "UserNameIndex";
@@ -154,6 +154,11 @@ internal sealed class CredentialRepository : ICredentialRepository
         var response = await _client.UpdateItemAsync(request, cancellationToken);
 
         ValidateResponse(response);
+    }
+
+    public void Dispose()
+    {
+        _client.Dispose();
     }
 
     private static GetItemRequest GetGetItemRequest(MemoryStream credentialIdStream)
