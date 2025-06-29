@@ -36,9 +36,7 @@ internal sealed class CredentialRepository : ICredentialRepository, IDisposable
             return null;
         }
 
-        using var credentialIdStream = new MemoryStream(credentialId);
-
-        var request = GetGetItemRequest(credentialIdStream);
+        var request = GetGetItemRequest(credentialId);
 
         var response = await _client.GetItemAsync(request, cancellationToken);
 
@@ -95,9 +93,7 @@ internal sealed class CredentialRepository : ICredentialRepository, IDisposable
             return false;
         }
 
-        using var credentialIdStream = new MemoryStream(credentialId);
-
-        var request = GetGetItemRequest(credentialIdStream);
+        var request = GetGetItemRequest(credentialId);
 
         var response = await _client.GetItemAsync(request, cancellationToken);
 
@@ -116,13 +112,10 @@ internal sealed class CredentialRepository : ICredentialRepository, IDisposable
 
         var entity = credential.ToEntity();
 
-        using var credentialIdStream = new MemoryStream(credential.CredentialId);
-        using var userHandleStream = new MemoryStream(credential.UserHandle);
-
         var request = new PutItemRequest
         {
             TableName = TableName,
-            Item = entity.ToItem(credentialIdStream, userHandleStream, GetDateTimeString()),
+            Item = entity.ToItem(GetDateTimeString()),
         };
 
         var response = await _client.PutItemAsync(request, cancellationToken);
@@ -134,14 +127,12 @@ internal sealed class CredentialRepository : ICredentialRepository, IDisposable
     {
         ArgumentNullException.ThrowIfNull(credentialId);
 
-        using var credentialIdStream = new MemoryStream(credentialId);
-
         var request = new UpdateItemRequest
         {
             TableName = TableName,
             Key = new Dictionary<string, AttributeValue>
             {
-                { PartitionKey, new AttributeValue { B = credentialIdStream } },
+                { PartitionKey, new AttributeValue { B = new MemoryStream(credentialId) } },
             },
             UpdateExpression = "SET sc = :signCount, uat = :updatedAt",
             ExpressionAttributeValues = new Dictionary<string, AttributeValue>
@@ -161,14 +152,14 @@ internal sealed class CredentialRepository : ICredentialRepository, IDisposable
         _client.Dispose();
     }
 
-    private static GetItemRequest GetGetItemRequest(MemoryStream credentialIdStream)
+    private static GetItemRequest GetGetItemRequest(byte[] credentialId)
     {
         return new GetItemRequest
         {
             TableName = TableName,
             Key = new Dictionary<string, AttributeValue>
             {
-                { PartitionKey, new AttributeValue { B = credentialIdStream } },
+                { PartitionKey, new AttributeValue { B = new MemoryStream(credentialId) } },
             },
             ConsistentRead = true,
         };

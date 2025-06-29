@@ -1,5 +1,7 @@
-﻿using Amazon.DynamoDBv2.Model;
+﻿using System.Net;
+using Amazon.DynamoDBv2.Model;
 using Shark.Fido2.Core.Entities;
+using Shark.Fido2.Domain;
 
 namespace Shark.Fido2.DynamoDB;
 
@@ -34,16 +36,12 @@ internal static class CredentialEntityMapper
         };
     }
 
-    internal static Dictionary<string, AttributeValue> ToItem(
-        this CredentialEntity entity,
-        MemoryStream credentialIdStream,
-        MemoryStream userHandleStream,
-        string createdAt)
+    internal static Dictionary<string, AttributeValue> ToItem(this CredentialEntity entity, string createdAt)
     {
         return new Dictionary<string, AttributeValue>
         {
-            { "cid", new AttributeValue { B = credentialIdStream } },
-            { "uh", new AttributeValue { B = userHandleStream } },
+            { "cid", new AttributeValue { B = new MemoryStream(entity.CredentialId) } },
+            { "uh", new AttributeValue { B = new MemoryStream(entity.UserHandle) } },
             { "un", new AttributeValue { S = entity.UserName } },
             { "udn", new AttributeValue { S = entity.UserDisplayName } },
             { "cpk", new AttributeValue { S = entity.CredentialPublicKeyJson } },
