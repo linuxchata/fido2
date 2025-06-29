@@ -1,7 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Amazon.DynamoDBv2;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Shark.Fido2.Core.Abstractions.Repositories;
-using Shark.Fido2.DynamoDB.Abstractions;
 
 namespace Shark.Fido2.DynamoDB;
 
@@ -16,12 +16,12 @@ public static class DependencyInjection
             throw new InvalidOperationException("Credential repository can only be registered once.");
         }
 
-        services.AddSingleton<IAmazonDynamoDbClientFactory>(sp =>
+        services.AddSingleton<IAmazonDynamoDB>(sp =>
         {
             var configuration = sp.GetRequiredService<IConfiguration>();
             var amazonDynamoDbConfiguration = new AmazonDynamoDbConfiguration();
             configuration.GetSection(amazonDynamoDbConfigurationKeyName).Bind(amazonDynamoDbConfiguration);
-            return new AmazonDynamoDbClientFactory(amazonDynamoDbConfiguration);
+            return AmazonDynamoDbClientFactory.GetClient(amazonDynamoDbConfiguration);
         });
 
         services.AddTransient<ICredentialRepository, CredentialRepository>();

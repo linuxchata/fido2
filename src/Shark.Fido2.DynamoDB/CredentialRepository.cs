@@ -4,7 +4,6 @@ using Amazon.Runtime;
 using Shark.Fido2.Core.Abstractions.Repositories;
 using Shark.Fido2.Core.Mappers;
 using Shark.Fido2.Domain;
-using Shark.Fido2.DynamoDB.Abstractions;
 
 namespace Shark.Fido2.DynamoDB;
 
@@ -15,20 +14,16 @@ namespace Shark.Fido2.DynamoDB;
 /// This implementation uses Amazon DynamoDB as the backing store for FIDO2 credentials.
 /// The table structure uses 'cid' as the partition key and includes a GSI on 'un' (username).
 /// </remarks>
-internal sealed class CredentialRepository : ICredentialRepository, IDisposable
+internal sealed class CredentialRepository : ICredentialRepository
 {
     private const string TableName = "Credential";
     private const string UserNameIndex = "UserNameIndex";
-    private const string UserNameExpressionName = ":userName";
-    private const string SignCountExpressionName = ":signCount";
-    private const string UpdatedAtExpressionName = ":updatedAt";
-    private const int QueryLimit = 100;
 
-    private readonly AmazonDynamoDBClient _client;
+    private readonly IAmazonDynamoDB _client;
 
-    public CredentialRepository(IAmazonDynamoDbClientFactory amazonDynamoDBClientFactory)
+    public CredentialRepository(IAmazonDynamoDB client)
     {
-        _client = amazonDynamoDBClientFactory.GetClient();
+        _client = client;
     }
 
     public async Task<Credential?> Get(byte[]? credentialId, CancellationToken cancellationToken = default)
@@ -73,13 +68,12 @@ internal sealed class CredentialRepository : ICredentialRepository, IDisposable
         {
             TableName = TableName,
             IndexName = UserNameIndex,
-            KeyConditionExpression = $"{AttributeNames.UserName} = {UserNameExpressionName}",
+            KeyConditionExpression = $"{AttributeNames.UserName} = {ExpressionNames.UserName}",
             ExpressionAttributeValues = new Dictionary<string, AttributeValue>
             {
-                { UserNameExpressionName, new AttributeValue { S = username } },
+                { ExpressionNames.UserName, new AttributeValue { S = username } },
             },
             ConsistentRead = false, // GSIs do not support consistent reads
-            Limit = QueryLimit,
         };
 
         var response = await _client.QueryAsync(request, cancellationToken);
@@ -131,10 +125,12 @@ internal sealed class CredentialRepository : ICredentialRepository, IDisposable
 
         var entity = credential.ToEntity();
 
+        var dateTimeString = GetDateTimeString();
+
         var request = new PutItemRequest
         {
             TableName = TableName,
-            Item = entity.ToItem(GetDateTimeString()),
+            Item = entity.ToItem(dateTimeString),
         };
 
         var response = await _client.PutItemAsync(request, cancellationToken);
@@ -146,6 +142,8 @@ internal sealed class CredentialRepository : ICredentialRepository, IDisposable
     {
         ArgumentNullException.ThrowIfNull(credentialId);
 
+        var dateTimeString = GetDateTimeString();
+
         var request = new UpdateItemRequest
         {
             TableName = TableName,
@@ -153,22 +151,17 @@ internal sealed class CredentialRepository : ICredentialRepository, IDisposable
             {
                 { AttributeNames.CredentialId, new AttributeValue { B = new MemoryStream(credentialId) } },
             },
-            UpdateExpression = $"SET {AttributeNames.SignCount} = {SignCountExpressionName}, {AttributeNames.UpdatedAt} = {UpdatedAtExpressionName}",
+            UpdateExpression = $"SET {AttributeNames.SignCount} = {ExpressionNames.SignCount}, {AttributeNames.UpdatedAt} = {ExpressionNames.UpdatedAt}",
             ExpressionAttributeValues = new Dictionary<string, AttributeValue>
             {
-                { SignCountExpressionName, new AttributeValue { N = $"{signCount}" } },
-                { UpdatedAtExpressionName, new AttributeValue { S = GetDateTimeString() } },
+                { ExpressionNames.SignCount, new AttributeValue { N = $"{signCount}" } },
+                { ExpressionNames.UpdatedAt, new AttributeValue { S = dateTimeString } },
             },
         };
 
         var response = await _client.UpdateItemAsync(request, cancellationToken);
 
         ValidateResponse(response);
-    }
-
-    public void Dispose()
-    {
-        _client.Dispose();
     }
 
     private static string GetDateTimeString()

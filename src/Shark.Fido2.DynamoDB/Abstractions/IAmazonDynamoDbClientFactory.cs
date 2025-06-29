@@ -4,5 +4,5 @@ namespace Shark.Fido2.DynamoDB.Abstractions;
 
 internal interface IAmazonDynamoDbClientFactory
 {
-    AmazonDynamoDBClient GetClient();
+    IAmazonDynamoDB GetClient();
 }
