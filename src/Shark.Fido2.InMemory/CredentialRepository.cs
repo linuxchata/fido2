@@ -11,7 +11,7 @@ namespace Shark.Fido2.InMemory;
 /// In-memory implementation of the credential repository.
 /// </summary>
 /// <remarks>
-/// This implementation uses in-memory store as the backing store for FIDO2 credentials.
+/// This implementation uses in-memory cache as the backing store for FIDO2 credentials.
 /// </remarks>
 internal sealed class CredentialRepository : ICredentialRepository
 {
