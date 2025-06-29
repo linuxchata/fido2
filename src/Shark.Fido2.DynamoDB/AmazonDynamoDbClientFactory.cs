@@ -1,23 +1,23 @@
 ﻿using Amazon;
 using Amazon.DynamoDBv2;
 using Amazon.Runtime;
-using Shark.Fido2.DynamoDB.Abstractions;
 
 namespace Shark.Fido2.DynamoDB;
 
-internal class AmazonDynamoDbClientFactory : IAmazonDynamoDbClientFactory
+internal static class AmazonDynamoDbClientFactory
 {
-    private readonly AmazonDynamoDbConfiguration _configuration;
-
-    public AmazonDynamoDbClientFactory(AmazonDynamoDbConfiguration configuration)
+    public static IAmazonDynamoDB GetClient(AmazonDynamoDbConfiguration configuration)
     {
-        _configuration = configuration;
-    }
+        var credentials = new BasicAWSCredentials(configuration.AccessKey, configuration.SecretKey);
 
-    public AmazonDynamoDBClient GetClient()
-    {
-        var credentials = new BasicAWSCredentials(_configuration.AccessKey, _configuration.SecretKey);
-        var regionEndpoint = RegionEndpoint.GetBySystemName(_configuration.AwsRegion);
-        return new AmazonDynamoDBClient(credentials, regionEndpoint);
+        var regionEndpoint = RegionEndpoint.GetBySystemName(configuration.AwsRegion);
+        var amazonDynamoDBConfig = new AmazonDynamoDBConfig
+        {
+            RegionEndpoint = regionEndpoint,
+            ConnectTimeout = TimeSpan.FromSeconds(configuration.ConnectTimeoutInSeconds),
+            MaxErrorRetry = configuration.MaxErrorRetry,
+        };
+
+        return new AmazonDynamoDBClient(credentials, amazonDynamoDBConfig);
     }
 }

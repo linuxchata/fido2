@@ -7,6 +7,12 @@ using Shark.Fido2.Domain;
 
 namespace Shark.Fido2.InMemory;
 
+/// <summary>
+/// In-memory implementation of the credential repository.
+/// </summary>
+/// <remarks>
+/// This implementation uses in-memory cache as the backing store for FIDO2 credentials.
+/// </remarks>
 internal sealed class CredentialRepository : ICredentialRepository
 {
     private const string CredentialKeyPrefix = "credential";
@@ -83,6 +89,10 @@ internal sealed class CredentialRepository : ICredentialRepository
     public async Task Add(Credential credential, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(credential);
+        ArgumentNullException.ThrowIfNull(credential.CredentialId);
+        ArgumentNullException.ThrowIfNullOrEmpty(credential.UserName);
+        ArgumentNullException.ThrowIfNull(credential.UserHandle);
+        ArgumentNullException.ThrowIfNull(credential.CredentialPublicKey);
 
         var entity = credential.ToEntity();
 

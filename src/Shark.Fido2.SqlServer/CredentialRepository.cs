@@ -7,6 +7,12 @@ using Shark.Fido2.Domain;
 
 namespace Shark.Fido2.SqlServer;
 
+/// <summary>
+/// Microsoft SQL Server implementation of the credential repository.
+/// </summary>
+/// <remarks>
+/// This implementation uses Microsoft SQL Server as the backing store for FIDO2 credentials.
+/// </remarks>
 internal sealed class CredentialRepository : ICredentialRepository
 {
     private readonly string _connectionString;
@@ -19,7 +25,7 @@ internal sealed class CredentialRepository : ICredentialRepository
 
     public async Task<Credential?> Get(byte[]? credentialId, CancellationToken cancellationToken = default)
     {
-        if (credentialId == null)
+        if (credentialId == null || credentialId.Length == 0)
         {
             return null;
         }
@@ -59,7 +65,7 @@ internal sealed class CredentialRepository : ICredentialRepository
 
     public async Task<bool> Exists(byte[]? credentialId, CancellationToken cancellationToken = default)
     {
-        if (credentialId == null)
+        if (credentialId == null || credentialId.Length == 0)
         {
             return false;
         }
@@ -79,6 +85,10 @@ internal sealed class CredentialRepository : ICredentialRepository
     public async Task Add(Credential credential, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(credential);
+        ArgumentNullException.ThrowIfNull(credential.CredentialId);
+        ArgumentNullException.ThrowIfNullOrEmpty(credential.UserName);
+        ArgumentNullException.ThrowIfNull(credential.UserHandle);
+        ArgumentNullException.ThrowIfNull(credential.CredentialPublicKey);
 
         const string sql = @"
             INSERT INTO Credential (CredentialId, UserHandle, UserName, UserDisplayName, CredentialPublicKeyJson, SignCount, Transports)

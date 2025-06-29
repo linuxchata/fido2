@@ -7,4 +7,8 @@ internal class AmazonDynamoDbConfiguration
     public string AccessKey { get; set; } = null!;
 
     public string SecretKey { get; set; } = null!;
+
+    public int ConnectTimeoutInSeconds { get; set; } = 60;
+
+    public int MaxErrorRetry { get; set; } = 10;
 }
