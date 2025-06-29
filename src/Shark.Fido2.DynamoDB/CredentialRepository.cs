@@ -169,7 +169,7 @@ internal sealed class CredentialRepository : ICredentialRepository
         return DateTime.UtcNow.ToString("o");
     }
 
-    private void ValidateResponse(AmazonWebServiceResponse response)
+    private static void ValidateResponse(AmazonWebServiceResponse response)
     {
         if (response.HttpStatusCode != System.Net.HttpStatusCode.OK)
         {
