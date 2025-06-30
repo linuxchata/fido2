@@ -203,6 +203,10 @@ public sealed class Assertion : IAssertion
                     "The authenticator may be cloned");
             }
         }
+        else
+        {
+            await _credentialRepository.UpdateLastUsedAt(credential.CredentialId, cancellationToken);
+        }
 
         return AssertionCompleteResult.Create();
     }

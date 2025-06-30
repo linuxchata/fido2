@@ -136,6 +136,11 @@ internal sealed class CredentialRepository : ICredentialRepository
         }
     }
 
+    public Task UpdateLastUsedAt(byte[] credentialId, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
+
     private async Task<List<CredentialEntity>> GetInternal(string username, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(username))

@@ -47,4 +47,12 @@ public interface ICredentialRepository
     /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     Task UpdateSignCount(byte[] credentialId, uint signCount, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Updates the last used timestamp of an existing credential.
+    /// </summary>
+    /// <param name="credentialId">The identifier of the credential.</param>
+    /// <param name="cancellationToken">A cancellation token.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    Task UpdateLastUsedAt(byte[] credentialId, CancellationToken cancellationToken = default);
 }

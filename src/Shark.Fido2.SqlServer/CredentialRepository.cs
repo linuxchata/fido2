@@ -118,7 +118,7 @@ internal sealed class CredentialRepository : ICredentialRepository
 
         const string sql = @"
             UPDATE Credential
-            SET SignCount = @SignCount, UpdatedAt = GETUTCDATE()
+            SET SignCount = @SignCount, UpdatedAt = GETUTCDATE(), LastUsedAt = GETUTCDATE()
             WHERE CredentialId = @CredentialId";
 
         using var connection = SqlConnectionFactory.GetConnection(_connectionString);
@@ -128,6 +128,25 @@ internal sealed class CredentialRepository : ICredentialRepository
             new
             {
                 SignCount = (long)signCount,
+                CredentialId = credentialId,
+            });
+    }
+
+    public async Task UpdateLastUsedAt(byte[] credentialId, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(credentialId);
+
+        const string sql = @"
+            UPDATE Credential
+            SET LastUsedAt = GETUTCDATE()
+            WHERE CredentialId = @CredentialId";
+
+        using var connection = SqlConnectionFactory.GetConnection(_connectionString);
+
+        await connection.ExecuteAsync(
+            sql,
+            new
+            {
                 CredentialId = credentialId,
             });
     }

@@ -21,6 +21,9 @@ internal static class CredentialEntityMapper
             UpdatedAt = item.ContainsKey(AttributeNames.UpdatedAt) && !item[AttributeNames.UpdatedAt].NULL == true
                 ? DateTime.Parse(item[AttributeNames.UpdatedAt].S)
                 : null,
+            LastUsedAt = item.ContainsKey(AttributeNames.LastUsedAt) && !item[AttributeNames.LastUsedAt].NULL == true
+                ? DateTime.Parse(item[AttributeNames.LastUsedAt].S)
+                : null,
         };
     }
 
@@ -47,6 +50,7 @@ internal static class CredentialEntityMapper
             { AttributeNames.Transports, new AttributeValue { S = entity.Transports } },
             { AttributeNames.CreatedAt, new AttributeValue { S = createdAt } },
             { AttributeNames.UpdatedAt, new AttributeValue { NULL = true } },
+            { AttributeNames.LastUsedAt, new AttributeValue { NULL = true } },
         };
     }
 }
