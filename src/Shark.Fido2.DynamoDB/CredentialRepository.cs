@@ -57,9 +57,9 @@ internal sealed class CredentialRepository : ICredentialRepository
         return null;
     }
 
-    public async Task<List<CredentialDescriptor>> Get(string username, CancellationToken cancellationToken = default)
+    public async Task<List<CredentialDescriptor>> Get(string userName, CancellationToken cancellationToken = default)
     {
-        if (string.IsNullOrEmpty(username))
+        if (string.IsNullOrEmpty(userName))
         {
             return [];
         }
@@ -71,7 +71,7 @@ internal sealed class CredentialRepository : ICredentialRepository
             KeyConditionExpression = $"{AttributeNames.UserName} = {ExpressionNames.UserName}",
             ExpressionAttributeValues = new Dictionary<string, AttributeValue>
             {
-                { ExpressionNames.UserName, new AttributeValue { S = username } },
+                { ExpressionNames.UserName, new AttributeValue { S = userName } },
             },
             ConsistentRead = false, // GSIs do not support consistent reads
         };
@@ -151,11 +151,37 @@ internal sealed class CredentialRepository : ICredentialRepository
             {
                 { AttributeNames.CredentialId, new AttributeValue { B = new MemoryStream(credentialId) } },
             },
-            UpdateExpression = $"SET {AttributeNames.SignCount} = {ExpressionNames.SignCount}, {AttributeNames.UpdatedAt} = {ExpressionNames.UpdatedAt}",
+            UpdateExpression = $"SET {AttributeNames.SignCount} = {ExpressionNames.SignCount}, {AttributeNames.UpdatedAt} = {ExpressionNames.UpdatedAt}, {AttributeNames.LastUsedAt} = {ExpressionNames.LastUsedAt}",
             ExpressionAttributeValues = new Dictionary<string, AttributeValue>
             {
                 { ExpressionNames.SignCount, new AttributeValue { N = $"{signCount}" } },
                 { ExpressionNames.UpdatedAt, new AttributeValue { S = dateTimeString } },
+                { ExpressionNames.LastUsedAt, new AttributeValue { S = dateTimeString } },
+            },
+        };
+
+        var response = await _client.UpdateItemAsync(request, cancellationToken);
+
+        ValidateResponse(response);
+    }
+
+    public async Task UpdateLastUsedAt(byte[] credentialId, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(credentialId);
+
+        var dateTimeString = GetDateTimeString();
+
+        var request = new UpdateItemRequest
+        {
+            TableName = TableName,
+            Key = new Dictionary<string, AttributeValue>
+            {
+                { AttributeNames.CredentialId, new AttributeValue { B = new MemoryStream(credentialId) } },
+            },
+            UpdateExpression = $"SET {AttributeNames.LastUsedAt} = {ExpressionNames.LastUsedAt}",
+            ExpressionAttributeValues = new Dictionary<string, AttributeValue>
+            {
+                { ExpressionNames.LastUsedAt, new AttributeValue { S = dateTimeString } },
             },
         };
 

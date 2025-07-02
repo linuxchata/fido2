@@ -29,6 +29,7 @@ public static class CredentialMapper
             Transports = string.Join(';', credential.Transports ?? []),
             CreatedAt = credential.CreatedAt,
             UpdatedAt = credential.UpdatedAt,
+            LastUsedAt = credential.LastUsedAt,
         };
 
         entity.CredentialPublicKeyJson = JsonSerializer.Serialize(entity.CredentialPublicKey);
@@ -67,6 +68,7 @@ public static class CredentialMapper
             Transports = MapTransports(entity.Transports),
             CreatedAt = entity.CreatedAt,
             UpdatedAt = entity.UpdatedAt,
+            LastUsedAt = entity.LastUsedAt,
         };
     }
 

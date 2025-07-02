@@ -19,4 +19,9 @@ internal static class ExpressionNames
     /// Updated at timestamp expression parameter.
     /// </summary>
     public const string UpdatedAt = ":updatedAt";
+
+    /// <summary>
+    /// Last used at timestamp expression parameter.
+    /// </summary>
+    public const string LastUsedAt = ":lastUsedAt";
 }

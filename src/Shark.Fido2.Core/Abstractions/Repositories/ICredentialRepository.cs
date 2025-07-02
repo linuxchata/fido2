@@ -18,10 +18,10 @@ public interface ICredentialRepository
     /// <summary>
     /// Gets a list of credentials associated with a username.
     /// </summary>
-    /// <param name="username">The username associated with the credentials.</param>
+    /// <param name="userName">The username associated with the credentials.</param>
     /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>A list of credential descriptors (a lightweight descriptor of a credential).</returns>
-    Task<List<CredentialDescriptor>> Get(string username, CancellationToken cancellationToken = default);
+    Task<List<CredentialDescriptor>> Get(string userName, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Checks whether a credential exists by credential identifier.
@@ -47,4 +47,12 @@ public interface ICredentialRepository
     /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
     Task UpdateSignCount(byte[] credentialId, uint signCount, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Updates the last used timestamp of an existing credential.
+    /// </summary>
+    /// <param name="credentialId">The identifier of the credential.</param>
+    /// <param name="cancellationToken">A cancellation token.</param>
+    /// <returns>A task that represents the asynchronous operation.</returns>
+    Task UpdateLastUsedAt(byte[] credentialId, CancellationToken cancellationToken = default);
 }

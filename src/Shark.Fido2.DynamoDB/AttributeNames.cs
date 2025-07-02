@@ -49,4 +49,9 @@ internal static class AttributeNames
     /// Updated at timestamp.
     /// </summary>
     public const string UpdatedAt = "uat";
+
+    /// <summary>
+    /// Last sed at timestamp.
+    /// </summary>
+    public const string LastUsedAt = "luat";
 }
