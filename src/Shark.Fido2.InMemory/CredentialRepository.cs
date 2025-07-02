@@ -157,6 +157,16 @@ internal sealed class CredentialRepository : ICredentialRepository
             cancellationToken);
     }
 
+    private static string GetCredentialKey(byte[] id)
+    {
+        return $"{CredentialKeyPrefix}:{Convert.ToBase64String(id)}";
+    }
+
+    private static string GetUserNameKey(string username)
+    {
+        return $"{UserNameKeyPrefix}:{username}";
+    }
+
     private Task<string?> GetCredential(byte[] credentialId, CancellationToken cancellationToken)
     {
         return _cache.GetStringAsync(GetCredentialKey(credentialId), cancellationToken);
@@ -164,8 +174,8 @@ internal sealed class CredentialRepository : ICredentialRepository
 
     private async Task SetCredential(string key, CredentialEntity entity, CancellationToken cancellationToken)
     {
-        var serialized = JsonSerializer.Serialize(entity, _jsonOptions);
-        await _cache.SetStringAsync(key, serialized, _options, cancellationToken);
+        var serializedCredential = JsonSerializer.Serialize(entity, _jsonOptions);
+        await _cache.SetStringAsync(key, serializedCredential, _options, cancellationToken);
     }
 
     private async Task SetUserName(string userName, string credentialKey, CancellationToken cancellationToken)
@@ -182,7 +192,10 @@ internal sealed class CredentialRepository : ICredentialRepository
         else
         {
             credentialsKeys = JsonSerializer.Deserialize<List<string>>(serializedCredentialsKeys!, _jsonOptions) ?? [];
-            credentialsKeys.Add(credentialKey);
+            if (!credentialsKeys.Any(ck => ck == credentialKey))
+            {
+                credentialsKeys.Add(credentialKey);
+            }
         }
 
         serializedCredentialsKeys = JsonSerializer.Serialize(credentialsKeys, _jsonOptions);
@@ -191,7 +204,7 @@ internal sealed class CredentialRepository : ICredentialRepository
 
     private async Task UpdateCredential(
         byte[] credentialId,
-        Action<CredentialEntity> updateCredentialAction,
+        Action<CredentialEntity> updateCredentialEntity,
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(credentialId);
@@ -208,7 +221,7 @@ internal sealed class CredentialRepository : ICredentialRepository
             return;
         }
 
-        updateCredentialAction(entity);
+        updateCredentialEntity(entity);
 
         await _operationLock.WaitAsync(cancellationToken);
 
@@ -220,15 +233,5 @@ internal sealed class CredentialRepository : ICredentialRepository
         {
             _operationLock.Release();
         }
-    }
-
-    private static string GetCredentialKey(byte[] id)
-    {
-        return $"{CredentialKeyPrefix}:{Convert.ToBase64String(id)}";
-    }
-
-    private static string GetUserNameKey(string username)
-    {
-        return $"{UserNameKeyPrefix}:{username}";
     }
 }
