@@ -124,22 +124,7 @@ internal sealed class CredentialRepository : ICredentialRepository
         {
             var credentialKey = GetCredentialKey(entity.CredentialId);
             await SetCredential(credentialKey, entity, cancellationToken);
-
-            var credentialsKeys = new List<string>();
-
-            var serializedCredentialsKeys = await _cache.GetStringAsync(GetUserNameKey(entity.UserName), cancellationToken);
-            if (string.IsNullOrEmpty(serializedCredentialsKeys))
-            {
-                credentialsKeys = [credentialKey];
-            }
-            else
-            {
-                credentialsKeys = JsonSerializer.Deserialize<List<string>>(serializedCredentialsKeys!, _jsonOptions) ?? [];
-                credentialsKeys.Add(credentialKey);
-            }
-
-            var serialized = JsonSerializer.Serialize(credentialsKeys, _jsonOptions);
-            await _cache.SetStringAsync(GetUserNameKey(entity.UserName), serialized, _options, cancellationToken);
+            await SetUserName(entity.UserName, credentialKey, cancellationToken);
         }
         finally
         {
@@ -192,6 +177,27 @@ internal sealed class CredentialRepository : ICredentialRepository
     {
         var serialized = JsonSerializer.Serialize(entity, _jsonOptions);
         await _cache.SetStringAsync(key, serialized, _options, cancellationToken);
+    }
+
+    private async Task SetUserName(string userName, string credentialKey, CancellationToken cancellationToken)
+    {
+        var userNameKey = GetUserNameKey(userName);
+
+        List<string> credentialsKeys;
+
+        var serializedCredentialsKeys = await _cache.GetStringAsync(userNameKey, cancellationToken);
+        if (string.IsNullOrEmpty(serializedCredentialsKeys))
+        {
+            credentialsKeys = [credentialKey];
+        }
+        else
+        {
+            credentialsKeys = JsonSerializer.Deserialize<List<string>>(serializedCredentialsKeys!, _jsonOptions) ?? [];
+            credentialsKeys.Add(credentialKey);
+        }
+
+        serializedCredentialsKeys = JsonSerializer.Serialize(credentialsKeys, _jsonOptions);
+        await _cache.SetStringAsync(userNameKey, serializedCredentialsKeys, _options, cancellationToken);
     }
 
     private static string GetCredentialKey(byte[] id)
