@@ -205,7 +205,7 @@ internal sealed class CredentialRepository : ICredentialRepository
     private async Task UpdateCredential(
         byte[] credentialId,
         Action<CredentialEntity> updateCredentialEntity,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(credentialId);
 
