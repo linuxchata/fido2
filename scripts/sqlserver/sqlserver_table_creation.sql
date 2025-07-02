@@ -8,6 +8,7 @@ CREATE TABLE [Credential] (
     [Transports] NVARCHAR(50) NULL,
     [CreatedAt] DATETIME2 NOT NULL CONSTRAINT [DF_Credential_CreatedAt] DEFAULT GETUTCDATE(),
     [UpdatedAt] DATETIME2 NULL,
+    [LastUsedAt] DATETIME2 NULL,
     CONSTRAINT [PK_Credential_CredentialId] PRIMARY KEY ([CredentialId])
 );
 
