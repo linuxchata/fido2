@@ -16,7 +16,7 @@ namespace Shark.Fido2.InMemory;
 internal sealed class CredentialRepository : ICredentialRepository
 {
     private const string CredentialKeyPrefix = "credential";
-    private const string UsernameKeyPrefix = "user";
+    private const string UserNameKeyPrefix = "user";
 
     private static readonly SemaphoreSlim _operationLock = new(1, 1);
 
@@ -27,6 +27,7 @@ internal sealed class CredentialRepository : ICredentialRepository
     };
 
     private readonly IDistributedCache _cache;
+
     private readonly DistributedCacheEntryOptions _options = new()
     {
         AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(24),
@@ -45,14 +46,13 @@ internal sealed class CredentialRepository : ICredentialRepository
         }
 
         var serialized = await _cache.GetStringAsync(GetCredentialKey(credentialId), cancellationToken);
-
-        if (!string.IsNullOrWhiteSpace(serialized))
+        if (string.IsNullOrWhiteSpace(serialized))
         {
-            var entity = JsonSerializer.Deserialize<CredentialEntity>(serialized, _jsonOptions);
-            return entity.ToDomain();
+            return null;
         }
 
-        return null;
+        var entity = JsonSerializer.Deserialize<CredentialEntity>(serialized, _jsonOptions);
+        return entity.ToDomain();
     }
 
     public async Task<List<CredentialDescriptor>> Get(string username, CancellationToken cancellationToken = default)
@@ -62,16 +62,20 @@ internal sealed class CredentialRepository : ICredentialRepository
             return [];
         }
 
-        var serialized = await _cache.GetStringAsync(GetUsernameKey(username), cancellationToken);
-
-        if (!string.IsNullOrWhiteSpace(serialized))
+        var credentialKey = await _cache.GetStringAsync(GetUserNameKey(username), cancellationToken);
+        if (string.IsNullOrWhiteSpace(credentialKey))
         {
-            var entities = JsonSerializer.Deserialize<List<CredentialDescriptorEntity>>(serialized, _jsonOptions) ?? [];
-
-            return entities.Select(e => e.ToLightweightDomain()!).ToList();
+            return [];
         }
 
-        return [];
+        var serialized = await _cache.GetStringAsync(credentialKey, cancellationToken);
+        if (string.IsNullOrWhiteSpace(serialized))
+        {
+            return [];
+        }
+
+        var entities = JsonSerializer.Deserialize<List<CredentialDescriptorEntity>>(serialized, _jsonOptions) ?? [];
+        return entities.Select(e => e.ToLightweightDomain()!).ToList();
     }
 
     public async Task<bool> Exists(byte[]? credentialId, CancellationToken cancellationToken = default)
@@ -82,7 +86,6 @@ internal sealed class CredentialRepository : ICredentialRepository
         }
 
         var serialized = await _cache.GetStringAsync(GetCredentialKey(credentialId), cancellationToken);
-
         return serialized != null;
     }
 
@@ -102,8 +105,9 @@ internal sealed class CredentialRepository : ICredentialRepository
 
         try
         {
-            await AddOrUpdateForCredentialId(entity, cancellationToken);
-            await AddForUsername(entity, cancellationToken);
+            var credentialKey = GetCredentialKey(entity.CredentialId);
+            await SetCredential(credentialKey, entity, cancellationToken);
+            await _cache.SetStringAsync(GetUserNameKey(entity.UserName), credentialKey, _options, cancellationToken);
         }
         finally
         {
@@ -116,19 +120,22 @@ internal sealed class CredentialRepository : ICredentialRepository
         ArgumentNullException.ThrowIfNull(credentialId);
 
         var serialized = await _cache.GetStringAsync(GetCredentialKey(credentialId), cancellationToken);
-
-        ArgumentNullException.ThrowIfNullOrWhiteSpace(serialized);
+        if (string.IsNullOrWhiteSpace(serialized))
+        {
+            return;
+        }
 
         var entity = JsonSerializer.Deserialize<CredentialEntity>(serialized!, _jsonOptions);
 
+        entity!.SignCount = signCount;
         entity!.UpdatedAt = DateTime.UtcNow;
 
         await _operationLock.WaitAsync(cancellationToken);
 
         try
         {
-            await UpdateForCredentialId(entity, signCount, cancellationToken);
-            await UpdateForUsername(entity, signCount, cancellationToken);
+            var credentialKey = GetCredentialKey(entity.CredentialId);
+            await SetCredential(credentialKey, entity, cancellationToken);
         }
         finally
         {
@@ -141,57 +148,10 @@ internal sealed class CredentialRepository : ICredentialRepository
         throw new NotImplementedException();
     }
 
-    private async Task<List<CredentialEntity>> GetInternal(string username, CancellationToken cancellationToken = default)
-    {
-        if (string.IsNullOrWhiteSpace(username))
-        {
-            return [];
-        }
-
-        var serialized = await _cache.GetStringAsync(GetUsernameKey(username), cancellationToken);
-
-        if (!string.IsNullOrWhiteSpace(serialized))
-        {
-            return JsonSerializer.Deserialize<List<CredentialEntity>>(serialized, _jsonOptions) ?? [];
-        }
-
-        return [];
-    }
-
-    private async Task AddOrUpdateForCredentialId(CredentialEntity entity, CancellationToken cancellationToken)
+    private async Task SetCredential(string key, CredentialEntity entity, CancellationToken cancellationToken)
     {
         var serialized = JsonSerializer.Serialize(entity, _jsonOptions);
-        await _cache.SetStringAsync(GetCredentialKey(entity.CredentialId), serialized, _options, cancellationToken);
-    }
-
-    private async Task AddForUsername(CredentialEntity entity, CancellationToken cancellationToken)
-    {
-        var entities = await GetInternal(entity.UserName, cancellationToken);
-        entities.Add(entity);
-
-        var serialized = JsonSerializer.Serialize(entities, _jsonOptions);
-        await _cache.SetStringAsync(GetUsernameKey(entity.UserName), serialized, _options, cancellationToken);
-    }
-
-    private async Task UpdateForCredentialId(CredentialEntity entity, uint signCount, CancellationToken cancellationToken)
-    {
-        entity.SignCount = signCount;
-
-        await AddOrUpdateForCredentialId(entity, cancellationToken);
-    }
-
-    private async Task UpdateForUsername(CredentialEntity entity, uint signCount, CancellationToken cancellationToken)
-    {
-        var entities = await GetInternal(entity.UserName, cancellationToken);
-
-        var targetEntity = entities.FirstOrDefault(c => c.CredentialId.SequenceEqual(entity.CredentialId));
-        if (targetEntity != null)
-        {
-            targetEntity.SignCount = signCount;
-
-            var serialized = JsonSerializer.Serialize(entities, _jsonOptions);
-            await _cache.SetStringAsync(GetUsernameKey(entity.UserName), serialized, _options, cancellationToken);
-        }
+        await _cache.SetStringAsync(key, serialized, _options, cancellationToken);
     }
 
     private static string GetCredentialKey(byte[] id)
@@ -199,8 +159,8 @@ internal sealed class CredentialRepository : ICredentialRepository
         return $"{CredentialKeyPrefix}:{Convert.ToBase64String(id)}";
     }
 
-    private static string GetUsernameKey(string username)
+    private static string GetUserNameKey(string username)
     {
-        return $"{UsernameKeyPrefix}:{username}";
+        return $"{UserNameKeyPrefix}:{username}";
     }
 }
