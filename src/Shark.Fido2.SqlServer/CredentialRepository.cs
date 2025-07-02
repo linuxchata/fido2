@@ -44,9 +44,9 @@ internal sealed class CredentialRepository : ICredentialRepository
         return entity.ToDomain();
     }
 
-    public async Task<List<CredentialDescriptor>> Get(string username, CancellationToken cancellationToken = default)
+    public async Task<List<CredentialDescriptor>> Get(string userName, CancellationToken cancellationToken = default)
     {
-        if (string.IsNullOrEmpty(username))
+        if (string.IsNullOrEmpty(userName))
         {
             return [];
         }
@@ -54,11 +54,11 @@ internal sealed class CredentialRepository : ICredentialRepository
         const string sql = @"
             SELECT CredentialId, Transports
             FROM Credential
-            WHERE UserName = @username";
+            WHERE UserName = @userName";
 
         using var connection = SqlConnectionFactory.GetConnection(_connectionString);
 
-        var entities = await connection.QueryAsync<CredentialDescriptorEntity>(sql, new { username });
+        var entities = await connection.QueryAsync<CredentialDescriptorEntity>(sql, new { userName });
 
         return entities.Select(e => e.ToLightweightDomain()!).ToList();
     }

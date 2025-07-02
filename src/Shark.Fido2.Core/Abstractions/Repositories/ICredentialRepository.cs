@@ -18,10 +18,10 @@ public interface ICredentialRepository
     /// <summary>
     /// Gets a list of credentials associated with a username.
     /// </summary>
-    /// <param name="username">The username associated with the credentials.</param>
+    /// <param name="userName">The username associated with the credentials.</param>
     /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>A list of credential descriptors (a lightweight descriptor of a credential).</returns>
-    Task<List<CredentialDescriptor>> Get(string username, CancellationToken cancellationToken = default);
+    Task<List<CredentialDescriptor>> Get(string userName, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// Checks whether a credential exists by credential identifier.

@@ -45,7 +45,7 @@ internal sealed class CredentialRepository : ICredentialRepository
             return null;
         }
 
-        var serializedCredential = await _cache.GetStringAsync(GetCredentialKey(credentialId), cancellationToken);
+        var serializedCredential = await GetCredential(credentialId, cancellationToken);
         if (string.IsNullOrWhiteSpace(serializedCredential))
         {
             return null;
@@ -55,20 +55,20 @@ internal sealed class CredentialRepository : ICredentialRepository
         return entity.ToDomain();
     }
 
-    public async Task<List<CredentialDescriptor>> Get(string username, CancellationToken cancellationToken = default)
+    public async Task<List<CredentialDescriptor>> Get(string userName, CancellationToken cancellationToken = default)
     {
-        if (string.IsNullOrWhiteSpace(username))
+        if (string.IsNullOrWhiteSpace(userName))
         {
             return [];
         }
 
-        var serializedCredentialsKeys = await _cache.GetStringAsync(GetUserNameKey(username), cancellationToken);
+        var serializedCredentialsKeys = await _cache.GetStringAsync(GetUserNameKey(userName), cancellationToken);
         if (string.IsNullOrWhiteSpace(serializedCredentialsKeys))
         {
             return [];
         }
 
-        var credentialDescriptorEntities = new List<CredentialDescriptorEntity>();
+        var entities = new List<CredentialDescriptorEntity>();
 
         var credentialsKeys = JsonSerializer.Deserialize<List<string>>(serializedCredentialsKeys!, _jsonOptions) ?? [];
 
@@ -88,11 +88,11 @@ internal sealed class CredentialRepository : ICredentialRepository
             var entity = JsonSerializer.Deserialize<CredentialDescriptorEntity>(serializedCredential, _jsonOptions);
             if (entity != null)
             {
-                credentialDescriptorEntities.Add(entity);
+                entities.Add(entity);
             }
         }
 
-        return credentialDescriptorEntities.Select(e => e.ToLightweightDomain()!).ToList();
+        return entities.Select(e => e.ToLightweightDomain()!).ToList();
     }
 
     public async Task<bool> Exists(byte[]? credentialId, CancellationToken cancellationToken = default)
@@ -102,7 +102,7 @@ internal sealed class CredentialRepository : ICredentialRepository
             return false;
         }
 
-        var serializedCredential = await _cache.GetStringAsync(GetCredentialKey(credentialId), cancellationToken);
+        var serializedCredential = await GetCredential(credentialId, cancellationToken);
         return serializedCredential != null;
     }
 
@@ -134,43 +134,32 @@ internal sealed class CredentialRepository : ICredentialRepository
 
     public async Task UpdateSignCount(byte[] credentialId, uint signCount, CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(credentialId);
-
-        var serialized = await _cache.GetStringAsync(GetCredentialKey(credentialId), cancellationToken);
-        if (string.IsNullOrWhiteSpace(serialized))
-        {
-            return;
-        }
-
-        var entity = JsonSerializer.Deserialize<CredentialEntity>(serialized!, _jsonOptions);
-        if (entity == null)
-        {
-            return;
-        }
-
-        var now = DateTime.UtcNow;
-        entity.SignCount = signCount;
-        entity.UpdatedAt = now;
-        entity.LastUsedAt = now;
-
-        await _operationLock.WaitAsync(cancellationToken);
-
-        try
-        {
-            var credentialKey = GetCredentialKey(entity.CredentialId);
-            await SetCredential(credentialKey, entity, cancellationToken);
-        }
-        finally
-        {
-            _operationLock.Release();
-        }
+        await UpdateCredential(
+            credentialId,
+            entity =>
+            {
+                var now = DateTime.UtcNow;
+                entity.SignCount = signCount;
+                entity.UpdatedAt = now;
+                entity.LastUsedAt = now;
+            },
+            cancellationToken);
     }
 
-    public Task UpdateLastUsedAt(byte[] credentialId, CancellationToken cancellationToken = default)
+    public async Task UpdateLastUsedAt(byte[] credentialId, CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(credentialId);
+        await UpdateCredential(
+            credentialId,
+            entity =>
+            {
+                entity.LastUsedAt = DateTime.UtcNow;
+            },
+            cancellationToken);
+    }
 
-        throw new NotImplementedException();
+    private Task<string?> GetCredential(byte[] credentialId, CancellationToken cancellationToken)
+    {
+        return _cache.GetStringAsync(GetCredentialKey(credentialId), cancellationToken);
     }
 
     private async Task SetCredential(string key, CredentialEntity entity, CancellationToken cancellationToken)
@@ -198,6 +187,39 @@ internal sealed class CredentialRepository : ICredentialRepository
 
         serializedCredentialsKeys = JsonSerializer.Serialize(credentialsKeys, _jsonOptions);
         await _cache.SetStringAsync(userNameKey, serializedCredentialsKeys, _options, cancellationToken);
+    }
+
+    private async Task UpdateCredential(
+        byte[] credentialId,
+        Action<CredentialEntity> updateCredentialAction,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(credentialId);
+
+        var serializedCredential = await GetCredential(credentialId, cancellationToken);
+        if (string.IsNullOrWhiteSpace(serializedCredential))
+        {
+            return;
+        }
+
+        var entity = JsonSerializer.Deserialize<CredentialEntity>(serializedCredential, _jsonOptions);
+        if (entity == null)
+        {
+            return;
+        }
+
+        updateCredentialAction(entity);
+
+        await _operationLock.WaitAsync(cancellationToken);
+
+        try
+        {
+            await SetCredential(GetCredentialKey(entity.CredentialId), entity, cancellationToken);
+        }
+        finally
+        {
+            _operationLock.Release();
+        }
     }
 
     private static string GetCredentialKey(byte[] id)

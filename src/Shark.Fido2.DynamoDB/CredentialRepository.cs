@@ -57,9 +57,9 @@ internal sealed class CredentialRepository : ICredentialRepository
         return null;
     }
 
-    public async Task<List<CredentialDescriptor>> Get(string username, CancellationToken cancellationToken = default)
+    public async Task<List<CredentialDescriptor>> Get(string userName, CancellationToken cancellationToken = default)
     {
-        if (string.IsNullOrEmpty(username))
+        if (string.IsNullOrEmpty(userName))
         {
             return [];
         }
@@ -71,7 +71,7 @@ internal sealed class CredentialRepository : ICredentialRepository
             KeyConditionExpression = $"{AttributeNames.UserName} = {ExpressionNames.UserName}",
             ExpressionAttributeValues = new Dictionary<string, AttributeValue>
             {
-                { ExpressionNames.UserName, new AttributeValue { S = username } },
+                { ExpressionNames.UserName, new AttributeValue { S = userName } },
             },
             ConsistentRead = false, // GSIs do not support consistent reads
         };
