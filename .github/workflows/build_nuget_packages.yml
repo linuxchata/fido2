@@ -1,0 +1,42 @@
+name: NuGet
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        project:
+          - ./src/Shark.Fido2.Core/Shark.Fido2.Core.csproj
+          - ./src/Shark.Fido2.DynamoDB/Shark.Fido2.DynamoDB.csproj
+          - ./src/Shark.Fido2.InMemory/Shark.Fido2.InMemory.csproj
+          - ./src/Shark.Fido2.Models/Shark.Fido2.Models.csproj
+          - ./src/Shark.Fido2.SqlServer/Shark.Fido2.SqlServer.csproj
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Restore dependencies
+      run: dotnet restore ${{ matrix.project }}
+
+    - name: Build
+      run: dotnet build ${{ matrix.project }} --configuration Release --no-restore
+
+    - name: Pack
+      run: dotnet pack ${{ matrix.project }} --configuration Release --no-restore --output ./nupkg /p:Version=1.0.4.${{ github.run_number }}
+
+    - name: Add nuget source
+      run: dotnet nuget add source --username linuxchata --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/linuxchata/index.json"
+
+    - name: Push packages to github.com
+      run: dotnet nuget push "./nupkg/Shark.Fido2.*.*.nupkg" --api-key ${{ secrets.OAUTH_GITHUB_PAT }} --source "github" --skip-duplicate
+
+    - name: Push packages to nuget.org
+      run: dotnet nuget push "./nupkg/Shark.Fido2.*.*.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
