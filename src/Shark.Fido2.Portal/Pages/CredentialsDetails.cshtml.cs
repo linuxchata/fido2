@@ -44,6 +44,9 @@ public class CredentialsDetailsModel : PageModel
     [BindProperty]
     public string? UpdatedAt { get; set; }
 
+    [BindProperty]
+    public string? LastUsedAt { get; set; }
+
     public async Task OnGet(string credentialId, CancellationToken cancellationToken)
     {
         if (string.IsNullOrEmpty(credentialId))
@@ -67,5 +70,6 @@ public class CredentialsDetailsModel : PageModel
         Transports = credential.Transports;
         CreatedAt = credential.CreatedAt.ToString(DateTimeFormat, CultureInfo.InvariantCulture);
         UpdatedAt = credential.UpdatedAt?.ToString(DateTimeFormat, CultureInfo.InvariantCulture) ?? "-";
+        LastUsedAt = credential.LastUsedAt?.ToString(DateTimeFormat, CultureInfo.InvariantCulture) ?? "-";
     }
 }
