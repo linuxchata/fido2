@@ -1,4 +1,4 @@
-name: NuGet Core
+name: NuGet
 
 on:
   workflow_dispatch:
@@ -37,3 +37,6 @@ jobs:
 
     - name: Push packages to github.com
       run: dotnet nuget push "./nupkg/Shark.Fido2.*.*.nupkg" --api-key ${{ secrets.OAUTH_GITHUB_PAT }} --source "github" --skip-duplicate
+
+    - name: Push packages to nuget.org
+      run: dotnet nuget push "./nupkg/Shark.Fido2.*.*.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
