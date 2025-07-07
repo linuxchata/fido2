@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Core.Abstractions.Handlers;
 using Shark.Fido2.Core.Abstractions.Services;
@@ -20,8 +21,10 @@ public static class DependencyInjection
 {
     public static void AddFido2(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddSingleton<IValidateOptions<Fido2Configuration>, Fido2ConfigurationValidator>();
         var fido2ConfigurationSection = configuration.GetSection(Fido2Configuration.Name);
-        services.Configure<Fido2Configuration>(fido2ConfigurationSection);
+        services.Configure<Fido2Configuration>(fido2ConfigurationSection)
+            .AddOptionsWithValidateOnStart<Fido2Configuration>();
 
         services.AddSingleton(TimeProvider.System);
 
