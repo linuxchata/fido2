@@ -61,7 +61,7 @@ internal class AttestationIntegrationTests
         Assert.That(result, Is.Not.Null);
         Assert.That(result.RelyingParty.Id, Is.EqualTo("localhost"));
         Assert.That(result.RelyingParty.Name, Is.EqualTo("Shark Corporation"));
-        Assert.That(result.User.Id, Has.Length.EqualTo(6));
+        Assert.That(result.User.Id, Has.Length.EqualTo(8));
         Assert.That(result.User.Name, Is.EqualTo(request.UserName));
         Assert.That(result.User.DisplayName, Is.EqualTo(request.DisplayName));
         Assert.That(result.Challenge, Has.Length.EqualTo(24));

@@ -21,8 +21,8 @@ public class UserIdGeneratorTests
         var result2 = _sut.Get();
 
         // Assert
-        Assert.That(result1, Has.Length.EqualTo(32));
-        Assert.That(result2, Has.Length.EqualTo(32));
+        Assert.That(result1, Has.Length.EqualTo(48));
+        Assert.That(result2, Has.Length.EqualTo(48));
         Assert.That(result1, Is.Not.EqualTo(result2), "Generated IDs should be random");
     }
 
@@ -33,7 +33,7 @@ public class UserIdGeneratorTests
         var result = _sut.Get(string.Empty);
 
         // Assert
-        Assert.That(result, Has.Length.EqualTo(32));
+        Assert.That(result, Has.Length.EqualTo(48));
     }
 
     [Test]
