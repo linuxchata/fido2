@@ -5,7 +5,8 @@ These server certificates were created to test
 
 According to the [specification](https://www.w3.org/TR/webauthn-2/#rp-id), Relying Party identifiers must comply with the following rule:
 ```
-For example, given a Relying Party whose origin is https://login.example.com:1337, then the following RP IDs are valid: login.example.com (default) and example.com, but not m.login.example.com and not com.```
+For example, given a Relying Party whose origin is https://login.example.com:1337, then the following RP IDs are valid: login.example.com (default) and example.com, but not m.login.example.com and not com.
+```
 
 # Generate certificates
 1. Install `openssl` via Chocolatey.
