@@ -1,5 +1,5 @@
 # Overview
-This repository provides a server-side implementation of the FIDO2 protocol, enabling secure passwordless authentication and multi-factor authentication (MFA) for web applications. It handles key FIDO2 operations, including credential registration and authentication, ensuring compliance with modern authentication standards.
+This repository provides a server-side implementation of the FIDO2 protocol, enabling secure passwordless and multi-factor authentication (MFA) for web applications. It supports key FIDO2 operations – credential registration and authentication – ensuring compliance with the [WebAuthn Level 2 specification](https://www.w3.org/TR/webauthn-2/) (Web Authentication: An API for accessing Public Key Credentials Level 2).
 
 ## Supported Features
 - **Attestation flow** for credentials registration
@@ -116,8 +116,8 @@ Example `appsettings.json` file: [appsettings.Production.json](https://github.co
 ## Client side (JavaScript)
 To complete the FIDO2 implementation, you need to add JavaScript code that communicates with the Web Authentication API (WebAuthn) in the browser. The WebAuthn API is part of the FIDO2 specification and provides the client-side functionality for secure authentication. Below you can find sample implementation for communication with WebAuthn:
 
-- [fido2-attestation.js](https://github.com/linuxchata/fido2/blob/main/src/Shark.Fido2.Portal/wwwroot/js/fido2-attestation.js) - Handles the registration process using the Web Authentication API (navigator.credentials.create)
-- [fido2-assertion.js](https://github.com/linuxchata/fido2/blob/main/src/Shark.Fido2.Portal/wwwroot/js/fido2-assertion.js) - Handles the authentication process using the Web Authentication API (navigator.credentials.get)
+- [fido2-attestation.js](https://github.com/linuxchata/fido2/blob/main/src/Shark.Fido2.Portal/wwwroot/js/fido2-attestation.js) handles the registration process using the Web Authentication API (`navigator.credentials.create`).
+- [fido2-assertion.js](https://github.com/linuxchata/fido2/blob/main/src/Shark.Fido2.Portal/wwwroot/js/fido2-assertion.js) handles the authentication process using the Web Authentication API (`navigator.credentials.get`).
 
 This JavaScript code bridges the browser's WebAuthn API with the server-side REST API endpoints provided by the ASP.NET Core controllers described above.
 
