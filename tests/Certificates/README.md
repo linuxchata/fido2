@@ -22,7 +22,7 @@ openssl version
 Password: `secret`
 
 # Use server certificates
-1. Update `C:\Windows\System32\drivers\etc\hosts file`:
+1. Update `C:\Windows\System32\drivers\etc\hosts` file:
 ```
 127.0.0.1 example.com
 127.0.0.1 login.example.com
