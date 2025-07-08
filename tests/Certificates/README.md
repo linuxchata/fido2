@@ -8,12 +8,16 @@ According to the [specification](https://www.w3.org/TR/webauthn-2/#rp-id), Relyi
 
 # Generate certificates
 1. Install `openssl` via Chocolatey.
-```choco install openssl```
+```
+choco install openssl
+```
 
 2. Ensure `openssl` is installed and accessible.
-```openssl version```
+```
+openssl version
+```
 
-3. Run `generate_certificates.ps1` to generate new certificates
+3. Run `GenerateCertificates.ps1` to generate new certificates.
 
 Password: `secret`
 
