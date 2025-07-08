@@ -10,10 +10,10 @@ According to the [specification](https://www.w3.org/TR/webauthn-2/#rp-id), Relyi
 1. Install `openssl` via Chocolatey.
 ```choco install openssl```
 
-1. Ensure `openssl` is installed and accessible.
+2. Ensure `openssl` is installed and accessible.
 ```openssl version```
 
-1. Run `generate_certificates.ps1` to generate new certificates
+3. Run `generate_certificates.ps1` to generate new certificates
 
 Password: `secret`
 
@@ -25,7 +25,7 @@ Password: `secret`
 127.0.0.1 m.login.example.com
 ```
 
-1. Add the following logic to `Program.cs`
+2. Add the following logic to `Program.cs`
 ```
 builder.WebHost.ConfigureKestrel(options =>
 {
