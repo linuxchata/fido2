@@ -80,9 +80,9 @@ public class AssertionTests
 
         _fido2Configuration = new Fido2Configuration
         {
-            Origin = "localhost",
             RelyingPartyId = "localhost",
             RelyingPartyIdName = "Test RP",
+            Origins = ["localhost"],
             Timeout = 60000,
         };
 

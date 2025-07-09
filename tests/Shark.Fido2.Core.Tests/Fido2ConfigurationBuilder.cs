@@ -10,7 +10,7 @@ internal class Fido2ConfigurationBuilder
         {
             RelyingPartyId = "localhost",
             RelyingPartyIdName = "Shark Corporation",
-            Origin = "localhost",
+            Origins = ["localhost"],
         };
     }
 }

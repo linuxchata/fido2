@@ -19,10 +19,10 @@ public sealed class Fido2Configuration
     public required string RelyingPartyIdName { get; init; }
 
     /// <summary>
-    /// Gets a fully qualified origin of the Relying Party making the request, passed to the authenticator
+    /// Gets a list of fully qualified origins of the Relying Party making the request, passed to the authenticator
     /// by the browser.
     /// </summary>
-    public required string Origin { get; init; }
+    public required HashSet<string> Origins { get; init; }
 
     /// <summary>
     /// Gets a time, in milliseconds, that the Relying Party is willing to wait for the call to complete.
