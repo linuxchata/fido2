@@ -32,7 +32,7 @@ internal class Fido2ConfigurationValidatorTests
 
         // Assert
         Assert.That(result.Failed, Is.True);
-        Assert.That(result.FailureMessage, Does.Contain("RelyingPartyId configuration key must be defined"));
+        Assert.That(result.FailureMessage, Does.Contain("'RelyingPartyId' configuration key must be defined"));
     }
 
     [Test]
@@ -53,7 +53,7 @@ internal class Fido2ConfigurationValidatorTests
 
         // Assert
         Assert.That(result.Failed, Is.True);
-        Assert.That(result.FailureMessage, Does.Contain("RelyingPartyId configuration key must not include scheme"));
+        Assert.That(result.FailureMessage, Does.Contain("'RelyingPartyId' configuration key must not include scheme"));
     }
 
     [Test]
@@ -76,7 +76,26 @@ internal class Fido2ConfigurationValidatorTests
 
         // Assert
         Assert.That(result.Failed, Is.True);
-        Assert.That(result.FailureMessage, Does.Contain("RelyingPartyId configuration key must not include port number"));
+        Assert.That(result.FailureMessage, Does.Contain("'RelyingPartyId' configuration key must not include port number"));
+    }
+
+    [Test]
+    public void Validate_WhenOriginsIsNull_ReturnsFailure()
+    {
+        // Arrange
+        var fido2Configuration = new Fido2Configuration
+        {
+            RelyingPartyId = "localhost",
+            RelyingPartyIdName = "Test RP",
+            Origins = null!,
+        };
+
+        // Act
+        var result = _sut.Validate(null, fido2Configuration);
+
+        // Assert
+        Assert.That(result.Failed, Is.True);
+        Assert.That(result.FailureMessage, Does.Contain("'Origins' configuration key must include at least one origin"));
     }
 
     [Test]
@@ -95,7 +114,7 @@ internal class Fido2ConfigurationValidatorTests
 
         // Assert
         Assert.That(result.Failed, Is.True);
-        Assert.That(result.FailureMessage, Does.Contain("Origins configuration key must include at least one origin"));
+        Assert.That(result.FailureMessage, Does.Contain("'Origins' configuration key must include at least one origin"));
     }
 
     [Test]
@@ -117,7 +136,7 @@ internal class Fido2ConfigurationValidatorTests
 
         // Assert
         Assert.That(result.Failed, Is.True);
-        Assert.That(result.FailureMessage, Does.Contain("Origins configuration key must not include empty values"));
+        Assert.That(result.FailureMessage, Does.Contain("'Origins' configuration key must not include empty values"));
     }
 
     [Test]
