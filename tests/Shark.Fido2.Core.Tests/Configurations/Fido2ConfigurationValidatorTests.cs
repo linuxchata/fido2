@@ -24,7 +24,7 @@ internal class Fido2ConfigurationValidatorTests
         {
             RelyingPartyId = relyingPartyId,
             RelyingPartyIdName = "Test RP",
-            Origin = "localhost",
+            Origins = ["localhost"],
         };
 
         // Act
@@ -32,7 +32,7 @@ internal class Fido2ConfigurationValidatorTests
 
         // Assert
         Assert.That(result.Failed, Is.True);
-        Assert.That(result.FailureMessage, Does.Contain("RelyingPartyId must be defined in the configuration"));
+        Assert.That(result.FailureMessage, Does.Contain("RelyingPartyId configuration key must be defined"));
     }
 
     [Test]
@@ -45,7 +45,7 @@ internal class Fido2ConfigurationValidatorTests
         {
             RelyingPartyId = relyingPartyId,
             RelyingPartyIdName = "Test RP",
-            Origin = "localhost",
+            Origins = ["localhost"],
         };
 
         // Act
@@ -53,22 +53,22 @@ internal class Fido2ConfigurationValidatorTests
 
         // Assert
         Assert.That(result.Failed, Is.True);
-        Assert.That(result.FailureMessage, Does.Contain("RelyingPartyId must not include scheme"));
+        Assert.That(result.FailureMessage, Does.Contain("RelyingPartyId configuration key must not include scheme"));
     }
 
     [Test]
-    [TestCase("localhost:")]
-    [TestCase("localhost:abc")]
     [TestCase("localhost:0")]
+    [TestCase("localhost:80")]
     [TestCase("localhost:8080")]
+    [TestCase("localhost:43589")]
     public void Validate_WhenRelyingPartyIdHasPort_ReturnsFailure(string relyingPartyId)
     {
         // Arrange
         var fido2Configuration = new Fido2Configuration
         {
-            RelyingPartyId = "localhost:8080",
+            RelyingPartyId = relyingPartyId,
             RelyingPartyIdName = "Test RP",
-            Origin = "localhost",
+            Origins = ["localhost"],
         };
 
         // Act
@@ -76,7 +76,26 @@ internal class Fido2ConfigurationValidatorTests
 
         // Assert
         Assert.That(result.Failed, Is.True);
-        Assert.That(result.FailureMessage, Does.Contain("RelyingPartyId must not include port number"));
+        Assert.That(result.FailureMessage, Does.Contain("RelyingPartyId configuration key must not include port number"));
+    }
+
+    [Test]
+    public void Validate_WhenOriginsAreEmpty_ReturnsFailure()
+    {
+        // Arrange
+        var fido2Configuration = new Fido2Configuration
+        {
+            RelyingPartyId = "localhost",
+            RelyingPartyIdName = "Test RP",
+            Origins = [],
+        };
+
+        // Act
+        var result = _sut.Validate(null, fido2Configuration);
+
+        // Assert
+        Assert.That(result.Failed, Is.True);
+        Assert.That(result.FailureMessage, Does.Contain("Origins configuration key must include at least one origin"));
     }
 
     [Test]
@@ -90,7 +109,7 @@ internal class Fido2ConfigurationValidatorTests
         {
             RelyingPartyId = "localhost",
             RelyingPartyIdName = "Test RP",
-            Origin = origin,
+            Origins = [origin],
         };
 
         // Act
@@ -98,7 +117,7 @@ internal class Fido2ConfigurationValidatorTests
 
         // Assert
         Assert.That(result.Failed, Is.True);
-        Assert.That(result.FailureMessage, Does.Contain("Origin must be defined in the configuration"));
+        Assert.That(result.FailureMessage, Does.Contain("Origins configuration key must not include empty values"));
     }
 
     [Test]
@@ -109,7 +128,7 @@ internal class Fido2ConfigurationValidatorTests
         {
             RelyingPartyId = "localhost",
             RelyingPartyIdName = "Test RP",
-            Origin = "localhost",
+            Origins = ["localhost"],
         };
 
         // Act

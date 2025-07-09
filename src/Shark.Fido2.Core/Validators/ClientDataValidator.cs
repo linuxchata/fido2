@@ -104,9 +104,7 @@ internal class ClientDataValidator : IClientDataValidator
             return ValidatorInternalResult.Invalid("Invalid client data origin");
         }
 
-        var expectedOrigin = _configuration.Origin;
-
-        if (!string.Equals(originUri.Host, expectedOrigin, StringComparison.OrdinalIgnoreCase))
+        if (_configuration.Origins.All(o => !string.Equals(originUri.Host, o, StringComparison.OrdinalIgnoreCase)))
         {
             return ValidatorInternalResult.Invalid("Client data origin mismatch");
         }
