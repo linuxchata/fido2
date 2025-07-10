@@ -5,6 +5,7 @@ using Shark.Fido2.Domain.Options;
 using Shark.Fido2.Models.Mappers;
 using Shark.Fido2.Models.Requests;
 using Shark.Fido2.Models.Responses;
+using Shark.Fido2.Portal.Filters;
 
 namespace Shark.Fido2.Portal.Controllers;
 
@@ -13,6 +14,7 @@ namespace Shark.Fido2.Portal.Controllers;
 /// </summary>
 [Route("[controller]")]
 [ApiController]
+[TypeFilter(typeof(RestApiExceptionFilter))]
 public class AssertionController(IAssertion assertion) : ControllerBase
 {
     private readonly IAssertion _assertion = assertion;
