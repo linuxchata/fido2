@@ -5,19 +5,20 @@ namespace Shark.Fido2.Core.Mappers;
 
 public static class GenericKeyTypeMapper
 {
-    public static HashAlgorithmName Get(int? keyType, int publicKeyAlgorithm)
+    public static (KeyTypeEnum, HashAlgorithmName) Get(int coseAlgorithm)
     {
-        if (keyType == (int)KeyTypeEnum.Rsa)
+        var rs256Algorithm = RsaKeyTypeMapper.Get(coseAlgorithm);
+        if (rs256Algorithm != null)
         {
-            return RsaKeyTypeMapper.Get(publicKeyAlgorithm).HashAlgorithmName;
+            return (KeyTypeEnum.Rsa, rs256Algorithm.HashAlgorithmName);
         }
-        else if (keyType == (int)KeyTypeEnum.Ec2)
+
+        var ec2Algorithm = Ec2KeyTypeMapper.Get(coseAlgorithm);
+        if (ec2Algorithm != null)
         {
-            return Ec2KeyTypeMapper.Get(publicKeyAlgorithm).HashAlgorithmName;
+            return (KeyTypeEnum.Ec2, ec2Algorithm.HashAlgorithmName);
         }
-        else
-        {
-            throw new NotSupportedException("Unsupported key type");
-        }
+
+        throw new NotSupportedException($"{coseAlgorithm} algorithm is not supported");
     }
 }

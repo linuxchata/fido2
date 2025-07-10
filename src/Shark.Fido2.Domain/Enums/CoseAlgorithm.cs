@@ -4,7 +4,7 @@
 /// COSE Algorithms
 /// See: https://www.iana.org/assignments/cose/cose.xhtml#algorithms.
 /// </summary>
-public enum PublicKeyAlgorithm
+public enum CoseAlgorithm
 {
     /// <summary>
     /// ECDSA w/ SHA-256

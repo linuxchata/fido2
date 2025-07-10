@@ -13,7 +13,7 @@ internal sealed class OkpCryptographyValidator : IOkpCryptographyValidator
         byte[] signature,
         CredentialPublicKey credentialPublicKey)
     {
-        if (credentialPublicKey.Algorithm == (int)PublicKeyAlgorithm.EdDsa &&
+        if (credentialPublicKey.Algorithm == (int)CoseAlgorithm.EdDsa &&
             credentialPublicKey.Curve == (int)EllipticCurveKey.Ed25519)
         {
             var parameters = new Ed25519PublicKeyParameters(credentialPublicKey.XCoordinate, 0);

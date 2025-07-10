@@ -26,7 +26,7 @@ internal static class PublicKeyCredentialCreationOptionsBuilder
                 new PublicKeyCredentialParameter
                 {
                     Type = PublicKeyCredentialType.PublicKey,
-                    Algorithm = PublicKeyAlgorithm.Rs256,
+                    Algorithm = CoseAlgorithm.Rs256,
                 },
             }.ToArray(),
             RelyingParty = new PublicKeyCredentialRpEntity

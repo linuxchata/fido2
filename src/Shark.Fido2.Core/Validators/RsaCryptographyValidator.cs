@@ -14,7 +14,8 @@ internal sealed class RsaCryptographyValidator : IRsaCryptographyValidator
         CredentialPublicKey credentialPublicKey,
         X509Certificate2? attestationCertificate = null)
     {
-        var rs256Algorithm = RsaKeyTypeMapper.Get(credentialPublicKey.Algorithm);
+        var rs256Algorithm = RsaKeyTypeMapper.Get(credentialPublicKey.Algorithm) ??
+            throw new NotSupportedException($"{credentialPublicKey.Algorithm} algorithm is not supported");
 
         if (attestationCertificate != null)
         {
@@ -41,7 +42,8 @@ internal sealed class RsaCryptographyValidator : IRsaCryptographyValidator
             return false;
         }
 
-        var rs256Algorithm = RsaKeyTypeMapper.Get(algorithm);
+        var rs256Algorithm = RsaKeyTypeMapper.Get(algorithm) ??
+            throw new NotSupportedException($"{algorithm} algorithm is not supported");
 
         return IsValidAttestationCertificate(data, signature, rs256Algorithm, attestationCertificate);
     }

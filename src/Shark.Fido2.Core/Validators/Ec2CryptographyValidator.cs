@@ -14,14 +14,15 @@ internal sealed class Ec2CryptographyValidator : IEc2CryptographyValidator
         CredentialPublicKey credentialPublicKey,
         X509Certificate2? attestationCertificate = null)
     {
-        var algorithm = Ec2KeyTypeMapper.Get(credentialPublicKey.Algorithm);
+        var ec2Algorithm = Ec2KeyTypeMapper.Get(credentialPublicKey.Algorithm) ??
+            throw new NotSupportedException($"{credentialPublicKey.Algorithm} algorithm is not supported");
 
         if (attestationCertificate != null)
         {
             using var ecdsa = attestationCertificate.GetECDsaPublicKey() ??
                 throw new ArgumentException("Certificate does not have an ECDsa public key");
 
-            return ecdsa!.VerifyData(data, signature, algorithm.HashAlgorithmName, DSASignatureFormat.Rfc3279DerSequence);
+            return ecdsa!.VerifyData(data, signature, ec2Algorithm.HashAlgorithmName, DSASignatureFormat.Rfc3279DerSequence);
         }
         else
         {
@@ -32,12 +33,12 @@ internal sealed class Ec2CryptographyValidator : IEc2CryptographyValidator
                     X = credentialPublicKey.XCoordinate,
                     Y = credentialPublicKey.YCoordinate,
                 },
-                Curve = algorithm.Curve, // https://www.rfc-editor.org/rfc/rfc9053.html#section-7.1
+                Curve = ec2Algorithm.Curve, // https://www.rfc-editor.org/rfc/rfc9053.html#section-7.1
             };
 
             using var ecdsa = ECDsa.Create(parameters);
 
-            return ecdsa.VerifyData(data, signature, algorithm.HashAlgorithmName, DSASignatureFormat.Rfc3279DerSequence);
+            return ecdsa.VerifyData(data, signature, ec2Algorithm.HashAlgorithmName, DSASignatureFormat.Rfc3279DerSequence);
         }
     }
 
@@ -48,7 +49,8 @@ internal sealed class Ec2CryptographyValidator : IEc2CryptographyValidator
             return false;
         }
 
-        var ec2Algorithm = Ec2KeyTypeMapper.Get(algorithm);
+        var ec2Algorithm = Ec2KeyTypeMapper.Get(algorithm) ??
+            throw new NotSupportedException($"{algorithm} algorithm is not supported");
 
         using var ecdsa = attestationCertificate.GetECDsaPublicKey() ??
             throw new ArgumentException("Certificate does not have an ECDsa public key");

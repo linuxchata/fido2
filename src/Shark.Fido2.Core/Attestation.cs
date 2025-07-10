@@ -78,7 +78,7 @@ public sealed class Attestation : IAttestation
                 DisplayName = request.DisplayName.Trim(),
             },
             Challenge = _challengeGenerator.Get(),
-            PublicKeyCredentialParams = PublicKeyAlgorithms.Extended
+            PublicKeyCredentialParams = CoseAlgorithms.Extended
                 .Select(a => new PublicKeyCredentialParameter { Algorithm = a })
                 .ToArray(),
             Timeout = _configuration.Timeout ?? DefaultTimeout,
