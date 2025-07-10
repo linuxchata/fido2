@@ -72,7 +72,29 @@ internal class TpmAttestationStatementStrategyTests
     public async Task Validate_WhenTpmAttestationWithRs256Algorithm_ShouldValidate()
     {
         // Arrange
+        // Please note that Rs256 algorithm is used by credential public key, not the attestation statement.
         var fileName = "TpmAttestationWithRs256Algorithm.json";
+        var attestationResponseData = AttestationResponseDataReader.Read(fileName);
+        var clientData = ClientDataBuilder.Build(attestationResponseData!.ClientDataJson);
+
+        var internalResult = await _attestationObjectHandler.Handle(
+            attestationResponseData.AttestationObject, clientData, _creationOptions);
+
+        // Act
+        var result = _sut.Validate(internalResult.Value!, clientData);
+
+        // Assert
+        var attestationStatementInternalResult = result as AttestationStatementInternalResult;
+        Assert.That(attestationStatementInternalResult, Is.Not.Null, result.Message);
+        Assert.That(attestationStatementInternalResult!.AttestationType, Is.EqualTo(AttestationTypeEnum.AttCA));
+    }
+
+    [Test]
+    public async Task Validate_WhenTpmAttestationWithEs256Algorithm_ShouldValidate()
+    {
+        // Arrange
+        // Please note that Es256 algorithm is used by credential public key, not the attestation statement.
+        var fileName = "TpmAttestationWithEs256Algorithm.json";
         var attestationResponseData = AttestationResponseDataReader.Read(fileName);
         var clientData = ClientDataBuilder.Build(attestationResponseData!.ClientDataJson);
 

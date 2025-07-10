@@ -59,6 +59,9 @@
     <Content Include="Data\PackedAttestationWithRs256Algorithm.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Data\TpmAttestationWithEs256Algorithm.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Data\TpmAttestationWithRs256Algorithm.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
