@@ -7,5 +7,5 @@ public sealed class PublicKeyCredentialParameter
 {
     public string Type { get; init; } = PublicKeyCredentialType.PublicKey;
 
-    public PublicKeyAlgorithm Algorithm { get; init; }
+    public CoseAlgorithm Algorithm { get; init; }
 }

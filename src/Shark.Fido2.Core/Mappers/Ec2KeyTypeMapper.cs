@@ -6,9 +6,9 @@ namespace Shark.Fido2.Core.Mappers;
 
 public static class Ec2KeyTypeMapper
 {
-    public static Ec2Algorithm Get(int publicKeyAlgorithm)
+    public static Ec2Algorithm? Get(int coseAlgorithm)
     {
-        if (publicKeyAlgorithm == (int)PublicKeyAlgorithm.Es256)
+        if (coseAlgorithm == (int)CoseAlgorithm.Es256)
         {
             return new Ec2Algorithm
             {
@@ -16,7 +16,7 @@ public static class Ec2KeyTypeMapper
                 HashAlgorithmName = HashAlgorithmName.SHA256,
             };
         }
-        else if (publicKeyAlgorithm == (int)PublicKeyAlgorithm.Es384)
+        else if (coseAlgorithm == (int)CoseAlgorithm.Es384)
         {
             return new Ec2Algorithm
             {
@@ -24,7 +24,7 @@ public static class Ec2KeyTypeMapper
                 HashAlgorithmName = HashAlgorithmName.SHA384,
             };
         }
-        else if (publicKeyAlgorithm == (int)PublicKeyAlgorithm.Es512)
+        else if (coseAlgorithm == (int)CoseAlgorithm.Es512)
         {
             return new Ec2Algorithm
             {
@@ -32,7 +32,7 @@ public static class Ec2KeyTypeMapper
                 HashAlgorithmName = HashAlgorithmName.SHA512,
             };
         }
-        else if (publicKeyAlgorithm == (int)PublicKeyAlgorithm.Es256K)
+        else if (coseAlgorithm == (int)CoseAlgorithm.Es256K)
         {
             return new Ec2Algorithm
             {
@@ -41,6 +41,6 @@ public static class Ec2KeyTypeMapper
             };
         }
 
-        throw new NotSupportedException($"{publicKeyAlgorithm} algorithm is not supported");
+        return null;
     }
 }

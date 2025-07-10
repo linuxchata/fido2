@@ -59,7 +59,7 @@ internal class AttestationObjectValidatorTests
         };
 
         var creationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
-        creationOptions.PublicKeyCredentialParams = [new() { Algorithm = PublicKeyAlgorithm.Es256 }];
+        creationOptions.PublicKeyCredentialParams = [new() { Algorithm = CoseAlgorithm.Es256 }];
         creationOptions.AuthenticatorSelection = new AuthenticatorSelectionCriteria
         {
             UserVerification = UserVerificationRequirement.Required,
@@ -92,7 +92,7 @@ internal class AttestationObjectValidatorTests
         };
 
         var creationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
-        creationOptions.PublicKeyCredentialParams = [new() { Algorithm = PublicKeyAlgorithm.Rs256 }];
+        creationOptions.PublicKeyCredentialParams = [new() { Algorithm = CoseAlgorithm.Rs256 }];
         creationOptions.AuthenticatorSelection = new AuthenticatorSelectionCriteria
         {
             UserVerification = UserVerificationRequirement.Required,

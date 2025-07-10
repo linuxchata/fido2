@@ -11,13 +11,13 @@ internal class Ec2KeyTypeMapperTests
     public void Get_WhenEs256_ReturnsCorrectAlgorithm()
     {
         // Arrange
-        var algorithm = (int)PublicKeyAlgorithm.Es256;
+        var algorithm = (int)CoseAlgorithm.Es256;
 
         // Act
         var result = Ec2KeyTypeMapper.Get(algorithm);
 
         // Assert
-        Assert.That(result.HashAlgorithmName, Is.EqualTo(HashAlgorithmName.SHA256));
+        Assert.That(result!.HashAlgorithmName, Is.EqualTo(HashAlgorithmName.SHA256));
         Assert.That(result.Curve.Oid.FriendlyName, Is.EqualTo(ECCurve.NamedCurves.nistP256.Oid.FriendlyName));
         Assert.That(result.Curve.Oid.Value, Is.EqualTo(ECCurve.NamedCurves.nistP256.Oid.Value));
     }
@@ -26,13 +26,13 @@ internal class Ec2KeyTypeMapperTests
     public void Get_WhenEs384_ReturnsCorrectAlgorithm()
     {
         // Arrange
-        var algorithm = (int)PublicKeyAlgorithm.Es384;
+        var algorithm = (int)CoseAlgorithm.Es384;
 
         // Act
         var result = Ec2KeyTypeMapper.Get(algorithm);
 
         // Assert
-        Assert.That(result.HashAlgorithmName, Is.EqualTo(HashAlgorithmName.SHA384));
+        Assert.That(result!.HashAlgorithmName, Is.EqualTo(HashAlgorithmName.SHA384));
         Assert.That(result.Curve.Oid.FriendlyName, Is.EqualTo(ECCurve.NamedCurves.nistP384.Oid.FriendlyName));
         Assert.That(result.Curve.Oid.Value, Is.EqualTo(ECCurve.NamedCurves.nistP384.Oid.Value));
     }
@@ -41,13 +41,13 @@ internal class Ec2KeyTypeMapperTests
     public void Get_WhenEs512_ReturnsCorrectAlgorithm()
     {
         // Arrange
-        var algorithm = (int)PublicKeyAlgorithm.Es512;
+        var algorithm = (int)CoseAlgorithm.Es512;
 
         // Act
         var result = Ec2KeyTypeMapper.Get(algorithm);
 
         // Assert
-        Assert.That(result.HashAlgorithmName, Is.EqualTo(HashAlgorithmName.SHA512));
+        Assert.That(result!.HashAlgorithmName, Is.EqualTo(HashAlgorithmName.SHA512));
         Assert.That(result.Curve.Oid.FriendlyName, Is.EqualTo(ECCurve.NamedCurves.nistP521.Oid.FriendlyName));
         Assert.That(result.Curve.Oid.Value, Is.EqualTo(ECCurve.NamedCurves.nistP521.Oid.Value));
     }
@@ -56,24 +56,27 @@ internal class Ec2KeyTypeMapperTests
     public void Get_WhenEs256K_ReturnsCorrectAlgorithm()
     {
         // Arrange
-        var algorithm = (int)PublicKeyAlgorithm.Es256K;
+        var algorithm = (int)CoseAlgorithm.Es256K;
 
         // Act
         var result = Ec2KeyTypeMapper.Get(algorithm);
 
         // Assert
-        Assert.That(result.HashAlgorithmName, Is.EqualTo(HashAlgorithmName.SHA256));
+        Assert.That(result!.HashAlgorithmName, Is.EqualTo(HashAlgorithmName.SHA256));
         Assert.That(result.Curve.Oid.FriendlyName, Is.EqualTo("secp256k1"));
         Assert.That(result.Curve.Oid.Value, Is.EqualTo("1.3.132.0.10"));
     }
 
     [Test]
-    public void Get_WhenUnsupportedAlgorithm_ThrowsNotSupportedException()
+    public void Get_WhenAlgorithmIsNotSupported_ThrowsReturnsNull()
     {
         // Arrange
-        const int unsupportedAlgorithm = 999;
+        const int algorithm = 999;
 
-        // Act & Assert
-        Assert.Throws<NotSupportedException>(() => Ec2KeyTypeMapper.Get(unsupportedAlgorithm));
+        // Act
+        var result = Ec2KeyTypeMapper.Get(algorithm);
+
+        // Assert
+        Assert.That(result, Is.Null);
     }
 }

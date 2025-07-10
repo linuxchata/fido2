@@ -8,41 +8,40 @@ namespace Shark.Fido2.Core.Tests.Mappers;
 internal class GenericKeyTypeMapperTests
 {
     [Test]
-    public void Get_WhenKeyTypeIsRsa_ThenReturnsCorrectHashAlgorithm()
+    public void Get_WhenRsaAlgorithm_ThenReturnsCorrectKeyTypeAndHashAlgorithm()
     {
         // Arrange
-        var keyType = (int)KeyTypeEnum.Rsa;
-        var publicKeyAlgorithm = (int)PublicKeyAlgorithm.Ps256;
+        var coseAlgorithm = (int)CoseAlgorithm.Ps256;
 
         // Act
-        var result = GenericKeyTypeMapper.Get(keyType, publicKeyAlgorithm);
+        var (keyType, hashAlgorithmName) = GenericKeyTypeMapper.Get(coseAlgorithm);
 
         // Assert
-        Assert.That(result, Is.EqualTo(HashAlgorithmName.SHA256));
+        Assert.That(keyType, Is.EqualTo(KeyTypeEnum.Rsa));
+        Assert.That(hashAlgorithmName, Is.EqualTo(HashAlgorithmName.SHA256));
     }
 
     [Test]
-    public void Get_WhenKeyTypeIsEc2_ThenReturnsCorrectHashAlgorithm()
+    public void Get_WhenEc2Algorithm_ThenReturnsCorrectKeyTypeAndHashAlgorithm()
     {
         // Arrange
-        var keyType = (int)KeyTypeEnum.Ec2;
-        var publicKeyAlgorithm = (int)PublicKeyAlgorithm.Es256;
+        var coseAlgorithm = (int)CoseAlgorithm.Es256;
 
         // Act
-        var result = GenericKeyTypeMapper.Get(keyType, publicKeyAlgorithm);
+        var (keyType, hashAlgorithmName) = GenericKeyTypeMapper.Get(coseAlgorithm);
 
         // Assert
-        Assert.That(result, Is.EqualTo(HashAlgorithmName.SHA256));
+        Assert.That(keyType, Is.EqualTo(KeyTypeEnum.Ec2));
+        Assert.That(hashAlgorithmName, Is.EqualTo(HashAlgorithmName.SHA256));
     }
 
     [Test]
-    public void Get_WhenKeyTypeIsUnsupported_ThenThrowsNotSupportedException()
+    public void Get_WhenAlgorithmIsUnsupported_ThenThrowsNotSupportedException()
     {
         // Arrange
-        var keyType = 999;
-        var publicKeyAlgorithm = (int)PublicKeyAlgorithm.Ps256;
+        const int algorithm = 999;
 
         // Act & Assert
-        Assert.Throws<NotSupportedException>(() => GenericKeyTypeMapper.Get(keyType, publicKeyAlgorithm));
+        Assert.Throws<NotSupportedException>(() => GenericKeyTypeMapper.Get(algorithm));
     }
 }

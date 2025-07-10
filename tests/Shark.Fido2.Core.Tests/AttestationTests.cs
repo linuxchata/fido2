@@ -11,7 +11,6 @@ using Shark.Fido2.Domain;
 using Shark.Fido2.Domain.Constants;
 using Shark.Fido2.Domain.Enums;
 using Shark.Fido2.Domain.Options;
-using static Org.BouncyCastle.Asn1.Cmp.Challenge;
 
 namespace Shark.Fido2.Core.Tests;
 

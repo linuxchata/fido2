@@ -126,7 +126,7 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
             return ValidatorInternalResult.Invalid("TPM attestation statement algorithm cannot be read");
         }
 
-        if (!Enum.IsDefined(typeof(PublicKeyAlgorithm), algorithm))
+        if (!Enum.IsDefined(typeof(CoseAlgorithm), algorithm))
         {
             return ValidatorInternalResult.Invalid("TPM attestation statement algorithm is not supported");
         }
@@ -135,7 +135,7 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
         var attToBeSigned = BytesArrayHelper.Concatenate(
             attestationObjectData.AuthenticatorRawData,
             clientData.ClientDataHash);
-        var hashAlgorithmName = GenericKeyTypeMapper.Get(credentialPublicKey.KeyType, (int)algorithm);
+        var (keyType, hashAlgorithmName) = GenericKeyTypeMapper.Get((int)algorithm);
         var attToBeSignedHash = HashProvider.GetHash(attToBeSigned, hashAlgorithmName);
         if (!BytesArrayComparer.CompareNullable(attToBeSignedHash, tpmsAttestation.ExtraData))
         {
@@ -168,7 +168,7 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
         var result = _signatureValidator.ValidateTpm(
             (byte[])certInfo,
             attestationStatementDict,
-            (KeyTypeEnum)credentialPublicKey.KeyType,
+            keyType,
             (int)algorithm,
             attestationIdentityKeyCertificate);
         if (!result.IsValid)

@@ -6,9 +6,9 @@ namespace Shark.Fido2.Core.Mappers;
 
 public static class RsaKeyTypeMapper
 {
-    public static Rs256Algorithm Get(int publicKeyAlgorithm)
+    public static Rs256Algorithm? Get(int coseAlgorithm)
     {
-        if (publicKeyAlgorithm == (int)PublicKeyAlgorithm.Ps256)
+        if (coseAlgorithm == (int)CoseAlgorithm.Ps256)
         {
             return new Rs256Algorithm
             {
@@ -16,7 +16,7 @@ public static class RsaKeyTypeMapper
                 Padding = RSASignaturePadding.Pss,
             };
         }
-        else if (publicKeyAlgorithm == (int)PublicKeyAlgorithm.Ps384)
+        else if (coseAlgorithm == (int)CoseAlgorithm.Ps384)
         {
             return new Rs256Algorithm
             {
@@ -24,7 +24,7 @@ public static class RsaKeyTypeMapper
                 Padding = RSASignaturePadding.Pss,
             };
         }
-        else if (publicKeyAlgorithm == (int)PublicKeyAlgorithm.Ps512)
+        else if (coseAlgorithm == (int)CoseAlgorithm.Ps512)
         {
             return new Rs256Algorithm
             {
@@ -32,7 +32,7 @@ public static class RsaKeyTypeMapper
                 Padding = RSASignaturePadding.Pss,
             };
         }
-        else if (publicKeyAlgorithm == (int)PublicKeyAlgorithm.Rs256)
+        else if (coseAlgorithm == (int)CoseAlgorithm.Rs256)
         {
             return new Rs256Algorithm
             {
@@ -40,7 +40,7 @@ public static class RsaKeyTypeMapper
                 Padding = RSASignaturePadding.Pkcs1,
             };
         }
-        else if (publicKeyAlgorithm == (int)PublicKeyAlgorithm.Rs384)
+        else if (coseAlgorithm == (int)CoseAlgorithm.Rs384)
         {
             return new Rs256Algorithm
             {
@@ -48,7 +48,7 @@ public static class RsaKeyTypeMapper
                 Padding = RSASignaturePadding.Pkcs1,
             };
         }
-        else if (publicKeyAlgorithm == (int)PublicKeyAlgorithm.Rs512)
+        else if (coseAlgorithm == (int)CoseAlgorithm.Rs512)
         {
             return new Rs256Algorithm
             {
@@ -56,7 +56,7 @@ public static class RsaKeyTypeMapper
                 Padding = RSASignaturePadding.Pkcs1,
             };
         }
-        else if (publicKeyAlgorithm == (int)PublicKeyAlgorithm.Rs1)
+        else if (coseAlgorithm == (int)CoseAlgorithm.Rs1)
         {
             return new Rs256Algorithm
             {
@@ -65,6 +65,6 @@ public static class RsaKeyTypeMapper
             };
         }
 
-        throw new NotSupportedException($"{publicKeyAlgorithm} algorithm is not supported");
+        return null;
     }
 }
