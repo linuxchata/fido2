@@ -6,49 +6,49 @@
         <div class="main-header">
             <h2>Non-discoverable Credentials</h2>
         </div>
-        <div class="form-group">
-            <p>This page demonstrates non-discoverable credentials (server-side credentials) for FIDO2/WebAuthn authentication. During registration, users must provide both a username and a display name; for authentication, only the username is required. Credentials are managed by the server, ensuring strong, phishing-resistant authentication compatible with a wide range of authenticators.</p>
+        <div class="main-description">
+            <p>This page demonstrates non-discoverable (server-side) credentials for FIDO2/WebAuthn authentication. During registration, users must provide both a username and a display name. For authentication, only the username is required. Credentials are managed on the server, enabling strong, phishing-resistant authentication compatible with a wide range of authenticators.</p>
         </div>
     </div>
-</div>
 
-<div class="main-container">
-    <!-- Sign Up Section -->
-    <div class="main-section signup-section">
-        <div class="main-header">
-            <h2>Set Up a Passkey</h2>
-            <p>Sign up with a passkey for enhanced security</p>
+    <div class="inner-container">
+        <!-- Sign Up Section -->
+        <div class="main-section signup-section">
+            <div class="main-header">
+                <h2>Set Up a Passkey</h2>
+                <p>Sign up with a passkey for enhanced security</p>
+            </div>
+            <form id="signupForm">
+                <div class="form-group">
+                    <label for="signUpUserName">Username</label>
+                    <input type="text" id="signUpUserName" name="username" placeholder="Enter your username" required class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="signUpDisplayName">Display Name</label>
+                    <input type="text" id="signUpDisplayName" name="displayname" placeholder="Enter your display name" required class="form-control">
+                </div>
+                <button type="button" id="signUpButton" name="signUpButton" class="btn btn-primary btn-block">Sign Up</button>
+            </form>
         </div>
-        <form id="signupForm">
-            <div class="form-group">
-                <label for="signUpUserName">Username</label>
-                <input type="text" id="signUpUserName" name="username" placeholder="Enter your username" required class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="signUpDisplayName">Display Name</label>
-                <input type="text" id="signUpDisplayName" name="displayname" placeholder="Enter your display name" required class="form-control">
-            </div>
-            <button type="button" id="signUpButton" name="signUpButton" class="btn btn-primary btn-block">Sign Up</button>
-        </form>
-    </div>
 
-    <!-- Sign In Section -->
-    <div class="main-section signin-section">
-        <div class="main-header">
-            <h2>Sign In with Passkey</h2>
-            <p>Sign in with your passkey</p>
+        <!-- Sign In Section -->
+        <div class="main-section signin-section">
+            <div class="main-header">
+                <h2>Sign In with Passkey</h2>
+                <p>Sign in with your passkey</p>
+            </div>
+            <form id="signinForm">
+                <div class="form-group">
+                    <label for="signInUserName">Username</label>
+                    <input type="text" id="signInUserName" name="username" placeholder="Enter your username" required class="form-control">
+                </div>
+                <input type="hidden" id="credentialId" name="credentialId" />
+                <div class="d-flex gap-2">
+                    <button type="button" id="signInButton" class="btn btn-primary btn-block">Sign In</button>
+                    <button type="button" id="credentialsButton" class="btn btn-secondary btn-block hide">Credentials</button>
+                </div>
+            </form>
         </div>
-        <form id="signinForm">
-            <div class="form-group">
-                <label for="signInUserName">Username</label>
-                <input type="text" id="signInUserName" name="username" placeholder="Enter your username" required class="form-control">
-            </div>
-            <input type="hidden" id="credentialId" name="credentialId" />
-            <div class="d-flex gap-2">
-                <button type="button" id="signInButton" class="btn btn-primary btn-block">Sign In</button>
-                <button type="button" id="credentialsButton" class="btn btn-secondary btn-block hide">Credentials</button>
-            </div>
-        </form>
     </div>
 </div>
 
