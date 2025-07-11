@@ -44,23 +44,24 @@ body {
 
 .main-container {
     display: flex;
-    flex-direction: column; /* stack children vertically */
-    min-height: 500px;
+    flex-direction: column;
+    min-height: 350px; /* reduced from 500px */
     max-width: 1000px;
-    margin: 20px auto;
+    margin: 10px auto; /* reduced from 20px */
     border-radius: var(--border-radius);
 }
 
 .inner-container {
     display: flex;
-    gap: 40px;
+    gap: 20px; /* reduced from 40px */
 }
 
 .main-section {
     flex: 1;
-    padding: 25px;
+    padding: 16px; /* reduced from 25px */
     display: flex;
     flex-direction: column;
+    border-radius: var(--border-radius);
 }
 
 .signup-section {
@@ -94,7 +95,7 @@ body {
 }
 
 .form-group {
-    margin-bottom: 16px;
+    margin-bottom: 10px;
 }
 
     .form-group label {
@@ -106,7 +107,7 @@ body {
 
 .form-control {
     width: 100%;
-    padding: 12px 16px;
+    padding: 8px 12px;
     font-size: 16px;
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
@@ -211,7 +212,7 @@ body {
 @media (max-width: 768px) {
     .main-container {
         flex-direction: column;
-        margin: 20px;
+        margin: 10px;
     }
 
     .signup-section {
@@ -220,11 +221,12 @@ body {
     }
 
     .btn-block {
-        width: auto;
+        width: 100%; /* full width on mobile */
     }
+
     .inner-container {
         flex-direction: column;
-        gap: 20px;
+        gap: 10px; /* reduced from 20px */
     }
 }
 
