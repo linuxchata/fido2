@@ -7,8 +7,8 @@
             <h2>Non-discoverable Credentials</h2>
         </div>
         <div class="main-description">
-            <p>Non-discoverable credentials, also known as server-side credentials, are stored only on the authenticator and are tied to a specific user identified during authentication (e.g., by username). They offer strong, phishing-resistant security but require the user to provide an identifier during login.</p>
-            <p>This page demonstrates non-discoverable credentials. During registration, users must provide both a username and a display name. For authentication, only the username is required.</p>
+            <p>Non-discoverable credentials (also known as non-resident keys in WebAuthn specification) are tied to a specific user and require the Relying Party (server) to store and provide a credential identifier to the authenticator during login. While the authenticator doesn't store the full credential itself, it uses this credential identifier in conjunction with an internal secret to access the necessary cryptographic keys. These credentials offer strong, phishing-resistant security, but they typically require the user to provide an identifier (like a username) to the Relying Party to initiate the login process.</p>
+            <p>This page illustrates the use of non-discoverable credentials. You'll provide a username and a display name during registration. For subsequent logins, however, only your username is needed to identify you.</p>
         </div>
     </div>
 
@@ -58,5 +58,5 @@
 </div>
 
 <div class="disclaimer">
-    <p>Passkeys (FIDO2 credentials) are temporarily stored in memory cache for a maximum of 24 hours.</p>
+    <p>Non-discoverable credentials are temporarily stored in memory cache for a maximum of 24 hours.</p>
 </div>

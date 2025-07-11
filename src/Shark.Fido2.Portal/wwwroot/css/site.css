@@ -110,7 +110,6 @@ body {
     .main-header h2 {
         font-size: var(--font-size-lg);
         color: var(--color-dark);
-        margin-bottom: 10px;
     }
 
     .main-header p {
