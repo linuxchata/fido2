@@ -28,14 +28,16 @@ body {
     --secondary-color: #34a853;
     --dark-color: #202124;
     --light-color: white;
+    --background-color: #f6f8fa;
     --border-color: #dadce0;
     --border-radius: 0.375rem;
     --box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    --box-shadow-light: 0 2px 8px rgba(0,0,0,0.03);
     --transition: all 0.3s ease;
 }
 
 .navbar {
-    background-color: #f6f8fa;
+    background-color: var(--background-color);
 }
 
 .navbar-toggler {
@@ -45,10 +47,9 @@ body {
 .main-container {
     display: flex;
     flex-direction: column;
-    min-height: 350px; /* reduced from 500px */
+    min-height: 350px;
     max-width: 1000px;
     margin: 10px auto;
-    border-radius: var(--border-radius);
 }
 
 .inner-container {
@@ -58,10 +59,8 @@ body {
 
 .main-section {
     flex: 1;
-    padding: 16px;
     display: flex;
     flex-direction: column;
-    border-radius: var(--border-radius);
 }
 
 .auth-section {
@@ -111,6 +110,21 @@ body {
     .auth-header p {
         color: #5f6368;
         font-size: 1.125rem;
+    }
+
+.main-description {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #333;
+    background-color: var(--background-color);
+    border-radius: var(--border-radius);
+    padding: 1.5rem 2rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--box-shadow-light);
+}
+
+    .main-description p {
+        margin: 0;
     }
 
 .card {
