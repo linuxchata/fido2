@@ -10,7 +10,8 @@ const notyf = new Notyf({
         {
             type: 'info',
             background: '#34a853',
-            duration: 4000,
+            duration: 3000,
+            dismissible: true,
             icon: {
                 className: 'notyf__icon fa-solid fa-circle-info',
                 tagName: 'i'
@@ -19,6 +20,7 @@ const notyf = new Notyf({
         {
             type: 'warning',
             background: '#ffc107',
+            dismissible: true,
             icon: {
                 className: 'notyf__icon fa-solid fa-triangle-exclamation',
                 tagName: 'i'
@@ -37,7 +39,7 @@ const notyf = new Notyf({
         {
             type: 'success',
             background: '#198754',
-            duration: 4000,
+            duration: 3000,
             dismissible: true,
             icon: {
                 className: 'notyf__icon fa-solid fa-circle-check',

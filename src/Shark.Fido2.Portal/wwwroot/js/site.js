@@ -71,7 +71,7 @@
                 const credentialId = credentialIdInput?.value;
 
                 if (credentialId) {
-                    window.location.href = `/CredentialsDetails?credentialId=${encodeURIComponent(credentialId)}`;
+                    window.location.href = `/CredentialDetails?credentialId=${encodeURIComponent(credentialId)}`;
                 }
             }
         });
