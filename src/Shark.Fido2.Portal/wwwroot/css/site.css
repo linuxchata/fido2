@@ -65,10 +65,11 @@ body {
 
 .auth-section {
     flex: 1;
-    padding: 16px 24px;
+    padding: 24px;
     display: flex;
     flex-direction: column;
     border-radius: var(--border-radius);
+    margin-bottom: 2.5rem;
 }
 
 .signup-section {
@@ -103,7 +104,7 @@ body {
 }
 
     .auth-header h4 {
-        font-size: 1.5rem;
+        font-size: 1.2rem;
         color: var(--dark-color);
     }
 
