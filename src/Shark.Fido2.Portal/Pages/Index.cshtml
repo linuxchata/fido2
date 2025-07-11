@@ -46,9 +46,11 @@
                     <input type="text" id="signInUserName" name="username" placeholder="Enter your username" required class="form-control">
                 </div>
                 <input type="hidden" id="credentialId" name="credentialId" />
-                <div class="d-flex gap-2 button-row">
+                <div class="button-row">
                     <button type="button" id="signInButton" class="btn btn-primary btn-block">Sign In</button>
-                    <button type="button" id="credentialsButton" class="btn btn-secondary btn-block hide">Credentials</button>
+                    <div>
+                        <a href="#" target="_blank" id="credentialsLink" class="credential-link hide">Non-discoverable Credentials</a>
+                    </div>
                 </div>
             </form>
         </div>

@@ -13,11 +13,11 @@
     }
 
     const credentialIdInput = getById('credentialId');
-    const credentialsButton = getById('credentialsButton');
+    const credentialsLink = getById('credentialsLink');
 
     function toggleCredentialsButtonVisibility() {
-        if (credentialsButton && credentialIdInput) {
-            credentialsButton.classList.toggle('hide', !credentialIdInput.value);
+        if (credentialsLink && credentialIdInput) {
+            credentialsLink.classList.toggle('hide', !credentialIdInput.value);
         }
     }
 
@@ -65,8 +65,8 @@
         });
     }
 
-    if (credentialsButton) {
-        credentialsButton.addEventListener('click', () => {
+    if (credentialsLink) {
+        credentialsLink.addEventListener('click', () => {
             if (credentialIdInput) {
                 const credentialId = credentialIdInput?.value;
 

@@ -128,9 +128,9 @@ body {
         margin: 0 0 1em 0;
     }
 
-    .main-description p:last-child {
-        margin-bottom: 0;
-    }
+        .main-description p:last-child {
+            margin-bottom: 0;
+        }
 
 .card {
     border: 0px;
@@ -196,7 +196,7 @@ body {
 
 .btn-block {
     width: 150px;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
 }
 
 .btn-github {
@@ -229,6 +229,22 @@ body {
 
     .resource-link:hover {
         text-decoration-color: rgba(var(--bs-link-color-rgb), 1);
+    }
+
+.credential-link {
+    color: #888;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: normal;
+    transition: color 0.2s;
+    margin-top: 10px;
+}
+
+    .credential-link:hover, .credential-link:focus {
+        color: #444;
+        transition: color 0.2s;
     }
 
 .divider {
