@@ -208,7 +208,7 @@ body {
     }
 
 .btn-block {
-    width: 150px;
+    width: 100%;
 }
 
 .btn-github {
@@ -297,14 +297,14 @@ body {
         border-bottom: 1px solid var(--color-divider-bg);
     }
 
-    .btn-block {
-        width: 100%;
-    }
-
     .inner-container {
         flex-direction: column;
         gap: 10px;
     }
+}
+
+.notyf {
+    word-break: break-word;
 }
 
 .notyf__icon {

@@ -30,6 +30,9 @@
                             <a class="nav-link" asp-page="/Index">Home</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" asp-page="/DiscoverableCredentials">Discoverable Credentials</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" asp-page="/Resources">Resources</a>
                         </li>
                         <li class="nav-item">
@@ -60,14 +63,8 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/notyf/dist/js/notyf.min.js"></script>
     <environment include="Development">
-        <script src="~/js/site.js"></script>
         <script src="~/js/utilities.js"></script>
         <script src="~/js/notifications.js"></script>
-        <script src="~/js/fido2-assertion.js"></script>
-        <script src="~/js/fido2-attestation.js"></script>
-    </environment>
-    <environment exclude="Development">
-        <script src="~/js/site.min.js"></script>
     </environment>
 
     @await RenderSectionAsync("Scripts", required: false)
