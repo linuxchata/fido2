@@ -54,7 +54,7 @@ body {
 
 .inner-container {
     display: flex;
-    gap: 20px;
+    gap: 40px;
 }
 
 .main-section {
@@ -65,11 +65,11 @@ body {
 
 .auth-section {
     flex: 1;
-    padding: 24px;
     display: flex;
     flex-direction: column;
+    padding: 24px;
     border-radius: var(--border-radius);
-    margin-bottom: 2.5rem;
+    margin-bottom: 2rem;
 }
 
 .signup-section {
@@ -99,7 +99,7 @@ body {
     }
 
 .auth-header {
-    margin-bottom: 20px;
+    margin-bottom: 5px;
     text-align: center;
 }
 
@@ -125,7 +125,11 @@ body {
 }
 
     .main-description p {
-        margin: 0;
+        margin: 0 0 1em 0;
+    }
+
+    .main-description p:last-child {
+        margin-bottom: 0;
     }
 
 .card {
