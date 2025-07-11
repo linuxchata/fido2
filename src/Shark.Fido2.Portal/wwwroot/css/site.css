@@ -267,12 +267,12 @@ body {
     }
 
     .btn-block {
-        width: 100%; /* full width on mobile */
+        width: 100%;
     }
 
     .inner-container {
         flex-direction: column;
-        gap: 10px; /* reduced from 20px */
+        gap: 10px;
     }
 }
 
