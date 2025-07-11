@@ -8,7 +8,7 @@
         </div>
         <div class="main-description">
             <p>Non-discoverable credentials (also known as non-resident keys in WebAuthn specification) are tied to a specific user and require the Relying Party (server) to store and provide a credential identifier to the authenticator during login. While the authenticator doesn't store the full credential itself, it uses this credential identifier in conjunction with an internal secret to access the necessary cryptographic keys. These credentials offer strong, phishing-resistant security, but they typically require the user to provide an identifier (like a username) to the Relying Party to initiate the login process.</p>
-            <p>This page illustrates the use of non-discoverable credentials. You'll provide a username and a display name during registration. For subsequent logins, however, only your username is needed to identify you.</p>
+            <p>This page illustrates the use of non-discoverable credentials. You'll need to provide a username and a display name during registration. For subsequent logins, however, only your username is needed to identify you.</p>
         </div>
     </div>
 
@@ -17,7 +17,6 @@
         <div class="auth-section signup-section">
             <div class="auth-header">
                 <h4>Set Up a Passkey</h4>
-                <p>Sign up with a passkey for enhanced security</p>
             </div>
             <form id="signupForm">
                 <div class="form-group">
@@ -38,7 +37,6 @@
         <div class="auth-section signin-section">
             <div class="auth-header">
                 <h4>Sign In with Passkey</h4>
-                <p>Sign in with your passkey</p>
             </div>
             <form id="signinForm">
                 <div class="form-group">
@@ -48,9 +46,9 @@
                 <input type="hidden" id="credentialId" name="credentialId" />
                 <div class="button-row">
                     <button type="button" id="signInButton" class="btn btn-primary btn-block">Sign In</button>
-                    <div>
-                        <a href="#" target="_blank" id="credentialsLink" class="credential-link hide">Non-discoverable Credentials</a>
-                    </div>
+                </div>
+                <div class="button-row-sm">
+                    <a href="#" target="_blank" id="credentialsLink" class="credential-link hide">Non-discoverable Credentials details</a>
                 </div>
             </form>
         </div>
