@@ -16,7 +16,7 @@
         <!-- Sign Up Section -->
         <div class="auth-section signup-section">
             <div class="auth-header">
-                <h4>Set Up a Passkey</h4>
+                <h3>Set Up</h3>
             </div>
             <form id="signupForm">
                 <div class="form-group">
@@ -36,7 +36,7 @@
         <!-- Sign In Section -->
         <div class="auth-section signin-section">
             <div class="auth-header">
-                <h4>Sign In with Passkey</h4>
+                <h3>Sign In</h3>
             </div>
             <form id="signinForm">
                 <div class="form-group">
@@ -58,3 +58,12 @@
 <div class="disclaimer">
     <p>Non-discoverable credentials are temporarily stored in memory cache for a maximum of 24 hours.</p>
 </div>
+
+<environment include="Development">
+    <script src="~/js/ndc/site-ndc.js"></script>
+    <script src="~/js/ndc/fido2-ndc-assertion.js"></script>
+    <script src="~/js/ndc/fido2-ndc-attestation.js"></script>
+</environment>
+<environment exclude="Development">
+    <script src="~/js/site-ndc.min.js"></script>
+</environment>

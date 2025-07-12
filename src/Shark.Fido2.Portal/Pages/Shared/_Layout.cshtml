@@ -20,7 +20,7 @@
     <header>
         <nav class="navbar navbar-expand-lg navbar-light">
             <div class="container">
-                <a class="navbar-brand" href="/">Shark FIDO2</a>
+                <a class="navbar-brand banner" href="/">Shark FIDO2</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -28,6 +28,9 @@
                     <ul class="navbar-nav">
                         <li class="nav-item">
                             <a class="nav-link" asp-page="/Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-page="/DiscoverableCredentials">Discoverable Credentials</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" asp-page="/Resources">Resources</a>
@@ -60,14 +63,11 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/notyf/dist/js/notyf.min.js"></script>
     <environment include="Development">
-        <script src="~/js/site.js"></script>
         <script src="~/js/utilities.js"></script>
         <script src="~/js/notifications.js"></script>
-        <script src="~/js/fido2-assertion.js"></script>
-        <script src="~/js/fido2-attestation.js"></script>
     </environment>
     <environment exclude="Development">
-        <script src="~/js/site.min.js"></script>
+        <script src="~/js/shared.min.js"></script>
     </environment>
 
     @await RenderSectionAsync("Scripts", required: false)

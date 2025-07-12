@@ -9,7 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddWebOptimizer(pipeline =>
 {
     pipeline.AddCssBundle("/css/site.min.css", "css/site.css").MinifyCss();
-    pipeline.AddJavaScriptBundle("/js/site.min.js", "js/*.js").MinifyJavaScript();
+    pipeline.AddJavaScriptBundle("/js/site-dc.min.js", "js/dc/*.js").MinifyJavaScript();
+    pipeline.AddJavaScriptBundle("/js/site-ndc.min.js", "js/ndc/*.js").MinifyJavaScript();
+    pipeline.AddJavaScriptBundle("/js/shared.min.js", "js/shared/*.js").MinifyJavaScript();
 });
 
 builder.Services.AddRazorPages();
