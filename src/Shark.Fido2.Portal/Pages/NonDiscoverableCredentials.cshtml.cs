@@ -1,0 +1,10 @@
+using Microsoft.AspNetCore.Mvc.RazorPages;
+
+namespace Shark.Fido2.Portal.Pages;
+
+public class NonDiscoverableCredentialsModel : PageModel
+{
+    public void OnGet()
+    {
+    }
+}
