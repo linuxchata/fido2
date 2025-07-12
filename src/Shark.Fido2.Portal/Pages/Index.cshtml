@@ -40,7 +40,7 @@
                         <polyline points="20,6 9,17 4,12" />
                     </svg>
                     <div class="feature-content">
-                        <h4>Attestation Flow</h4>
+                        <h3>Attestation Flow</h3>
                         <p>Complete credential registration flow</p>
                     </div>
                 </li>
@@ -49,7 +49,7 @@
                         <polyline points="20,6 9,17 4,12" />
                     </svg>
                     <div class="feature-content">
-                        <h4>Assertion Flow</h4>
+                        <h3>Assertion Flow</h3>
                         <p>Complete credential authentication flow</p>
                     </div>
                 </li>
@@ -58,7 +58,7 @@
                         <polyline points="20,6 9,17 4,12" />
                     </svg>
                     <div class="feature-content">
-                        <h4>Supported Attestation Statement Formats</h4>
+                        <h3>Supported Attestation Statement Formats</h3>
                         <p>Comprehensive support for all major attestation formats</p>
                         <div class="feature-tags">
                             <span class="tag">Packed</span>
@@ -76,7 +76,7 @@
                         <polyline points="20,6 9,17 4,12" />
                     </svg>
                     <div class="feature-content">
-                        <h4>Supported Algorithms</h4>
+                        <h3>Supported Algorithms</h3>
                         <p>Wide range of cryptographic algorithms for maximum compatibility</p>
                         <div class="feature-tags">
                             <span class="tag">ES256</span>
@@ -99,8 +99,8 @@
                         <polyline points="20,6 9,17 4,12" />
                     </svg>
                     <div class="feature-content">
-                        <h4>FIDO Metadata Service</h4>
-                        <p>Built-in integration with metadata service for authenticator verification and trust assessment</p>
+                        <h3>FIDO Metadata Service</h3>
+                        <p>Built-in integration with FIDO metadata service for authenticator verification and trust assessment</p>
                     </div>
                 </li>
             </ul>
@@ -120,7 +120,7 @@
                         <path d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4" />
                         <line x1="12" y1="3" x2="12" y2="21" />
                     </svg>
-                    <h4>Microsoft SQL Server</h4>
+                    <h3>Microsoft SQL Server</h3>
                     <p>Enterprise-grade relational database storage with full transaction support</p>
                 </div>
                 <div class="provider-card">
@@ -129,14 +129,14 @@
                         <polyline points="3.27,6.96 12,12.01 20.73,6.96" />
                         <line x1="12" y1="22.08" x2="12" y2="12" />
                     </svg>
-                    <h4>Amazon DynamoDB</h4>
+                    <h3>Amazon DynamoDB</h3>
                     <p>Scalable NoSQL database for high-performance applications</p>
                 </div>
                 <div class="provider-card">
                     <svg class="provider-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
                     </svg>
-                    <h4>In-Memory Storage</h4>
+                    <h3>In-Memory Storage</h3>
                     <p>Fast in-memory storage for development and testing scenarios</p>
                 </div>
             </div>
@@ -165,19 +165,19 @@
                 <div class="card">
                     <div class="step-title">
                         <span class="step-number">2</span>
-                        <h3>Configure Services</h3>
+                        <h3>Configure Storage Provider</h3>
                     </div>
                     <div class="code-block">
-                        builder.Services.AddFido2(builder.Configuration);
+                        builder.Services.AddFido2InMemory();
                     </div>
                 </div>
                 <div class="card">
                     <div class="step-title">
                         <span class="step-number">3</span>
-                        <h3>Configure Storage Provider</h3>
+                        <h3>Configure Services</h3>
                     </div>
                     <div class="code-block">
-                        builder.Services.AddFido2InMemory();
+                        builder.Services.AddFido2(builder.Configuration);
                     </div>
                 </div>
                 <div class="card">

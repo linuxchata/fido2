@@ -49,7 +49,7 @@
 }
 
     .hero h1 {
-        font-size: 3rem;
+        font-size: 4rem;
         font-weight: bold;
         color: #111827;
         margin-bottom: 1.5rem;
@@ -145,7 +145,7 @@
     flex-shrink: 0;
 }
 
-.feature-content h4 {
+.feature-content h3 {
     font-size: 1.125rem;
     font-weight: 600;
     color: #111827;
@@ -207,7 +207,7 @@
     margin: 0 auto 1rem;
 }
 
-.provider-card h4 {
+.provider-card h3 {
     font-size: 1.125rem;
     font-weight: 600;
     color: #111827;
@@ -309,13 +309,7 @@
     }
 
 /* Responsive */
-@media (min-width: 768px) {
-    .hero h1 {
-        font-size: 4rem;
-    }
-}
-
-@media (max-width: 767px) {
+@media (max-width: 768px) {
     .hero h1 {
         font-size: 2rem;
     }
@@ -327,5 +321,9 @@
 
     .steps-grid {
         grid-template-columns: 1fr;
+    }
+
+    .features-list {
+        padding: 0 1rem;
     }
 }
