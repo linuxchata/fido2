@@ -1,69 +1,226 @@
-﻿@page
+@page
 @model IndexModel
 
-<div class="main-container">
-    <div class="main-section">
-        <div class="main-header">
-            <h2>Non-discoverable Credentials</h2>
-        </div>
-        <div class="main-description">
-            <p>Non-discoverable credentials (also known as non-resident keys in WebAuthn specification) are tied to a specific user and require the Relying Party (server) to store and provide a credential identifier to the authenticator during login. While the authenticator doesn't store the full credential itself, it uses this credential identifier in conjunction with an internal secret to access the necessary cryptographic keys. These credentials offer strong, phishing-resistant security, but they typically require the user to provide an identifier (like a username) to the Relying Party to initiate the login process.</p>
-            <p>This page illustrates the use of non-discoverable credentials. You'll need to provide a username and a display name during registration. For subsequent logins, however, only your username is needed to identify you.</p>
-        </div>
-    </div>
-
-    <div class="inner-container">
-        <!-- Sign Up Section -->
-        <div class="auth-section signup-section">
-            <div class="auth-header">
-                <h3>Set Up</h3>
+<div>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="landing-container">
+            <h1>Secure Passwordless Authentication with <span class="highlight">Shark FIDO2</span> for .NET</h1>
+            <p>A comprehensive .NET library for implementing FIDO2 WebAuthn authentication. Build passwordless authentication systems with developer-friendly APIs.</p>
+            <div class="hero-buttons">
+                <a href="https://www.nuget.org/packages/Shark.Fido2.Core/" class="button button-primary button-lg">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="7,10 12,15 17,10" />
+                        <line x1="12" y1="15" x2="12" y2="3" />
+                    </svg>
+                    Install Package
+                </a>
+                <a href="https://github.com/linuxchata/fido2?tab=readme-ov-file#usage" class="button button-outline button-lg">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                    </svg>
+                    View Documentation
+                </a>
             </div>
-            <form id="signupForm">
-                <div class="form-group">
-                    <label for="signUpUserName">Username</label>
-                    <input type="text" id="signUpUserName" name="username" placeholder="Enter your username" required class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="signUpDisplayName">Display Name</label>
-                    <input type="text" id="signUpDisplayName" name="displayname" placeholder="Enter your display name" required class="form-control">
-                </div>
-                <div class="button-row">
-                    <button type="button" id="signUpButton" name="signUpButton" class="btn btn-primary btn-block">Sign Up</button>
-                </div>
-            </form>
         </div>
+    </section>
 
-        <!-- Sign In Section -->
-        <div class="auth-section signin-section">
-            <div class="auth-header">
-                <h3>Sign In</h3>
+    <!-- Supported Features Section -->
+    <section id="features" class="supported-features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Supported Features</h2>
+                <p>Comprehensive FIDO2 implementation designed for enhanced security</p>
             </div>
-            <form id="signinForm">
-                <div class="form-group">
-                    <label for="signInUserName">Username</label>
-                    <input type="text" id="signInUserName" name="username" placeholder="Enter your username" required class="form-control">
-                </div>
-                <input type="hidden" id="credentialId" name="credentialId" />
-                <div class="button-row">
-                    <button type="button" id="signInButton" class="btn btn-primary btn-block">Sign In</button>
-                </div>
-                <div class="button-row-sm">
-                    <a href="#" target="_blank" id="credentialsLink" class="credential-link hide">Non-discoverable Credentials details</a>
-                </div>
-            </form>
+            <ul class="features-list">
+                <li>
+                    <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20,6 9,17 4,12" />
+                    </svg>
+                    <div class="feature-content">
+                        <h4>Attestation Flow</h4>
+                        <p>Complete credential registration flow</p>
+                    </div>
+                </li>
+                <li>
+                    <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20,6 9,17 4,12" />
+                    </svg>
+                    <div class="feature-content">
+                        <h4>Assertion Flow</h4>
+                        <p>Complete credential authentication flow</p>
+                    </div>
+                </li>
+                <li>
+                    <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20,6 9,17 4,12" />
+                    </svg>
+                    <div class="feature-content">
+                        <h4>Supported Attestation Statement Formats</h4>
+                        <p>Comprehensive support for all major attestation formats</p>
+                        <div class="feature-tags">
+                            <span class="tag">Packed</span>
+                            <span class="tag">TPM</span>
+                            <span class="tag">Android Key</span>
+                            <span class="tag">Android SafetyNet</span>
+                            <span class="tag">FIDO U2F</span>
+                            <span class="tag">None</span>
+                            <span class="tag">Apple Anonymous</span>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20,6 9,17 4,12" />
+                    </svg>
+                    <div class="feature-content">
+                        <h4>Supported Algorithms</h4>
+                        <p>Wide range of cryptographic algorithms for maximum compatibility</p>
+                        <div class="feature-tags">
+                            <span class="tag">ES256</span>
+                            <span class="tag">EdDSA</span>
+                            <span class="tag">ES384</span>
+                            <span class="tag">ES512</span>
+                            <span class="tag">PS256</span>
+                            <span class="tag">PS384</span>
+                            <span class="tag">PS512</span>
+                            <span class="tag">ES256K</span>
+                            <span class="tag">RS256</span>
+                            <span class="tag">RS384</span>
+                            <span class="tag">RS512</span>
+                            <span class="tag">RS1</span>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20,6 9,17 4,12" />
+                    </svg>
+                    <div class="feature-content">
+                        <h4>FIDO Metadata Service</h4>
+                        <p>Built-in integration with metadata service for authenticator verification and trust assessment</p>
+                    </div>
+                </li>
+            </ul>
         </div>
-    </div>
-</div>
+    </section>
 
-<div class="disclaimer">
-    <p>Non-discoverable credentials are temporarily stored in memory cache for a maximum of 24 hours.</p>
-</div>
+    <!-- Storage Providers Section -->
+    <section id="storage" class="storage-providers">
+        <div class="landing-container">
+            <div class="section-header">
+                <h2>Built-in Storage Providers</h2>
+                <p>Flexible storage options to fit your infrastructure needs</p>
+            </div>
+            <div class="providers-grid">
+                <div class="provider-card">
+                    <svg class="provider-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4" />
+                        <line x1="12" y1="3" x2="12" y2="21" />
+                    </svg>
+                    <h4>Microsoft SQL Server</h4>
+                    <p>Enterprise-grade relational database storage with full transaction support</p>
+                </div>
+                <div class="provider-card">
+                    <svg class="provider-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                        <polyline points="3.27,6.96 12,12.01 20.73,6.96" />
+                        <line x1="12" y1="22.08" x2="12" y2="12" />
+                    </svg>
+                    <h4>Amazon DynamoDB</h4>
+                    <p>Scalable NoSQL database for high-performance applications</p>
+                </div>
+                <div class="provider-card">
+                    <svg class="provider-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+                    </svg>
+                    <h4>In-Memory Storage</h4>
+                    <p>Fast in-memory storage for development and testing scenarios</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<environment include="Development">
-    <script src="~/js/ndc/site-ndc.js"></script>
-    <script src="~/js/ndc/fido2-ndc-assertion.js"></script>
-    <script src="~/js/ndc/fido2-ndc-attestation.js"></script>
-</environment>
-<environment exclude="Development">
-    <script src="~/js/site-ndc.min.js"></script>
-</environment>
+    <!-- Getting Started Section -->
+    <section id="getting-started" class="getting-started">
+        <div class="landing-container">
+            <div class="section-header">
+                <h2>Get Started in Minutes</h2>
+                <p>Install the package and start building secure authentication flows</p>
+            </div>
+            <div class="steps-grid">
+                <div class="card">
+                    <div class="step-title">
+                        <span class="step-number">1</span>
+                        <h3>Install Packages</h3>
+                    </div>
+                    <div class="code-block">
+                        dotnet add package Shark.Fido2.Core<br />
+                        dotnet add package Shark.Fido2.Models<br />
+                        dotnet add package Shark.Fido2.InMemory
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="step-title">
+                        <span class="step-number">2</span>
+                        <h3>Configure Services</h3>
+                    </div>
+                    <div class="code-block">
+                        builder.Services.AddFido2(builder.Configuration);
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="step-title">
+                        <span class="step-number">3</span>
+                        <h3>Configure Storage Provider</h3>
+                    </div>
+                    <div class="code-block">
+                        builder.Services.AddFido2InMemory();
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="step-title">
+                        <span class="step-number">4</span>
+                        <h3>Provide Configuration</h3>
+                    </div>
+                    <div class="code-block">
+                        {<br />
+                        &nbsp;&nbsp;"RelyingPartyId": "shark-fido2.com",<br />
+                        &nbsp;&nbsp;"RelyingPartyIdName": "Shark Corporation",<br />
+                        &nbsp;&nbsp;"Origins": [ "shark-fido2.com" ],<br />
+                        &nbsp;&nbsp;"Timeout": "60000",<br />
+                        &nbsp;&nbsp;"EnableMetadataService": true<br />
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="landing-container">
+            <h2>Ready to Go Passwordless?</h2>
+            <p>Join thousands of developers building secure authentication with passkeys</p>
+            <div class="cta-buttons">
+                <a href="https://www.nuget.org/packages/Shark.Fido2.Core/" class="button button-white button-lg">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="7,10 12,15 17,10" />
+                        <line x1="12" y1="15" x2="12" y2="3" />
+                    </svg>
+                    Install Now
+                </a>
+                <a href="https://github.com/linuxchata/fido2" class="button button-outline-white button-lg">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                    </svg>
+                    View on GitHub
+                </a>
+            </div>
+        </div>
+    </section>
+
+</div>
