@@ -5,8 +5,8 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="landing-container">
-            <h1>Secure Passwordless Authentication with <span class="highlight">Shark FIDO2</span> for .NET</h1>
-            <p>A comprehensive .NET library for implementing FIDO2 WebAuthn authentication. Build passwordless authentication systems with developer-friendly APIs.</p>
+            <h1>Secure Passwordless Authentication with <span class="highlight">Shark WebAuthn</span> for .NET</h1>
+            <p>A comprehensive .NET library for implementing WebAuthn authentication. Build passwordless authentication systems with developer-friendly APIs.</p>
             <div class="hero-buttons">
                 <a href="https://www.nuget.org/packages/Shark.Fido2.Core/" class="button button-primary button-lg">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -32,7 +32,7 @@
         <div class="container">
             <div class="section-header">
                 <h2>Supported Features</h2>
-                <p>Comprehensive FIDO2 implementation designed for enhanced security</p>
+                <p>Comprehensive WebAuthn server-side implementation designed for enhanced security</p>
             </div>
             <ul class="features-list">
                 <li>
@@ -99,8 +99,8 @@
                         <polyline points="20,6 9,17 4,12" />
                     </svg>
                     <div class="feature-content">
-                        <h3>FIDO Metadata Service</h3>
-                        <p>Built-in integration with FIDO metadata service for authenticator verification and trust assessment</p>
+                        <h3>FIDO Alliance Metadata Service</h3>
+                        <p>Built-in integration with FIDO Alliance metadata service (MDS) for authenticator verification and trust assessment</p>
                     </div>
                 </li>
             </ul>
@@ -120,7 +120,7 @@
                         <path d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4" />
                         <line x1="12" y1="3" x2="12" y2="21" />
                     </svg>
-                    <h3>Microsoft SQL Server</h3>
+                    <h3>Microsoft&reg; SQL Server&reg;</h3>
                     <p>Enterprise-grade relational database storage with full transaction support</p>
                 </div>
                 <div class="provider-card">
@@ -129,7 +129,7 @@
                         <polyline points="3.27,6.96 12,12.01 20.73,6.96" />
                         <line x1="12" y1="22.08" x2="12" y2="12" />
                     </svg>
-                    <h3>Amazon DynamoDB</h3>
+                    <h3>Amazon DynamoDB&reg;</h3>
                     <p>Scalable NoSQL database for high-performance applications</p>
                 </div>
                 <div class="provider-card">
@@ -147,8 +147,8 @@
     <section id="getting-started" class="getting-started">
         <div class="landing-container">
             <div class="section-header">
-                <h2>Get Started in Minutes</h2>
-                <p>Install the package and start building secure authentication flows</p>
+                <h2>Get Started</h2>
+                <p>Install the packages and start building secure authentication flows</p>
             </div>
             <div class="steps-grid">
                 <div class="card">
@@ -193,6 +193,18 @@
                         &nbsp;&nbsp;"Timeout": "60000",<br />
                         &nbsp;&nbsp;"EnableMetadataService": true<br />
                         }
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="step-title">
+                        <span class="step-number">5</span>
+                        <h3>Add Attestation & Assertion API endpoints</h3>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="step-title">
+                        <span class="step-number">6</span>
+                        <h3>Add WebAuthn JS integration</h3>
                     </div>
                 </div>
             </div>
