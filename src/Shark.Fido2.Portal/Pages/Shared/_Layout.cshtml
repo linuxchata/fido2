@@ -66,6 +66,9 @@
         <script src="~/js/utilities.js"></script>
         <script src="~/js/notifications.js"></script>
     </environment>
+    <environment exclude="Development">
+        <script src="~/js/shared.min.js"></script>
+    </environment>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
