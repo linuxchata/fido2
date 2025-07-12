@@ -63,6 +63,11 @@ body {
     border: none;
 }
 
+.banner {
+    font-weight: 500;
+    color: var(--color-link);
+}
+
 .main-container {
     display: flex;
     flex-direction: column;
