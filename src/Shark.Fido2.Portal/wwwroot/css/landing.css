@@ -281,7 +281,7 @@
 }
 
 .provider-card h3 {
-    font-size: var(--font-lnd-size-lg);
+    font-size: var(--font-lnd-size-xl);
     font-weight: 600;
     color: var(--color-lnd-gray-900);
     margin-bottom: var(--spacing-lnd-sm);
@@ -289,7 +289,7 @@
 
 .provider-card p {
     color: var(--color-lnd-text-muted);
-    font-size: var(--font-lnd-size-sm);
+    font-size: var(--font-lnd-size-base);
 }
 
 /* Getting Started Section */
