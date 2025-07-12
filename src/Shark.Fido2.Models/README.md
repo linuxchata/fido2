@@ -1,3 +1,3 @@
-The Shark FIDO2 WebAuthn provides a server-side implementation of the FIDO2 protocol, enabling secure passwordless authentication and multi-factor authentication (MFA) for web applications. It handles key FIDO2 operations, including credential registration and authentication, ensuring compliance with modern authentication standards.
+The Shark FIDO2 WebAuthn provides a server-side implementation of the FIDO2 protocol, enabling secure passwordless and multi-factor authentication (MFA) for web applications. It supports key FIDO2 operations – credential registration and authentication – ensuring compliance with the WebAuthn Level 2 specification (Web Authentication: An API for accessing Public Key Credentials Level 2).
 
 This package contains data transfer objects (DTOs) for FIDO2 operations, facilitating communication between client and server components.
