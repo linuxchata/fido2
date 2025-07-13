@@ -310,27 +310,35 @@
     border-radius: var(--border-lnd-radius-full);
     width: var(--font-lnd-size-2xl);
     height: var(--font-lnd-size-2xl);
+    min-width: var(--font-lnd-size-2xl);
+    min-height: var(--font-lnd-size-2xl);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: var(--font-lnd-size-sm);
+    font-weight: 600;
     margin-right: var(--spacing-lnd-md);
+    flex-shrink: 0;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .step-title {
     display: flex;
     align-items: center;
-    margin-bottom: var(--spacing-lnd-base);
 }
 
-.code-block {
+pre {
+    display: block;
+    margin-top: var(--spacing-lnd-base);
+    margin-bottom: 0;
+    padding: var(--spacing-lnd-base);
+    overflow: auto;
+    border-radius: var(--border-lnd-radius-md);
     background: var(--color-lnd-gray-800);
     color: var(--color-lnd-secondary);
-    padding: var(--spacing-lnd-base);
-    border-radius: var(--border-lnd-radius-md);
     font-family: 'Courier New', monospace;
     font-size: var(--font-lnd-size-sm);
-    overflow-x: auto;
 }
 
 /* CTA (Call-to-Action) Section */

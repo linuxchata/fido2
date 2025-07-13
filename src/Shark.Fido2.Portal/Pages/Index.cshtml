@@ -156,10 +156,10 @@
                         <span class="step-number">1</span>
                         <h3>Install Packages</h3>
                     </div>
-                    <div class="code-block">
-                        dotnet add package Shark.Fido2.Core<br />
-                        dotnet add package Shark.Fido2.Models<br />
-                        dotnet add package Shark.Fido2.InMemory
+                    <div>
+<pre><code>dotnet add package Shark.Fido2.Core
+dotnet add package Shark.Fido2.Models
+dotnet add package Shark.Fido2.InMemory</code></pre>
                     </div>
                 </div>
                 <div class="card">
@@ -167,8 +167,8 @@
                         <span class="step-number">2</span>
                         <h3>Configure Storage Provider</h3>
                     </div>
-                    <div class="code-block">
-                        builder.Services.AddFido2InMemory();
+                    <div>
+                        <pre><code>builder.Services.AddFido2InMemory();</code></pre>
                     </div>
                 </div>
                 <div class="card">
@@ -176,29 +176,28 @@
                         <span class="step-number">3</span>
                         <h3>Configure Services</h3>
                     </div>
-                    <div class="code-block">
-                        builder.Services.AddFido2(builder.Configuration);
+                    <div>
+                        <pre><code>builder.Services.AddFido2(builder.Configuration);</code></pre>
                     </div>
                 </div>
                 <div class="card">
                     <div class="step-title">
                         <span class="step-number">4</span>
-                        <h3>Provide Configuration</h3>
+                        <h3>Provide Server Configuration</h3>
                     </div>
-                    <div class="code-block">
-                        {<br />
-                        &nbsp;&nbsp;"RelyingPartyId": "shark-fido2.com",<br />
-                        &nbsp;&nbsp;"RelyingPartyIdName": "Shark Corporation",<br />
-                        &nbsp;&nbsp;"Origins": [ "shark-fido2.com" ],<br />
-                        &nbsp;&nbsp;"Timeout": "60000",<br />
-                        &nbsp;&nbsp;"EnableMetadataService": true<br />
-                        }
-                    </div>
+                    <div>
+                        <pre><code>{
+  "RelyingPartyId": "shark-fido2.com",
+  "RelyingPartyIdName": "Shark Corporation",
+  "Origins": [ "shark-fido2.com" ],
+  "Timeout": "60000",
+  "EnableMetadataService": true
+}</code></pre></div>
                 </div>
                 <div class="card">
                     <div class="step-title">
                         <span class="step-number">5</span>
-                        <h3>Add Attestation & Assertion API endpoints</h3>
+                        <h3>Add Attestation & Assertion REST API endpoints</h3>
                     </div>
                 </div>
                 <div class="card">
