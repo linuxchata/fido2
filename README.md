@@ -1,5 +1,5 @@
 # Overview
-This repository provides a server-side implementation of the FIDO2 protocol, enabling secure passwordless and multi-factor authentication (MFA) for web applications. It supports key FIDO2 operations – credential registration and authentication – ensuring compliance with the [WebAuthn Level 2 specification](https://www.w3.org/TR/webauthn-2/) (Web Authentication: An API for accessing Public Key Credentials Level 2).
+This repository provides a server-side implementation of the WebAuthn web standard, enabling secure passwordless and multi-factor authentication (MFA) for web applications. It supports key WebAuthn operations – credential registration and authentication – ensuring compliance with the [WebAuthn Level 2 specification](https://www.w3.org/TR/webauthn-2/) (Web Authentication: An API for accessing Public Key Credentials Level 2).
 
 ## Supported Features
 - **Attestation flow** for credentials registration
@@ -24,13 +24,13 @@ This repository provides a server-side implementation of the FIDO2 protocol, ena
 [![build](https://github.com/linuxchata/fido2/actions/workflows/build.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build.yml) [![NuGet](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_packages.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_packages.yml)
 
 # Usage
-The following examples demonstrate how to implement FIDO2 authentication in your application.
+The following examples demonstrate how to implement passwordless authentication in your application.
 
 ## Server side (ASP.NET Core Controllers)
 The sample C# code below is designed for ASP.NET Core controllers.
 
 ### Registration
-Registers both the credential store (in-memory or alternative) and the core FIDO2 dependencies.
+Registers both the credential store (in-memory or alternative) and the core dependencies.
 ```csharp
 builder.Services.AddFido2InMemoryStore();
 builder.Services.AddFido2(builder.Configuration);
@@ -104,7 +104,7 @@ The server side can be customized using the following configuration options. You
 | `EnableMetadataService` | `true` | Value indicating whether the Relying Party uses the Metadata Service to verify the attestation object. |
 | `EnableStrictAuthenticatorVerification` | `false` | Value indicating whether the Relying Party requires strict verification of authenticators. If enabled, missing metadata for the authenticator would cause attestation to fail. |
 
-#### Metadata Service Configuration
+#### FIDO Metadata Service Configuration
 | Option | Default | Description |
 |-|-|-|
 | `MetadataBlobLocation` | `https://mds3.fidoalliance.org/` | Location of the centralized and trusted source of information about FIDO authenticators (Metadata Service BLOB). |
@@ -114,7 +114,7 @@ The server side can be customized using the following configuration options. You
 Example `appsettings.json` file: [appsettings.Production.json](https://github.com/linuxchata/fido2/blob/main/src/Shark.Fido2.Portal/appsettings.Production.json)
 
 ## Client side (JavaScript)
-To complete the FIDO2 implementation, you need to add JavaScript code that communicates with the Web Authentication API (WebAuthn) in the browser. The WebAuthn API is part of the FIDO2 specification and provides the client-side functionality for secure authentication. Below you can find sample implementation for communication with WebAuthn:
+To complete the implementation, you need to add JavaScript code that communicates with the Web Authentication API (WebAuthn) in the browser. The WebAuthn API provides the client-side functionality for secure authentication. Below you can find sample implementation for communication with WebAuthn:
 
 - [fido2-ndc-attestation.js](https://github.com/linuxchata/fido2/blob/main/src/Shark.Fido2.Portal/wwwroot/js/ndc/fido2-ndc-attestation.js) handles the registration process using the Web Authentication API (`navigator.credentials.create`).
 - [fido2-ndc-assertion.js](https://github.com/linuxchata/fido2/blob/main/src/Shark.Fido2.Portal/wwwroot/js/ndc/fido2-ndc-assertion.js) handles the authentication process using the Web Authentication API (`navigator.credentials.get`).
