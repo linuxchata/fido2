@@ -18,6 +18,8 @@ builder.Services.AddWebOptimizer(pipeline =>
 builder.Services.AddRazorPages();
 builder.Services.AddControllers();
 
+builder.Services.AddApplicationInsightsTelemetry();
+
 builder.Services.AddSession(options =>
 {
     options.Cookie.SameSite = SameSiteMode.Unspecified;
