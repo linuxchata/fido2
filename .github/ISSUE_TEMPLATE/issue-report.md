@@ -24,10 +24,10 @@ A clear and concise description of what you expected to happen.
 If applicable, add code sample to help explain your problem.
 
 ## Environment (please complete the following information):
- - OS [e.g. Windows 10]
- - Browser [e.g. Chrome, Safari]
- - Authenticator
- - Mobile Device
+ - OS: [e.g. Windows 10, iOS 18.5]
+ - Browser: [e.g. Chrome, Safari]
+ - Authenticator: [e.g. iPhone]
+ - Mobile Device: [e.g. iPhone 14]
 
 ## Additional context
 Add any other context about the problem here.
