@@ -1,6 +1,15 @@
 ﻿document.addEventListener('DOMContentLoaded', () => {
     const getById = (id) => document.getElementById(id);
 
+    if (areDiscoverableCredentialsSupported()) {
+        var authSection = getById('auth-dc-section');
+        authSection.classList.remove('hide');
+    }
+    else {
+        var authNotSupportedSection = getById('auth-dc-notsupported-section');
+        authNotSupportedSection.classList.remove('hide');
+    }
+
     async function handleAsyncAction(button, form, asyncAction, originalText) {
         Array.from(form.elements).forEach(el => el.disabled = true);
         button.disabled = true;

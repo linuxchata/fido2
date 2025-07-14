@@ -1,6 +1,15 @@
 ﻿document.addEventListener('DOMContentLoaded', () => {
     const getById = (id) => document.getElementById(id);
 
+    if (isWebauthnSupported()) {
+        var authSection = getById('auth-ndc-section');
+        authSection.classList.remove('hide');
+    }
+    else {
+        var authNotSupportedSection = getById('auth-ndc-notsupported-section');
+        authNotSupportedSection.classList.remove('hide');
+    }
+
     async function handleAsyncAction(button, form, asyncAction, originalText) {
         Array.from(form.elements).forEach(el => el.disabled = true);
         button.textContent = 'Processing...';
