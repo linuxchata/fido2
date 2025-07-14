@@ -1,78 +1,21 @@
 {
-  "RelyingParty": {
-    "Id": "localhost",
-    "Name": "Shark Corporation"
-  },
-  "User": {
-    "Id": "U2hhcms=",
-    "Name": "Shark",
-    "DisplayName": "Shark"
-  },
-  "Challenge": "psBOKFZiVtBefgcNAqFfQte5OtJqf6ry",
-  "PublicKeyCredentialParams": [
+  "Challenge": "IQOjrNiJkCb1YecKME+Yfjtk0Shb7qlPIxP1rTngTwDsAYBNnw==",
+  "Timeout": 60000,
+  "RpId": "localhost",
+  "AllowCredentials": [
     {
       "Type": "public-key",
-      "Algorithm": -7
-    },
-    {
-      "Type": "public-key",
-      "Algorithm": -8
-    },
-    {
-      "Type": "public-key",
-      "Algorithm": -35
-    },
-    {
-      "Type": "public-key",
-      "Algorithm": -36
-    },
-    {
-      "Type": "public-key",
-      "Algorithm": -37
-    },
-    {
-      "Type": "public-key",
-      "Algorithm": -38
-    },
-    {
-      "Type": "public-key",
-      "Algorithm": -39
-    },
-    {
-      "Type": "public-key",
-      "Algorithm": -47
-    },
-    {
-      "Type": "public-key",
-      "Algorithm": -257
-    },
-    {
-      "Type": "public-key",
-      "Algorithm": -258
-    },
-    {
-      "Type": "public-key",
-      "Algorithm": -259
-    },
-    {
-      "Type": "public-key",
-      "Algorithm": -65535
+      "Id": "5IhwVj8OKbvMZlva1IoS4+EAA4fC+EaRseluOzlJXwQ=",
+      "Transports": [ 4 ]
     }
   ],
-  "Timeout": 30000,
-  "ExcludeCredentials": [],
-  "AuthenticatorSelection": {
-    "AuthenticatorAttachment": null,
-    "ResidentKey": 1,
-    "RequireResidentKey": false,
-    "UserVerification": 1
-  },
-  "Attestation": "direct",
+  "Username": "John",
+  "UserVerification": 2,
   "Extensions": {
     "AppId": null,
     "AppIdExclude": null,
     "UserVerificationMethod": false,
-    "CredentialProperties": false,
+    "CredentialProperties": null,
     "LargeBlob": null
   }
 }
