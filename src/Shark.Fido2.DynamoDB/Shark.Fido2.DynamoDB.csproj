@@ -5,7 +5,7 @@
     <IsPackable>true</IsPackable>
     <Description>FIDO2 WebAuthn library Amazon DynamoDB datastore</Description>
     <PackageId>Shark.Fido2.DynamoDB</PackageId>
-    <PackageTags>security;fido2;fido2-standard;passkeys</PackageTags>
+    <PackageTags>security;passwordless;passwordless-authentication;webauthn;fido2;fido2-standard;passkeys</PackageTags>
     <RepositoryUrl>https://github.com/linuxchata/fido2</RepositoryUrl>
     <Product>FIDO2 WebAuthn library Amazon DynamoDB datastore</Product>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
