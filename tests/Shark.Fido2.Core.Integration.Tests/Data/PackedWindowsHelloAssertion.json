@@ -1,0 +1,18 @@
+{
+  "Id": "5IhwVj8OKbvMZlva1IoS4-EAA4fC-EaRseluOzlJXwQ",
+  "RawId": "5IhwVj8OKbvMZlva1IoS4-EAA4fC-EaRseluOzlJXwQ",
+  "Response": {
+    "ClientDataJson": "eyJ0eXBlIjoid2ViYXV0aG4uZ2V0IiwiY2hhbGxlbmdlIjoiSVFPanJOaUprQ2IxWWVjS01FLVlmanRrMFNoYjdxbFBJeFAxclRuZ1R3RHNBWUJObnciLCJvcmlnaW4iOiJodHRwczovL2xvY2FsaG9zdDo4MDgzIiwiY3Jvc3NPcmlnaW4iOmZhbHNlfQ",
+    "AuthenticatorData": "SZYN5YgOjGh0NBcPZHZgW4_krrmihjLHmVzzuoMdl2MFAAAAAg",
+    "Signature": "vjCoh_j03-jyjf5Kc5C6lLG9SbsOCmpfiG_5gTHIt8hXTf13EGNuygEZ5g_EfKyF-vNOAYF6qdbZzmf7cYVbUlTE4qzxqb57Suq4k0PukdwRvpoQQuzK3lCJdrU6gh1Se7lBdEChx6SD5RBvS0EWlrAAchXvQ2RLlbLxS9xXOxPfm8OUs4sfDIkhIjxMAIj1qotusNCNIIBqh9RKvDPIV9WPAN2COY4y7fxVgDihIgJthIXEtwqOTS8PmYVWFFDNMWvLcKQiw6RQe7SAECiXB8pkoTAlRtJiNk8YV45EtfiTxlprMMgNwfpkxZ5HnmqBZ02k82tIGo2XvQw5dVDuuQ",
+    "UserHandle": "Sm9obg"
+  },
+  "Type": "public-key",
+  "Extensions": {
+    "AppId": null,
+    "AppIdExclude": null,
+    "UserVerificationMethod": null,
+    "CredentialProperties": null,
+    "LargeBlob": null
+  }
+}

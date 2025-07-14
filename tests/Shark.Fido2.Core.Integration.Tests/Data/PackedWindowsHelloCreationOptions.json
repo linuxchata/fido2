@@ -4,11 +4,11 @@
     "Name": "Shark Corporation"
   },
   "User": {
-    "Id": "U2hhcms=",
-    "Name": "Shark",
-    "DisplayName": "Shark"
+    "Id": "Sm9obg==",
+    "Name": "John",
+    "DisplayName": "John Doe"
   },
-  "Challenge": "psBOKFZiVtBefgcNAqFfQte5OtJqf6ry",
+  "Challenge": "ZqWi8w34HOHaQaqLUEyQEZSvxi/eOfhn6Tnv8lgy6oZ412sbTA==",
   "PublicKeyCredentialParams": [
     {
       "Type": "public-key",
@@ -59,13 +59,13 @@
       "Algorithm": -65535
     }
   ],
-  "Timeout": 30000,
+  "Timeout": 60000,
   "ExcludeCredentials": [],
   "AuthenticatorSelection": {
     "AuthenticatorAttachment": null,
     "ResidentKey": 1,
     "RequireResidentKey": false,
-    "UserVerification": 1
+    "UserVerification": 2
   },
   "Attestation": "direct",
   "Extensions": {
