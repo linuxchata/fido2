@@ -1,7 +1,7 @@
 ﻿document.addEventListener('DOMContentLoaded', () => {
     const getById = (id) => document.getElementById(id);
 
-    if (isWebauthnSupported()) {
+    if (isWebAuthnSupported()) {
         var authSection = getById('auth-ndc-section');
         authSection.classList.remove('hide');
     }
