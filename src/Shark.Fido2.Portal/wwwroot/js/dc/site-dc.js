@@ -1,7 +1,7 @@
-﻿document.addEventListener('DOMContentLoaded', async () => {
+﻿document.addEventListener('DOMContentLoaded', () => {
     const getById = (id) => document.getElementById(id);
 
-    if (await areDiscoverableCredentialsSupported()) {
+    if (isWebAuthnSupported()) {
         var authSection = getById('auth-dc-section');
         authSection.classList.remove('hide');
     }

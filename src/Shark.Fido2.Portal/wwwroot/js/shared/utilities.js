@@ -36,23 +36,8 @@ function base64ToBase64Url(base64) {
     return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 }
 
-function isWebauthnSupported() {
+function isWebAuthnSupported() {
     return window.PublicKeyCredential != null;
 }
 
-async function areDiscoverableCredentialsSupported() {
-    if (!isWebauthnSupported()) {
-        return false;
-    }
-
-    const capabilities = await PublicKeyCredential.getClientCapabilities();
-    if (capabilities.conditionalCreate === true && capabilities.conditionalGet === true) {
-        return true;
-    }
-    else {
-        return false;
-    }
-}
-
-window.isWebauthnSupported = isWebauthnSupported;
-window.areDiscoverableCredentialsSupported = areDiscoverableCredentialsSupported;
+window.isWebAuthnSupported = isWebAuthnSupported;
