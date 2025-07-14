@@ -41,7 +41,7 @@ function isWebauthnSupported() {
 }
 
 async function areDiscoverableCredentialsSupported() {
-    if (!window.PublicKeyCredential) {
+    if (!isWebauthnSupported()) {
         return false;
     }
 
