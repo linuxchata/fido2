@@ -1,13 +1,13 @@
 ﻿document.addEventListener('DOMContentLoaded', () => {
     const getById = (id) => document.getElementById(id);
 
-    async function handleAsyncAction(button, asyncAction, originalText) {
-        button.disabled = true;
+    async function handleAsyncAction(button, form, asyncAction, originalText) {
+        Array.from(form.elements).forEach(el => el.disabled = true);
         button.textContent = 'Processing...';
         try {
             await asyncAction();
         } finally {
-            button.disabled = false;
+            Array.from(form.elements).forEach(el => el.disabled = false);
             button.textContent = originalText;
         }
     }
@@ -37,6 +37,7 @@
 
             await handleAsyncAction(
                 this,
+                getById('signupForm'),
                 () => requestCreateCredentialOptions(userName, displayName),
                 this.textContent
             );
@@ -57,6 +58,7 @@
 
             await handleAsyncAction(
                 this,
+                getById('signinForm'),
                 () => requestVerifyCredentialOptions(userName),
                 this.textContent
             );
