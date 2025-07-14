@@ -46,7 +46,7 @@ async function areDiscoverableCredentialsSupported() {
     }
 
     const capabilities = await PublicKeyCredential.getClientCapabilities();
-    if (capabilities.conditionalCreate && capabilities.conditionalGet) {
+    if (capabilities.conditionalCreate === true && capabilities.conditionalGet === true) {
         return true;
     }
     else {
