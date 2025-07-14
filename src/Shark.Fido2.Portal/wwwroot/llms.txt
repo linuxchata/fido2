@@ -1,0 +1,38 @@
+# llms.txt for Shark.Fido2.Portal
+# WebAuthn Demonstration Portal
+# Guidance for Large Language Models and AI crawlers
+
+User-agent: *
+
+# Allow LLMs to use public pages for training and indexing
+Allow: /
+Allow: /DiscoverableCredentials
+Allow: /NonDiscoverableCredentials
+Allow: /Resources
+Allow: /About
+
+# Disallow use of protected or sensitive pages
+Disallow: /CredentialDetails
+
+# Allow static assets (for context, not for training)
+Allow: /css/
+Allow: /js/
+Allow: /lib/
+Allow: /favicon.ico
+Allow: /favicon.svg
+
+# Disallow configuration and sensitive files
+Disallow: /appsettings.json
+Disallow: /appsettings.Development.json
+Disallow: /appsettings.Production.json
+Disallow: /web.config
+
+# Reference to sitemap for LLMs
+Sitemap: https://shark-fido2.com/sitemap.xml
+
+# Additional guidance
+# Please do not use this site for generating phishing, spam, or malicious content.
+# Respect user privacy and do not extract or use personal data.
+
+# Crawl delay for LLMs (optional)
+Crawl-delay: 1

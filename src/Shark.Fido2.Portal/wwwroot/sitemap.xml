@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Home page - Main landing page -->
+  <url>
+    <loc>https://shark-fido2.com/</loc>
+    <lastmod>2024-07-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Discoverable Credentials demo - Resident keys demonstration -->
+  <url>
+    <loc>https://shark-fido2.com/DiscoverableCredentials</loc>
+    <lastmod>2024-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Non-discoverable Credentials demo - Non-resident keys demonstration -->
+  <url>
+    <loc>https://shark-fido2.com/NonDiscoverableCredentials</loc>
+    <lastmod>2024-07-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Resources page - External WebAuthn resources -->
+  <url>
+    <loc>https://shark-fido2.com/Resources</loc>
+    <lastmod>2024-06-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- About page - Information about passkeys and the library -->
+  <url>
+    <loc>https://shark-fido2.com/About</loc>
+    <lastmod>2024-07-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+</urlset>
