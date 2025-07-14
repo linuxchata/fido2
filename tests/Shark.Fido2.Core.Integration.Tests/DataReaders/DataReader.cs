@@ -24,6 +24,24 @@ internal static class DataReader
         return attestationData;
     }
 
+    internal static PublicKeyCredentialRequestOptions ReadRequestOptions(string fileName)
+    {
+        var testData = GetTestData(fileName);
+        var requestOptions = JsonSerializer.Deserialize<PublicKeyCredentialRequestOptions>(testData)
+            ?? throw new ArgumentException();
+
+        return requestOptions;
+    }
+
+    internal static PublicKeyCredentialAssertion ReadAssertionData(string fileName)
+    {
+        var testData = GetTestData(fileName);
+        var assertionData = JsonSerializer.Deserialize<PublicKeyCredentialAssertion>(testData)
+            ?? throw new ArgumentException();
+
+        return assertionData;
+    }
+
     private static string GetTestData(string fileName)
     {
         var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
