@@ -6,6 +6,17 @@ using Shark.Fido2.Portal.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Logging.AddSimpleConsole(options =>
+{
+    options.IncludeScopes = false;
+    options.TimestampFormat = "dd-MM-yyyy HH:mm:ss ";
+    options.SingleLine = true;
+});
+builder.Logging.Configure(options =>
+{
+    options.ActivityTrackingOptions = ActivityTrackingOptions.None;
+});
+
 builder.Services.AddWebOptimizer(pipeline =>
 {
     pipeline.AddCssBundle("/css/site.min.css", "css/site.css").MinifyCss();
