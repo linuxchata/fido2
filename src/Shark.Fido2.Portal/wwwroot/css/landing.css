@@ -9,6 +9,7 @@
     --color-lnd-light: #f9fafb;
     --color-lnd-lighter: #f8fafc;
     --color-lnd-lightest: #eff6ff;
+    --color-lnd-light-code: #f1f1f1;
     --color-lnd-gray-50: #f9fafb;
     --color-lnd-gray-100: #f3f4f6;
     --color-lnd-gray-200: #e5e7eb;
@@ -17,7 +18,7 @@
     --color-lnd-gray-500: #6b7280;
     --color-lnd-gray-600: #4b5563;
     --color-lnd-gray-700: #374151;
-    --color-lnd-gray-800: #1f2937;
+    --color-lnd-gray-800: #252526;
     --color-lnd-gray-900: #111827;
     --color-lnd-dark: #202124;
     --color-lnd-text: #333333;
@@ -336,7 +337,7 @@ pre {
     overflow: auto;
     border-radius: var(--border-lnd-radius-md);
     background: var(--color-lnd-gray-800);
-    color: var(--color-lnd-secondary);
+    color: var(--color-lnd-light-code);
     font-family: 'Courier New', monospace;
     font-size: var(--font-lnd-size-sm);
 }
