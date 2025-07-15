@@ -46,7 +46,12 @@ async function createCredential(options) {
         attestation = await navigator.credentials.create(credentialCreationOptions);
     }
     catch (error) {
-        notify.error(error.message, registrationTitle);
+        if (error.name === 'InvalidStateError') {
+            notify.error('The authenticator was not allowed because it was already registered.', registrationTitle);
+        }
+        else {
+            notify.error(error.message, registrationTitle);
+        }
         return;
     }
 
