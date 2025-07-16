@@ -7,4 +7,4 @@ public class DiscoverableCredentialsModel : PageModel
     public void OnGet()
     {
     }
-} 
+}

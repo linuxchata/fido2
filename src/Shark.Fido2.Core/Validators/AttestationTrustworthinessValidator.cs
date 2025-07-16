@@ -74,15 +74,16 @@ internal class AttestationTrustworthinessValidator : IAttestationTrustworthiness
         chain.ChainPolicy.RevocationMode = X509RevocationMode.NoCheck;
         chain.ChainPolicy.VerificationFlags = X509VerificationFlags.AllowUnknownCertificateAuthority;
         chain.ChainPolicy.VerificationTime = _timeProvider.GetLocalNow().DateTime;
+        chain.ChainPolicy.TrustMode = X509ChainTrustMode.System | X509ChainTrustMode.CustomRootTrust;
 
         var leafCertificate = certificates.First();
 
         foreach (var certificate in certificates.Skip(1))
         {
-            if (certificate.Subject == certificate.Issuer)
+            if (certificate.SubjectName.RawData.AsSpan().SequenceEqual(certificate.IssuerName.RawData))
             {
-                // If trust path contains a root certificate (full chain), the server should return error
-                return ValidatorInternalResult.Invalid("Trust path contains a root certificate");
+                // Root certificate
+                chain.ChainPolicy.CustomTrustStore.Add(certificate);
             }
             else
             {
