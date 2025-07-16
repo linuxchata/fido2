@@ -141,6 +141,11 @@ This project is licensed under the [BSD 3-Clause License](LICENSE).
 See [Contributing](https://github.com/linuxchata/fido2/blob/main/CONTRIBUTING.md) for information about contributing to the project.
 
 # Specification
+## Introduction
+- [An introduction to Web Authentication](https://webauthn.guide/)
+- [Web Authentication Credential and Login Demo](https://webauthn.me/)
+- [FIDO Alliance](https://fidoalliance.org/)
+
 ## Web Authentication
 - [Web Authentication: An API for accessing Public Key Credentials Level 2](https://www.w3.org/TR/webauthn-2/)
 - [Server Requirements and Transport Binding Profile](https://fidoalliance.org/specs/fido-v2.0-rd-20180702/fido-server-v2.0-rd-20180702.html)
