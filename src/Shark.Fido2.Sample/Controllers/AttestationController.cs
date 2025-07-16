@@ -70,6 +70,9 @@ public class AttestationController(IAttestation attestation, ILogger<Attestation
 
         var createOptions = JsonSerializer.Deserialize<PublicKeyCredentialCreationOptions>(createOptionsString!);
 
+        logger.LogInformation(createOptionsString);
+        logger.LogInformation(JsonSerializer.Serialize(request.Map()));
+
         var response = await _attestation.Complete(request.Map(), createOptions!, cancellationToken);
 
         if (response.IsValid)
