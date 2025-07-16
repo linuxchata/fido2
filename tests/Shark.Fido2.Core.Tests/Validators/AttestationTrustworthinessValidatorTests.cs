@@ -162,8 +162,8 @@ public class AttestationTrustworthinessValidatorTests
         var result = _sut.Validate(attestationResult, null);
 
         // Assert
-        Assert.That(result.IsValid, Is.False);
-        Assert.That(result.Message, Is.Not.Null);
+        Assert.That(result.IsValid, Is.True);
+        Assert.That(result.Message, Is.Null);
     }
 
     [Test]
