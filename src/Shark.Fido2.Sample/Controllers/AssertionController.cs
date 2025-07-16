@@ -62,7 +62,7 @@ public class AssertionController(IAssertion assertion, ILogger<AssertionControll
     {
         if (request == null)
         {
-            return Ok(ServerResponse.CreateFailed());
+            return BadRequest(ServerResponse.CreateFailed());
         }
 
         var requestOptionsString = HttpContext.Session.GetString("RequestOptions");
@@ -77,7 +77,7 @@ public class AssertionController(IAssertion assertion, ILogger<AssertionControll
         }
         else
         {
-            logger.LogWarning("{Message}", response.Message);
+            logger.LogError("{Message}", response.Message);
             return BadRequest(ServerResponse.CreateFailed(response.Message));
         }
     }

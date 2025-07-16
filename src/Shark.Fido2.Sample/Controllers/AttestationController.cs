@@ -63,7 +63,7 @@ public class AttestationController(IAttestation attestation, ILogger<Attestation
     {
         if (request == null || request.Response == null)
         {
-            return Ok(ServerResponse.CreateFailed());
+            return BadRequest(ServerResponse.CreateFailed());
         }
 
         var createOptionsString = HttpContext.Session.GetString("CreateOptions");
@@ -78,7 +78,7 @@ public class AttestationController(IAttestation attestation, ILogger<Attestation
         }
         else
         {
-            logger.LogWarning("{Message}", response.Message);
+            logger.LogError("{Message}", response.Message);
             return BadRequest(ServerResponse.CreateFailed(response.Message));
         }
     }

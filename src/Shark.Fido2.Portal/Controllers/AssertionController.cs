@@ -15,7 +15,7 @@ namespace Shark.Fido2.Portal.Controllers;
 [Route("[controller]")]
 [ApiController]
 [TypeFilter(typeof(RestApiExceptionFilter))]
-public class AssertionController(IAssertion assertion) : ControllerBase
+public class AssertionController(IAssertion assertion, ILogger<AssertionController> logger) : ControllerBase
 {
     private readonly IAssertion _assertion = assertion;
 
@@ -52,7 +52,7 @@ public class AssertionController(IAssertion assertion) : ControllerBase
     {
         if (request == null)
         {
-            return Ok(ServerResponse.CreateFailed());
+            return BadRequest(ServerResponse.CreateFailed());
         }
 
         var requestOptionsString = HttpContext.Session.GetString("RequestOptions");
@@ -67,6 +67,7 @@ public class AssertionController(IAssertion assertion) : ControllerBase
         }
         else
         {
+            logger.LogError("{Message}", response.Message);
             return BadRequest(ServerResponse.CreateFailed(response.Message));
         }
     }

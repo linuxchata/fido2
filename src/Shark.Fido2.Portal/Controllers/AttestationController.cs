@@ -16,7 +16,7 @@ namespace Shark.Fido2.Portal.Controllers;
 [Route("[controller]")]
 [ApiController]
 [TypeFilter(typeof(RestApiExceptionFilter))]
-public class AttestationController(IAttestation attestation) : ControllerBase
+public class AttestationController(IAttestation attestation, ILogger<AssertionController> logger) : ControllerBase
 {
     private readonly IAttestation _attestation = attestation;
 
@@ -53,7 +53,7 @@ public class AttestationController(IAttestation attestation) : ControllerBase
     {
         if (request == null || request.Response == null)
         {
-            return Ok(ServerResponse.CreateFailed());
+            return BadRequest(ServerResponse.CreateFailed());
         }
 
         var createOptionsString = HttpContext.Session.GetString("CreateOptions");
@@ -68,6 +68,7 @@ public class AttestationController(IAttestation attestation) : ControllerBase
         }
         else
         {
+            logger.LogError("{Message}", response.Message);
             return BadRequest(ServerResponse.CreateFailed(response.Message));
         }
     }
