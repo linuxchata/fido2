@@ -17,7 +17,6 @@
     --color-footer-bg: #111827;
     --color-footer-text: #fff;
     --color-disclaimer: #6b7280;
-    --color-divider-bg: #e0e0e0;
     --color-btn-focus-shadow: rgba(66, 133, 244, 0.2);
     /* Typography */
     --font-size-base: 1rem;
@@ -318,11 +317,6 @@ input:disabled {
     .main-container {
         flex-direction: column;
         margin: 10px;
-    }
-
-    .signup-section {
-        border-right: none;
-        border-bottom: 1px solid var(--color-divider-bg);
     }
 
     .inner-container {
