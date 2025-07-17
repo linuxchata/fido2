@@ -38,7 +38,8 @@
     --font-lnd-size-2xl: 1.5rem;
     --font-lnd-size-3xl: 2.25rem;
     --font-lnd-size-4xl: 4rem;
-    --font-lnd-size-mobile: 2rem;
+    --font-lnd-size-mobile-2xl: 2rem;
+    --font-lnd-size-mobile-xl: 2rem;
     /* Spacing */
     --spacing-lnd-xs: 0.25rem;
     --spacing-lnd-sm: 0.5rem;
@@ -392,12 +393,16 @@ pre {
 /* Responsive */
 @media (max-width: 768px) {
     .hero h1 {
-        font-size: var(--font-lnd-size-mobile);
+        font-size: var(--font-lnd-size-3xl);
     }
 
     .hero-buttons {
         flex-direction: column;
         align-items: center;
+    }
+
+    .section-header h2 {
+        font-size: var(--font-lnd-size-2xl);
     }
 
     .steps-grid {
