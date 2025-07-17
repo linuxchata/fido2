@@ -1,4 +1,5 @@
-﻿using Shark.Fido2.Core.Abstractions.Services;
+﻿using System.Security.Cryptography.X509Certificates;
+using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Helpers;
@@ -96,8 +97,14 @@ internal class PackedAttestationStatementStrategy : IAttestationStatementStrateg
 
             // Optionally, inspect x5c and consult externally provided knowledge to determine whether attStmt conveys
             // a Basic or AttCA attestation.
-            var attestationType = (attestationCertificate.Subject == attestationCertificate.Issuer) ?
+            var attestationType = IsRootCertificate(attestationCertificate) ?
                 AttestationTypeEnum.AttCA : AttestationTypeEnum.Basic;
+
+            // Verify that trust path does not contain a root certificate
+            if (certificates[1..].Any(IsRootCertificate))
+            {
+                return ValidatorInternalResult.Invalid("Trust path contains a root certificate");
+            }
 
             // If successful, return implementation-specific values representing attestation type Basic, AttCA or
             // uncertainty, and attestation trust path x5c.
@@ -118,5 +125,10 @@ internal class PackedAttestationStatementStrategy : IAttestationStatementStrateg
             // attestation trust path.
             return new AttestationStatementInternalResult(AttestationTypeEnum.Self);
         }
+    }
+
+    private bool IsRootCertificate(X509Certificate2 certificate)
+    {
+        return certificate.SubjectName.RawData.AsSpan().SequenceEqual(certificate.IssuerName.RawData);
     }
 }
