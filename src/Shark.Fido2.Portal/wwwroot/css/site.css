@@ -364,7 +364,7 @@ input:disabled {
     align-items: center;
     text-align: center;
     background-color: var(--color-footer-bg);
-    padding: 1.5rem 0;
+    padding: 1.5rem 0.5rem;
     margin-top: auto;
 }
 
