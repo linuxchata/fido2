@@ -173,23 +173,6 @@
         color: var(--color-lnd-text-secondary);
     }
 
-.card {
-    background: var(--color-lnd-white);
-    border-radius: var(--border-lnd-radius-md);
-    padding: var(--spacing-lnd-xl);
-    box-shadow: var(--shadow-lnd-md);
-}
-
-    .card h3 {
-        font-size: var(--font-lnd-size-xl);
-        font-weight: 600;
-        color: var(--color-lnd-gray-900);
-    }
-
-    .card p {
-        color: var(--color-lnd-text-muted);
-    }
-
 /* Supported Features Section */
 .supported-features {
     padding: var(--spacing-lnd-5xl) 0;
@@ -327,49 +310,6 @@
             margin: 0;
         }
 
-.steps-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(var(--grid-lnd-min-width-lg), 1fr));
-    gap: var(--grid-lnd-gap);
-}
-
-.step-number {
-    background: var(--color-lnd-primary);
-    color: var(--color-lnd-white);
-    border-radius: var(--border-lnd-radius-full);
-    width: var(--font-lnd-size-2xl);
-    height: var(--font-lnd-size-2xl);
-    min-width: var(--font-lnd-size-2xl);
-    min-height: var(--font-lnd-size-2xl);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: var(--font-lnd-size-sm);
-    font-weight: 600;
-    margin-right: var(--spacing-lnd-md);
-    flex-shrink: 0;
-    white-space: nowrap;
-    overflow: hidden;
-}
-
-.step-title {
-    display: flex;
-    align-items: center;
-}
-
-pre {
-    display: block;
-    margin-top: var(--spacing-lnd-base);
-    margin-bottom: 0;
-    padding: var(--spacing-lnd-base);
-    overflow: auto;
-    border-radius: var(--border-lnd-radius-md);
-    background: var(--color-lnd-gray-800);
-    color: var(--color-lnd-light-code);
-    font-family: 'Courier New', monospace;
-    font-size: var(--font-lnd-size-sm);
-}
-
 /* CTA (Call-to-Action) Section */
 .cta {
     padding: var(--spacing-lnd-5xl) 0;
@@ -435,10 +375,6 @@ pre {
         .section-header h2 {
             font-size: var(--font-lnd-size-mobile-xl);
         }
-
-    .steps-grid {
-        grid-template-columns: 1fr;
-    }
 
     .features-list {
         padding: 0 var(--spacing-lnd-base);
