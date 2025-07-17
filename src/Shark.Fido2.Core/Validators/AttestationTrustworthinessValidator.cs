@@ -72,7 +72,7 @@ internal class AttestationTrustworthinessValidator : IAttestationTrustworthiness
     {
         using var chain = new X509Chain();
         chain.ChainPolicy.RevocationMode = X509RevocationMode.NoCheck;
-        chain.ChainPolicy.VerificationFlags = X509VerificationFlags.AllowUnknownCertificateAuthority;
+        chain.ChainPolicy.VerificationFlags = X509VerificationFlags.IgnoreNotTimeValid | X509VerificationFlags.AllowUnknownCertificateAuthority;
         chain.ChainPolicy.VerificationTime = _timeProvider.GetLocalNow().DateTime;
         chain.ChainPolicy.TrustMode = X509ChainTrustMode.System | X509ChainTrustMode.CustomRootTrust;
 
