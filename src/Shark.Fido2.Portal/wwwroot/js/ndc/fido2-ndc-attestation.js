@@ -8,7 +8,8 @@ async function requestCreateCredentialOptions(username, displayName) {
         displayName: displayName,
         attestation: 'direct',
         authenticatorSelection: {
-            residentKey: 'discouraged'
+            residentKey: 'preferred',
+            userVerification: 'required'
         }
     };
 
