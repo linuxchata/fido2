@@ -306,7 +306,7 @@
         color: var(--color-lnd-text-muted);
         max-width: var(--container-lnd-max-width-text);
         margin: 0 auto var(--spacing-lnd-2xl);
-        line-height: 1.8;
+        line-height: 1.55;
     }
 
 /* Getting Started Section */
@@ -320,7 +320,7 @@
         color: var(--color-lnd-text-muted);
         max-width: var(--container-lnd-max-width-text-lg);
         margin: 0 auto var(--spacing-lnd-2xl);
-        line-height: 1.8;
+        line-height: 1.55;
     }
 
         .getting-started p.last {
