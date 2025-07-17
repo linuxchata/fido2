@@ -1,6 +1,7 @@
 using System.Security.Cryptography.X509Certificates;
 using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
+using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Helpers;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain;
@@ -115,7 +116,10 @@ internal class FidoU2fAttestationStatementStrategy : IAttestationStatementStrate
 
         // If successful, return implementation-specific values representing attestation type Basic, AttCA or
         // uncertainty, and attestation trust path x5c.
-        return new AttestationStatementInternalResult(attestationType, [.. certificates]);
+        return new AttestationStatementInternalResult(
+            AttestationStatementFormatIdentifier.FidoU2f,
+            attestationType,
+            [.. certificates]);
     }
 
     private static byte[] GetPublicKeyU2f(CredentialPublicKey credentialPublicKey)

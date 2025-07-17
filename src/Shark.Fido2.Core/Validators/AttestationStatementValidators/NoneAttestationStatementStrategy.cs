@@ -1,4 +1,5 @@
 ﻿using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
+using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain;
 using Shark.Fido2.Domain.Enums;
@@ -30,6 +31,6 @@ internal class NoneAttestationStatementStrategy : IAttestationStatementStrategy
             return ValidatorInternalResult.Invalid("None attestation statement is not empty");
         }
 
-        return new AttestationStatementInternalResult(AttestationTypeEnum.None);
+        return new AttestationStatementInternalResult(AttestationStatementFormatIdentifier.None, AttestationTypeEnum.None);
     }
 }

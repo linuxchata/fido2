@@ -2,6 +2,7 @@ using System.Security.Cryptography.X509Certificates;
 using Microsoft.Extensions.Options;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Configurations;
+using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain.Enums;
 using Shark.Fido2.Metadata.Core.Domain;
@@ -63,22 +64,23 @@ internal class AttestationTrustworthinessValidator : IAttestationTrustworthiness
                 $"Trust path is required for {attestationStatementResult.AttestationType} attestation type");
         }
 
-        var result = ValidateTrustPath(attestationStatementResult.TrustPath);
+        var result = ValidateTrustPath(attestationStatementResult);
 
         return result;
     }
 
-    private ValidatorInternalResult ValidateTrustPath(X509Certificate2[] certificates)
+    private ValidatorInternalResult ValidateTrustPath(AttestationStatementInternalResult attestationStatementResult)
     {
         using var chain = new X509Chain();
         chain.ChainPolicy.RevocationMode = X509RevocationMode.NoCheck;
-        chain.ChainPolicy.VerificationFlags = X509VerificationFlags.AllowUnknownCertificateAuthority;
+        chain.ChainPolicy.VerificationFlags = GetVerificationFlags(attestationStatementResult.AttestationStatementFormat);
         chain.ChainPolicy.VerificationTime = _timeProvider.GetLocalNow().DateTime;
         chain.ChainPolicy.TrustMode = X509ChainTrustMode.System | X509ChainTrustMode.CustomRootTrust;
 
-        var leafCertificate = certificates.First();
+        var certificates = attestationStatementResult.TrustPath!;
+        var leafCertificate = certificates[0];
 
-        foreach (var certificate in certificates.Skip(1))
+        foreach (var certificate in certificates[1..])
         {
             if (certificate.SubjectName.RawData.AsSpan().SequenceEqual(certificate.IssuerName.RawData))
             {
@@ -100,5 +102,20 @@ internal class AttestationTrustworthinessValidator : IAttestationTrustworthiness
         }
 
         return ValidatorInternalResult.Valid();
+    }
+
+    private static X509VerificationFlags GetVerificationFlags(string attestationStatementFormat)
+    {
+        // Some Android devices may generate an attestation certificate with a default date of January 1, 1970.
+        // See https://source.android.com/docs/security/features/keystore/attestation#tbscertificate-sequence.
+        if (string.Equals(
+            attestationStatementFormat,
+            AttestationStatementFormatIdentifier.AndroidKey,
+            StringComparison.OrdinalIgnoreCase))
+        {
+            return X509VerificationFlags.IgnoreNotTimeValid | X509VerificationFlags.AllowUnknownCertificateAuthority;
+        }
+
+        return X509VerificationFlags.AllowUnknownCertificateAuthority;
     }
 }

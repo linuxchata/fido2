@@ -187,7 +187,10 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
 
         // If successful, return implementation-specific values representing attestation type AttCA and attestation
         // trust path x5c.
-        return new AttestationStatementInternalResult(AttestationTypeEnum.AttCA, [.. certificates]);
+        return new AttestationStatementInternalResult(
+            AttestationStatementFormatIdentifier.Tpm,
+            AttestationTypeEnum.AttCA,
+            [.. certificates]);
     }
 
     private static uint GetExponentAsUInt32LittleEndian(byte[]? exponent)
