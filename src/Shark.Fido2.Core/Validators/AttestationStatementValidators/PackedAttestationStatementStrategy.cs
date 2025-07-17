@@ -101,12 +101,9 @@ internal class PackedAttestationStatementStrategy : IAttestationStatementStrateg
                 AttestationTypeEnum.AttCA : AttestationTypeEnum.Basic;
 
             // Verify that trust path does not contain a root certificate
-            foreach (var certificate in certificates.Skip(1))
+            if (certificates[1..].Any(IsRootCertificate))
             {
-                if (IsRootCertificate(certificate))
-                {
-                    return ValidatorInternalResult.Invalid("Trust path contains a root certificate");
-                }
+                return ValidatorInternalResult.Invalid("Trust path contains a root certificate");
             }
 
             // If successful, return implementation-specific values representing attestation type Basic, AttCA or

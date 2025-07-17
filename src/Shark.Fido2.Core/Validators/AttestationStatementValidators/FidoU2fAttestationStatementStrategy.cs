@@ -1,3 +1,4 @@
+using System.Security.Cryptography.X509Certificates;
 using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Helpers;
@@ -109,7 +110,7 @@ internal class FidoU2fAttestationStatementStrategy : IAttestationStatementStrate
 
         // Optionally, inspect x5c and consult externally provided knowledge to determine whether attStmt conveys a
         // Basic or AttCA attestation.
-        var attestationType = (attestationCertificate.Subject == attestationCertificate.Issuer) ?
+        var attestationType = IsRootCertificate(attestationCertificate) ?
             AttestationTypeEnum.Basic : AttestationTypeEnum.AttCA;
 
         // If successful, return implementation-specific values representing attestation type Basic, AttCA or
@@ -137,5 +138,10 @@ internal class FidoU2fAttestationStatementStrategy : IAttestationStatementStrate
         var andClientDataHash = BytesArrayHelper.Concatenate(andRpIdHash, clientData.ClientDataHash);
         var andCredentialId = BytesArrayHelper.Concatenate(andClientDataHash, credentialId);
         return BytesArrayHelper.Concatenate(andCredentialId, publicKeyU2f);
+    }
+
+    private bool IsRootCertificate(X509Certificate2 certificate)
+    {
+        return certificate.SubjectName.RawData.AsSpan().SequenceEqual(certificate.IssuerName.RawData);
     }
 }
