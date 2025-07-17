@@ -21,7 +21,7 @@
     --color-btn-focus-shadow: rgba(66, 133, 244, 0.2);
     /* Typography */
     --font-size-base: 1rem;
-    --font-size-lg: 2rem;
+    --font-size-lg: 2.25rem;
     --font-size-md: 1.125rem;
     --font-size-sm: 1rem;
     --font-size-xs: 0.9rem;
@@ -112,21 +112,22 @@ input:disabled {
 
 .signup-section {
     background-color: var(--color-light);
-    box-shadow: var(--box-shadow);
+    border: 1px solid var(--color-border);
 }
 
 .signin-section {
     background-color: var(--color-light);
-    box-shadow: var(--box-shadow);
+    border: 1px solid var(--color-border);
 }
 
 .main-header {
-    margin-top: 15px;
+    margin-top: 20px;
     margin-bottom: 20px;
 }
 
     .main-header h2 {
         font-size: var(--font-size-lg);
+        font-weight: bold;
         color: var(--color-dark);
     }
 
