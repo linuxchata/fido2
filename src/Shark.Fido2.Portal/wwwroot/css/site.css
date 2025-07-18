@@ -325,7 +325,7 @@ input:disabled {
     .nav-link:active {
         color: var(--color-dark) !important;
         font-weight: 500;
-        -webkit-tap-highlight-color: transparent;
+        cursor: pointer;
     }
 
     .main-container {
