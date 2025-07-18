@@ -19,6 +19,7 @@ Allow: /js/
 Allow: /lib/
 Allow: /favicon.ico
 Allow: /favicon.svg
+Allow: /og-image.png
 
 # Disallow configuration and sensitive files
 Disallow: /appsettings.json
