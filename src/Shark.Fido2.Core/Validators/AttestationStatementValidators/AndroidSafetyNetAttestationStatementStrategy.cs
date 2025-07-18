@@ -136,6 +136,9 @@ internal class AndroidSafetyNetAttestationStatementStrategy : IAttestationStatem
 
         // If successful, return implementation-specific values representing attestation type Basic and attestation
         // trust path x5c.
-        return new AttestationStatementInternalResult(AttestationTypeEnum.Basic, [.. certificates]);
+        return new AttestationStatementInternalResult(
+            AttestationStatementFormatIdentifier.AndroidSafetyNet,
+            AttestationTypeEnum.Basic,
+            [.. certificates]);
     }
 }

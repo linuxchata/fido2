@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Options;
 using Shark.Fido2.Core.Configurations;
+using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Core.Tests.DataReaders;
 using Shark.Fido2.Core.Validators;
@@ -38,7 +39,9 @@ public class AttestationTrustworthinessValidatorTests
     {
         // Arrange
         _configuration.AllowNoneAttestation = allowNoneAttestation;
-        var attestationResult = new AttestationStatementInternalResult(AttestationTypeEnum.None);
+        var attestationResult = new AttestationStatementInternalResult(
+            AttestationStatementFormatIdentifier.None,
+            AttestationTypeEnum.None);
 
         // Act
         var result = _sut.Validate(attestationResult, null);
@@ -57,7 +60,9 @@ public class AttestationTrustworthinessValidatorTests
     {
         // Arrange
         _configuration.AllowSelfAttestation = allowSelfAttestation;
-        var attestationResult = new AttestationStatementInternalResult(AttestationTypeEnum.Self);
+        var attestationResult = new AttestationStatementInternalResult(
+            AttestationStatementFormatIdentifier.Packed,
+            AttestationTypeEnum.Self);
 
         // Act
         var result = _sut.Validate(attestationResult, null);
@@ -74,7 +79,9 @@ public class AttestationTrustworthinessValidatorTests
     public void Validate_WhenBasicAttestationWithoutTrustPath_ThenReturnsInvalid()
     {
         // Arrange
-        var attestationResult = new AttestationStatementInternalResult(AttestationTypeEnum.Basic);
+        var attestationResult = new AttestationStatementInternalResult(
+            AttestationStatementFormatIdentifier.Packed,
+            AttestationTypeEnum.Basic);
 
         // Act
         var result = _sut.Validate(attestationResult, null);
@@ -88,7 +95,10 @@ public class AttestationTrustworthinessValidatorTests
     public void Validate_WhenBasicAttestationWithEmptyTrustPath_ThenReturnsInvalid()
     {
         // Arrange
-        var attestationResult = new AttestationStatementInternalResult(AttestationTypeEnum.Basic, []);
+        var attestationResult = new AttestationStatementInternalResult(
+            AttestationStatementFormatIdentifier.None,
+            AttestationTypeEnum.Basic,
+            []);
 
         // Act
         var result = _sut.Validate(attestationResult, null);
@@ -99,13 +109,36 @@ public class AttestationTrustworthinessValidatorTests
     }
 
     [Test]
-    public void Validate_WhenAttCaAttestationWithTrustPathWithAppleAnonymousCertificates_ThenReturnsValid()
+    public void Validate_WhenBasicAttestationWithTrustPathWitAndroidKeyCertificates_ThenReturnsValid()
+    {
+        // Arrange
+        var fileName = "AndroidKey.pem";
+        var certificateData = CertificateDataReader.Read(fileName);
+
+        var attestationResult = new AttestationStatementInternalResult(
+            AttestationStatementFormatIdentifier.AndroidKey,
+            AttestationTypeEnum.Basic,
+            certificateData);
+
+        // Act
+        var result = _sut.Validate(attestationResult, null);
+
+        // Assert
+        Assert.That(result.IsValid, Is.True);
+        Assert.That(result.Message, Is.Null);
+    }
+
+    [Test]
+    public void Validate_WhenAnonCaAttestationWithTrustPathWithAppleAnonymousCertificates_ThenReturnsValid()
     {
         // Arrange
         var fileName = "AppleAnonymous.pem";
         var certificateData = CertificateDataReader.Read(fileName);
 
-        var attestationResult = new AttestationStatementInternalResult(AttestationTypeEnum.AnonCA, certificateData);
+        var attestationResult = new AttestationStatementInternalResult(
+            AttestationStatementFormatIdentifier.Apple,
+            AttestationTypeEnum.AnonCA,
+            certificateData);
 
         // Act
         var result = _sut.Validate(attestationResult, null);
@@ -122,7 +155,10 @@ public class AttestationTrustworthinessValidatorTests
         var fileName = "Tpm.pem";
         var certificateData = CertificateDataReader.Read(fileName);
 
-        var attestationResult = new AttestationStatementInternalResult(AttestationTypeEnum.AttCA, certificateData);
+        var attestationResult = new AttestationStatementInternalResult(
+            AttestationStatementFormatIdentifier.Tpm,
+            AttestationTypeEnum.AttCA,
+            certificateData);
 
         // Act
         var result = _sut.Validate(attestationResult, null);
@@ -139,7 +175,10 @@ public class AttestationTrustworthinessValidatorTests
         var fileName = "Packed.pem";
         var certificateData = CertificateDataReader.Read(fileName);
 
-        var attestationResult = new AttestationStatementInternalResult(AttestationTypeEnum.AttCA, certificateData);
+        var attestationResult = new AttestationStatementInternalResult(
+            AttestationStatementFormatIdentifier.Packed,
+            AttestationTypeEnum.AttCA,
+            certificateData);
 
         // Act
         var result = _sut.Validate(attestationResult, null);
@@ -156,7 +195,10 @@ public class AttestationTrustworthinessValidatorTests
         var fileName = "PackedWithCa.pem";
         var certificateData = CertificateDataReader.Read(fileName);
 
-        var attestationResult = new AttestationStatementInternalResult(AttestationTypeEnum.AttCA, certificateData);
+        var attestationResult = new AttestationStatementInternalResult(
+            AttestationStatementFormatIdentifier.Packed,
+            AttestationTypeEnum.AttCA,
+            certificateData);
 
         // Act
         var result = _sut.Validate(attestationResult, null);
@@ -173,7 +215,10 @@ public class AttestationTrustworthinessValidatorTests
         var fileName = "FidoU2f.pem";
         var certificateData = CertificateDataReader.Read(fileName);
 
-        var attestationResult = new AttestationStatementInternalResult(AttestationTypeEnum.AttCA, certificateData);
+        var attestationResult = new AttestationStatementInternalResult(
+            AttestationStatementFormatIdentifier.FidoU2f,
+            AttestationTypeEnum.AttCA,
+            certificateData);
 
         // Act
         var result = _sut.Validate(attestationResult, null);

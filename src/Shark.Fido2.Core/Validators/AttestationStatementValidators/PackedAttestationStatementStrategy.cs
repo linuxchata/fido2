@@ -108,7 +108,10 @@ internal class PackedAttestationStatementStrategy : IAttestationStatementStrateg
 
             // If successful, return implementation-specific values representing attestation type Basic, AttCA or
             // uncertainty, and attestation trust path x5c.
-            return new AttestationStatementInternalResult(attestationType, [.. certificates]);
+            return new AttestationStatementInternalResult(
+                AttestationStatementFormatIdentifier.Packed,
+                attestationType,
+                [.. certificates]);
         }
         else
         {
@@ -123,7 +126,9 @@ internal class PackedAttestationStatementStrategy : IAttestationStatementStrateg
 
             // If successful, return implementation-specific values representing attestation type Self and an empty
             // attestation trust path.
-            return new AttestationStatementInternalResult(AttestationTypeEnum.Self);
+            return new AttestationStatementInternalResult(
+                AttestationStatementFormatIdentifier.Packed,
+                AttestationTypeEnum.Self);
         }
     }
 

@@ -1,6 +1,7 @@
 using System.Security.Cryptography;
 using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
+using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Helpers;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain;
@@ -78,6 +79,9 @@ internal class AppleAnonymousAttestationStatementStrategy : IAttestationStatemen
 
         // If successful, return implementation-specific values representing attestation type Anonymization CA
         // and attestation trust path x5c.
-        return new AttestationStatementInternalResult(AttestationTypeEnum.AnonCA, [.. certificates]);
+        return new AttestationStatementInternalResult(
+            AttestationStatementFormatIdentifier.Apple,
+            AttestationTypeEnum.AnonCA,
+            [.. certificates]);
     }
 }
