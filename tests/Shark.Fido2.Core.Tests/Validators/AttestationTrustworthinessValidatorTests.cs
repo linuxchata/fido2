@@ -109,7 +109,27 @@ public class AttestationTrustworthinessValidatorTests
     }
 
     [Test]
-    public void Validate_WhenAttCaAttestationWithTrustPathWithAppleAnonymousCertificates_ThenReturnsValid()
+    public void Validate_WhenBasicAttestationWithTrustPathWitAndroidKeyCertificates_ThenReturnsValid()
+    {
+        // Arrange
+        var fileName = "AndroidKey.pem";
+        var certificateData = CertificateDataReader.Read(fileName);
+
+        var attestationResult = new AttestationStatementInternalResult(
+            AttestationStatementFormatIdentifier.AndroidKey,
+            AttestationTypeEnum.Basic,
+            certificateData);
+
+        // Act
+        var result = _sut.Validate(attestationResult, null);
+
+        // Assert
+        Assert.That(result.IsValid, Is.True);
+        Assert.That(result.Message, Is.Null);
+    }
+
+    [Test]
+    public void Validate_WhenAnonCaAttestationWithTrustPathWithAppleAnonymousCertificates_ThenReturnsValid()
     {
         // Arrange
         var fileName = "AppleAnonymous.pem";
