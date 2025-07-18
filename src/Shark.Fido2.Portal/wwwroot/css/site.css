@@ -322,6 +322,11 @@ input:disabled {
         padding-left: 0.75rem;
     }
 
+    .nav-link:active {
+        color: var(--color-dark) !important;
+        font-weight: 500;
+    }
+
     .main-container {
         flex-direction: column;
         margin: 10px;
