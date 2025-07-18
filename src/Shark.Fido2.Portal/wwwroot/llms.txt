@@ -6,10 +6,9 @@ User-agent: *
 
 # Allow LLMs to use public pages for training and indexing
 Allow: /
+Allow: /Documentation
 Allow: /DiscoverableCredentials
 Allow: /NonDiscoverableCredentials
-Allow: /Resources
-Allow: /About
 
 # Disallow use of protected or sensitive pages
 Disallow: /CredentialDetails

@@ -5,10 +5,9 @@ User-agent: *
 
 # Allow crawling of public pages
 Allow: /
+Allow: /Documentation
 Allow: /DiscoverableCredentials
 Allow: /NonDiscoverableCredentials
-Allow: /Resources
-Allow: /About
 
 # Disallow crawling of protected pages
 Disallow: /CredentialDetails
