@@ -24,6 +24,7 @@
     --font-size-lg: 2.25rem;
     --font-size-md: 1.125rem;
     --font-size-sm: 1rem;
+    --font-size-xs: 0.9rem;
     /* Border radius */
     --border-radius: 0.375rem;
     /* Shadows */
@@ -337,6 +338,11 @@ input:disabled {
     .main-description {
         font-size: var(--font-size-mobile);
     }
+
+        .main-description td {
+            font-size: var(--font-size-xs);
+            line-height: var(--bs-body-line-height);
+        }
 
     .inner-container {
         flex-direction: column;
