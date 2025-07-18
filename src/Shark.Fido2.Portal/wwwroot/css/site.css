@@ -76,10 +76,6 @@ input:disabled {
     border: none;
 }
 
-.nav-link:active {
-    background-color: #d0d7de;
-}
-
 .banner {
     font-weight: 500;
     color: var(--color-link);
@@ -319,6 +315,10 @@ input:disabled {
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .navbar-brand {
+        padding-left: 0.75rem;
+    }
+
+    .navbar-collapse {
         padding-left: 0.75rem;
     }
 
