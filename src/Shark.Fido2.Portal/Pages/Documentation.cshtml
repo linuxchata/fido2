@@ -223,7 +223,7 @@ async function fetchAttestationResult(credentials) {
 </code></pre>
             </details>
             <p>
-                The following is a minimal sample of JavaScript code for performing authentication (assertion) using the Web Authentication API in the browser. <b>Note:</b> This example does not include production-level safeguards for simplicity. For real-world applications, you should add proper error handling and input validation.
+                The following is a minimal sample of JavaScript code for performing authentication with discoverable credentials using the Web Authentication API in the browser. <b>Note:</b> This example does not include production-level safeguards for simplicity. For real-world applications, you should add proper error handling and input validation.
             </p>
             <details>
                 <summary>Click to expand</summary>
@@ -344,8 +344,8 @@ async function fetchAssertionResult(credentials) {
                     <tr><td><code>RelyingPartyIdName</code></td><td></td><td>Human-palatable identifier for the Relying Party, intended only for display.</td></tr>
                     <tr><td><code>Origins</code></td><td></td><td>List of the fully qualified origins of the Relying Party making the request, passed to the authenticator by the browser.</td></tr>
                     <tr><td><code>Timeout</code></td><td><code>60000</code></td><td>Time, in milliseconds, that the Relying Party is willing to wait for the call to complete.</td></tr>
-                    <tr><td><code>AllowNoneAttestation</code></td><td><code>true</code></td><td>Value indicating whether None attestation type is acceptable under Relying Party policy. <a href="https://www.w3.org/TR/webauthn-2/#none" target="_blank">None attestation</a> is used when the authenticator doesn't have any attestation information available.</td></tr>
-                    <tr><td><code>AllowSelfAttestation</code></td><td><code>true</code></td><td>Value indicating whether Self attestation type is acceptable under Relying Party policy. <a href="https://www.w3.org/TR/webauthn-2/#self-attestation" target="_blank">Self attestation</a> is used when the authenticator doesn't have a dedicated attestation key pair or a vendor-issued certificate.</td></tr>
+                    <tr><td><code>AllowNoneAttestation</code></td><td><code>true</code></td><td>Value indicating whether None attestation type is acceptable under Relying Party policy. <a href="https://www.w3.org/TR/webauthn-2/#none" target="_blank" class="resource-link">None attestation</a> is used when the authenticator doesn't have any attestation information available.</td></tr>
+                    <tr><td><code>AllowSelfAttestation</code></td><td><code>true</code></td><td>Value indicating whether Self attestation type is acceptable under Relying Party policy. <a href="https://www.w3.org/TR/webauthn-2/#self-attestation" target="_blank" class="resource-link">Self attestation</a> is used when the authenticator doesn't have a dedicated attestation key pair or a vendor-issued certificate.</td></tr>
                     <tr><td><code>EnableTrustedExecutionEnvironmentOnly</code></td><td><code>true</code></td><td>Value indicating whether the Relying Party trusts only keys that are securely generated and stored in a Trusted Execution Environment (Android Key Attestation).</td></tr>
                     <tr><td><code>EnableMetadataService</code></td><td><code>true</code></td><td>Value indicating whether the Relying Party uses the Metadata Service to verify the attestation object.</td></tr>
                     <tr><td><code>EnableStrictAuthenticatorVerification</code></td><td><code>false</code></td><td>Value indicating whether the Relying Party requires strict verification of authenticators. If enabled, missing metadata for the authenticator would cause attestation to fail.</td></tr>
