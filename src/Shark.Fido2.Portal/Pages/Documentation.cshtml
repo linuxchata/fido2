@@ -137,7 +137,7 @@ app.UseSession();
                 To complete the implementation, you must add JavaScript code that communicates with the Web Authentication API in the browser. This API handles the client side of the authentication process.
             </p>
             <ol start="1">
-                <li><b>Add call <code>navigator.credentials.create()</code></b></li>
+                <li><b>Add <code>navigator.credentials.create()</code> call</b></li>
             </ol>
             <p>
                 The following is a minimal sample of JavaScript code for creating discoverable credentials using the Web Authentication API in the browser. This code demonstrates the basic flow for communicating with the server-side REST API endpoints described above. <b>Note:</b> This example does not include production-level safeguards for simplicity. For real-world applications, you should add proper error handling and input validation.
@@ -226,7 +226,7 @@ async function fetchAttestationResult(credentials) {
 </code></pre>
             </details>
             <ol start="2">
-                <li><b>Add call <code>navigator.credentials.get()</code></b></li>
+                <li><b>Add <code>navigator.credentials.get()</code> call</b></li>
             </ol>
             <p>
                 The following is a minimal sample of JavaScript code for performing authentication with discoverable credentials using the Web Authentication API in the browser. <b>Note:</b> This example does not include production-level safeguards for simplicity. For real-world applications, you should add proper error handling and input validation.
