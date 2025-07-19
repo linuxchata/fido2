@@ -6,10 +6,9 @@ User-agent: *
 
 # Allow LLMs to use public pages for training and indexing
 Allow: /
+Allow: /Documentation
 Allow: /DiscoverableCredentials
 Allow: /NonDiscoverableCredentials
-Allow: /Resources
-Allow: /About
 
 # Disallow use of protected or sensitive pages
 Disallow: /CredentialDetails
@@ -20,6 +19,7 @@ Allow: /js/
 Allow: /lib/
 Allow: /favicon.ico
 Allow: /favicon.svg
+Allow: /og-image.png
 
 # Disallow configuration and sensitive files
 Disallow: /appsettings.json
