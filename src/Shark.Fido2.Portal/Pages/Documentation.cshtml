@@ -392,5 +392,51 @@ async function fetchAssertionResult(credentials) {
                 <li>If using the Metadata Service, ensure your application can reach the URLs specified in <code>MetadataServiceConfiguration</code>.</li>
             </ul>
         </div>
+        <div class="main-description">
+            <h3 id="permanent-datastores">Permanent Datastores</h3>
+            <p>
+                For production environments, you should use a persistent credential store instead of the in-memory implementation. <b>Shark WebAuthn</b> provides support for various database providers.
+            </p>
+            <h4 id="sql-server">SQL Server</h4>
+            <p>
+                To use SQL Server as your credential store, follow these steps:
+            </p>
+            <ol>
+                <li><b>Installation</b></li>
+            </ol>
+            <pre class="code"><code class="language-bash">dotnet add package Shark.Fido2.SqlServer
+</code></pre>
+            <ol start="2">
+                <li><b>Registration</b></li>
+            </ol>
+            <p>
+                Replace the in-memory store registration with SQL Server in your <code>Program.cs</code>:
+            </p>
+            <pre class="code"><code class="language-csharp">var builder = WebApplication.CreateBuilder(args);
+
+// Other service registrations
+
+builder.Services.AddFido2SqlServer();
+builder.Services.AddFido2(builder.Configuration);
+</code></pre>
+            <ol start="3">
+                <li><b>Configuration</b></li>
+            </ol>
+            <p>
+                Add the connection string to your <code>appsettings.json</code> or environment-specific configuration file:
+            </p>
+            <pre class="code"><code class="language-json">{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=SQL_SERVER_INSTANCE;Database=fido2;OTHER_PARAMETERS;"
+  }
+}
+</code></pre>
+            <ol start="4">
+                <li><b>Database Setup</b></li>
+            </ol>
+            <p>
+                Create the required database tables by running the SQL Server table creation script available at <a href="https://github.com/linuxchata/fido2/blob/main/scripts/sqlserver/sqlserver_table_creation.sql" target="_blank" class="resource-link">SQL Server Table Creation Script</a>.
+            </p>
+        </div>
     </div>
 </div> 
