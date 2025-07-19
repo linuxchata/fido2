@@ -14,6 +14,7 @@
     --color-link: #374151;
     --color-link-hover: #444;
     --color-credential: #888;
+    --color-pre-code: #f8f9fa;
     --color-footer-bg: #111827;
     --color-footer-text: #fff;
     --color-disclaimer: #6b7280;
@@ -21,7 +22,8 @@
     /* Typography */
     --font-size-base: 1rem;
     --font-size-mobile: 1.1rem;
-    --font-size-lg: 2.25rem;
+    --font-size-xxl: 2.25rem;
+    --font-size-xl: 1.75rem;
     --font-size-md: 1.125rem;
     --font-size-sm: 1rem;
     --font-size-xs: 0.9rem;
@@ -126,7 +128,7 @@ input:disabled {
 }
 
     .main-header h2 {
-        font-size: var(--font-size-lg);
+        font-size: var(--font-size-xxl);
         font-weight: bold;
         color: var(--color-dark);
     }
@@ -152,6 +154,16 @@ input:disabled {
     color: var(--color-text);
     margin-bottom: 2.5rem;
 }
+
+    .main-description h3 {
+        font-size: var(--font-size-xl);
+        color: var(--color-dark);
+    }
+
+    .main-description h4 {
+        font-size: var(--font-size-md);
+        color: var(--color-dark);
+    }
 
     .main-description p {
         margin: 0 0 1em 0;
@@ -320,6 +332,53 @@ input:disabled {
     display: block;
 }
 
+.code {
+    padding: 0.5rem;
+    background: var(--color-pre-code);
+}
+
+.disclaimer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+    .disclaimer p {
+        margin: 0;
+        font-size: var(--font-size-sm);
+        color: var(--color-disclaimer);
+    }
+
+.footer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: var(--color-footer-bg);
+    padding: 1.5rem 0.5rem;
+    margin-top: auto;
+}
+
+    .footer p {
+        margin: 0;
+        font-size: var(--font-size-sm);
+        color: var(--color-footer-text);
+    }
+
+.hide {
+    display: none;
+}
+
+.notyf {
+    word-break: break-word;
+}
+
+.notyf__icon {
+    color: var(--color-light) !important;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .navbar-brand {
@@ -356,46 +415,4 @@ input:disabled {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
     }
-}
-
-.notyf {
-    word-break: break-word;
-}
-
-.notyf__icon {
-    color: var(--color-light) !important;
-}
-
-.disclaimer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-}
-
-    .disclaimer p {
-        margin: 0;
-        font-size: var(--font-size-sm);
-        color: var(--color-disclaimer);
-    }
-
-.footer {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    background-color: var(--color-footer-bg);
-    padding: 1.5rem 0.5rem;
-    margin-top: auto;
-}
-
-    .footer p {
-        margin: 0;
-        font-size: var(--font-size-sm);
-        color: var(--color-footer-text);
-    }
-
-.hide {
-    display: none;
 }
