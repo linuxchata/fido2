@@ -88,6 +88,16 @@ public async Task<IActionResult> Result(ServerPublicKeyCredentialAssertion reque
     return Ok(ServerResponse.Create());
 }
 </code></pre>
+            <p>
+                <b>Note:</b> These controller examples use session state to store options between requests. To enable session support in your application, ensure that <code>Program.cs</code> includes calls to <code>AddSession</code> and <code>UseSession</code>:
+            </p>
+            <pre class="code"><code class="language-csharp">builder.Services.AddSession();
+...
+app.UseSession();
+</code></pre>
+            <p>
+                While the default in-memory session state is sufficient for development and testing, it is recommended to use a distributed cache (such as Redis) in production environments.
+            </p>
         </div>
         <div class="main-description">
             <h3 id="configuration">Configuration</h3>
