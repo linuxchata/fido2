@@ -32,6 +32,61 @@ builder.Services.AddFido2(builder.Configuration);
             </p>
         </div>
         <div class="main-description">
+            <h3 id="rest-api-controllers">REST API Controllers</h3>
+            <h4>Attestation (Registration)</h4>
+            <p>The Attestation controller handles the registration ceremony.</p>
+            <ol>
+                <li><b>Get create options</b></li>
+            </ol>
+            <pre class="code"><code class="language-csharp">[HttpPost("options")]
+public async Task<IActionResult> Options(ServerPublicKeyCredentialCreationOptionsRequest request)
+{
+    var createOptions = await _attestation.CreateOptions(request.Map());
+    var response = createOptions.Map();
+    HttpContext.Session.SetString("CreateOptions", JsonSerializer.Serialize(createOptions));
+    return Ok(response);
+}
+</code></pre>
+            <ol start="2">
+                <li><b>Create credential</b></li>
+            </ol>
+            <pre class="code"><code class="language-csharp">[HttpPost("result")]
+public async Task<IActionResult> Result(ServerPublicKeyCredentialAttestation request)
+{
+    var createOptionsString = HttpContext.Session.GetString("CreateOptions");
+    var createOptions = JsonSerializer.Deserialize<PublicKeyCredentialCreationOptions>(createOptionsString!);
+    await _attestation.Complete(request.Map(), createOptions!);
+    return Ok(ServerResponse.Create());
+}
+</code></pre>
+            <h4>Assertion (Authentication)</h4>
+            <p>The Assertion controller handles the authentication ceremony.</p>
+            <ol>
+                <li><b>Get request options</b></li>
+            </ol>
+            <pre class="code"><code class="language-csharp">[HttpPost("options")]
+public async Task<IActionResult> Options(ServerPublicKeyCredentialGetOptionsRequest request)
+{
+    var requestOptions = await _assertion.RequestOptions(request.Map());
+    var response = requestOptions.Map();
+    HttpContext.Session.SetString("RequestOptions", JsonSerializer.Serialize(requestOptions));
+    return Ok(response);
+}
+</code></pre>
+            <ol start="2">
+                <li><b>Validate credential</b></li>
+            </ol>
+            <pre class="code"><code class="language-csharp">[HttpPost("result")]
+public async Task<IActionResult> Result(ServerPublicKeyCredentialAssertion request)
+{
+    var requestOptionsString = HttpContext.Session.GetString("RequestOptions");
+    var requestOptions = JsonSerializer.Deserialize<PublicKeyCredentialRequestOptions>(requestOptionsString!);
+    await _assertion.Complete(request.Map(), requestOptions!);
+    return Ok(ServerResponse.Create());
+}
+</code></pre>
+        </div>
+        <div class="main-description">
             <h3 id="configuration">Configuration</h3>
             <p>
                 The <code>Shark.Fido2.Core</code> library requires specific configuration to operate as a WebAuthn relying party. Configuration is typically provided via the <code>Fido2Configuration</code> section in your application's configuration files (e.g., <code>appsettings.json</code>, <code>appsettings.Production.json</code>). This section details all available configuration options, their default values, and their intended usage.
