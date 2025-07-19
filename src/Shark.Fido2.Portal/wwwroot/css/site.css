@@ -173,6 +173,10 @@ input:disabled {
             margin-bottom: 0;
         }
 
+    .main-description details {
+        margin: 0 0 1em 0;
+    }
+
 .card {
     border: 0px;
 }
