@@ -41,9 +41,9 @@ Attestation controller
 1. Get create options.
 ```csharp
 [HttpPost("options")]
-public async Task<IActionResult> Options(ServerPublicKeyCredentialCreationOptionsRequest request)
+public async Task<IActionResult> Options(ServerPublicKeyCredentialCreationOptionsRequest request, CancellationToken cancellationToken)
 {
-    var createOptions = await _attestation.CreateOptions(request.Map());
+    var createOptions = await _attestation.CreateOptions(request.Map(), cancellationToken);
     var response = createOptions.Map();
     HttpContext.Session.SetString("CreateOptions", JsonSerializer.Serialize(createOptions));
     return Ok(response);
@@ -53,11 +53,11 @@ public async Task<IActionResult> Options(ServerPublicKeyCredentialCreationOption
 2. Create credential.
 ```csharp
 [HttpPost("result")]
-public async Task<IActionResult> Result(ServerPublicKeyCredentialAttestation request)
+public async Task<IActionResult> Result(ServerPublicKeyCredentialAttestation request, CancellationToken cancellationToken)
 {
     var createOptionsString = HttpContext.Session.GetString("CreateOptions");
     var createOptions = JsonSerializer.Deserialize<PublicKeyCredentialCreationOptions>(createOptionsString!);
-    await _attestation.Complete(request.Map(), createOptions!);
+    await _attestation.Complete(request.Map(), createOptions!, cancellationToken);
     return Ok(ServerResponse.Create());
 }
 ```
@@ -67,9 +67,9 @@ Assertion controller
 1. Get request options.
 ```csharp
 [HttpPost("options")]
-public async Task<IActionResult> Options(ServerPublicKeyCredentialGetOptionsRequest request)
+public async Task<IActionResult> Options(ServerPublicKeyCredentialGetOptionsRequest request, CancellationToken cancellationToken)
 {
-    var requestOptions = await _assertion.RequestOptions(request.Map());
+    var requestOptions = await _assertion.RequestOptions(request.Map(), cancellationToken);
     var response = requestOptions.Map();
     HttpContext.Session.SetString("RequestOptions", JsonSerializer.Serialize(requestOptions));
     return Ok(response);
@@ -79,11 +79,11 @@ public async Task<IActionResult> Options(ServerPublicKeyCredentialGetOptionsRequ
 2. Validate credential.
 ```csharp
 [HttpPost("result")]
-public async Task<IActionResult> Result(ServerPublicKeyCredentialAssertion request)
+public async Task<IActionResult> Result(ServerPublicKeyCredentialAssertion request, CancellationToken cancellationToken)
 {
     var requestOptionsString = HttpContext.Session.GetString("RequestOptions");
     var requestOptions = JsonSerializer.Deserialize<PublicKeyCredentialRequestOptions>(requestOptionsString!);
-    await _assertion.Complete(request.Map(), requestOptions!);
+    await _assertion.Complete(request.Map(), requestOptions!, cancellationToken);
     return Ok(ServerResponse.Create());
 }
 ```
