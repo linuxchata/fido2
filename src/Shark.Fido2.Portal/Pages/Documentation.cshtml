@@ -7,9 +7,22 @@
             <h2>Documentation</h2>
         </div>
         <div class="main-description">
+            <h3 id="installation">Installation</h3>
+            <p>
+                To get started with <b>Shark WebAuthn</b> in your ASP.NET Core application, add the following NuGet packages to your project:
+            </p>
+            <pre class="code"><code class="language-bash">dotnet add package Shark.Fido2.Core
+dotnet add package Shark.Fido2.Models
+dotnet add package Shark.Fido2.InMemory
+</code></pre>
+            <p>
+                These packages provide the core WebAuthn functionality, data models, and an in-memory credential repository for development and testing. For production scenarios, consider using a persistent credential repository implementation.
+            </p>
+        </div>
+        <div class="main-description">
             <h3 id="configuration">Configuration</h3>
             <p>
-                The <code>Shark.Fido2.Core</code> library requires specific configuration to operate as a FIDO2/WebAuthn relying party. Configuration is typically provided via the <code>Fido2Configuration</code> section in your application's configuration files (e.g., <code>appsettings.json</code>, <code>appsettings.Production.json</code>). This section details all available configuration options, their default values, and their intended usage.
+                The <code>Shark.Fido2.Core</code> library requires specific configuration to operate as a WebAuthn relying party. Configuration is typically provided via the <code>Fido2Configuration</code> section in your application's configuration files (e.g., <code>appsettings.json</code>, <code>appsettings.Production.json</code>). This section details all available configuration options, their default values, and their intended usage.
             </p>
         </div>
         <div class="main-description">
