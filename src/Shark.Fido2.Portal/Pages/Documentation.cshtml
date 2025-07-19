@@ -22,19 +22,19 @@ dotnet add package Shark.Fido2.InMemory
         <div class="main-description">
             <h3 id="registration">Registration</h3>
             <p>
-                To register the WebAuthn services in your ASP.NET Core application, add the following lines to your <code>Program.cs</code> file:
+                To register the Shark WebAuthn services in your ASP.NET Core application, add the following lines to your <code>Program.cs</code> file:
             </p>
             <pre class="code"><code class="language-csharp">builder.Services.AddFido2InMemoryStore();
 builder.Services.AddFido2(builder.Configuration);
 </code></pre>
             <p>
-                <code>AddFido2(builder.Configuration)</code> registers the core WebAuthn services using your application's configuration. <code>AddFido2InMemoryStore()</code> registers an in-memory credential repository, suitable for development and testing. For production, consider using a persistent credential store instead of the in-memory implementation.
+                <code>AddFido2(builder.Configuration)</code> registers the core Shark WebAuthn services using your application's configuration. <code>AddFido2InMemoryStore()</code> registers an in-memory credential repository, suitable for development and testing. For production, consider using a persistent credential store instead of the in-memory implementation.
             </p>
         </div>
         <div class="main-description">
             <h3 id="rest-api-controllers">REST API Controllers</h3>
             <p>
-                To enable WebAuthn functionality in your application, you need to add REST API controllers that will handle the core WebAuthn operations—credential registration (attestation) and authentication (assertion). These controllers will expose endpoints for the frontend to interact with the WebAuthn flows.
+                To enable WebAuthn functionality in your application, you need to add REST API controllers that will handle the core WebAuthn operations — credential registration (attestation) and authentication (assertion). These controllers will expose endpoints for the frontend to interact with the WebAuthn flows.
             </p>
             <h4>Attestation (Registration)</h4>
             <p>The Attestation controller handles the registration ceremony.</p>
