@@ -136,6 +136,9 @@ app.UseSession();
             <p>
                 To complete the implementation, you must add JavaScript code that communicates with the Web Authentication API in the browser. This API handles the client side of the authentication process.
             </p>
+            <ol start="1">
+                <li><b>Add call <code>navigator.credentials.create()</code></b></li>
+            </ol>
             <p>
                 The following is a minimal sample of JavaScript code for creating discoverable credentials using the Web Authentication API in the browser. This code demonstrates the basic flow for communicating with the server-side REST API endpoints described above. <b>Note:</b> This example does not include production-level safeguards for simplicity. For real-world applications, you should add proper error handling and input validation.
             </p>
@@ -222,6 +225,9 @@ async function fetchAttestationResult(credentials) {
 }
 </code></pre>
             </details>
+            <ol start="2">
+                <li><b>Add call <code>navigator.credentials.get()</code></b></li>
+            </ol>
             <p>
                 The following is a minimal sample of JavaScript code for performing authentication with discoverable credentials using the Web Authentication API in the browser. <b>Note:</b> This example does not include production-level safeguards for simplicity. For real-world applications, you should add proper error handling and input validation.
             </p>
@@ -288,7 +294,7 @@ async function fetchAssertionResult(credentials) {
         </div>
         <div class="main-description">
             <h4>Browsers Support</h4>
-            <p>Up-to-date details regarding the Authentication API support across modern browsers can be found on <a href="https://caniuse.com/webauthn" target="_blank" class="resource-link">Can I use</a> page.</p>
+            <p>Up-to-date details regarding the Web Authentication API support across modern browsers can be found on <a href="https://caniuse.com/webauthn" target="_blank" class="resource-link">Can I use</a> page.</p>
         </div>
         <div class="main-description">
             <h3 id="configuration">Configuration</h3>
