@@ -124,6 +124,9 @@ app.UseSession();
             <p>
                 To complete the implementation, you need to add JavaScript code that communicates with the Web Authentication API (WebAuthn) in the browser. The WebAuthn API provides the client-side functionality for secure authentication.
             </p>
+            <p>
+                The following is a minimal sample of JavaScript code for creating discoverable credentials using the WebAuthn API in the browser. This code demonstrates the basic flow for communicating with the server-side REST API endpoints described above. <b>Note:</b> This example does not include error handling or production-level robustness. For real-world applications, you should add proper error handling and input validation.
+            </p>
             <pre class="code"><code class="language-js">async function requestCreateDiscoverableCredentialOptions(username, displayName) {
     const optionsRequest = {
         username: username,
