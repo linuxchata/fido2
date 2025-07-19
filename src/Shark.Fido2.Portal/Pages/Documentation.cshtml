@@ -127,7 +127,9 @@ app.UseSession();
             <p>
                 The following is a minimal sample of JavaScript code for creating discoverable credentials using the WebAuthn API in the browser. This code demonstrates the basic flow for communicating with the server-side REST API endpoints described above. <b>Note:</b> This example does not include error handling or production-level robustness. For real-world applications, you should add proper error handling and input validation.
             </p>
-            <pre class="code"><code class="language-js">async function requestCreateDiscoverableCredentialOptions(username, displayName) {
+            <details>
+                <summary>Click to expand</summary>
+                <pre class="code"><code class="language-js">async function requestCreateDiscoverableCredentialOptions(username, displayName) {
     const optionsRequest = {
         username: username,
         displayName: displayName,
@@ -138,9 +140,7 @@ app.UseSession();
             requireResidentKey: true
         }
     };
-
     const options = await fetchAttestationOptions(optionsRequest);
-
     await createCredential(options);
 }
 
@@ -172,7 +172,6 @@ async function createCredential(options) {
     };
 
     let attestation = await navigator.credentials.create(credentialCreationOptions);
-
     const credentials = {
         id: attestation.id,
         rawId: toBase64Url(attestation.rawId),
@@ -195,7 +194,6 @@ async function fetchAttestationOptions(optionsRequest) {
         },
         body: JSON.stringify(optionsRequest)
     });
-
     if (response.ok) {
         return await response.json();
     }
@@ -211,6 +209,65 @@ async function fetchAttestationResult(credentials) {
     });
 }
 </code></pre>
+            </details>
+            <p>Cursor here...</p>
+            <details>
+                <summary>Click to expand</summary>
+                <pre class="code"><code class="language-js">async function requestVerifyDiscoverableCredentialOptions() {
+    const optionsRequest = {};
+    const options = await fetchAssertionOptions(optionsRequest);
+    await requestCredential(options);
+}
+
+async function requestCredential(options) {
+    const credentialRequestOptions = {
+        publicKey: {
+            rpId: options.rpId,
+            challenge: toUint8Array(options.challenge),
+            allowCredentials: [],
+            timeout: options.timeout
+        },
+    };
+
+    let assertion = await navigator.credentials.get(credentialRequestOptions);
+    const credentials = {
+        id: assertion.id,
+        rawId: toBase64Url(assertion.rawId),
+        response: {
+            authenticatorData: toBase64Url(assertion.response.authenticatorData),
+            clientDataJson: toBase64Url(assertion.response.clientDataJSON),
+            signature: toBase64Url(assertion.response.signature),
+            userHandle: toBase64Url(assertion.response.userHandle),
+        },
+        type: assertion.type,
+    };
+
+    await fetchAssertionResult(credentials);
+}
+
+async function fetchAssertionOptions(optionsRequest) {
+    const response = await fetch('/assertion/options/', {
+        method: 'POST',
+        headers: {
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify(optionsRequest)
+    });
+    if (response.ok) {
+        return await response.json();
+    }
+}
+
+async function fetchAssertionResult(credentials) {
+    const response = await fetch('/assertion/result/', {
+        method: 'POST',
+        headers: {
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify(credentials)
+    });
+}</code></pre>
+            </details>
             <p>
                 This JavaScript code bridges the browser's WebAuthn API with the server-side REST API endpoints provided by the ASP.NET Core controllers described above.
             </p>
