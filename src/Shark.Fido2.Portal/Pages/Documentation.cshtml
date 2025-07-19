@@ -53,7 +53,7 @@ public AttestationController(IAttestation attestation)
 }
 </code></pre>
             <ol start="2">
-                <li><b>Get create options</b></li>
+                <li><b>Add endpoint to get create options</b></li>
             </ol>
             <pre class="code"><code class="language-csharp">[HttpPost("options")]
 public async Task<IActionResult> Options(ServerPublicKeyCredentialCreationOptionsRequest request, CancellationToken cancellationToken)
@@ -65,7 +65,7 @@ public async Task<IActionResult> Options(ServerPublicKeyCredentialCreationOption
 }
 </code></pre>
             <ol start="3">
-                <li><b>Create credential</b></li>
+                <li><b>Add endpoint to create credential</b></li>
             </ol>
             <pre class="code"><code class="language-csharp">[HttpPost("result")]
 public async Task<IActionResult> Result(ServerPublicKeyCredentialAttestation request, CancellationToken cancellationToken)
@@ -89,7 +89,7 @@ public AssertionController(IAssertion assertion)
 }
 </code></pre>
             <ol start="2">
-                <li><b>Get request options</b></li>
+                <li><b>Add endpoint to get request options</b></li>
             </ol>
             <pre class="code"><code class="language-csharp">[HttpPost("options")]
 public async Task<IActionResult> Options(ServerPublicKeyCredentialGetOptionsRequest request, CancellationToken cancellationToken)
@@ -101,7 +101,7 @@ public async Task<IActionResult> Options(ServerPublicKeyCredentialGetOptionsRequ
 }
 </code></pre>
             <ol start="3">
-                <li><b>Validate credential</b></li>
+                <li><b>Add endpoint to validate credential</b></li>
             </ol>
             <pre class="code"><code class="language-csharp">[HttpPost("result")]
 public async Task<IActionResult> Result(ServerPublicKeyCredentialAssertion request, CancellationToken cancellationToken)
