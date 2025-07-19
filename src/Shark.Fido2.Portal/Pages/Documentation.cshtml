@@ -33,6 +33,9 @@ builder.Services.AddFido2(builder.Configuration);
         </div>
         <div class="main-description">
             <h3 id="rest-api-controllers">REST API Controllers</h3>
+            <p>
+                To enable WebAuthn functionality in your application, you need to add REST API controllers that will handle the core WebAuthn operations—credential registration (attestation) and authentication (assertion). These controllers will expose endpoints for the frontend to interact with the WebAuthn flows.
+            </p>
             <h4>Attestation (Registration)</h4>
             <p>The Attestation controller handles the registration ceremony.</p>
             <ol>
