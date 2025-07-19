@@ -16,7 +16,19 @@ dotnet add package Shark.Fido2.Models
 dotnet add package Shark.Fido2.InMemory
 </code></pre>
             <p>
-                These packages provide the core WebAuthn functionality, data models, and an in-memory credential repository for development and testing. For production scenarios, consider using a persistent credential repository implementation.
+                These packages provide the core WebAuthn functionality, data models, and an in-memory credential repository for development and testing. For production, consider using a persistent credential store instead of the in-memory implementation.
+            </p>
+        </div>
+        <div class="main-description">
+            <h3 id="registration">Registration</h3>
+            <p>
+                To register the WebAuthn services in your ASP.NET Core application, add the following lines to your <code>Program.cs</code> file:
+            </p>
+            <pre class="code"><code class="language-csharp">builder.Services.AddFido2InMemoryStore();
+builder.Services.AddFido2(builder.Configuration);
+</code></pre>
+            <p>
+                <code>AddFido2(builder.Configuration)</code> registers the core WebAuthn services using your application's configuration. <code>AddFido2InMemoryStore()</code> registers an in-memory credential repository, suitable for development and testing. For production, consider using a persistent credential store instead of the in-memory implementation.
             </p>
         </div>
         <div class="main-description">
