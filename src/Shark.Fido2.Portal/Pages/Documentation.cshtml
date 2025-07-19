@@ -24,7 +24,11 @@ dotnet add package Shark.Fido2.InMemory
             <p>
                 To register the Shark WebAuthn services in your ASP.NET Core application, add the following lines to your <code>Program.cs</code> file:
             </p>
-            <pre class="code"><code class="language-csharp">builder.Services.AddFido2InMemoryStore();
+            <pre class="code"><code class="language-csharp">var builder = WebApplication.CreateBuilder(args);
+
+// Other service registrations
+
+builder.Services.AddFido2InMemoryStore();
 builder.Services.AddFido2(builder.Configuration);
 </code></pre>
             <p>
@@ -111,9 +115,17 @@ public async Task<IActionResult> Result(ServerPublicKeyCredentialAssertion reque
             <p>
                 <b>Note:</b> These controller examples use session state to store options between requests. To enable session support in your application, ensure that <code>Program.cs</code> includes calls to <code>AddSession</code> and <code>UseSession</code>:
             </p>
-            <pre class="code"><code class="language-csharp">builder.Services.AddSession();
-...
+            <pre class="code"><code class="language-csharp">var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddSession();
+
+// Other service registrations
+
+var app = builder.Build();
+
 app.UseSession();
+
+// Other middleware
 </code></pre>
             <p>
                 While the default in-memory session state is sufficient for development and testing, it is recommended to use a distributed cache (such as Redis) in production environments.
