@@ -41,9 +41,9 @@ Attestation controller
 1. Get create options.
 ```csharp
 [HttpPost("options")]
-public async Task<IActionResult> Options(ServerPublicKeyCredentialCreationOptionsRequest request)
+public async Task<IActionResult> Options(ServerPublicKeyCredentialCreationOptionsRequest request, CancellationToken cancellationToken)
 {
-    var createOptions = await _attestation.CreateOptions(request.Map());
+    var createOptions = await _attestation.CreateOptions(request.Map(), cancellationToken);
     var response = createOptions.Map();
     HttpContext.Session.SetString("CreateOptions", JsonSerializer.Serialize(createOptions));
     return Ok(response);
@@ -53,11 +53,11 @@ public async Task<IActionResult> Options(ServerPublicKeyCredentialCreationOption
 2. Create credential.
 ```csharp
 [HttpPost("result")]
-public async Task<IActionResult> Result(ServerPublicKeyCredentialAttestation request)
+public async Task<IActionResult> Result(ServerPublicKeyCredentialAttestation request, CancellationToken cancellationToken)
 {
     var createOptionsString = HttpContext.Session.GetString("CreateOptions");
     var createOptions = JsonSerializer.Deserialize<PublicKeyCredentialCreationOptions>(createOptionsString!);
-    await _attestation.Complete(request.Map(), createOptions!);
+    await _attestation.Complete(request.Map(), createOptions!, cancellationToken);
     return Ok(ServerResponse.Create());
 }
 ```
@@ -67,9 +67,9 @@ Assertion controller
 1. Get request options.
 ```csharp
 [HttpPost("options")]
-public async Task<IActionResult> Options(ServerPublicKeyCredentialGetOptionsRequest request)
+public async Task<IActionResult> Options(ServerPublicKeyCredentialGetOptionsRequest request, CancellationToken cancellationToken)
 {
-    var requestOptions = await _assertion.RequestOptions(request.Map());
+    var requestOptions = await _assertion.RequestOptions(request.Map(), cancellationToken);
     var response = requestOptions.Map();
     HttpContext.Session.SetString("RequestOptions", JsonSerializer.Serialize(requestOptions));
     return Ok(response);
@@ -79,11 +79,11 @@ public async Task<IActionResult> Options(ServerPublicKeyCredentialGetOptionsRequ
 2. Validate credential.
 ```csharp
 [HttpPost("result")]
-public async Task<IActionResult> Result(ServerPublicKeyCredentialAssertion request)
+public async Task<IActionResult> Result(ServerPublicKeyCredentialAssertion request, CancellationToken cancellationToken)
 {
     var requestOptionsString = HttpContext.Session.GetString("RequestOptions");
     var requestOptions = JsonSerializer.Deserialize<PublicKeyCredentialRequestOptions>(requestOptionsString!);
-    await _assertion.Complete(request.Map(), requestOptions!);
+    await _assertion.Complete(request.Map(), requestOptions!, cancellationToken);
     return Ok(ServerResponse.Create());
 }
 ```
@@ -114,12 +114,12 @@ The server side can be customized using the following configuration options. You
 Example `appsettings.json` file: [appsettings.Production.json](https://github.com/linuxchata/fido2/blob/main/src/Shark.Fido2.Portal/appsettings.Production.json)
 
 ## Client side (JavaScript)
-To complete the implementation, you need to add JavaScript code that communicates with the Web Authentication API (WebAuthn) in the browser. The WebAuthn API provides the client-side functionality for secure authentication. Below you can find sample implementation for communication with WebAuthn:
+To complete the implementation, you must add JavaScript code that communicates with the Web Authentication API in the browser. This API handles the client side of the authentication process. Below you can find sample implementation for communication with the Web Authentication API in the browser:
 
 - [fido2-ndc-attestation.js](https://github.com/linuxchata/fido2/blob/main/src/Shark.Fido2.Portal/wwwroot/js/ndc/fido2-ndc-attestation.js) handles the registration process using the Web Authentication API (`navigator.credentials.create`).
 - [fido2-ndc-assertion.js](https://github.com/linuxchata/fido2/blob/main/src/Shark.Fido2.Portal/wwwroot/js/ndc/fido2-ndc-assertion.js) handles the authentication process using the Web Authentication API (`navigator.credentials.get`).
 
-This JavaScript code bridges the browser's WebAuthn API with the server-side REST API endpoints provided by the ASP.NET Core controllers described above.
+This JavaScript code bridges the browser's Web Authentication API with the server-side REST API endpoints provided by the ASP.NET Core controllers described above.
 
 # Packages
 | Package Name | Status |

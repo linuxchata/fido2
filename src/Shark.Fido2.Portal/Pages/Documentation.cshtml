@@ -1,0 +1,396 @@
+@page
+@model DocumentationModel
+
+<div class="main-container">
+    <div class="main-section">
+        <div class="main-header">
+            <h2>Documentation</h2>
+        </div>
+        <div class="main-description">
+            <h3 id="installation">Installation</h3>
+            <p>
+                To get started with <b>Shark WebAuthn</b> in your ASP.NET Core application, add the following NuGet packages to your project:
+            </p>
+            <pre class="code"><code class="language-bash">dotnet add package Shark.Fido2.Core
+dotnet add package Shark.Fido2.Models
+dotnet add package Shark.Fido2.InMemory
+</code></pre>
+            <p>
+                These packages provide the core WebAuthn functionality, data models, and an in-memory credential repository for development and testing. For production, consider using a persistent credential store instead of the in-memory implementation.
+            </p>
+        </div>
+        <div class="main-description">
+            <h3 id="registration">Registration</h3>
+            <p>
+                To register the Shark WebAuthn services in your ASP.NET Core application, add the following lines to your <code>Program.cs</code> file:
+            </p>
+            <pre class="code"><code class="language-csharp">var builder = WebApplication.CreateBuilder(args);
+
+// Other service registrations
+
+builder.Services.AddFido2InMemoryStore();
+builder.Services.AddFido2(builder.Configuration);
+</code></pre>
+            <p>
+                <code>AddFido2(builder.Configuration)</code> registers the core Shark WebAuthn services using your application's configuration. <code>AddFido2InMemoryStore()</code> registers an in-memory credential repository, suitable for development and testing. For production, consider using a persistent credential store instead of the in-memory implementation.
+            </p>
+        </div>
+        <div class="main-description">
+            <h3 id="rest-api-controllers">REST API Controllers</h3>
+            <p>
+                To enable WebAuthn functionality in your application, you need to add REST API controllers that will handle the core WebAuthn operations — credential registration (attestation) and authentication (assertion). These controllers will expose endpoints for the frontend to interact with the WebAuthn flows.
+            </p>
+            <h4>Attestation (Registration)</h4>
+            <p>The Attestation controller handles the registration ceremony.</p>
+            <ol>
+                <li><b>Create the <code>AttestationController</code> and inject <code>IAttestation</code> interface into its constructor</b></li>
+            </ol>
+            <pre class="code"><code class="language-csharp">private readonly IAttestation _attestation;
+
+public AttestationController(IAttestation attestation)
+{
+    _attestation = attestation;
+}
+</code></pre>
+            <ol start="2">
+                <li><b>Add endpoint to get create options</b></li>
+            </ol>
+            <pre class="code"><code class="language-csharp">[HttpPost("options")]
+public async Task<IActionResult> Options(ServerPublicKeyCredentialCreationOptionsRequest request, CancellationToken cancellationToken)
+{
+    var createOptions = await _attestation.CreateOptions(request.Map(), cancellationToken);
+    var response = createOptions.Map();
+    HttpContext.Session.SetString("CreateOptions", JsonSerializer.Serialize(createOptions));
+    return Ok(response);
+}
+</code></pre>
+            <ol start="3">
+                <li><b>Add endpoint to create credential</b></li>
+            </ol>
+            <pre class="code"><code class="language-csharp">[HttpPost("result")]
+public async Task<IActionResult> Result(ServerPublicKeyCredentialAttestation request, CancellationToken cancellationToken)
+{
+    var createOptionsString = HttpContext.Session.GetString("CreateOptions");
+    var createOptions = JsonSerializer.Deserialize<PublicKeyCredentialCreationOptions>(createOptionsString!);
+    await _attestation.Complete(request.Map(), createOptions!, cancellationToken);
+    return Ok(ServerResponse.Create());
+}
+</code></pre>
+            <h4>Assertion (Authentication)</h4>
+            <p>The Assertion controller handles the authentication ceremony.</p>
+            <ol>
+                <li><b>Create the <code>AssertionController</code> and inject <code>IAssertion</code> interface into its constructor</b></li>
+            </ol>
+            <pre class="code"><code class="language-csharp">private readonly IAssertion _attestation;
+
+public AssertionController(IAssertion assertion)
+{
+    _assertion = assertion;
+}
+</code></pre>
+            <ol start="2">
+                <li><b>Add endpoint to get request options</b></li>
+            </ol>
+            <pre class="code"><code class="language-csharp">[HttpPost("options")]
+public async Task<IActionResult> Options(ServerPublicKeyCredentialGetOptionsRequest request, CancellationToken cancellationToken)
+{
+    var requestOptions = await _assertion.RequestOptions(request.Map(), cancellationToken);
+    var response = requestOptions.Map();
+    HttpContext.Session.SetString("RequestOptions", JsonSerializer.Serialize(requestOptions));
+    return Ok(response);
+}
+</code></pre>
+            <ol start="3">
+                <li><b>Add endpoint to validate credential</b></li>
+            </ol>
+            <pre class="code"><code class="language-csharp">[HttpPost("result")]
+public async Task<IActionResult> Result(ServerPublicKeyCredentialAssertion request, CancellationToken cancellationToken)
+{
+    var requestOptionsString = HttpContext.Session.GetString("RequestOptions");
+    var requestOptions = JsonSerializer.Deserialize<PublicKeyCredentialRequestOptions>(requestOptionsString!);
+    await _assertion.Complete(request.Map(), requestOptions!, cancellationToken);
+    return Ok(ServerResponse.Create());
+}
+</code></pre>
+            <p>
+                <b>Note:</b> These controller examples use session state to store options between requests. To enable session support in your application, ensure that <code>Program.cs</code> includes calls to <code>AddSession</code> and <code>UseSession</code>:
+            </p>
+            <pre class="code"><code class="language-csharp">var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddSession();
+
+// Other service registrations
+
+var app = builder.Build();
+
+app.UseSession();
+
+// Other middleware
+</code></pre>
+            <p>
+                While the default in-memory session state is sufficient for development and testing, it is recommended to use a distributed cache (such as Redis) in production environments.
+            </p>
+        </div>
+        <div class="main-description">
+            <h3 id="clientside">Client side (JavaScript)</h3>
+            <p>
+                To complete the implementation, you must add JavaScript code that communicates with the Web Authentication API in the browser. This API handles the client side of the authentication process.
+            </p>
+            <ol start="1">
+                <li><b>Add <code>navigator.credentials.create()</code> call</b></li>
+            </ol>
+            <p>
+                The following is a minimal sample of JavaScript code for creating discoverable credentials using the Web Authentication API in the browser. This code demonstrates the basic flow for communicating with the server-side REST API endpoints described above. <b>Note:</b> This example does not include production-level safeguards for simplicity. For real-world applications, you should add proper error handling and input validation.
+            </p>
+            <details>
+                <summary>Click to expand</summary>
+                <pre class="code"><code class="language-js">async function requestCreateDiscoverableCredentialOptions(username, displayName) {
+    const optionsRequest = {
+        username: username,
+        displayName: displayName,
+        attestation: 'direct',
+        authenticatorSelection: {
+            residentKey: 'required',
+            userVerification: 'required',
+            requireResidentKey: true
+        }
+    };
+    const options = await fetchAttestationOptions(optionsRequest);
+    await createCredential(options);
+}
+
+async function createCredential(options) {
+    const credentialCreationOptions = {
+        publicKey: {
+            rp: {
+                id: options.rp.id,
+                name: options.rp.name,
+            },
+            user: {
+                id: toUint8Array(options.user.id),
+                name: options.user.name,
+                displayName: options.user.displayName,
+            },
+            pubKeyCredParams: options.pubKeyCredParams.map(param => ({
+                type: param.type,
+                alg: param.alg,
+            })),
+            challenge: toUint8Array(options.challenge),
+            excludeCredentials: options.excludeCredentials.map(credential => ({
+                id: toUint8Array(credential.id),
+                transports: credential.transports,
+                type: credential.type,
+            })),
+            timeout: options.timeout,
+            attestation: options.attestation
+        },
+    };
+
+    let attestation = await navigator.credentials.create(credentialCreationOptions);
+    const credentials = {
+        id: attestation.id,
+        rawId: toBase64Url(attestation.rawId),
+        response: {
+            attestationObject: toBase64Url(attestation.response.attestationObject),
+            clientDataJson: toBase64Url(attestation.response.clientDataJSON),
+            transports: attestation.response.getTransports(),
+        },
+        type: attestation.type,
+    };
+
+    await fetchAttestationResult(credentials);
+}
+
+async function fetchAttestationOptions(optionsRequest) {
+    const response = await fetch('/attestation/options/', {
+        method: 'POST',
+        headers: {
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify(optionsRequest)
+    });
+    if (response.ok) {
+        return await response.json();
+    }
+}
+
+async function fetchAttestationResult(credentials) {
+    const response = await fetch('/attestation/result/', {
+        method: 'POST',
+        headers: {
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify(credentials)
+    });
+}
+</code></pre>
+            </details>
+            <ol start="2">
+                <li><b>Add <code>navigator.credentials.get()</code> call</b></li>
+            </ol>
+            <p>
+                The following is a minimal sample of JavaScript code for performing authentication with discoverable credentials using the Web Authentication API in the browser. <b>Note:</b> This example does not include production-level safeguards for simplicity. For real-world applications, you should add proper error handling and input validation.
+            </p>
+            <details>
+                <summary>Click to expand</summary>
+                <pre class="code"><code class="language-js">async function requestVerifyDiscoverableCredentialOptions() {
+    const optionsRequest = {};
+    const options = await fetchAssertionOptions(optionsRequest);
+    await requestCredential(options);
+}
+
+async function requestCredential(options) {
+    const credentialRequestOptions = {
+        publicKey: {
+            rpId: options.rpId,
+            challenge: toUint8Array(options.challenge),
+            allowCredentials: [],
+            timeout: options.timeout
+        },
+    };
+
+    let assertion = await navigator.credentials.get(credentialRequestOptions);
+    const credentials = {
+        id: assertion.id,
+        rawId: toBase64Url(assertion.rawId),
+        response: {
+            authenticatorData: toBase64Url(assertion.response.authenticatorData),
+            clientDataJson: toBase64Url(assertion.response.clientDataJSON),
+            signature: toBase64Url(assertion.response.signature),
+            userHandle: toBase64Url(assertion.response.userHandle),
+        },
+        type: assertion.type,
+    };
+
+    await fetchAssertionResult(credentials);
+}
+
+async function fetchAssertionOptions(optionsRequest) {
+    const response = await fetch('/assertion/options/', {
+        method: 'POST',
+        headers: {
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify(optionsRequest)
+    });
+    if (response.ok) {
+        return await response.json();
+    }
+}
+
+async function fetchAssertionResult(credentials) {
+    const response = await fetch('/assertion/result/', {
+        method: 'POST',
+        headers: {
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify(credentials)
+    });
+}</code></pre>
+            </details>
+            <p>
+                This JavaScript code bridges the browser's Web Authentication API with the server-side REST API endpoints provided by the ASP.NET Core controllers described above. More information about the Web Authentication API is available on the MDN Web Docs site at <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Authentication_API" target="_blank" class="resource-link">developer.mozilla.org</a> page.
+            </p>
+        </div>
+        <div class="main-description">
+            <h4>Browsers Support</h4>
+            <p>Up-to-date details regarding the Web Authentication API support across modern browsers can be found on <a href="https://caniuse.com/webauthn" target="_blank" class="resource-link">Can I use</a> page.</p>
+        </div>
+        <div class="main-description">
+            <h3 id="configuration">Configuration</h3>
+            <p>
+                The <code>Shark.Fido2.Core</code> library requires specific configuration to operate as a WebAuthn relying party. Configuration is typically provided via the <code>Fido2Configuration</code> section in your application's configuration files (e.g., <code>appsettings.json</code>, <code>appsettings.Production.json</code>). This section details all available configuration options, their default values, and their intended usage.
+            </p>
+        </div>
+        <div class="main-description">
+            <h4>Configuration Schema</h4>
+            <p>The following is an example of the server-side configuration.</p>
+            <pre class="code"><code class="language-json">{
+  "Fido2Configuration": {
+    "RelyingPartyId": "example.com",
+    "RelyingPartyIdName": "Example Corporation",
+    "Origins": [ "https://example.com" ],
+    "Timeout": "60000",
+    "AllowNoneAttestation": true,
+    "AllowSelfAttestation": true,
+    "EnableTrustedExecutionEnvironmentOnly": false,
+    "EnableMetadataService": true,
+    "EnableStrictAuthenticatorVerification": false,
+    "MetadataServiceConfiguration": {
+      "MetadataBlobLocation": "https://mds3.fidoalliance.org/",
+      "RootCertificateLocationUrl": "http://secure.globalsign.com/cacert/root-r3.crt",
+      "MaximumTokenSizeInBytes": 6291456
+    }
+  }
+}
+</code></pre>
+            <p>A minimal server-side configuration example is shown below.</p>
+            <pre class="code"><code class="language-json">{
+  "Fido2Configuration": {
+    "RelyingPartyId": "example.com",
+    "RelyingPartyIdName": "Example Corporation",
+    "Origins": [ "https://example.com" ]
+  }
+}
+</code></pre>
+        </div>
+        <div class="main-description">
+            <h4>Property Reference</h4>
+            <p>Core Configuration</p>
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Option</th>
+                        <th>Default</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>RelyingPartyId</code></td><td></td><td>Valid domain string identifying the Relying Party on whose behalf a given registration or authentication ceremony is being performed. This is a critical parameter in the WebAuthn protocol. It defines the security scope within which credentials are valid. Therefore, careful selection is essential, as an incorrect or overly broad value can lead to unintended credential reuse or security vulnerabilities.</td></tr>
+                    <tr><td><code>RelyingPartyIdName</code></td><td></td><td>Human-palatable identifier for the Relying Party, intended only for display.</td></tr>
+                    <tr><td><code>Origins</code></td><td></td><td>List of the fully qualified origins of the Relying Party making the request, passed to the authenticator by the browser.</td></tr>
+                    <tr><td><code>Timeout</code></td><td><code>60000</code></td><td>Time, in milliseconds, that the Relying Party is willing to wait for the call to complete.</td></tr>
+                    <tr><td><code>AllowNoneAttestation</code></td><td><code>true</code></td><td>Value indicating whether None attestation type is acceptable under Relying Party policy. <a href="https://www.w3.org/TR/webauthn-2/#none" target="_blank" class="resource-link">None attestation</a> is used when the authenticator doesn't have any attestation information available.</td></tr>
+                    <tr><td><code>AllowSelfAttestation</code></td><td><code>true</code></td><td>Value indicating whether Self attestation type is acceptable under Relying Party policy. <a href="https://www.w3.org/TR/webauthn-2/#self-attestation" target="_blank" class="resource-link">Self attestation</a> is used when the authenticator doesn't have a dedicated attestation key pair or a vendor-issued certificate.</td></tr>
+                    <tr><td><code>EnableTrustedExecutionEnvironmentOnly</code></td><td><code>true</code></td><td>Value indicating whether the Relying Party trusts only keys that are securely generated and stored in a Trusted Execution Environment (Android Key Attestation).</td></tr>
+                    <tr><td><code>EnableMetadataService</code></td><td><code>true</code></td><td>Value indicating whether the Relying Party uses the Metadata Service to verify the attestation object.</td></tr>
+                    <tr><td><code>EnableStrictAuthenticatorVerification</code></td><td><code>false</code></td><td>Value indicating whether the Relying Party requires strict verification of authenticators. If enabled, missing metadata for the authenticator would cause attestation to fail.</td></tr>
+                </tbody>
+            </table>
+            <p>FIDO Metadata Service Configuration</p>
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Option</th>
+                        <th>Default</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>MetadataBlobLocation</code></td><td><code>https://mds3.fidoalliance.org/</code></td><td>Location of the centralized and trusted source of information about FIDO authenticators (Metadata Service BLOB).</td></tr>
+                    <tr><td><code>RootCertificateLocationUrl</code></td><td><code>http://secure.globalsign.com/cacert/root-r3.crt</code></td><td>Location of GlobalSign Root R3 for Metadata Service BLOB.</td></tr>
+                    <tr><td><code>MaximumTokenSizeInBytes</code></td><td><code>6291456</code></td><td>Maximum token size in bytes that will be processed. This configuration is related to the Metadata Service BLOB size.</td></tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="main-description">
+            <h4>Configuration Usage</h4>
+            <p>
+                Add the <code>Fido2Configuration</code> section to your <code>appsettings.json</code> or environment-specific configuration file.
+            </p>
+        </div>
+        <div class="main-description">
+            <h4>Best Practices</h4>
+            <ul>
+                <li><strong>EnableMetadataService</strong> is recommended for production environments to ensure authenticators are validated against the FIDO Metadata Service.</li>
+            </ul>
+        </div>
+        <div class="main-description">
+            <h4>Troubleshooting</h4>
+            <ul>
+                <li>If authentication fails with an "origin" error, verify that the <code>Origins</code> array matches the actual origin of your frontend application.</li>
+                <li>If using the Metadata Service, ensure your application can reach the URLs specified in <code>MetadataServiceConfiguration</code>.</li>
+            </ul>
+        </div>
+    </div>
+</div> 
