@@ -39,6 +39,16 @@ builder.Services.AddFido2(builder.Configuration);
             <h4>Attestation (Registration)</h4>
             <p>The Attestation controller handles the registration ceremony.</p>
             <ol>
+                <li><b>Create the <code>AttestationController</code> and inject <code>IAttestation</code> interface into its constructor</b></li>
+            </ol>
+            <pre class="code"><code class="language-csharp">private readonly IAttestation _attestation;
+
+public AttestationController(IAttestation attestation)
+{
+    _attestation = attestation;
+}
+</code></pre>
+            <ol start="2">
                 <li><b>Get create options</b></li>
             </ol>
             <pre class="code"><code class="language-csharp">[HttpPost("options")]
@@ -50,7 +60,7 @@ public async Task<IActionResult> Options(ServerPublicKeyCredentialCreationOption
     return Ok(response);
 }
 </code></pre>
-            <ol start="2">
+            <ol start="3">
                 <li><b>Create credential</b></li>
             </ol>
             <pre class="code"><code class="language-csharp">[HttpPost("result")]
@@ -65,6 +75,16 @@ public async Task<IActionResult> Result(ServerPublicKeyCredentialAttestation req
             <h4>Assertion (Authentication)</h4>
             <p>The Assertion controller handles the authentication ceremony.</p>
             <ol>
+                <li><b>Create the <code>AssertionController</code> and inject <code>IAssertion</code> interface into its constructor</b></li>
+            </ol>
+            <pre class="code"><code class="language-csharp">private readonly IAssertion _attestation;
+
+public AssertionController(IAssertion assertion)
+{
+    _assertion = assertion;
+}
+</code></pre>
+            <ol start="2">
                 <li><b>Get request options</b></li>
             </ol>
             <pre class="code"><code class="language-csharp">[HttpPost("options")]
@@ -76,7 +96,7 @@ public async Task<IActionResult> Options(ServerPublicKeyCredentialGetOptionsRequ
     return Ok(response);
 }
 </code></pre>
-            <ol start="2">
+            <ol start="3">
                 <li><b>Validate credential</b></li>
             </ol>
             <pre class="code"><code class="language-csharp">[HttpPost("result")]
@@ -97,6 +117,15 @@ app.UseSession();
 </code></pre>
             <p>
                 While the default in-memory session state is sufficient for development and testing, it is recommended to use a distributed cache (such as Redis) in production environments.
+            </p>
+        </div>
+        <div class="main-description">
+            <h3 id="clientside">Client side (JavaScript)</h3>
+            <p>
+                To complete the implementation, you need to add JavaScript code that communicates with the Web Authentication API (WebAuthn) in the browser. The WebAuthn API provides the client-side functionality for secure authentication.
+            </p>
+            <p>
+                This JavaScript code bridges the browser's WebAuthn API with the server-side REST API endpoints provided by the ASP.NET Core controllers described above.
             </p>
         </div>
         <div class="main-description">
