@@ -7,7 +7,7 @@
             <h2>Documentation</h2>
         </div>
         <div class="main-description">
-            <h3 id="installation">Installation</h3>
+            <h3 id="installation">Packages Installation</h3>
             <p>
                 To get started with <b>Shark WebAuthn</b> in your ASP.NET Core application, add the following NuGet packages to your project:
             </p>
@@ -16,11 +16,11 @@ dotnet add package Shark.Fido2.Models
 dotnet add package Shark.Fido2.InMemory
 </code></pre>
             <p>
-                These packages provide the core WebAuthn functionality, data models, and an in-memory credential repository for development and testing. For production, consider using a persistent credential store instead of the in-memory implementation.
+                These packages provide the core WebAuthn functionality, data models, and an in-memory credential repository for development and testing. For production, consider using a persistent credential store instead of the in-memory implementation. See the <a href="/Documentation#persistent-datastores" class="resource-link">Persistent Datastores</a> section for details on integrating with Microsoft SQL Server and Amazon DynamoDB.
             </p>
         </div>
         <div class="main-description">
-            <h3 id="registration">Registration</h3>
+            <h3 id="registration">Dependencies Registration</h3>
             <p>
                 To register the Shark WebAuthn services in your ASP.NET Core application, add the following lines to your <code>Program.cs</code> file:
             </p>
@@ -393,21 +393,28 @@ async function fetchAssertionResult(credentials) {
             </ul>
         </div>
         <div class="main-description">
-            <h3 id="permanent-datastores">Permanent Datastores</h3>
+            <h3 id="persistent-datastores">Persistent Datastores</h3>
             <p>
                 For production environments, you should use a persistent credential store instead of the in-memory implementation. <b>Shark WebAuthn</b> provides support for various database providers.
             </p>
             <h4 id="sql-server">Microsoft SQL Server</h4>
             <p>
-                To use SQL Server as your credential store, follow these steps:
+                To use Microsoft SQL Server as your credential store, follow these steps:
             </p>
-            <ol>
-                <li><b>Installation</b></li>
+            <ol start="1">
+                <li><b>Database Setup</b></li>
             </ol>
+            <p>
+                Create the required database table by running the SQL table creation script available at <a href="https://github.com/linuxchata/fido2/blob/main/scripts/sqlserver/sqlserver_table_creation.sql" target="_blank" class="resource-link">SQL Server Table Creation Script</a>.
+            </p>
+            <ol start="2">
+                <li><b>Package Installation</b></li>
+            </ol>
+            <p>Add the following NuGet packages to your project:</p>
             <pre class="code"><code class="language-bash">dotnet add package Shark.Fido2.SqlServer
 </code></pre>
-            <ol start="2">
-                <li><b>Registration</b></li>
+            <ol start="3">
+                <li><b>Dependencies Registration</b></li>
             </ol>
             <p>
                 Replace the in-memory store registration with Microsoft SQL Server in your <code>Program.cs</code>:
@@ -419,7 +426,7 @@ async function fetchAssertionResult(credentials) {
 builder.Services.AddFido2SqlServer();
 builder.Services.AddFido2(builder.Configuration);
 </code></pre>
-            <ol start="3">
+            <ol start="4">
                 <li><b>Configuration</b></li>
             </ol>
             <p>
@@ -427,27 +434,55 @@ builder.Services.AddFido2(builder.Configuration);
             </p>
             <pre class="code"><code class="language-json">{
   "ConnectionStrings": {
-    "DefaultConnection": "Server=SQL_SERVER_INSTANCE;Database=fido2;OTHER_PARAMETERS;"
+    "DefaultConnection": "Server=SQL_SERVER_INSTANCE;Database=DATABASE_NAME;OTHER_PARAMETERS;"
   }
 }
 </code></pre>
-            <ol start="4">
-                <li><b>Database Setup</b></li>
-            </ol>
-            <p>
-                Create the required database tables by running the SQL table creation script available at <a href="https://github.com/linuxchata/fido2/blob/main/scripts/sqlserver/sqlserver_table_creation.sql" target="_blank" class="resource-link">SQL Server Table Creation Script</a>.
-            </p>
             <h4 id="amazon-dynamodb">Amazon DynamoDB</h4>
             <p>
                 To use Amazon DynamoDB as your credential store, follow these steps:
             </p>
-            <ol>
-                <li><b>Installation</b></li>
+            <ol start="1">
+                <li><b>Table Setup</b></li>
             </ol>
+            <p>
+                Create the Amazon DynamoDB table with the following parameters:
+            </p>
+            <ul>
+                <li><strong>Table Name:</strong> <code>Credential</code></li>
+                <li><strong>Partition Key:</strong> <code>cid</code> (Binary)</li>
+                <li><strong>Sort key:</strong> -</li>
+                <li>
+                    <strong>Global Secondary Index:</strong> <code>UserNameIndex</code>
+                    <ul>
+                        <li><strong>Partition Key:</strong> <code>un</code> (String)</li>
+                        <li><strong>Projected Properties:</strong> include: <code>cid</code>, <code>tsp</code></li>
+                    </ul>
+                </li>
+            </ul>
+            <p>
+                Ensure your AWS credentials have the following permissions to access the <code>Credential</code> table.
+            </p>
+            <p>Actions</p>
+            <ul>
+                <li><code>dynamodb:GetItem</code></li>
+                <li><code>dynamodb:Query</code></li>
+                <li><code>dynamodb:PutItem</code></li>
+                <li><code>dynamodb:UpdateItem</code></li>
+            </ul>
+            <p>Resources</p>
+            <ul>
+                <li><code>arn:aws:dynamodb:AWS_REGION:AWS_ACCOUNT_ID:table/Credential</code></li>
+                <li><code>arn:aws:dynamodb:AWS_REGION:AWS_ACCOUNT_ID:table/Credential/index/UserNameIndex</code></li>
+            </ul>
+            <ol start="2">
+                <li><b>Package Installation</b></li>
+            </ol>
+            <p>Add the following NuGet packages to your project:</p>
             <pre class="code"><code class="language-bash">dotnet add package Shark.Fido2.DynamoDB
 </code></pre>
-            <ol start="2">
-                <li><b>Registration</b></li>
+            <ol start="3">
+                <li><b>Dependencies Registration</b></li>
             </ol>
             <p>
                 Replace the in-memory store registration with Amazon DynamoDB in your <code>Program.cs</code>:
@@ -459,7 +494,7 @@ builder.Services.AddFido2(builder.Configuration);
 builder.Services.AddFido2DynamoDB();
 builder.Services.AddFido2(builder.Configuration);
 </code></pre>
-            <ol start="3">
+            <ol start="4">
                 <li><b>Configuration</b></li>
             </ol>
             <p>
@@ -467,7 +502,7 @@ builder.Services.AddFido2(builder.Configuration);
             </p>
             <pre class="code"><code class="language-json">{
   "AmazonDynamoDbConfiguration": {
-    "AwsRegion": "eu-central-1",
+    "AwsRegion": "",
     "ConnectTimeoutInSeconds": 10,
     "MaxErrorRetry": 3,
     "AccessKey": "",
@@ -475,12 +510,6 @@ builder.Services.AddFido2(builder.Configuration);
   }
 }
 </code></pre>
-            <ol start="4">
-                <li><b>Database Setup</b></li>
-            </ol>
-            <p>
-                The DynamoDB tables will be created automatically when the application starts. Ensure your AWS credentials have the necessary permissions to create and manage DynamoDB tables.
-            </p>
         </div>
     </div>
-</div> 
+</div>
