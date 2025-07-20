@@ -81,7 +81,7 @@ public async Task<IActionResult> Result(ServerPublicKeyCredentialAttestation req
             <ol>
                 <li><b>Create the <code>AssertionController</code> and inject <code>IAssertion</code> interface into its constructor</b></li>
             </ol>
-            <pre class="code"><code class="language-csharp">private readonly IAssertion _attestation;
+            <pre class="code"><code class="language-csharp">private readonly IAssertion _assertion;
 
 public AssertionController(IAssertion assertion)
 {
