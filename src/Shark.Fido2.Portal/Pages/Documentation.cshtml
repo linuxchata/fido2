@@ -6,6 +6,18 @@
         <div class="main-header">
             <h2>Documentation</h2>
         </div>
+        <nav class="toc-block" aria-label="Table of Contents">
+            <h3>Table of Contents</h3>
+            <ul>
+                <li><a href="/Documentation#overview" class="resource-link">Overview</a></li>
+                <li><a href="/Documentation#installation" class="resource-link">Packages Installation</a></li>
+                <li><a href="/Documentation#registration" class="resource-link">Dependencies Registration</a></li>
+                <li><a href="/Documentation#server-side-api" class="resource-link">Server-side API</a></li>
+                <li><a href="/Documentation#client-side-integration" class="resource-link">Client-side Integration</a></li>
+                <li><a href="/Documentation#server-side-configuration" class="resource-link">Server-side Configuration</a></li>
+                <li><a href="/Documentation#persistent-datastores" class="resource-link">Persistent Datastores</a></li>
+            </ul>
+        </nav>
         <div class="main-description">
             <h3 id="overview">Overview</h3>
             <p>
@@ -42,11 +54,11 @@ builder.Services.AddFido2(builder.Configuration);
             </p>
         </div>
         <div class="main-description">
-            <h3 id="rest-api-controllers">REST API Controllers</h3>
+            <h3 id="server-side-api">Server-side API</h3>
             <p>
                 To enable WebAuthn functionality, your application requires REST API controllers to handle core WebAuthn operations: credential registration (attestation) and authentication (assertion). These controllers expose endpoints for frontend interaction with the WebAuthn flows.
             </p>
-            <h4>Attestation (Registration)</h4>
+            <h4 id="attestation-registration">Attestation (Registration)</h4>
             <p>The Attestation controller handles the registration ceremony.</p>
             <ol>
                 <li><b>Create the <code>AttestationController</code> and inject the <code>IAttestation</code> interface into its constructor</b></li>
@@ -82,7 +94,7 @@ public async Task<IActionResult> Result(ServerPublicKeyCredentialAttestation req
     return Ok(ServerResponse.Create());
 }
 </code></pre>
-            <h4>Assertion (Authentication)</h4>
+            <h4 id="assertion-authentication">Assertion (Authentication)</h4>
             <p>The Assertion controller handles the authentication ceremony.</p>
             <ol>
                 <li><b>Create the <code>AssertionController</code> and inject the <code>IAssertion</code> interface into its constructor</b></li>
@@ -138,7 +150,7 @@ app.UseSession();
             </p>
         </div>
         <div class="main-description">
-            <h3 id="clientside">Client side (JavaScript)</h3>
+            <h3 id="client-side-integration">Client-side Integration</h3>
             <p>
                 To finalize the implementation, you must incorporate JavaScript code that interacts with the browser's Web Authentication API. This API manages the client-side authentication process.
             </p>
@@ -299,17 +311,17 @@ async function fetchAssertionResult(credentials) {
             </p>
         </div>
         <div class="main-description">
-            <h4>Browsers Support</h4>
+            <h4 id="browsers-support">Browsers Support</h4>
             <p>Up-to-date details regarding the Web Authentication API support across modern browsers can be found on <a href="https://caniuse.com/webauthn" target="_blank" class="resource-link">Can I use</a> page.</p>
         </div>
         <div class="main-description">
-            <h3 id="configuration">Configuration</h3>
+            <h3 id="server-side-configuration">Server-side Configuration</h3>
             <p>
                 The <code>Shark.Fido2.Core</code> library requires specific configuration to operate as a WebAuthn relying party. Configuration is typically provided via the <code>Fido2Configuration</code> section in your application's configuration files (e.g., <code>appsettings.json</code>, <code>appsettings.Production.json</code>). This section details all available configuration options, their default values, and their intended usage.
             </p>
         </div>
         <div class="main-description">
-            <h4>Configuration Schema</h4>
+            <h4 id="configuration-schema">Configuration Schema</h4>
             <p>The following is an example of the server-side configuration.</p>
             <pre class="code"><code class="language-json">{
   "Fido2Configuration": {
@@ -341,7 +353,7 @@ async function fetchAssertionResult(credentials) {
 </code></pre>
         </div>
         <div class="main-description">
-            <h4>Property Reference</h4>
+            <h4 id="property-reference">Property Reference</h4>
             <p>Core Configuration</p>
             <table class="table table-bordered table-striped">
                 <thead>
@@ -380,19 +392,19 @@ async function fetchAssertionResult(credentials) {
             </table>
         </div>
         <div class="main-description">
-            <h4>Configuration Usage</h4>
+            <h4 id="configuration-usage">Configuration Usage</h4>
             <p>
                 Add the <code>Fido2Configuration</code> section to your <code>appsettings.json</code> or environment-specific configuration file.
             </p>
         </div>
         <div class="main-description">
-            <h4>Best Practices</h4>
+            <h4 id="best-practices">Best Practices</h4>
             <ul>
                 <li><strong>EnableMetadataService</strong> is recommended for production environments to ensure authenticators are validated against the FIDO Metadata Service.</li>
             </ul>
         </div>
         <div class="main-description">
-            <h4>Troubleshooting</h4>
+            <h4 id="troubleshooting">Troubleshooting</h4>
             <ul>
                 <li>If authentication fails with an "origin" error, verify that the <code>Origins</code> array matches the actual origin of your frontend application.</li>
                 <li>If using the Metadata Service, ensure your application can reach the URLs specified in <code>MetadataServiceConfiguration</code>.</li>
