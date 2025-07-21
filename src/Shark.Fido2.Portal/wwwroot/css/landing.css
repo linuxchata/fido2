@@ -369,7 +369,7 @@
     }
 
     .section-header {
-        padding: 0 var(--spacing-lnd-2xl);
+        padding: 0 var(--spacing-lnd-xl);
     }
 
         .section-header h2 {

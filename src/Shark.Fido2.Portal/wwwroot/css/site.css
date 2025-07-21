@@ -427,4 +427,9 @@ input:disabled {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
     }
+
+    .toc-block ul li a {
+        padding: 0.1rem 0;
+        display: inline-block;
+    }
 }
