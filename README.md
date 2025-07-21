@@ -26,10 +26,10 @@ This repository provides a server-side implementation of the WebAuthn web standa
 # Usage
 The following examples demonstrate how to implement passwordless authentication in your application.
 
-## Server side (ASP.NET Core Controllers)
+## Server-side API (ASP.NET Core Controllers)
 The sample C# code below is designed for ASP.NET Core controllers.
 
-### Registration
+### Dependencies Registration
 Registers both the credential store (in-memory or alternative) and the core dependencies.
 ```csharp
 builder.Services.AddFido2InMemoryStore();
@@ -88,7 +88,7 @@ public async Task<IActionResult> Result(ServerPublicKeyCredentialAssertion reque
 }
 ```
 
-### Configuration
+### Server-side Configuration
 The server side can be customized using the following configuration options. You can set these options in an `appsettings.json` file.
 
 #### Core Configuration
@@ -113,7 +113,7 @@ The server side can be customized using the following configuration options. You
 
 Example `appsettings.json` file: [appsettings.Production.json](https://github.com/linuxchata/fido2/blob/main/src/Shark.Fido2.Portal/appsettings.Production.json)
 
-## Client side (JavaScript)
+## Client-side Integration
 To complete the implementation, you must add JavaScript code that communicates with the Web Authentication API in the browser. This API handles the client side of the authentication process. Below you can find sample implementation for communication with the Web Authentication API in the browser:
 
 - [fido2-ndc-attestation.js](https://github.com/linuxchata/fido2/blob/main/src/Shark.Fido2.Portal/wwwroot/js/ndc/fido2-ndc-attestation.js) handles the registration process using the Web Authentication API (`navigator.credentials.create`).
