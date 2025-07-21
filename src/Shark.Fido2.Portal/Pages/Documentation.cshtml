@@ -38,22 +38,6 @@ dotnet add package Shark.Fido2.InMemory
             </p>
         </div>
         <div class="main-description">
-            <h3 id="registration">Dependencies Registration</h3>
-            <p>
-                To register the Shark WebAuthn services in your ASP.NET Core application, add the following lines to your <code>Program.cs</code> file:
-            </p>
-            <pre class="code"><code class="language-csharp">var builder = WebApplication.CreateBuilder(args);
-
-// Other service registrations
-
-builder.Services.AddFido2InMemoryStore();
-builder.Services.AddFido2(builder.Configuration);
-</code></pre>
-            <p>
-                <code>AddFido2(builder.Configuration)</code> registers the core Shark WebAuthn services using your application's configuration. <code>AddFido2InMemoryStore()</code> registers an in-memory credential repository, suitable for development and testing. For production, consider using a persistent credential store instead of the in-memory implementation.
-            </p>
-        </div>
-        <div class="main-description">
             <h3 id="server-side-configuration">Server-side Configuration</h3>
             <p>
                 The <code>Shark.Fido2.Core</code> library requires specific configuration to operate as a WebAuthn relying party. Configuration is typically provided via the <code>Fido2Configuration</code> section in your application's configuration files (e.g., <code>appsettings.json</code>, <code>appsettings.Production.json</code>). This section details all available configuration options, their default values, and their intended usage.
@@ -138,6 +122,22 @@ builder.Services.AddFido2(builder.Configuration);
                 <li>If authentication fails with an "origin" error, verify that the <code>Origins</code> array matches the actual origin of your frontend application.</li>
                 <li>If using the Metadata Service, ensure your application can reach the URLs specified in <code>MetadataServiceConfiguration</code>.</li>
             </ul>
+        </div>
+        <div class="main-description">
+            <h3 id="registration">Dependencies Registration</h3>
+            <p>
+                To register the Shark WebAuthn services in your ASP.NET Core application, add the following lines to your <code>Program.cs</code> file:
+            </p>
+            <pre class="code"><code class="language-csharp">var builder = WebApplication.CreateBuilder(args);
+
+// Other service registrations
+
+builder.Services.AddFido2InMemoryStore();
+builder.Services.AddFido2(builder.Configuration);
+</code></pre>
+            <p>
+                <code>AddFido2(builder.Configuration)</code> registers the core Shark WebAuthn services using your application's configuration. <code>AddFido2InMemoryStore()</code> registers an in-memory credential repository, suitable for development and testing. For production, consider using a persistent credential store instead of the in-memory implementation.
+            </p>
         </div>
         <div class="main-description">
             <h3 id="server-side-api">Server-side API</h3>
