@@ -455,14 +455,14 @@ builder.Services.AddFido2(builder.Configuration);
                 Create the Amazon DynamoDB table with the following parameters:
             </p>
             <ul>
-                <li><strong>Table Name:</strong> <code>Credential</code></li>
-                <li><strong>Partition Key:</strong> <code>cid</code> (Binary)</li>
-                <li><strong>Sort key:</strong> -</li>
+                <li>Table name: <code>Credential</code></li>
+                <li>Partition key: <code>cid</code> (Binary)</li>
+                <li>Sort key: -</li>
                 <li>
-                    <strong>Global Secondary Index:</strong> <code>UserNameIndex</code>
+                    Global secondary index name: <code>UserNameIndex</code>
                     <ul>
-                        <li><strong>Partition Key:</strong> <code>un</code> (String)</li>
-                        <li><strong>Projected Properties:</strong> include: <code>cid</code>, <code>tsp</code></li>
+                        <li>Partition key: <code>un</code> (String)</li>
+                        <li>Projected properties: include: <code>cid</code>, <code>tsp</code></li>
                     </ul>
                 </li>
             </ul>

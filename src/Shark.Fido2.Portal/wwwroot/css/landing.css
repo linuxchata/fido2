@@ -376,6 +376,10 @@
             font-size: var(--font-lnd-size-mobile-xl);
         }
 
+    .getting-started {
+        padding: 0 var(--spacing-lnd-base);
+    }
+
     .features-list {
         padding: 0 var(--spacing-lnd-base);
     }
