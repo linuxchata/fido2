@@ -2,7 +2,7 @@
 @using Shark.Fido2.Sample.Pages
 @model IndexModel
 
-<div>
+<div class="main">
     <h1 class="display-4 text-center">Web Authentication</h1>
     <h2 class="mb-4 fs-5 text-center text-muted">Non-discoverable Credentials</h2>
 
@@ -10,7 +10,7 @@
         <div id="register-container" class="section p-4 border rounded">
             <h3 class="mb-3">Registration</h3>
             <input id="username-register" type="text" class="form-control input-text" placeholder="Enter username" />
-            <span id="message" class="d-block mt-2 mb-2 text-danger"></span>
+            <span id="message-register" class="d-block mt-2 mb-2 text-danger"></span>
             <input id="display-name-register" type="text" class="form-control mb-3 input-text" placeholder="Enter display name" />
             <div class="button-container">
                 <button id="register" data-action="register" class="button btn btn-primary">Register</button>
