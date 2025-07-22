@@ -116,8 +116,8 @@ Example `appsettings.json` file: [appsettings.Production.json](https://github.co
 ## Client-side Integration
 To complete the implementation, you must add JavaScript code that communicates with the Web Authentication API in the browser. This API handles the client side of the authentication process. Below you can find sample implementation for communication with the Web Authentication API in the browser:
 
-- [fido2-ndc-attestation.js](https://github.com/linuxchata/fido2/blob/main/src/Shark.Fido2.Portal/wwwroot/js/ndc/fido2-ndc-attestation.js) handles the registration process using the Web Authentication API (`navigator.credentials.create`).
-- [fido2-ndc-assertion.js](https://github.com/linuxchata/fido2/blob/main/src/Shark.Fido2.Portal/wwwroot/js/ndc/fido2-ndc-assertion.js) handles the authentication process using the Web Authentication API (`navigator.credentials.get`).
+- [fido2-attestation.js](https://github.com/linuxchata/fido2/blob/main/src/Shark.Fido2.Sample/wwwroot/js/fido2-attestation.js) handles the registration process using the Web Authentication API (`navigator.credentials.create`).
+- [fido2-assertion.js](https://github.com/linuxchata/fido2/blob/main/src/Shark.Fido2.Sample/wwwroot/js/fido2-assertion.js) handles the authentication process using the Web Authentication API (`navigator.credentials.get`).
 
 This JavaScript code bridges the browser's Web Authentication API with the server-side REST API endpoints provided by the ASP.NET Core controllers described above.
 

@@ -1,4 +1,4 @@
-﻿// Registration
+﻿// Registration of non-discoverable credentials
 
 const registrationTitle = 'Web Authentication';
 

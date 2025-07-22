@@ -1,4 +1,4 @@
-﻿// Authentication
+﻿// Authentication with non-discoverable credentials
 
 const authenticationTitle = 'Web Authentication';
 
