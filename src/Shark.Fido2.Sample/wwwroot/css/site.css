@@ -33,6 +33,7 @@ input:-webkit-autofill {
     min-height: 350px;
     max-width: 1000px;
     margin: 10px auto;
+    padding: 0 2rem;
 }
 
 .main-controls-container {
@@ -60,9 +61,11 @@ input:-webkit-autofill {
 }
 
 .input-text {
-    padding: 8px;
+    padding: 12px;
+    font-size: 16px;
     background-color: #fff !important;
     background-clip: padding-box;
+    transition: all 0.3s ease;
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -75,6 +78,8 @@ input:-webkit-autofill {
 
 .button {
     flex-grow: 1;
+    padding: 12px 24px;
+    font-size: 16px;
 }
 
 @media (max-width: 768px) {
