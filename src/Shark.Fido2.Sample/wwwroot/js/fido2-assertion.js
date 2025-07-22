@@ -7,7 +7,11 @@ async function requestVerifyCredentialOptions(username) {
         username: username
     };
 
+    console.log("Start fetching assertion options");
+
     const options = await fetchAssertionOptions(optionsRequest);
+
+    console.log(JSON.stringify(options));
 
     await requestCredential(options);
 }
@@ -18,6 +22,8 @@ async function requestCredential(options) {
         ...(options.extensions.uvm && { uvm: options.extensions.uvm }),
         ...(options.extensions.largeBlob && { largeBlob: options.extensions.largeBlob })
     };
+
+    console.log("Starting to  request credential");
 
     // https://developer.mozilla.org/en-US/docs/Web/API/PublicKeyCredentialRequestOptions
     const credentialRequestOptions = {
@@ -35,6 +41,8 @@ async function requestCredential(options) {
         },
     };
 
+    console.log(JSON.stringify(credentialRequestOptions));
+
     let assertion;
     try {
         assertion = await navigator.credentials.get(credentialRequestOptions);
@@ -43,6 +51,8 @@ async function requestCredential(options) {
         toastr.error(error.message, authenticationTitle);
         return;
     }
+
+    console.log("Assertion object was received from browser");
 
     const credentials = {
         id: assertion.id,
@@ -57,7 +67,11 @@ async function requestCredential(options) {
         extensions: assertion.getClientExtensionResults(),
     };
 
+    console.log(JSON.stringify(credentials));
+
     await fetchAssertionResult(credentials);
+
+    console.log("Assertion result was received from REST API");
 }
 
 async function fetchAssertionOptions(optionsRequest) {
