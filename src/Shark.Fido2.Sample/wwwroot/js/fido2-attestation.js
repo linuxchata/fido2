@@ -1,13 +1,12 @@
 ﻿// Registration
 
-const toastrRegistrationTitle = 'Web Authentication';
+const registrationTitle = 'Web Authentication';
 
 async function requestCreateCredentialOptions(username, displayName) {
     const optionsRequest = {
         username: username,
         displayName: displayName,
-        attestation: 'direct',
-        authenticatorSelection: { userVerification: 'required' }
+        attestation: 'direct'
     };
 
     const options = await fetchAttestationOptions(optionsRequest);
@@ -57,7 +56,12 @@ async function createCredential(options) {
         attestation = await navigator.credentials.create(credentialCreationOptions);
     }
     catch (error) {
-        toastr.error(error.message, toastrRegistrationTitle);
+        if (error.name === 'InvalidStateError') {
+            toastr.error('The authenticator was not allowed because it was already registered.', registrationTitle);
+        }
+        else {
+            toastr.error(error.message, registrationTitle);
+        }
         return;
     }
 
@@ -94,7 +98,7 @@ async function fetchAttestationOptions(optionsRequest) {
             throw new Error(`Server responded with status code ${response.status}: ${errorMessage}`);
         }
     } catch (error) {
-        toastr.error("Error creating registration options", toastrRegistrationTitle);
+        toastr.error("Error creating registration options", registrationTitle);
         throw error;
     }
 }
@@ -110,14 +114,14 @@ async function fetchAttestationResult(credentials) {
         });
 
         if (response.ok) {
-            toastr.info('Registration was successful', toastrRegistrationTitle);
+            toastr.info('Registration was successful', registrationTitle);
         }
         else {
             const responseBody = await response.json();
             throw new Error(responseBody.errorMessage);
         }
     } catch (error) {
-        toastr.error(`Registration has failed. ${error.message}`, toastrRegistrationTitle);
+        toastr.error(`Registration has failed. ${error.message}`, registrationTitle);
     }
 }
 

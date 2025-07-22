@@ -1,11 +1,10 @@
 ﻿// Authentication
 
-const toastrAuthenticationTitle = 'Web Authentication';
+const authenticationTitle = 'Web Authentication';
 
 async function requestVerifyCredentialOptions(username) {
     const optionsRequest = {
-        username: username,
-        userVerification: 'required'
+        username: username
     };
 
     const options = await fetchAssertionOptions(optionsRequest);
@@ -41,7 +40,7 @@ async function requestCredential(options) {
         assertion = await navigator.credentials.get(credentialRequestOptions);
     }
     catch (error) {
-        toastr.error(error.message, toastrAuthenticationTitle);
+        toastr.error(error.message, authenticationTitle);
         return;
     }
 
@@ -79,7 +78,7 @@ async function fetchAssertionOptions(optionsRequest) {
             throw new Error(`Server responded with status code ${response.status}: ${errorMessage}`);
         }
     } catch (error) {
-        toastr.error("Error creating authentication options", toastrAuthenticationTitle);
+        toastr.error("Error creating authentication options", authenticationTitle);
         throw error;
     }
 }
@@ -95,14 +94,14 @@ async function fetchAssertionResult(credentials) {
         });
 
         if (response.ok) {
-            toastr.info('Authentication was successful', toastrAuthenticationTitle);
+            toastr.info('Authentication was successful', authenticationTitle);
         }
         else {
             const responseBody = await response.json();
             throw new Error(responseBody.errorMessage);
         }
     } catch (error) {
-        toastr.error(`Authentication has failed. ${error.message}`, toastrAuthenticationTitle);
+        toastr.error(`Authentication has failed. ${error.message}`, authenticationTitle);
     }
 }
 
