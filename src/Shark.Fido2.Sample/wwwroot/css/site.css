@@ -21,17 +21,7 @@ body {
     margin-bottom: 60px;
 }
 
-.main-controls-container {
-    display: flex;
-    flex-direction: column;
-    margin: auto;
-    justify-content: center;
-    width: 30%;
-    margin-top: 60px;
-    margin-bottom: 60px;
-}
-
-@media (max-width: 992px) {
+@media (max-width: 768px) {
     .main-controls-container {
         width: 100%;
     }
