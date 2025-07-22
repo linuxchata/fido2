@@ -4,15 +4,23 @@
 
 <div>
     <h1 class="display-4 text-center">Web Authentication</h1>
-    <h2 class="fs-5 text-center text-muted">Public Key Credentials</h2>
+    <h2 class="fs-5 text-center text-muted">Non-discoverable Credentials</h2>
 
     <div class="main-controls-container">
-        <input id="username" type="text" class="form-control input-text" placeholder="Enter username" />
-        <span id="message" class="d-block mt-2 mb-2 text-danger"></span>
-        <input id="displayName" type="text" class="form-control mb-3 input-text" placeholder="Enter display name" />
-        <div class="button-container">
-            <button id="register" data-action="register" class="button btn btn-primary">Register</button>
-            <button id="authenticate" data-action="authenticate" class="button btn btn-primary">Authenticate</button>
+        <div>
+            <input id="username" type="text" class="form-control input-text" placeholder="Enter username" />
+            <span id="message" class="d-block mt-2 mb-2 text-danger"></span>
+            <input id="displayName" type="text" class="form-control mb-3 input-text" placeholder="Enter display name" />
+            <div class="button-container">
+                <button id="register" data-action="register" class="button btn btn-primary">Register</button>
+            </div>
+        </div>
+        <div>
+            <input id="username" type="text" class="form-control input-text" placeholder="Enter username" />
+            <span id="message" class="d-block mt-2 mb-2 text-danger"></span>
+            <div class="button-container">
+                <button id="authenticate" data-action="authenticate" class="button btn btn-primary">Authenticate</button>
+            </div>
         </div>
     </div>
 </div>
