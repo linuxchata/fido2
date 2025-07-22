@@ -13,7 +13,7 @@ async function requestCreateCredentialOptions(username, displayName) {
 
     const options = await fetchAttestationOptions(optionsRequest);
 
-    console.log(`Server side assertion options\n${JSON.stringify(options)}`);
+    console.log(`Server side attestation options\n${JSON.stringify(options)}`);
 
     await createCredential(options);
 }
@@ -55,7 +55,7 @@ async function createCredential(options) {
         },
     };
 
-    console.log(`Mapped creation options\n${JSON.stringify(credentialCreationOptions)}`);
+    console.log(`Mapped attestation options\n${JSON.stringify(credentialCreationOptions)}`);
 
     let attestation;
     try {
@@ -89,7 +89,7 @@ async function createCredential(options) {
 
     await fetchAttestationResult(credentials);
 
-    console.log("Attestation result was received from server side");
+    console.log("Attestation was completed on server side");
 }
 
 async function fetchAttestationOptions(optionsRequest) {

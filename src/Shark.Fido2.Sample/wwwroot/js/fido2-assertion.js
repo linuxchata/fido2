@@ -11,7 +11,7 @@ async function requestVerifyCredentialOptions(username) {
 
     const options = await fetchAssertionOptions(optionsRequest);
 
-    console.log(`Server side assertion options\n${JSON.stringify(options) }`);
+    console.log(`Server side assertion options\n${JSON.stringify(options)}`);
 
     await requestCredential(options);
 }
@@ -39,7 +39,7 @@ async function requestCredential(options) {
         },
     };
 
-    console.log(`Mapped request options\n${JSON.stringify(credentialRequestOptions) }`);
+    console.log(`Mapped assertion options\n${JSON.stringify(credentialRequestOptions)}`);
 
     let assertion;
     try {
@@ -69,7 +69,7 @@ async function requestCredential(options) {
 
     await fetchAssertionResult(credentials);
 
-    console.log("Assertion result was received from server side");
+    console.log("Assertion was completed on server side");
 }
 
 async function fetchAssertionOptions(optionsRequest) {
