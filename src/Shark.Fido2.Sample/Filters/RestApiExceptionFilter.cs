@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Shark.Fido2.Portal.Filters;
+namespace Shark.Fido2.Sample.Filters;
 
 public class RestApiExceptionFilter : IExceptionFilter
 {

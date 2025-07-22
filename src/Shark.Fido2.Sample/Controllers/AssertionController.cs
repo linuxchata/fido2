@@ -6,6 +6,7 @@ using Shark.Fido2.Domain.Options;
 using Shark.Fido2.Models.Mappers;
 using Shark.Fido2.Models.Requests;
 using Shark.Fido2.Models.Responses;
+using Shark.Fido2.Sample.Filters;
 using Shark.Fido2.Sample.Swagger;
 using Swashbuckle.AspNetCore.Filters;
 
@@ -16,6 +17,7 @@ namespace Shark.Fido2.Sample.Controllers;
 /// </summary>
 [Route("[controller]")]
 [ApiController]
+[TypeFilter(typeof(RestApiExceptionFilter))]
 public class AssertionController(IAssertion assertion, ILogger<AssertionController> logger) : ControllerBase
 {
     private readonly IAssertion _assertion = assertion;
