@@ -376,8 +376,8 @@
             font-size: var(--font-lnd-size-mobile-xl);
         }
 
-    .getting-started {
-        padding: 0 var(--spacing-lnd-base);
+    .reduced-padding {
+        padding: 0 var(--spacing-lnd-sm);
     }
 
     .features-list {
