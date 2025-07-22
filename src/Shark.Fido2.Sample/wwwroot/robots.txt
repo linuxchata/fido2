@@ -22,7 +22,7 @@ Disallow: /appsettings.Test.json
 Disallow: /web.config
 
 # Sitemap location
-Sitemap: https://app-fido2-dev-01-hcguafdhd6ewfcgv.westeurope-01.azurewebsites.net/
+Sitemap: https://app-fido2-dev-01-hcguafdhd6ewfcgv.westeurope-01.azurewebsites.net/sitemap.xml
 
 # Crawl delay (optional - be respectful to server resources)
 Crawl-delay: 1
