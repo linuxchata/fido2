@@ -377,7 +377,7 @@
         }
 
     .reduced-padding {
-        padding: 0 var(--spacing-lnd-sm);
+        padding: 0 var(--spacing-lnd-base);
     }
 
     .features-list {
