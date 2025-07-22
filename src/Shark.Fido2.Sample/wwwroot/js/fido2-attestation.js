@@ -13,7 +13,7 @@ async function requestCreateCredentialOptions(username, displayName) {
 
     const options = await fetchAttestationOptions(optionsRequest);
 
-    console.log(JSON.stringify(options));
+    console.log(`Server side assertion options\n${JSON.stringify(options)}`);
 
     await createCredential(options);
 }
@@ -25,8 +25,6 @@ async function createCredential(options) {
         ...(options.extensions.credProps && { credProps: options.extensions.credProps }),
         ...(options.extensions.largeBlob && { largeBlob: options.extensions.largeBlob })
     };
-
-    console.log("Starting to create credential");
 
     // https://developer.mozilla.org/en-US/docs/Web/API/PublicKeyCredentialCreationOptions
     const credentialCreationOptions = {
@@ -57,7 +55,7 @@ async function createCredential(options) {
         },
     };
 
-    console.log(JSON.stringify(credentialCreationOptions));
+    console.log(`Mapped creation options\n${JSON.stringify(credentialCreationOptions)}`);
 
     let attestation;
     try {
@@ -87,11 +85,11 @@ async function createCredential(options) {
         extensions: attestation.getClientExtensionResults(),
     };
 
-    console.log(JSON.stringify(credentials));
+    console.log(`Mapped attestation object ${JSON.stringify(credentials)}`);
 
     await fetchAttestationResult(credentials);
 
-    console.log("Attestation result was received from REST API");
+    console.log("Attestation result was received from server side");
 }
 
 async function fetchAttestationOptions(optionsRequest) {
