@@ -69,6 +69,9 @@ public class AssertionController(IAssertion assertion, ILogger<AssertionControll
 
         var requestOptions = JsonSerializer.Deserialize<PublicKeyCredentialRequestOptions>(requestOptionsString!);
 
+        logger.LogInformation("Assertion create options: {RequestOptionsString}", requestOptionsString);
+        logger.LogInformation("Assertion: {Request}", JsonSerializer.Serialize(request.Map()));
+
         var response = await _assertion.Complete(request.Map(), requestOptions!, cancellationToken);
 
         if (response.IsValid)
