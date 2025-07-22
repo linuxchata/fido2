@@ -9,7 +9,11 @@ async function requestCreateCredentialOptions(username, displayName) {
         attestation: 'direct'
     };
 
+    console.log("Start fetching attestation options")
+
     const options = await fetchAttestationOptions(optionsRequest);
+
+    console.log(options)
 
     await createCredential(options);
 }
@@ -22,7 +26,7 @@ async function createCredential(options) {
         ...(options.extensions.largeBlob && { largeBlob: options.extensions.largeBlob })
     };
 
-    console.log("Start createCredential()")
+    console.log("Start creation of credential")
 
     // https://developer.mozilla.org/en-US/docs/Web/API/PublicKeyCredentialCreationOptions
     const credentialCreationOptions = {
@@ -53,7 +57,7 @@ async function createCredential(options) {
         },
     };
 
-    console.log("credentialCreationOptions were created")
+    console.log(credentialCreationOptions)
 
     let attestation;
     try {
@@ -83,9 +87,11 @@ async function createCredential(options) {
         extensions: attestation.getClientExtensionResults(),
     };
 
-    console.log("Attestation object was mapped")
+    console.log(credentials)
 
     await fetchAttestationResult(credentials);
+
+    console.log("Attestation result was received")
 }
 
 async function fetchAttestationOptions(optionsRequest) {
@@ -120,8 +126,6 @@ async function fetchAttestationResult(credentials) {
             },
             body: JSON.stringify(credentials)
         });
-
-        console.log("Attestation result was received")
 
         if (response.ok) {
             toastr.info('Registration was successful', registrationTitle);
