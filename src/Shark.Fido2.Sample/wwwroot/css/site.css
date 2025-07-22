@@ -21,24 +21,51 @@ body {
     margin-bottom: 60px;
 }
 
-.main-controls-container {
-    display: flex;
-    flex-direction: column;
-    margin: auto;
-    justify-content: center;
-    width: 30%;
-    margin-top: 60px;
-    margin-bottom: 60px;
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+    -webkit-text-fill-color: #000 !important;
+    transition: background-color 5000s ease-in-out 0s;
 }
 
-@media (max-width: 992px) {
-    .main-controls-container {
-        width: 100%;
-    }
+.main {
+    display: flex;
+    flex-direction: column;
+    min-height: 350px;
+    max-width: 1000px;
+    margin: 10px auto;
+}
+
+.main-controls-container {
+    display: flex;
+    gap: 40px;
+}
+
+.section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    border-radius: var(--border-radius);
+    margin-bottom: 2rem;
+}
+
+.form-control:focus {
+    outline: none;
+    box-shadow: none;
+    border-color: #6366f1;
+}
+
+.form-control:disabled, .form-control[readonly] {
+    opacity: .45 !important;
 }
 
 .input-text {
     padding: 8px;
+    background-color: #fff !important;
+    background-clip: padding-box;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
 }
 
 .button-container {
@@ -48,4 +75,11 @@ body {
 
 .button {
     flex-grow: 1;
+}
+
+@media (max-width: 768px) {
+    .main-controls-container {
+        flex-direction: column;
+        gap: 10px;
+    }
 }

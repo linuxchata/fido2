@@ -1,16 +1,19 @@
 ﻿// Registration
 
-const toastrRegistrationTitle = 'Web Authentication';
+const registrationTitle = 'Web Authentication';
 
 async function requestCreateCredentialOptions(username, displayName) {
     const optionsRequest = {
         username: username,
         displayName: displayName,
-        attestation: 'direct',
-        authenticatorSelection: { userVerification: 'required' }
+        attestation: 'direct'
     };
 
+    console.log("Start fetching attestation options");
+
     const options = await fetchAttestationOptions(optionsRequest);
+
+    console.log(`Server side attestation options\n${JSON.stringify(options)}`);
 
     await createCredential(options);
 }
@@ -52,14 +55,23 @@ async function createCredential(options) {
         },
     };
 
+    console.log(`Mapped attestation options\n${JSON.stringify(credentialCreationOptions)}`);
+
     let attestation;
     try {
         attestation = await navigator.credentials.create(credentialCreationOptions);
     }
     catch (error) {
-        toastr.error(error.message, toastrRegistrationTitle);
+        if (error.name === 'InvalidStateError') {
+            toastr.error('The authenticator was not allowed because it was already registered.', registrationTitle);
+        }
+        else {
+            toastr.error(error.message, registrationTitle);
+        }
         return;
     }
+
+    console.log("Attestation object was received from browser");
 
     const credentials = {
         id: attestation.id,
@@ -73,7 +85,11 @@ async function createCredential(options) {
         extensions: attestation.getClientExtensionResults(),
     };
 
+    console.log(`Mapped attestation object ${JSON.stringify(credentials)}`);
+
     await fetchAttestationResult(credentials);
+
+    console.log("Attestation was completed on server side");
 }
 
 async function fetchAttestationOptions(optionsRequest) {
@@ -94,7 +110,7 @@ async function fetchAttestationOptions(optionsRequest) {
             throw new Error(`Server responded with status code ${response.status}: ${errorMessage}`);
         }
     } catch (error) {
-        toastr.error("Error creating registration options", toastrRegistrationTitle);
+        toastr.error("Error creating registration options", registrationTitle);
         throw error;
     }
 }
@@ -110,14 +126,14 @@ async function fetchAttestationResult(credentials) {
         });
 
         if (response.ok) {
-            toastr.info('Registration was successful', toastrRegistrationTitle);
+            toastr.info('Registration was successful', registrationTitle);
         }
         else {
             const responseBody = await response.json();
             throw new Error(responseBody.errorMessage);
         }
     } catch (error) {
-        toastr.error(`Registration has failed. ${error.message}`, toastrRegistrationTitle);
+        toastr.error(`Registration has failed. ${error.message}`, registrationTitle);
     }
 }
 

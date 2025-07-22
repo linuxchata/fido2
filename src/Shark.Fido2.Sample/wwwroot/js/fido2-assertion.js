@@ -1,14 +1,17 @@
 ﻿// Authentication
 
-const toastrAuthenticationTitle = 'Web Authentication';
+const authenticationTitle = 'Web Authentication';
 
 async function requestVerifyCredentialOptions(username) {
     const optionsRequest = {
-        username: username,
-        userVerification: 'required'
+        username: username
     };
 
+    console.log("Start fetching assertion options");
+
     const options = await fetchAssertionOptions(optionsRequest);
+
+    console.log(`Server side assertion options\n${JSON.stringify(options)}`);
 
     await requestCredential(options);
 }
@@ -36,14 +39,18 @@ async function requestCredential(options) {
         },
     };
 
+    console.log(`Mapped assertion options\n${JSON.stringify(credentialRequestOptions)}`);
+
     let assertion;
     try {
         assertion = await navigator.credentials.get(credentialRequestOptions);
     }
     catch (error) {
-        toastr.error(error.message, toastrAuthenticationTitle);
+        toastr.error(error.message, authenticationTitle);
         return;
     }
+
+    console.log("Assertion object was received from browser");
 
     const credentials = {
         id: assertion.id,
@@ -58,7 +65,11 @@ async function requestCredential(options) {
         extensions: assertion.getClientExtensionResults(),
     };
 
+    console.log(`Mapped assertion object ${JSON.stringify(credentials)}`);
+
     await fetchAssertionResult(credentials);
+
+    console.log("Assertion was completed on server side");
 }
 
 async function fetchAssertionOptions(optionsRequest) {
@@ -79,7 +90,7 @@ async function fetchAssertionOptions(optionsRequest) {
             throw new Error(`Server responded with status code ${response.status}: ${errorMessage}`);
         }
     } catch (error) {
-        toastr.error("Error creating authentication options", toastrAuthenticationTitle);
+        toastr.error("Error creating authentication options", authenticationTitle);
         throw error;
     }
 }
@@ -95,14 +106,14 @@ async function fetchAssertionResult(credentials) {
         });
 
         if (response.ok) {
-            toastr.info('Authentication was successful', toastrAuthenticationTitle);
+            toastr.info('Authentication was successful', authenticationTitle);
         }
         else {
             const responseBody = await response.json();
             throw new Error(responseBody.errorMessage);
         }
     } catch (error) {
-        toastr.error(`Authentication has failed. ${error.message}`, toastrAuthenticationTitle);
+        toastr.error(`Authentication has failed. ${error.message}`, authenticationTitle);
     }
 }
 
