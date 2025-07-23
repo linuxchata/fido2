@@ -1,5 +1,7 @@
 ﻿document.addEventListener('DOMContentLoaded', function () {
     if (document.getElementById('docs')) {
-        hljs.highlightAll();
+        if (typeof Prism !== 'undefined') {
+            Prism.highlightAll();
+        }
     }
 });

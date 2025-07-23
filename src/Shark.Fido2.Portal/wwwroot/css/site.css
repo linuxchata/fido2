@@ -337,18 +337,18 @@ input:disabled {
     display: block;
 }
 
-.code {
-    background: var(--color-pre-code);
-    border-radius: var(--border-radius);
-    overflow-x: auto;
+pre.code {
+    margin: 1em 0;
+    padding: 1em;
+    border-radius: 4px;
+    background: #f5f5f5;
 }
 
-/* Highlight.js customizations to match site theme */
-.hljs {
-    background: transparent !important;
-    font-size: 0.9rem;
-    line-height: 1.4;
-}
+    pre.code code {
+        font-family: 'Consolas', 'Monaco', 'Andale Mono', 'Ubuntu Mono', monospace;
+        font-size: 14px;
+        line-height: 1.5;
+    }
 
 .disclaimer {
     display: flex;
