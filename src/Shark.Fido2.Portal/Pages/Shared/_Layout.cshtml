@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -21,7 +23,7 @@
     <meta name="twitter:image" content="https://shark-fido2.com/og-image.png" />
     <meta name="twitter:image" content="Shark WebAuthn library for .NET – Secure passwordless authentication library" />
     <meta name="twitter:site" content="@@SharkWebAuthn" />
-    <link rel="canonical" href="https://shark-fido2.com/" />
+    <link rel="canonical" href="@($"{HttpContextAccessor!.HttpContext!.Request.Scheme}://{HttpContextAccessor.HttpContext.Request.Host}{HttpContextAccessor.HttpContext.Request.Path}{HttpContextAccessor.HttpContext.Request.QueryString}")" />
     <link rel="icon" href="favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/lib/font-awesome/dist/css/all.min.css" />
@@ -77,7 +79,6 @@
         <p>FIDO&reg; and FIDO2&reg; are trademarks of FIDO Alliance, Inc.</p>
     </footer>
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/notyf/dist/js/notyf.min.js"></script>
     <script src="~/lib/highlight.js/highlight.min.js"></script>

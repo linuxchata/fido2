@@ -4,6 +4,7 @@
     --color-primary-hover: #3367d6;
     --color-secondary: #fcd34d;
     --color-secondary-hover: #fbbd24;
+    --color-primary-link: #3236F1;
     --color-dark: #202124;
     --color-light: #fff;
     --color-background: #f6f8fa;
@@ -281,7 +282,7 @@ input:disabled {
 }
 
 .resource-link {
-    color: var(--color-primary);
+    color: var(--color-primary-link);
     text-decoration-line: underline;
     text-underline-offset: 0.1rem;
     text-decoration-color: rgba(37, 99, 235, 0.25);

@@ -1,3 +1,5 @@
 ﻿document.addEventListener('DOMContentLoaded', function () {
-    hljs.highlightAll();
+    if (document.getElementById('docs')) {
+        hljs.highlightAll();
+    }
 });
