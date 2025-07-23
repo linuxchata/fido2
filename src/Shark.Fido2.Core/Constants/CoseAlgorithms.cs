@@ -2,16 +2,27 @@
 
 namespace Shark.Fido2.Core.Constants;
 
+/// <summary>
+/// https://fidoalliance.org/specs/fido-v2.0-rd-20180702/fido-server-v2.0-rd-20180702.html#other.
+/// </summary>
 public static class CoseAlgorithms
 {
     public readonly static HashSet<CoseAlgorithm> Required =
     [
-        CoseAlgorithm.Es256,
-        CoseAlgorithm.Rs256,
-        CoseAlgorithm.Rs1,
+        CoseAlgorithm.Es256, // Required
+        CoseAlgorithm.Rs256, // Required
+        CoseAlgorithm.Rs1,   // Required
     ];
 
-    // https://fidoalliance.org/specs/fido-v2.0-rd-20180702/fido-server-v2.0-rd-20180702.html#other
+    public readonly static HashSet<CoseAlgorithm> Recommended =
+    [
+        CoseAlgorithm.Es256, // Required
+        CoseAlgorithm.EdDsa, // Recommended
+        CoseAlgorithm.Es384, // Recommended
+        CoseAlgorithm.Rs256, // Required
+        CoseAlgorithm.Rs1,   // Required
+    ];
+
     public readonly static HashSet<CoseAlgorithm> Extended =
     [
         CoseAlgorithm.Es256,  // Required
