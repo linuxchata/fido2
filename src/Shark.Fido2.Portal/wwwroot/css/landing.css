@@ -24,11 +24,11 @@
     --color-lnd-text: #333333;
     --color-lnd-text-secondary: #4c5357;
     --color-lnd-text-muted: #6b7280;
+    --color-lnd-text-dark: #4e525a;
     --color-lnd-border: #e2e8f0;
     --color-lnd-border-light: #d1d5db;
     --color-lnd-shadow: rgba(0, 0, 0, 0.1);
     --color-lnd-shadow-light: rgba(0, 0, 0, 0.03);
-    --color-lnd-cta-text: #e7f3fe;
     /* Typography */
     --font-lnd-size-xs: 0.75rem;
     --font-lnd-size-sm: 0.875rem;
@@ -300,7 +300,7 @@
 
     .getting-started p {
         font-size: var(--font-lnd-size-lg);
-        color: var(--color-lnd-text-muted);
+        color: var(--color-lnd-text-dark);
         max-width: var(--container-lnd-max-width-text-lg);
         margin: 0 auto var(--spacing-lnd-2xl);
         line-height: 1.55;
@@ -326,7 +326,7 @@
 
     .cta p {
         font-size: var(--font-lnd-size-lg);
-        color: var(--color-lnd-cta-text);
+        color: var(--color-lnd-white);
         margin-bottom: var(--spacing-lnd-xl);
     }
 
