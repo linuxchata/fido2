@@ -40,10 +40,16 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"linuxchata_fido2" /o:"linuxchata" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.exclusions="src/Shark.Fido2.Sample/wwwroot/lib/**/*.js,src/Shark.Fido2.Sample/wwwroot/lib/**/*.css,src/Shark.Fido2.Portal/wwwroot/lib/**/*.js,src/Shark.Fido2.Portal/wwwroot/lib/**/*.css" /d:sonar.cs.opencover.reportsPaths="**/coverage.cobertura.xml"
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"linuxchata_fido2" /o:"linuxchata" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.exclusions="src/Shark.Fido2.Sample/wwwroot/lib/**/*.js,src/Shark.Fido2.Sample/wwwroot/lib/**/*.css,src/Shark.Fido2.Portal/wwwroot/lib/**/*.js,src/Shark.Fido2.Portal/wwwroot/lib/**/*.css" /d:sonar.cs.opencover.reportsPaths=coverage.xml"
+
+          dotnet build ./src/Shark.Fido2.sln
 
           dotnet test ./src/Shark.Fido2.sln /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=./TestResults/
 
-          dotnet build ./src/Shark.Fido2.sln
+          coverlet ./TestResults/
+            --target "dotnet"
+            --targetargs "test --no-build"
+            -f=opencover
+            -o="coverage.xml"
 
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
