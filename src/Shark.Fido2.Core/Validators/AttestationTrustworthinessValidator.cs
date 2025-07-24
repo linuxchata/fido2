@@ -75,7 +75,7 @@ internal class AttestationTrustworthinessValidator : IAttestationTrustworthiness
         chain.ChainPolicy.RevocationMode = X509RevocationMode.NoCheck;
         chain.ChainPolicy.VerificationFlags = GetVerificationFlags(attestationStatementResult.AttestationStatementFormat);
         chain.ChainPolicy.VerificationTime = _timeProvider.GetLocalNow().DateTime;
-        chain.ChainPolicy.TrustMode = X509ChainTrustMode.System | X509ChainTrustMode.CustomRootTrust;
+        chain.ChainPolicy.TrustMode = X509ChainTrustMode.CustomRootTrust;
 
         var certificates = attestationStatementResult.TrustPath!;
         var leafCertificate = certificates[0];
