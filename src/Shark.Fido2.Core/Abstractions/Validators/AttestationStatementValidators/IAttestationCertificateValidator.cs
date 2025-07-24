@@ -62,7 +62,7 @@ public interface IAttestationCertificateValidator
     /// </summary>
     /// <param name="attestationCertificate">The X.509 certificate to validate.</param>
     /// <returns>A validation result indicating success or failure with error details.</returns>
-    ValidatorInternalResult ValidateFidoU2f(X509Certificate2 attestationCertificate);
+    ValidatorInternalResult ValidateFidoU2F(X509Certificate2 attestationCertificate);
 
     /// <summary>
     /// Validates a certificate for Apple Anonymous attestation format.

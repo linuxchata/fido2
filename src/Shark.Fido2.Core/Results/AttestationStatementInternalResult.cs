@@ -7,7 +7,7 @@ public class AttestationStatementInternalResult : ValidatorInternalResult
 {
     public AttestationStatementInternalResult(
         string attestationStatementFormat,
-        AttestationTypeEnum attestationType)
+        AttestationType attestationType)
         : base(true)
     {
         AttestationStatementFormat = attestationStatementFormat;
@@ -16,7 +16,7 @@ public class AttestationStatementInternalResult : ValidatorInternalResult
 
     public AttestationStatementInternalResult(
         string attestationStatementFormat,
-        AttestationTypeEnum attestationType,
+        AttestationType attestationType,
         X509Certificate2[] trustedPath)
         : base(true)
     {
@@ -27,7 +27,7 @@ public class AttestationStatementInternalResult : ValidatorInternalResult
 
     public string AttestationStatementFormat { get; set; }
 
-    public AttestationTypeEnum AttestationType { get; set; }
+    public AttestationType AttestationType { get; set; }
 
     public X509Certificate2[]? TrustPath { get; set; }
 }

@@ -33,7 +33,7 @@ internal static class AttestationStatementFormatIdentifier
     /// <summary>
     /// Used with FIDO U2F authenticators.
     /// </summary>
-    public const string FidoU2f = "fido-u2f";
+    public const string FidoU2F = "fido-u2f";
 
     /// <summary>
     /// Used with Apple devices' platform authenticators.
@@ -48,6 +48,6 @@ internal static class AttestationStatementFormatIdentifier
 
     public readonly static HashSet<string> Supported =
     [
-        Packed, Tpm, AndroidKey, AndroidSafetyNet, FidoU2f, Apple, None
+        Packed, Tpm, AndroidKey, AndroidSafetyNet, FidoU2F, Apple, None
     ];
 }

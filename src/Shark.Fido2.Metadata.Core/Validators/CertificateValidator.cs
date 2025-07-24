@@ -34,7 +34,7 @@ internal sealed class CertificateValidator : ICertificateValidator
             chain.ChainPolicy.ExtraStore.Add(intermediateCertificate);
         }
 
-        var leafCertificate = certificates.First();
+        var leafCertificate = certificates[0];
         var isValid = chain.Build(leafCertificate);
         if (!isValid)
         {

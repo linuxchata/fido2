@@ -41,7 +41,7 @@ public class AttestationTrustworthinessValidatorTests
         _configuration.AllowNoneAttestation = allowNoneAttestation;
         var attestationResult = new AttestationStatementInternalResult(
             AttestationStatementFormatIdentifier.None,
-            AttestationTypeEnum.None);
+            AttestationType.None);
 
         // Act
         var result = _sut.Validate(attestationResult, null);
@@ -62,7 +62,7 @@ public class AttestationTrustworthinessValidatorTests
         _configuration.AllowSelfAttestation = allowSelfAttestation;
         var attestationResult = new AttestationStatementInternalResult(
             AttestationStatementFormatIdentifier.Packed,
-            AttestationTypeEnum.Self);
+            AttestationType.Self);
 
         // Act
         var result = _sut.Validate(attestationResult, null);
@@ -81,7 +81,7 @@ public class AttestationTrustworthinessValidatorTests
         // Arrange
         var attestationResult = new AttestationStatementInternalResult(
             AttestationStatementFormatIdentifier.Packed,
-            AttestationTypeEnum.Basic);
+            AttestationType.Basic);
 
         // Act
         var result = _sut.Validate(attestationResult, null);
@@ -97,7 +97,7 @@ public class AttestationTrustworthinessValidatorTests
         // Arrange
         var attestationResult = new AttestationStatementInternalResult(
             AttestationStatementFormatIdentifier.None,
-            AttestationTypeEnum.Basic,
+            AttestationType.Basic,
             []);
 
         // Act
@@ -117,7 +117,7 @@ public class AttestationTrustworthinessValidatorTests
 
         var attestationResult = new AttestationStatementInternalResult(
             AttestationStatementFormatIdentifier.AndroidKey,
-            AttestationTypeEnum.Basic,
+            AttestationType.Basic,
             certificateData);
 
         // Act
@@ -137,7 +137,7 @@ public class AttestationTrustworthinessValidatorTests
 
         var attestationResult = new AttestationStatementInternalResult(
             AttestationStatementFormatIdentifier.Apple,
-            AttestationTypeEnum.AnonCA,
+            AttestationType.AnonCA,
             certificateData);
 
         // Act
@@ -157,7 +157,7 @@ public class AttestationTrustworthinessValidatorTests
 
         var attestationResult = new AttestationStatementInternalResult(
             AttestationStatementFormatIdentifier.Tpm,
-            AttestationTypeEnum.AttCA,
+            AttestationType.AttCA,
             certificateData);
 
         // Act
@@ -177,7 +177,7 @@ public class AttestationTrustworthinessValidatorTests
 
         var attestationResult = new AttestationStatementInternalResult(
             AttestationStatementFormatIdentifier.Packed,
-            AttestationTypeEnum.AttCA,
+            AttestationType.AttCA,
             certificateData);
 
         // Act
@@ -197,7 +197,7 @@ public class AttestationTrustworthinessValidatorTests
 
         var attestationResult = new AttestationStatementInternalResult(
             AttestationStatementFormatIdentifier.Packed,
-            AttestationTypeEnum.AttCA,
+            AttestationType.AttCA,
             certificateData);
 
         // Act
@@ -216,8 +216,8 @@ public class AttestationTrustworthinessValidatorTests
         var certificateData = CertificateDataReader.Read(fileName);
 
         var attestationResult = new AttestationStatementInternalResult(
-            AttestationStatementFormatIdentifier.FidoU2f,
-            AttestationTypeEnum.AttCA,
+            AttestationStatementFormatIdentifier.FidoU2F,
+            AttestationType.AttCA,
             certificateData);
 
         // Act

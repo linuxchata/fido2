@@ -11,14 +11,14 @@ internal class TmpHashAlgorithmMapperTests
     public void Get_WhenUnsupportedAlgorithm_ThrowsNotSupportedException()
     {
         // Arrange
-        var unsupportedAlgorithm = TpmAlgorithmEnum.TpmAlgorithmRsa;
+        var unsupportedAlgorithm = TpmAlgorithm.TpmAlgorithmRsa;
 
         // Act & Assert
         Assert.Throws<NotSupportedException>(() => TmpHashAlgorithmMapper.Get(unsupportedAlgorithm));
     }
 
     [TestCaseSource(nameof(HashAlgorithmTestCases))]
-    public void Get_WhenValidAlgorithm_ReturnsExpectedHashAlgorithmName(TpmAlgorithmEnum tpmAlgorithm, HashAlgorithmName expectedHashAlgorithmName)
+    public void Get_WhenValidAlgorithm_ReturnsExpectedHashAlgorithmName(TpmAlgorithm tpmAlgorithm, HashAlgorithmName expectedHashAlgorithmName)
     {
         // Act
         var result = TmpHashAlgorithmMapper.Get(tpmAlgorithm);
@@ -29,9 +29,9 @@ internal class TmpHashAlgorithmMapperTests
 
     private static IEnumerable<TestCaseData> HashAlgorithmTestCases()
     {
-        yield return new TestCaseData(TpmAlgorithmEnum.TpmAlgorithmSha1, HashAlgorithmName.SHA1);
-        yield return new TestCaseData(TpmAlgorithmEnum.TpmAlgorithmSha256, HashAlgorithmName.SHA256);
-        yield return new TestCaseData(TpmAlgorithmEnum.TpmAlgorithmSha384, HashAlgorithmName.SHA384);
-        yield return new TestCaseData(TpmAlgorithmEnum.TpmAlgorithmSha512, HashAlgorithmName.SHA512);
+        yield return new TestCaseData(TpmAlgorithm.TpmAlgorithmSha1, HashAlgorithmName.SHA1);
+        yield return new TestCaseData(TpmAlgorithm.TpmAlgorithmSha256, HashAlgorithmName.SHA256);
+        yield return new TestCaseData(TpmAlgorithm.TpmAlgorithmSha384, HashAlgorithmName.SHA384);
+        yield return new TestCaseData(TpmAlgorithm.TpmAlgorithmSha512, HashAlgorithmName.SHA512);
     }
 }

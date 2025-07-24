@@ -14,7 +14,7 @@ namespace Shark.Fido2.Core.Validators.AttestationStatementValidators;
 /// This validates attestation statements according to the FIDO2 specification section 8.6.
 /// See: https://www.w3.org/TR/webauthn/#sctn-fido-u2f-attestation.
 /// </summary>
-internal class FidoU2fAttestationStatementStrategy : IAttestationStatementStrategy
+internal class FidoU2FAttestationStatementStrategy : IAttestationStatementStrategy
 {
     private const int CoordinateSize = 32;
 
@@ -22,7 +22,7 @@ internal class FidoU2fAttestationStatementStrategy : IAttestationStatementStrate
     private readonly IAttestationCertificateValidator _attestationCertificateValidator;
     private readonly ISignatureAttestationStatementValidator _signatureValidator;
 
-    public FidoU2fAttestationStatementStrategy(
+    public FidoU2FAttestationStatementStrategy(
         IAttestationCertificateProviderService attestationCertificateProviderService,
         IAttestationCertificateValidator attestationCertificateValidator,
         ISignatureAttestationStatementValidator signatureAttestationStatementValidator)
@@ -63,7 +63,7 @@ internal class FidoU2fAttestationStatementStrategy : IAttestationStatementStrate
         }
 
         var attestationCertificate = _attestationCertificateProviderService.GetAttestationCertificate(certificates);
-        var result = _attestationCertificateValidator.ValidateFidoU2f(attestationCertificate);
+        var result = _attestationCertificateValidator.ValidateFidoU2F(attestationCertificate);
         if (!result.IsValid)
         {
             return result;
@@ -112,12 +112,12 @@ internal class FidoU2fAttestationStatementStrategy : IAttestationStatementStrate
         // Optionally, inspect x5c and consult externally provided knowledge to determine whether attStmt conveys a
         // Basic or AttCA attestation.
         var attestationType = IsRootCertificate(attestationCertificate) ?
-            AttestationTypeEnum.Basic : AttestationTypeEnum.AttCA;
+            AttestationType.Basic : AttestationType.AttCA;
 
         // If successful, return implementation-specific values representing attestation type Basic, AttCA or
         // uncertainty, and attestation trust path x5c.
         return new AttestationStatementInternalResult(
-            AttestationStatementFormatIdentifier.FidoU2f,
+            AttestationStatementFormatIdentifier.FidoU2F,
             attestationType,
             [.. certificates]);
     }
@@ -144,7 +144,7 @@ internal class FidoU2fAttestationStatementStrategy : IAttestationStatementStrate
         return BytesArrayHelper.Concatenate(andCredentialId, publicKeyU2f);
     }
 
-    private bool IsRootCertificate(X509Certificate2 certificate)
+    private static bool IsRootCertificate(X509Certificate2 certificate)
     {
         return certificate.SubjectName.RawData.AsSpan().SequenceEqual(certificate.IssuerName.RawData);
     }

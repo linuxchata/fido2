@@ -3,7 +3,7 @@
 /// <summary>
 /// TPM Algorithm Types.
 /// </summary>
-public enum TpmAlgorithmEnum
+public enum TpmAlgorithm
 {
     /// <summary>
     /// TPM_ALG_ERROR (0x0000)

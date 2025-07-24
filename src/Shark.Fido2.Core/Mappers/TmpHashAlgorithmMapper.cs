@@ -5,21 +5,21 @@ namespace Shark.Fido2.Core.Mappers;
 
 public static class TmpHashAlgorithmMapper
 {
-    public static HashAlgorithmName Get(TpmAlgorithmEnum tpmAlgorithm)
+    public static HashAlgorithmName Get(TpmAlgorithm tpmAlgorithm)
     {
-        if (tpmAlgorithm == TpmAlgorithmEnum.TpmAlgorithmSha1)
+        if (tpmAlgorithm == TpmAlgorithm.TpmAlgorithmSha1)
         {
             return HashAlgorithmName.SHA1;
         }
-        else if (tpmAlgorithm == TpmAlgorithmEnum.TpmAlgorithmSha256)
+        else if (tpmAlgorithm == TpmAlgorithm.TpmAlgorithmSha256)
         {
             return HashAlgorithmName.SHA256;
         }
-        else if (tpmAlgorithm == TpmAlgorithmEnum.TpmAlgorithmSha384)
+        else if (tpmAlgorithm == TpmAlgorithm.TpmAlgorithmSha384)
         {
             return HashAlgorithmName.SHA384;
         }
-        else if (tpmAlgorithm == TpmAlgorithmEnum.TpmAlgorithmSha512)
+        else if (tpmAlgorithm == TpmAlgorithm.TpmAlgorithmSha512)
         {
             return HashAlgorithmName.SHA512;
         }

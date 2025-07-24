@@ -98,10 +98,10 @@ internal class PackedAttestationStatementStrategy : IAttestationStatementStrateg
             // Optionally, inspect x5c and consult externally provided knowledge to determine whether attStmt conveys
             // a Basic or AttCA attestation.
             var attestationType = IsRootCertificate(attestationCertificate) ?
-                AttestationTypeEnum.AttCA : AttestationTypeEnum.Basic;
+                AttestationType.AttCA : AttestationType.Basic;
 
             // Verify that trust path does not contain a root certificate
-            if (certificates[1..].Any(IsRootCertificate))
+            if (certificates[1..].Exists(IsRootCertificate))
             {
                 return ValidatorInternalResult.Invalid("Trust path contains a root certificate");
             }
@@ -128,11 +128,11 @@ internal class PackedAttestationStatementStrategy : IAttestationStatementStrateg
             // attestation trust path.
             return new AttestationStatementInternalResult(
                 AttestationStatementFormatIdentifier.Packed,
-                AttestationTypeEnum.Self);
+                AttestationType.Self);
         }
     }
 
-    private bool IsRootCertificate(X509Certificate2 certificate)
+    private static bool IsRootCertificate(X509Certificate2 certificate)
     {
         return certificate.SubjectName.RawData.AsSpan().SequenceEqual(certificate.IssuerName.RawData);
     }

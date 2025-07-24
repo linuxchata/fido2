@@ -19,7 +19,7 @@ internal class AttestationStatementValidator : IAttestationStatementValidator
         IAttestationStatementStrategy androidKeyAttestationStatementStrategy,
         [FromKeyedServices(AttestationStatementFormatIdentifier.AndroidSafetyNet)]
         IAttestationStatementStrategy androidSafetyNetAttestationStatementStrategy,
-        [FromKeyedServices(AttestationStatementFormatIdentifier.FidoU2f)]
+        [FromKeyedServices(AttestationStatementFormatIdentifier.FidoU2F)]
         IAttestationStatementStrategy fidoU2fAttestationStatementStrategy,
         [FromKeyedServices(AttestationStatementFormatIdentifier.None)]
         IAttestationStatementStrategy noneAttestationStatementStategy,
@@ -32,7 +32,7 @@ internal class AttestationStatementValidator : IAttestationStatementValidator
             { AttestationStatementFormatIdentifier.Tpm, tpmAttestationStatementStrategy },
             { AttestationStatementFormatIdentifier.AndroidKey, androidKeyAttestationStatementStrategy },
             { AttestationStatementFormatIdentifier.AndroidSafetyNet, androidSafetyNetAttestationStatementStrategy },
-            { AttestationStatementFormatIdentifier.FidoU2f, fidoU2fAttestationStatementStrategy },
+            { AttestationStatementFormatIdentifier.FidoU2F, fidoU2fAttestationStatementStrategy },
             { AttestationStatementFormatIdentifier.None, noneAttestationStatementStategy },
             { AttestationStatementFormatIdentifier.Apple, appleAnonymousAttestationStatementStrategy },
         };

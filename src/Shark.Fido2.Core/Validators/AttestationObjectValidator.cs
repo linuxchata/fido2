@@ -85,7 +85,7 @@ internal class AttestationObjectValidator : IAttestationObjectValidator
         // Verify that the "alg" parameter in the credential public key in authData matches the alg attribute of
         // one of the items in options.pubKeyCredParams.
         var algorithm = authenticatorData.AttestedCredentialData.CredentialPublicKey?.Algorithm;
-        if (!creationOptions.PublicKeyCredentialParams.Any(p => (int)p.Algorithm == algorithm))
+        if (!Array.Exists(creationOptions.PublicKeyCredentialParams, p => (int)p.Algorithm == algorithm))
         {
             return ValidatorInternalResult.Invalid("Credential public key algorithm mismatch");
         }

@@ -17,7 +17,7 @@ internal class GenericKeyTypeMapperTests
         var (keyType, hashAlgorithmName) = GenericKeyTypeMapper.Get(coseAlgorithm);
 
         // Assert
-        Assert.That(keyType, Is.EqualTo(KeyTypeEnum.Rsa));
+        Assert.That(keyType, Is.EqualTo(KeyType.Rsa));
         Assert.That(hashAlgorithmName, Is.EqualTo(HashAlgorithmName.SHA256));
     }
 
@@ -31,7 +31,7 @@ internal class GenericKeyTypeMapperTests
         var (keyType, hashAlgorithmName) = GenericKeyTypeMapper.Get(coseAlgorithm);
 
         // Assert
-        Assert.That(keyType, Is.EqualTo(KeyTypeEnum.Ec2));
+        Assert.That(keyType, Is.EqualTo(KeyType.Ec2));
         Assert.That(hashAlgorithmName, Is.EqualTo(HashAlgorithmName.SHA256));
     }
 

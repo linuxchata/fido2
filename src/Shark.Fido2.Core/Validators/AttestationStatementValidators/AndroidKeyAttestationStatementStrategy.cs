@@ -94,7 +94,7 @@ internal class AndroidKeyAttestationStatementStrategy : IAttestationStatementStr
         // trust path x5c.
         return new AttestationStatementInternalResult(
             AttestationStatementFormatIdentifier.AndroidKey,
-            AttestationTypeEnum.Basic,
+            AttestationType.Basic,
             [.. certificates]);
     }
 }

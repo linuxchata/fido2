@@ -14,14 +14,14 @@ using Shark.Fido2.Domain.Options;
 namespace Shark.Fido2.Core.Tests.Validators.AttestationStatementValidators;
 
 [TestFixture]
-internal class FidoU2fAttestationStatementStrategyTests
+internal class FidoU2FAttestationStatementStrategyTests
 {
     private Mock<IAttestationObjectValidator> _attestationObjectValidatorMock;
     private AttestationObjectHandler _attestationObjectHandler;
     private AuthenticatorDataParserService _provider;
     private PublicKeyCredentialCreationOptions _creationOptions;
 
-    private FidoU2fAttestationStatementStrategy _sut = null!;
+    private FidoU2FAttestationStatementStrategy _sut = null!;
 
     [SetUp]
     public void Setup()
@@ -55,14 +55,14 @@ internal class FidoU2fAttestationStatementStrategyTests
             new Ec2CryptographyValidator(),
             new OkpCryptographyValidator());
 
-        _sut = new FidoU2fAttestationStatementStrategy(
+        _sut = new FidoU2FAttestationStatementStrategy(
             attestationCertificateProviderService,
             attestationCertificateValidator,
             signatureAttestationStatementValidator);
     }
 
     [Test]
-    public async Task Validate_WhenFidoU2fAttestationWithEc2Algorithm_ShouldValidate()
+    public async Task Validate_WhenFidoU2FAttestationWithEc2Algorithm_ShouldValidate()
     {
         // Arrange
         var fileName = "FidoU2fAttestationWithEc2Algorithm.json";
@@ -78,7 +78,7 @@ internal class FidoU2fAttestationStatementStrategyTests
         // Assert
         var attestationStatementInternalResult = result as AttestationStatementInternalResult;
         Assert.That(attestationStatementInternalResult, Is.Not.Null);
-        Assert.That(attestationStatementInternalResult!.AttestationType, Is.EqualTo(AttestationTypeEnum.AttCA));
+        Assert.That(attestationStatementInternalResult!.AttestationType, Is.EqualTo(AttestationType.AttCA));
     }
 
     [Test]

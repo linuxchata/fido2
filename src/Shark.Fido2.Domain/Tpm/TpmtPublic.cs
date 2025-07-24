@@ -16,12 +16,12 @@ public sealed class TpmtPublic
     /// <summary>
     /// Gets type. Type is TPMI_ALG_PUBLIC.
     /// </summary>
-    public TpmAlgorithmEnum Type { get; init; }
+    public TpmAlgorithm Type { get; init; }
 
     /// <summary>
     /// Gets name alg. Type is TPMI_ALG_HASH.
     /// </summary>
-    public TpmAlgorithmEnum NameAlg { get; init; }
+    public TpmAlgorithm NameAlg { get; init; }
 
     /// <summary>
     /// Gets name alg raw. Type is TPMI_ALG_HASH.

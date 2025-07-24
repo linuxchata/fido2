@@ -45,5 +45,5 @@ internal class HttpClientConformanceTestRepository : IHttpClientConformanceTestR
         return new X509Certificate2(response);
     }
 
-    private record ApiResponse(string status, string[] result);
+    private sealed record ApiResponse(string status, string[] result);
 }

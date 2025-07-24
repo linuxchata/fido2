@@ -31,6 +31,6 @@ internal class NoneAttestationStatementStrategy : IAttestationStatementStrategy
             return ValidatorInternalResult.Invalid("None attestation statement is not empty");
         }
 
-        return new AttestationStatementInternalResult(AttestationStatementFormatIdentifier.None, AttestationTypeEnum.None);
+        return new AttestationStatementInternalResult(AttestationStatementFormatIdentifier.None, AttestationType.None);
     }
 }

@@ -31,7 +31,7 @@ internal class AttestationTrustworthinessValidator : IAttestationTrustworthiness
         }
 
         // If no attestation was provided, verify that None attestation is acceptable under Relying Party policy.
-        if (attestationStatementResult.AttestationType == AttestationTypeEnum.None)
+        if (attestationStatementResult.AttestationType == Domain.Enums.AttestationType.None)
         {
             return _configuration.AllowNoneAttestation
                 ? ValidatorInternalResult.Valid()
@@ -39,7 +39,7 @@ internal class AttestationTrustworthinessValidator : IAttestationTrustworthiness
         }
 
         // If self attestation was used, verify that Self attestation is acceptable under Relying Party policy.
-        if (attestationStatementResult.AttestationType == AttestationTypeEnum.Self)
+        if (attestationStatementResult.AttestationType == Domain.Enums.AttestationType.Self)
         {
             return _configuration.AllowSelfAttestation
                 ? ValidatorInternalResult.Valid()
@@ -48,11 +48,11 @@ internal class AttestationTrustworthinessValidator : IAttestationTrustworthiness
 
         // Self attestation cannot contains full attestation (trust path)
         if (metadataPayloadItem?.AttestationTypes?.Length == 1 &&
-            metadataPayloadItem.AttestationTypes.First() == AttestationType.BasicSurrogate &&
+            metadataPayloadItem.AttestationTypes[0] == Metadata.Core.Domain.Constants.AttestationType.BasicSurrogate &&
             attestationStatementResult.TrustPath?.Length > 0)
         {
             return ValidatorInternalResult.Invalid(
-                $"{AttestationType.BasicSurrogate} (self) attestation type cannot have trust path");
+                $"{Metadata.Core.Domain.Constants.AttestationType.BasicSurrogate} (self) attestation type cannot have trust path");
         }
 
         // Otherwise, use the X.509 certificates returned as the attestation trust path from the verification

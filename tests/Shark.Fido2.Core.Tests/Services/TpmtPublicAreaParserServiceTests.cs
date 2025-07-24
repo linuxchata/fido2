@@ -26,8 +26,8 @@ internal class TpmtPublicAreaParserServiceTests
 
         // Assert
         Assert.That(result, Is.True);
-        Assert.That(tpmtPublic.Type, Is.EqualTo(TpmAlgorithmEnum.TpmAlgorithmRsa));
-        Assert.That(tpmtPublic.NameAlg, Is.EqualTo(TpmAlgorithmEnum.TpmAlgorithmSha256));
+        Assert.That(tpmtPublic.Type, Is.EqualTo(TpmAlgorithm.TpmAlgorithmRsa));
+        Assert.That(tpmtPublic.NameAlg, Is.EqualTo(TpmAlgorithm.TpmAlgorithmSha256));
         Assert.That(tpmtPublic.Unique, Is.Not.Null);
         Assert.That(tpmtPublic.Unique.Length, Is.EqualTo(256));
     }
