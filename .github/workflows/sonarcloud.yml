@@ -34,18 +34,16 @@ jobs:
         run: |
           New-Item -Path .\.sonar\scanner -ItemType Directory
           dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
-      - name: Install coverlet.console
-        run: dotnet tool install --global coverlet.console
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any. Created automatically by GitHub
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"linuxchata_fido2" /o:"linuxchata" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.exclusions="src/Shark.Fido2.Sample/wwwroot/lib/**/*.js,src/Shark.Fido2.Sample/wwwroot/lib/**/*.css,src/Shark.Fido2.Portal/wwwroot/lib/**/*.js,src/Shark.Fido2.Portal/wwwroot/lib/**/*.css" /d:sonar.cs.opencover.reportsPaths=coverage.xml
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"linuxchata_fido2" /o:"linuxchata" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.exclusions="src/Shark.Fido2.Sample/wwwroot/lib/**/*.js,src/Shark.Fido2.Sample/wwwroot/lib/**/*.css,src/Shark.Fido2.Portal/wwwroot/lib/**/*.js,src/Shark.Fido2.Portal/wwwroot/lib/**/*.css"  /d:sonar.cs.opencover.reportsPaths="TestResults/*/coverage.opencover.xml"
 
           dotnet build ./src/Shark.Fido2.sln
 
-          coverlet ./TestResults/ --target "dotnet" --targetargs "test ./src/Shark.Fido2.sln --no-build" -f=opencover -o="coverage.xml"
-
+          dotnet test ./src/Shark.Fido2.sln --collect:"XPlat Code Coverage"
+          
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
