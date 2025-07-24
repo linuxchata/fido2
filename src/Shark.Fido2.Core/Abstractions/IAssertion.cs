@@ -22,12 +22,12 @@ public interface IAssertion
     /// <summary>
     /// Verifies an assertion from a client.
     /// </summary>
-    /// <param name="publicKeyCredential">The credential assertion response received from the client.</param>
+    /// <param name="publicKeyCredentialAssertion">The credential assertion response received from the client.</param>
     /// <param name="requestOptions">The original request options that were sent to the client.</param>
     /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>The result of the assertion verification process.</returns>
     Task<AssertionCompleteResult> Complete(
-        PublicKeyCredentialAssertion publicKeyCredential,
+        PublicKeyCredentialAssertion publicKeyCredentialAssertion,
         PublicKeyCredentialRequestOptions requestOptions,
         CancellationToken cancellationToken = default);
 }

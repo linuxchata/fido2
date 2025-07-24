@@ -4,7 +4,4 @@ namespace Shark.Fido2.Portal.Pages;
 
 public class ResourcesModel : PageModel
 {
-    public void OnGet()
-    {
-    }
 }
