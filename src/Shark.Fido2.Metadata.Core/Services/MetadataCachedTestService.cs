@@ -114,6 +114,7 @@ internal sealed class MetadataCachedTestService : IMetadataCachedService
             }
             catch
             {
+                // Safe to ignore errors in conformance tests.
             }
         }
 
