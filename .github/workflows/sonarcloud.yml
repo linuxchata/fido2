@@ -40,6 +40,10 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"linuxchata_fido2" /o:"linuxchata" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.exclusions="wwwroot/lib/**/*.js,wwwroot/lib/**/*.css"
-            dotnet build ./src/Shark.Fido2.sln
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"linuxchata_fido2" /o:"linuxchata" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.exclusions="wwwroot/lib/**/*.js,wwwroot/lib/**/*.css" /d:sonar.cs.opencover.reportsPaths="**/coverage.cobertura.xml"
+
+          dotnet test ./src/Shark.Fido2.sln /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=./TestResults/
+
+          dotnet build ./src/Shark.Fido2.sln
+
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
