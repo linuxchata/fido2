@@ -32,12 +32,9 @@ internal sealed class UserHandlerValidator : IUserHandlerValidator
             // - If the user was identified before the authentication ceremony was initiated, e.g., via a username or
             // cookie, verify that the identified user is the owner of credentialSource. If response.userHandle is
             // present, let userHandle be its value. Verify that userHandle also maps to the same user.
-            if (userHandle != null && userHandle.Length != 0)
+            if (userHandle != null && userHandle.Length != 0 && IsUserHandleInvalid(userHandle, credential))
             {
-                if (IsUserHandleInvalid(userHandle, credential))
-                {
-                    return ValidatorInternalResult.Invalid(UserIsNotTheOwnerOfTheCredential);
-                }
+                return ValidatorInternalResult.Invalid(UserIsNotTheOwnerOfTheCredential);
             }
         }
         else

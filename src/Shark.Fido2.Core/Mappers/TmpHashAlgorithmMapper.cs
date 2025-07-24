@@ -3,7 +3,7 @@ using Shark.Fido2.Domain.Enums;
 
 namespace Shark.Fido2.Core.Mappers;
 
-public sealed class TmpHashAlgorithmMapper
+public static class TmpHashAlgorithmMapper
 {
     public static HashAlgorithmName Get(TpmAlgorithmEnum tpmAlgorithm)
     {

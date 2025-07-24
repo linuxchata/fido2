@@ -66,9 +66,7 @@ internal sealed class MetadataCachedTestService : IMetadataCachedService
         var metadataBlobLocation = _configuration.MetadataBlobLocation.Split(';');
         if (metadataBlobLocation.Length != 2)
         {
-            throw new ArgumentOutOfRangeException(
-                nameof(metadataBlobLocation),
-                "Metadata blob location should be in the format 'remoteUrl;localPath'");
+            throw new FormatException("Metadata blob location should be in the format 'remoteUrl;localPath'");
         }
 
         var remoteUrl = metadataBlobLocation[0];
@@ -138,7 +136,7 @@ internal sealed class MetadataCachedTestService : IMetadataCachedService
         }
         else
         {
-            throw new Exception($"Path '{localPath}' does not exist");
+            throw new InvalidOperationException($"Path '{localPath}' does not exist");
         }
 
         var payloadEntries = metadataStatements
