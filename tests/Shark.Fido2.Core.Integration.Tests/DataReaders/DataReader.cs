@@ -10,7 +10,7 @@ internal static class DataReader
     {
         var testData = GetTestData(fileName);
         var creationOptions = JsonSerializer.Deserialize<PublicKeyCredentialCreationOptions>(testData)
-            ?? throw new ArgumentException();
+            ?? throw new ArgumentException("Invalid creation options", nameof(fileName));
 
         return creationOptions;
     }
@@ -19,7 +19,7 @@ internal static class DataReader
     {
         var testData = GetTestData(fileName);
         var attestationData = JsonSerializer.Deserialize<PublicKeyCredentialAttestation>(testData)
-            ?? throw new ArgumentException();
+            ?? throw new ArgumentException("Invalid attestation data", nameof(fileName));
 
         return attestationData;
     }
@@ -28,7 +28,7 @@ internal static class DataReader
     {
         var testData = GetTestData(fileName);
         var requestOptions = JsonSerializer.Deserialize<PublicKeyCredentialRequestOptions>(testData)
-            ?? throw new ArgumentException();
+            ?? throw new ArgumentException("Invalid request options", nameof(fileName));
 
         return requestOptions;
     }
@@ -37,7 +37,7 @@ internal static class DataReader
     {
         var testData = GetTestData(fileName);
         var assertionData = JsonSerializer.Deserialize<PublicKeyCredentialAssertion>(testData)
-            ?? throw new ArgumentException();
+            ?? throw new ArgumentException("Invalid assertion data", nameof(fileName));
 
         return assertionData;
     }

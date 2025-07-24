@@ -23,6 +23,7 @@ dotnet_diagnostic.SA1201.severity = none
 dotnet_diagnostic.SA1124.severity = none
 
 dotnet_diagnostic.NUnit2045.severity = none
+dotnet_diagnostic.NUnit2046.severity = none
 dotnet_diagnostic.NUnit2056.severity = none
 
 [*.{cs,vb}]

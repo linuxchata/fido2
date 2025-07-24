@@ -119,7 +119,9 @@ public sealed class Assertion : IAssertion
         var credentialId = publicKeyCredentialAssertion.RawId.FromBase64Url();
         if (requestOptions.AllowCredentials != null &&
             requestOptions.AllowCredentials.Length != 0 &&
-            !requestOptions.AllowCredentials.Any(c => BytesArrayComparer.CompareNullable(c.Id, credentialId)))
+            !Array.Exists(
+                requestOptions.AllowCredentials,
+                c => BytesArrayComparer.CompareNullable(c.Id, credentialId)))
         {
             return AssertionCompleteResult.CreateFailure(
                 "Assertion response does not contain expected credential identifier");
