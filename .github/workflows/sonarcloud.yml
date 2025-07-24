@@ -46,8 +46,6 @@ jobs:
 
           dotnet build ./src/Shark.Fido2.sln
 
-          dotnet test ./src/Shark.Fido2.sln /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=./TestResults/
-
-          coverlet ./TestResults/ --target "dotnet" --targetargs "test --no-build" -f=opencover -o="coverage.xml"
+          coverlet ./TestResults/ --target "dotnet" --targetargs "test ./src/Shark.Fido2.sln --no-build" -f=opencover -o="coverage.xml"
 
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
