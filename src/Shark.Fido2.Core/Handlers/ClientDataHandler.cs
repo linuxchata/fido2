@@ -66,12 +66,8 @@ internal class ClientDataHandler : IClientDataHandler
         // Step 6
         // Let C, the client data claimed as collected during the credential creation,
         // be the result of running an implementation-specific JSON parser on JSONtext.
-        var clientData = JsonSerializer.Deserialize<ClientData>(decodedClientDataJson);
-
-        if (clientData == null)
-        {
-            throw new ArgumentException("Client data cannot be read", nameof(clientData));
-        }
+        var clientData = JsonSerializer.Deserialize<ClientData>(decodedClientDataJson) ??
+            throw new ArgumentException("Client data cannot be read", nameof(clientDataJson));
 
         // Step 11
         // Let hash be the result of computing a hash over response.clientDataJSON using SHA-256.
@@ -92,12 +88,8 @@ internal class ClientDataHandler : IClientDataHandler
         // Step 10
         // Let C, the client data claimed as used for the signature, be the result of running an
         // implementation-specific JSON parser on JSONtext.
-        var clientData = JsonSerializer.Deserialize<ClientData>(decodedClientDataJson);
-
-        if (clientData == null)
-        {
-            throw new ArgumentException("Client data cannot be read", nameof(clientData));
-        }
+        var clientData = JsonSerializer.Deserialize<ClientData>(decodedClientDataJson) ??
+            throw new ArgumentException("Client data cannot be read", nameof(clientDataJson));
 
         // Step 19
         // Let hash be the result of computing a hash over the cData using SHA-256.

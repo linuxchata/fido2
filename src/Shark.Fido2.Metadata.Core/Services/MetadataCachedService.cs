@@ -103,7 +103,7 @@ internal sealed class MetadataCachedService : IMetadataCachedService
         return expiration;
     }
 
-    private MetadataPayloadItem? GetMetadataPayloadItem(string serializedPayload, Guid aaguid)
+    private static MetadataPayloadItem? GetMetadataPayloadItem(string serializedPayload, Guid aaguid)
     {
         var payload = JsonSerializer.Deserialize<List<MetadataBlobPayloadEntry>>(serializedPayload);
         var map = payload!.Where(p => p.Aaguid.HasValue).ToDictionary(p => p.Aaguid!.Value, p => p);

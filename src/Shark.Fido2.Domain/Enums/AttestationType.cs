@@ -1,6 +1,6 @@
 ﻿namespace Shark.Fido2.Domain.Enums;
 
-public enum AttestationTypeEnum
+public enum AttestationType
 {
     /// <summary>
     /// Basic Attestation

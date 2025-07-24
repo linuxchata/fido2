@@ -96,14 +96,6 @@ internal sealed class AuthenticatorDataParserService : IAuthenticatorDataParserS
         return authenticatorData;
     }
 
-    private void GetAndSetFlags(byte flags, AuthenticatorData authenticatorData)
-    {
-        authenticatorData.UserPresent = (flags & 0b00000001) != 0; // Bit 0
-        authenticatorData.UserVerified = (flags & 0b00000100) != 0; // Bit 2
-        authenticatorData.AttestedCredentialDataIncluded = (flags & 0b01000000) != 0; // Bit 6
-        authenticatorData.ExtensionDataIncluded = (flags & 0b10000000) != 0; // Bit 7
-    }
-
     private CredentialPublicKey GetCredentialPublicKey(Span<byte> credentialPublicKeyArray, ref int bytesRemaining)
     {
         var coseKeyFormat = CborConverter.DecodeToCoseKeyFormat(credentialPublicKeyArray.ToArray(), ref bytesRemaining);
@@ -114,26 +106,26 @@ internal sealed class AuthenticatorDataParserService : IAuthenticatorDataParserS
             Algorithm = GetCredentialPublicKeyIntParameter(coseKeyFormat, CoseKeyIndex.Algorithm),
         };
 
-        if (credentialPublicKey.KeyType == (int)KeyTypeEnum.Okp)
+        if (credentialPublicKey.KeyType == (int)KeyType.Okp)
         {
             // https://datatracker.ietf.org/doc/html/rfc8152#section-13.2
             credentialPublicKey.Curve = GetCredentialPublicKeyIntNullableParameter(coseKeyFormat, CoseKeyIndex.Curve);
             credentialPublicKey.XCoordinate = GetCredentialPublicKeyParameter(coseKeyFormat, CoseKeyIndex.XCoordinate);
         }
-        else if (credentialPublicKey.KeyType == (int)KeyTypeEnum.Ec2)
+        else if (credentialPublicKey.KeyType == (int)KeyType.Ec2)
         {
             // https://datatracker.ietf.org/doc/html/rfc8152#section-13.1
             credentialPublicKey.Curve = GetCredentialPublicKeyIntNullableParameter(coseKeyFormat, CoseKeyIndex.Curve);
             credentialPublicKey.XCoordinate = GetCredentialPublicKeyParameter(coseKeyFormat, CoseKeyIndex.XCoordinate);
             credentialPublicKey.YCoordinate = GetCredentialPublicKeyParameter(coseKeyFormat, CoseKeyIndex.YCoordinate);
         }
-        else if (credentialPublicKey.KeyType == (int)KeyTypeEnum.Rsa)
+        else if (credentialPublicKey.KeyType == (int)KeyType.Rsa)
         {
             // https://datatracker.ietf.org/doc/html/rfc8230#section-4
             credentialPublicKey.Modulus = GetCredentialPublicKeyParameter(coseKeyFormat, CoseKeyIndex.Modulus);
             credentialPublicKey.Exponent = GetCredentialPublicKeyParameter(coseKeyFormat, CoseKeyIndex.Exponent);
         }
-        else if (credentialPublicKey.KeyType == (int)KeyTypeEnum.Symmetric)
+        else if (credentialPublicKey.KeyType == (int)KeyType.Symmetric)
         {
             // https://datatracker.ietf.org/doc/html/rfc8152#section-13.3
             credentialPublicKey.Key = GetCredentialPublicKeyParameter(coseKeyFormat, CoseKeyIndex.SymmetricKey);
@@ -146,6 +138,14 @@ internal sealed class AuthenticatorDataParserService : IAuthenticatorDataParserS
         return credentialPublicKey;
     }
 
+    private static void GetAndSetFlags(byte flags, AuthenticatorData authenticatorData)
+    {
+        authenticatorData.UserPresent = (flags & 0b00000001) != 0; // Bit 0
+        authenticatorData.UserVerified = (flags & 0b00000100) != 0; // Bit 2
+        authenticatorData.AttestedCredentialDataIncluded = (flags & 0b01000000) != 0; // Bit 6
+        authenticatorData.ExtensionDataIncluded = (flags & 0b10000000) != 0; // Bit 7
+    }
+
     private static int GetCredentialPublicKeyIntParameter(Dictionary<int, object> coseKeyFormat, int coseKeyIndex)
     {
         if (coseKeyFormat.TryGetValue(coseKeyIndex, out var value))
@@ -153,7 +153,7 @@ internal sealed class AuthenticatorDataParserService : IAuthenticatorDataParserS
             return Convert.ToInt32(value);
         }
 
-        throw new ArgumentException(nameof(coseKeyFormat));
+        throw new ArgumentException("COSE key format does not expected key index", nameof(coseKeyFormat));
     }
 
     private static int? GetCredentialPublicKeyIntNullableParameter(Dictionary<int, object> coseKeyFormat, int coseKeyIndex)

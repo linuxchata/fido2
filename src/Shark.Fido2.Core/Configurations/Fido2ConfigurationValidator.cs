@@ -17,7 +17,7 @@ public class Fido2ConfigurationValidator : IValidateOptions<Fido2Configuration>
             return ValidateOptionsResult.Fail("'RelyingPartyId' configuration key must not include scheme");
         }
 
-        if (Regex.IsMatch(options.RelyingPartyId, @":\d+"))
+        if (Regex.IsMatch(options.RelyingPartyId, @":\d+", RegexOptions.None, TimeSpan.FromMilliseconds(100)))
         {
             return ValidateOptionsResult.Fail("'RelyingPartyId' configuration key must not include port number");
         }

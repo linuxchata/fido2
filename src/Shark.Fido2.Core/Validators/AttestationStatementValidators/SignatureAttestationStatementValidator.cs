@@ -60,7 +60,7 @@ internal class SignatureAttestationStatementValidator : ISignatureAttestationSta
     public ValidatorInternalResult ValidateTpm(
         byte[] data,
         Dictionary<string, object> attestationStatementDict,
-        KeyTypeEnum keyType,
+        KeyType keyType,
         int algorithm,
         X509Certificate2 attestationCertificate)
     {
@@ -75,7 +75,7 @@ internal class SignatureAttestationStatementValidator : ISignatureAttestationSta
         }
 
         bool isValid;
-        if (keyType == KeyTypeEnum.Rsa)
+        if (keyType == KeyType.Rsa)
         {
             isValid = _rsaCryptographyValidator.IsValid(
                 data,
@@ -83,7 +83,7 @@ internal class SignatureAttestationStatementValidator : ISignatureAttestationSta
                 algorithm,
                 attestationCertificate);
         }
-        else if (keyType == KeyTypeEnum.Ec2)
+        else if (keyType == KeyType.Ec2)
         {
             isValid = _ec2CryptographyValidator.IsValid(
                 data,
@@ -117,7 +117,7 @@ internal class SignatureAttestationStatementValidator : ISignatureAttestationSta
         }
 
         bool isValid;
-        if (credentialPublicKey.KeyType == (int)KeyTypeEnum.Ec2)
+        if (credentialPublicKey.KeyType == (int)KeyType.Ec2)
         {
             isValid = _ec2CryptographyValidator.IsValid(
                 data,
@@ -140,15 +140,15 @@ internal class SignatureAttestationStatementValidator : ISignatureAttestationSta
         X509Certificate2? attestationCertificate = null)
     {
         bool isValid;
-        if (credentialPublicKey.KeyType == (int)KeyTypeEnum.Rsa)
+        if (credentialPublicKey.KeyType == (int)KeyType.Rsa)
         {
             isValid = _rsaCryptographyValidator.IsValid(data, signature, credentialPublicKey, attestationCertificate);
         }
-        else if (credentialPublicKey.KeyType == (int)KeyTypeEnum.Ec2)
+        else if (credentialPublicKey.KeyType == (int)KeyType.Ec2)
         {
             isValid = _ec2CryptographyValidator.IsValid(data, signature, credentialPublicKey, attestationCertificate);
         }
-        else if (credentialPublicKey.KeyType == (int)KeyTypeEnum.Okp)
+        else if (credentialPublicKey.KeyType == (int)KeyType.Okp)
         {
             isValid = _okpCryptographyValidator.IsValid(data, signature, credentialPublicKey);
         }

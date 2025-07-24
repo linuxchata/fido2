@@ -81,7 +81,7 @@ internal class AndroidKeyAttestationStatementStrategyTests
         // Assert
         var attestationStatementInternalResult = result as AttestationStatementInternalResult;
         Assert.That(attestationStatementInternalResult, Is.Not.Null, result.Message);
-        Assert.That(attestationStatementInternalResult!.AttestationType, Is.EqualTo(AttestationTypeEnum.Basic));
+        Assert.That(attestationStatementInternalResult!.AttestationType, Is.EqualTo(AttestationType.Basic));
     }
 
     [Test]

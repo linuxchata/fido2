@@ -86,7 +86,7 @@ internal class TpmAttestationStatementStrategyTests
         // Assert
         var attestationStatementInternalResult = result as AttestationStatementInternalResult;
         Assert.That(attestationStatementInternalResult, Is.Not.Null, result.Message);
-        Assert.That(attestationStatementInternalResult!.AttestationType, Is.EqualTo(AttestationTypeEnum.AttCA));
+        Assert.That(attestationStatementInternalResult!.AttestationType, Is.EqualTo(AttestationType.AttCA));
     }
 
     [Test]
@@ -107,7 +107,7 @@ internal class TpmAttestationStatementStrategyTests
         // Assert
         var attestationStatementInternalResult = result as AttestationStatementInternalResult;
         Assert.That(attestationStatementInternalResult, Is.Not.Null, result.Message);
-        Assert.That(attestationStatementInternalResult!.AttestationType, Is.EqualTo(AttestationTypeEnum.AttCA));
+        Assert.That(attestationStatementInternalResult!.AttestationType, Is.EqualTo(AttestationType.AttCA));
     }
 
     [Test]

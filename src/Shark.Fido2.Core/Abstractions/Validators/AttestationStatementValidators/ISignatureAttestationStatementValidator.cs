@@ -45,7 +45,7 @@ public interface ISignatureAttestationStatementValidator
     ValidatorInternalResult ValidateTpm(
         byte[] data,
         Dictionary<string, object> attestationStatementDict,
-        KeyTypeEnum keyType,
+        KeyType keyType,
         int algorithm,
         X509Certificate2 attestationCertificate);
 

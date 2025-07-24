@@ -40,7 +40,7 @@ internal sealed class MetadataReaderService : IMetadataReaderService
 
         // Step 4
         // If the x5u attribute is present in the JWT Header, then:
-        List<X509Certificate2> certificates = [];
+        List<X509Certificate2> certificates;
         var certificateUrl = GetCertificateUrlFromToken(metadataBlobToken);
         if (!string.IsNullOrWhiteSpace(certificateUrl))
         {

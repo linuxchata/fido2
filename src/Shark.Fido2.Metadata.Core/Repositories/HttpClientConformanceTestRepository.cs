@@ -1,21 +1,12 @@
 ﻿using System.Net.Http.Json;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
-using Microsoft.Extensions.Options;
 using Shark.Fido2.Metadata.Core.Abstractions.Repositories;
-using Shark.Fido2.Metadata.Core.Configurations;
 
 namespace Shark.Fido2.Metadata.Core.Repositories;
 
 internal class HttpClientConformanceTestRepository : IHttpClientConformanceTestRepository
 {
-    private readonly MetadataServiceConfiguration _configuration;
-
-    public HttpClientConformanceTestRepository(IOptions<MetadataServiceConfiguration> options)
-    {
-        _configuration = options.Value;
-    }
-
     public async Task<List<string>> GetMetadataBlobEndpoints(string remoteUrl, CancellationToken cancellationToken)
     {
         using var client = new HttpClient();
@@ -39,7 +30,7 @@ internal class HttpClientConformanceTestRepository : IHttpClientConformanceTestR
         using var client = new HttpClient();
         using var stream = await client.GetStreamAsync(endpoint, cancellationToken);
         using var reader = new StreamReader(stream);
-        return reader.ReadToEnd();
+        return await reader.ReadToEndAsync(cancellationToken);
     }
 
     public async Task<X509Certificate2> GetRootCertificate(string url, CancellationToken cancellationToken)
@@ -54,5 +45,5 @@ internal class HttpClientConformanceTestRepository : IHttpClientConformanceTestR
         return new X509Certificate2(response);
     }
 
-    private record ApiResponse(string status, string[] result);
+    private sealed record ApiResponse(string status, string[] result);
 }

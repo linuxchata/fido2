@@ -117,13 +117,12 @@ public sealed class Assertion : IAssertion
         // If options.allowCredentials is not empty, verify that credential.id identifies one of the public key
         // credentials listed in options.allowCredentials.
         var credentialId = publicKeyCredentialAssertion.RawId.FromBase64Url();
-        if (requestOptions.AllowCredentials != null && requestOptions.AllowCredentials.Length != 0)
+        if (requestOptions.AllowCredentials != null &&
+            requestOptions.AllowCredentials.Length != 0 &&
+            !requestOptions.AllowCredentials.Any(c => BytesArrayComparer.CompareNullable(c.Id, credentialId)))
         {
-            if (!requestOptions.AllowCredentials.Any(c => BytesArrayComparer.CompareNullable(c.Id, credentialId)))
-            {
-                return AssertionCompleteResult.CreateFailure(
-                    "Assertion response does not contain expected credential identifier");
-            }
+            return AssertionCompleteResult.CreateFailure(
+                "Assertion response does not contain expected credential identifier");
         }
 
         var credential = await _credentialRepository.Get(credentialId, cancellationToken);

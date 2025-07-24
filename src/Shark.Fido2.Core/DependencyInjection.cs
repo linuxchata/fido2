@@ -70,8 +70,8 @@ public static class DependencyInjection
             AttestationStatementFormatIdentifier.AndroidSafetyNet);
         services.AddKeyedTransient<IAttestationStatementStrategy, NoneAttestationStatementStrategy>(
             AttestationStatementFormatIdentifier.None);
-        services.AddKeyedTransient<IAttestationStatementStrategy, FidoU2fAttestationStatementStrategy>(
-            AttestationStatementFormatIdentifier.FidoU2f);
+        services.AddKeyedTransient<IAttestationStatementStrategy, FidoU2FAttestationStatementStrategy>(
+            AttestationStatementFormatIdentifier.FidoU2F);
         services.AddKeyedTransient<IAttestationStatementStrategy, AppleAnonymousAttestationStatementStrategy>(
             AttestationStatementFormatIdentifier.Apple);
 

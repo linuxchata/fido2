@@ -81,7 +81,7 @@ internal class AppleAnonymousAttestationStatementStrategy : IAttestationStatemen
         // and attestation trust path x5c.
         return new AttestationStatementInternalResult(
             AttestationStatementFormatIdentifier.Apple,
-            AttestationTypeEnum.AnonCA,
+            AttestationType.AnonCA,
             [.. certificates]);
     }
 }

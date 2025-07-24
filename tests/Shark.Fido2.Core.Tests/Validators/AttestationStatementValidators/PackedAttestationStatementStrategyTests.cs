@@ -79,7 +79,7 @@ internal class PackedAttestationStatementStrategyTests
         // Assert
         var attestationStatementInternalResult = result as AttestationStatementInternalResult;
         Assert.That(attestationStatementInternalResult, Is.Not.Null, result.Message);
-        Assert.That(attestationStatementInternalResult!.AttestationType, Is.EqualTo(AttestationTypeEnum.Self));
+        Assert.That(attestationStatementInternalResult!.AttestationType, Is.EqualTo(AttestationType.Self));
     }
 
     [Test]
@@ -119,7 +119,7 @@ internal class PackedAttestationStatementStrategyTests
         // Assert
         var attestationStatementInternalResult = result as AttestationStatementInternalResult;
         Assert.That(attestationStatementInternalResult, Is.Not.Null, result.Message);
-        Assert.That(attestationStatementInternalResult!.AttestationType, Is.EqualTo(AttestationTypeEnum.Self));
+        Assert.That(attestationStatementInternalResult!.AttestationType, Is.EqualTo(AttestationType.Self));
     }
 
     [Test]

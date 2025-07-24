@@ -17,7 +17,7 @@ internal sealed class CertificatePublicKeyValidator : ICertificatePublicKeyValid
         ArgumentNullException.ThrowIfNull(credentialPublicKey);
 
         bool isValid;
-        if (credentialPublicKey.KeyType == (int)KeyTypeEnum.Rsa)
+        if (credentialPublicKey.KeyType == (int)KeyType.Rsa)
         {
             using var rsaPublicKey = attestationCertificate.GetRSAPublicKey();
             var parameters = rsaPublicKey?.ExportParameters(false);
@@ -25,7 +25,7 @@ internal sealed class CertificatePublicKeyValidator : ICertificatePublicKeyValid
             isValid = BytesArrayComparer.CompareNullable(credentialPublicKey.Modulus, parameters?.Modulus) &&
                 BytesArrayComparer.CompareNullable(credentialPublicKey.Exponent, parameters?.Exponent);
         }
-        else if (credentialPublicKey.KeyType == (int)KeyTypeEnum.Ec2)
+        else if (credentialPublicKey.KeyType == (int)KeyType.Ec2)
         {
             using var ecdsaPublicKey = attestationCertificate.GetECDsaPublicKey();
             var parameters = ecdsaPublicKey?.ExportParameters(false);

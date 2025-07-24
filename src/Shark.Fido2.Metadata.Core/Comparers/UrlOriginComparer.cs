@@ -1,6 +1,6 @@
 ﻿namespace Shark.Fido2.Metadata.Core.Comparers;
 
-internal sealed class UrlOriginComparer
+internal static class UrlOriginComparer
 {
     internal static bool CompareOrigins(string left, string right)
     {

@@ -192,7 +192,7 @@ internal sealed class CredentialRepository : ICredentialRepository
         else
         {
             credentialsKeys = JsonSerializer.Deserialize<List<string>>(serializedCredentialsKeys!, _jsonOptions) ?? [];
-            if (!credentialsKeys.Any(ck => ck == credentialKey))
+            if (!credentialsKeys.Exists(ck => ck == credentialKey))
             {
                 credentialsKeys.Add(credentialKey);
             }

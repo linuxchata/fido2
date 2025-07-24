@@ -74,7 +74,7 @@ internal class AppleAnonymousAttestationStatementStrategyTests
         // Assert
         var attestationStatementInternalResult = result as AttestationStatementInternalResult;
         Assert.That(attestationStatementInternalResult, Is.Not.Null);
-        Assert.That(attestationStatementInternalResult!.AttestationType, Is.EqualTo(AttestationTypeEnum.AnonCA));
+        Assert.That(attestationStatementInternalResult!.AttestationType, Is.EqualTo(AttestationType.AnonCA));
     }
 
     [Test]

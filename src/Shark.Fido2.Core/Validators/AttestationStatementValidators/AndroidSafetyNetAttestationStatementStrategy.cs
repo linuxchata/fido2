@@ -138,7 +138,7 @@ internal class AndroidSafetyNetAttestationStatementStrategy : IAttestationStatem
         // trust path x5c.
         return new AttestationStatementInternalResult(
             AttestationStatementFormatIdentifier.AndroidSafetyNet,
-            AttestationTypeEnum.Basic,
+            AttestationType.Basic,
             [.. certificates]);
     }
 }

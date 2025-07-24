@@ -7,7 +7,7 @@ namespace Shark.Fido2.Core.Abstractions.Handlers;
 public interface IAssertionObjectHandler
 {
     InternalResult<AuthenticatorData> Handle(
-        string authenticatorData,
+        string authenticatorDataString,
         string signature,
         ClientData clientData,
         CredentialPublicKey credentialPublicKey,

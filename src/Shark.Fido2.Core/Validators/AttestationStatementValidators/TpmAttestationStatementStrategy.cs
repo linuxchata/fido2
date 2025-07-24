@@ -189,7 +189,7 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
         // trust path x5c.
         return new AttestationStatementInternalResult(
             AttestationStatementFormatIdentifier.Tpm,
-            AttestationTypeEnum.AttCA,
+            AttestationType.AttCA,
             [.. certificates]);
     }
 

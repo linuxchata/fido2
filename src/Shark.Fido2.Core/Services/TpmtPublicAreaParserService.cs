@@ -18,11 +18,11 @@ internal sealed class TpmtPublicAreaParserService : ITpmtPublicAreaParserService
 
             // TPMI_ALG_PUBLIC => TPM_ALG_ID; UINT16
             var typeRaw = ReadUInt16(reader);
-            var type = (TpmAlgorithmEnum)typeRaw;
+            var type = (TpmAlgorithm)typeRaw;
 
             // TPMI_ALG_HASH => TPM_ALG_ID; UINT16
             var nameAlgRaw = ReadUInt16(reader);
-            var nameAlg = (TpmAlgorithmEnum)nameAlgRaw;
+            var nameAlg = (TpmAlgorithm)nameAlgRaw;
 
             // TPMA_OBJECT; UINT32
             var objectAttributes = ReadUInt32(reader);
@@ -40,7 +40,7 @@ internal sealed class TpmtPublicAreaParserService : ITpmtPublicAreaParserService
             TpmtPublicRsaParameters tpmtPublicRsaParameters = null!;
             TpmtPublicEccParameters tpmtPublicEccParameters = null!;
             byte[]? unique = null;
-            if (type == TpmAlgorithmEnum.TpmAlgorithmRsa)
+            if (type == TpmAlgorithm.TpmAlgorithmRsa)
             {
                 // TPMI_RSA_KEY_BITS => TPM_KEY_BITS; UINT16
                 var keyBits = ReadUInt16(reader);
@@ -62,7 +62,7 @@ internal sealed class TpmtPublicAreaParserService : ITpmtPublicAreaParserService
                 var size = ReadUInt16(reader);
                 unique = reader.ReadBytes(size);
             }
-            else if (type == TpmAlgorithmEnum.TpmAlgorithmEcc)
+            else if (type == TpmAlgorithm.TpmAlgorithmEcc)
             {
                 // TPMI_ECC_CURVE => TPM_ECC_CURVE; UINT16
                 var curveId = ReadUInt16(reader);
