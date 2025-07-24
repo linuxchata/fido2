@@ -15,9 +15,14 @@ internal sealed class SubjectAlternativeNameParserService : ISubjectAlternativeN
     private const string TpmVersionName = "TPMVersion";
     private const string TpmVersionId = "2.23.133.2.3";
 
-    private readonly Regex _regexNumericNotation = new Regex(@"(?<key>\d+(\.\d+)+)=(?<value>[\w:]+)");
-    private readonly Regex _regexNameNotation = new Regex(@"(?<key>\w+)=(?<value>[\w:]+)");
-    private readonly Regex _regexManufacturer = new Regex(@"id:([A-F0-9]+)");
+    private static readonly TimeSpan MatchTimeout = TimeSpan.FromMilliseconds(100);
+
+    private readonly Regex _regexNumericNotation = new(
+        @"(?<key>\d+(\.\d+)+)=(?<value>[\w:]+)",
+        RegexOptions.None,
+        MatchTimeout);
+    private readonly Regex _regexNameNotation = new(@"(?<key>\w+)=(?<value>[\w:]+)", RegexOptions.None, MatchTimeout);
+    private readonly Regex _regexManufacturer = new(@"id:([A-F0-9]+)", RegexOptions.None, MatchTimeout);
 
     public TpmIssuer Parse(X509SubjectAlternativeNameExtension subjectAlternativeNameExtension)
     {
