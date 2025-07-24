@@ -7,6 +7,8 @@ namespace Shark.Fido2.Core.Tests.Mappers;
 [TestFixture]
 internal class CredentialMapperTests
 {
+    internal static readonly string[] ExpectedTransports = ["usb", "nfc"];
+
     [Test]
     public void ToEntity_WhenValidCredential_ThenReturnsCorrectEntity()
     {
@@ -100,7 +102,7 @@ internal class CredentialMapperTests
             Assert.That(domain.UserName, Is.EqualTo(entity.UserName));
             Assert.That(domain.UserDisplayName, Is.EqualTo(entity.UserDisplayName));
             Assert.That(domain.SignCount, Is.EqualTo(entity.SignCount));
-            Assert.That(domain.Transports, Is.EqualTo(new[] { "usb", "nfc" }));
+            Assert.That(domain.Transports, Is.EqualTo(ExpectedTransports));
             Assert.That(domain.CreatedAt, Is.EqualTo(entity.CreatedAt));
             Assert.That(domain.UpdatedAt, Is.EqualTo(entity.UpdatedAt));
 
@@ -148,7 +150,7 @@ internal class CredentialMapperTests
         Assert.Multiple(() =>
         {
             Assert.That(result!.CredentialId, Is.EqualTo(entity.CredentialId));
-            Assert.That(result.Transports, Is.EqualTo(new[] { "usb", "nfc" }));
+            Assert.That(result.Transports, Is.EqualTo(ExpectedTransports));
         });
     }
 

@@ -36,9 +36,9 @@ public class AndroidKeyAttestationExtensionParserServiceTests
         Assert.That(result.SoftwareEnforced, Is.Not.Null);
         Assert.Multiple(() =>
         {
-            Assert.That(result.SoftwareEnforced.Purpose, Is.EqualTo(0));
+            Assert.That(result.SoftwareEnforced.Purpose, Is.Zero);
             Assert.That(result.SoftwareEnforced.IsAllApplicationsPresent, Is.False);
-            Assert.That(result.SoftwareEnforced.Origin, Is.EqualTo(0));
+            Assert.That(result.SoftwareEnforced.Origin, Is.Zero);
         });
 
         Assert.That(result.HardwareEnforced, Is.Not.Null);
@@ -46,7 +46,7 @@ public class AndroidKeyAttestationExtensionParserServiceTests
         {
             Assert.That(result.HardwareEnforced.Purpose, Is.EqualTo(2));
             Assert.That(result.HardwareEnforced.IsAllApplicationsPresent, Is.False);
-            Assert.That(result.HardwareEnforced.Origin, Is.EqualTo(0));
+            Assert.That(result.HardwareEnforced.Origin, Is.Zero);
         });
     }
 

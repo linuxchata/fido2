@@ -1,4 +1,5 @@
-﻿using Amazon.DynamoDBv2.Model;
+﻿using System.Globalization;
+using Amazon.DynamoDBv2.Model;
 using Shark.Fido2.Core.Entities;
 
 namespace Shark.Fido2.DynamoDB;
@@ -17,13 +18,9 @@ internal static class CredentialEntityMapper
             CredentialPublicKeyJson = item[AttributeNames.CredentialPublicKeyJson].S,
             SignCount = uint.Parse(item[AttributeNames.SignCount].N),
             Transports = item[AttributeNames.Transports].S,
-            CreatedAt = DateTime.Parse(item[AttributeNames.CreatedAt].S),
-            UpdatedAt = item.ContainsKey(AttributeNames.UpdatedAt) && !item[AttributeNames.UpdatedAt].NULL == true
-                ? DateTime.Parse(item[AttributeNames.UpdatedAt].S)
-                : null,
-            LastUsedAt = item.ContainsKey(AttributeNames.LastUsedAt) && !item[AttributeNames.LastUsedAt].NULL == true
-                ? DateTime.Parse(item[AttributeNames.LastUsedAt].S)
-                : null,
+            CreatedAt = GetDateTime(item),
+            UpdatedAt = GetNullableDateTime(item, AttributeNames.UpdatedAt),
+            LastUsedAt = GetNullableDateTime(item, AttributeNames.LastUsedAt),
         };
     }
 
@@ -52,5 +49,17 @@ internal static class CredentialEntityMapper
             { AttributeNames.UpdatedAt, new AttributeValue { NULL = true } },
             { AttributeNames.LastUsedAt, new AttributeValue { NULL = true } },
         };
+    }
+
+    private static DateTime GetDateTime(Dictionary<string, AttributeValue> item)
+    {
+        return DateTime.Parse(item[AttributeNames.CreatedAt].S, DateTimeFormatInfo.InvariantInfo);
+    }
+
+    private static DateTime? GetNullableDateTime(Dictionary<string, AttributeValue> item, string attributeName)
+    {
+        return item.TryGetValue(attributeName, out AttributeValue? value) && !value.NULL == true
+            ? DateTime.Parse(value.S, DateTimeFormatInfo.InvariantInfo)
+            : null;
     }
 }

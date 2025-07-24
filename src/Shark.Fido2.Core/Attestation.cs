@@ -206,8 +206,7 @@ public sealed class Attestation : IAttestation
             new AuthenticatorSelectionCriteria
             {
                 AuthenticatorAttachment = request.AuthenticatorSelection.AuthenticatorAttachment,
-                ResidentKey = request.AuthenticatorSelection.ResidentKey != 0 ?
-                    request.AuthenticatorSelection.ResidentKey : ResidentKeyRequirement.Discouraged,
+                ResidentKey = GetResidentKeyRequirement(request.AuthenticatorSelection.ResidentKey),
                 RequireResidentKey = request.AuthenticatorSelection.ResidentKey == ResidentKeyRequirement.Required,
                 UserVerification = request.AuthenticatorSelection.UserVerification ??
                     UserVerificationRequirement.Preferred,
@@ -229,5 +228,10 @@ public sealed class Attestation : IAttestation
 
         return AttestationConveyancePreference.Supported.Contains(attestation) ?
             attestation : AttestationConveyancePreference.None;
+    }
+
+    private static ResidentKeyRequirement GetResidentKeyRequirement(ResidentKeyRequirement residentKeyRequirement)
+    {
+        return residentKeyRequirement != 0 ? residentKeyRequirement : ResidentKeyRequirement.Discouraged;
     }
 }

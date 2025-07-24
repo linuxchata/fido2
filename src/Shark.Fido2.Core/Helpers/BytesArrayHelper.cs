@@ -11,7 +11,7 @@ public static class BytesArrayHelper
 
         if (left == null)
         {
-            return right != null ? (byte[])right.Clone() : [];
+            return (byte[])right!.Clone();
         }
 
         if (right == null)

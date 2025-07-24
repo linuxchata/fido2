@@ -92,7 +92,7 @@ public static class CborConverter
         }
     }
 
-    private static object ReadMap(CborReader reader)
+    private static Dictionary<string, object> ReadMap(CborReader reader)
     {
         var map = new Dictionary<string, object>();
         reader.ReadStartMap();
@@ -107,7 +107,7 @@ public static class CborConverter
         return map;
     }
 
-    private static object ReadArray(CborReader reader)
+    private static List<object> ReadArray(CborReader reader)
     {
         var array = new List<object>();
         reader.ReadStartArray();
