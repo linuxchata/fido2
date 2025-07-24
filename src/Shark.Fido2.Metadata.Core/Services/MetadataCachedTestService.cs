@@ -150,6 +150,6 @@ internal sealed class MetadataCachedTestService : IMetadataCachedService
                 })
             .ToList();
 
-        return payloadEntries ?? [];
+        return payloadEntries;
     }
 }

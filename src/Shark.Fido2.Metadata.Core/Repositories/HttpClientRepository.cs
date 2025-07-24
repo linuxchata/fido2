@@ -19,7 +19,7 @@ internal sealed class HttpClientRepository : IHttpClientRepository
         using var client = new HttpClient();
         using var stream = await client.GetStreamAsync(_configuration.MetadataBlobLocation, cancellationToken);
         using var reader = new StreamReader(stream);
-        return reader.ReadToEnd();
+        return await reader.ReadToEndAsync();
     }
 
     public async Task<X509Certificate2> GetRootCertificate(CancellationToken cancellationToken)

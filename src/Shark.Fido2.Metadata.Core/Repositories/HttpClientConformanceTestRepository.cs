@@ -30,7 +30,7 @@ internal class HttpClientConformanceTestRepository : IHttpClientConformanceTestR
         using var client = new HttpClient();
         using var stream = await client.GetStreamAsync(endpoint, cancellationToken);
         using var reader = new StreamReader(stream);
-        return reader.ReadToEnd();
+        return await reader.ReadToEndAsync(cancellationToken);
     }
 
     public async Task<X509Certificate2> GetRootCertificate(string url, CancellationToken cancellationToken)

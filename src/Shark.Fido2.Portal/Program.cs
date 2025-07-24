@@ -73,4 +73,4 @@ app.MapControllers();
 
 app.UseSession();
 
-app.Run();
+await app.RunAsync();
