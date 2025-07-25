@@ -1,5 +1,5 @@
-# Contributing to Shark FIDO2 WebAuthn .NET library
-Thank you for your interest in contributing to the **Shark FIDO2 WebAuthn .NET library**.
+# Contributing to Shark WebAuthn .NET library
+Thank you for your interest in contributing to the **Shark WebAuthn .NET library**.
 
 This document outlines how to get started, coding conventions, and how to submit issues or changes.
 
@@ -13,7 +13,7 @@ This document outlines how to get started, coding conventions, and how to submit
 
    `cd fido2/src`
 
-4. **Build the project**:
+5. **Build the project**:
 
    `dotnet build`
 
