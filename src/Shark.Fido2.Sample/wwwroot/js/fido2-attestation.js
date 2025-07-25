@@ -63,10 +63,10 @@ async function createCredential(options) {
     }
     catch (error) {
         if (error.name === 'InvalidStateError') {
-            toastr.error('The authenticator was not allowed because it was already registered.', registrationTitle);
+            notify.error('The authenticator was not allowed because it was already registered.', registrationTitle);
         }
         else {
-            toastr.error(error.message, registrationTitle);
+            notify.error(error.message, registrationTitle);
         }
         return;
     }
@@ -110,7 +110,7 @@ async function fetchAttestationOptions(optionsRequest) {
             throw new Error(`Server responded with status code ${response.status}: ${errorMessage}`);
         }
     } catch (error) {
-        toastr.error("Error creating registration options", registrationTitle);
+        notify.error("Error creating registration options", registrationTitle);
         throw error;
     }
 }
@@ -126,14 +126,14 @@ async function fetchAttestationResult(credentials) {
         });
 
         if (response.ok) {
-            toastr.info('Registration was successful', registrationTitle);
+            notify.info('Registration was successful', registrationTitle);
         }
         else {
             const responseBody = await response.json();
             throw new Error(responseBody.errorMessage);
         }
     } catch (error) {
-        toastr.error(`Registration has failed. ${error.message}`, registrationTitle);
+        notify.error(`Registration has failed. ${error.message}`, registrationTitle);
     }
 }
 
