@@ -1,14 +1,4 @@
-﻿toastr.options = {
-    "positionClass": "toast-top-right",
-    "timeOut": "5000",
-    "closeButton": true,
-    "showEasing": "swing",
-    "hideEasing": "linear",
-    "showMethod": "fadeIn",
-    "hideMethod": "fadeOut"
-};
-
-$(function () {
+﻿$(function () {
     $("#register").on("click", function (event) {
         const usernameInput = $("#username-register");
         const displayNameInput = $("#display-name-register");

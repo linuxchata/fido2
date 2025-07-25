@@ -46,7 +46,7 @@ async function requestCredential(options) {
         assertion = await navigator.credentials.get(credentialRequestOptions);
     }
     catch (error) {
-        toastr.error(error.message, authenticationTitle);
+        notify.error(error.message, authenticationTitle);
         return;
     }
 
@@ -90,7 +90,7 @@ async function fetchAssertionOptions(optionsRequest) {
             throw new Error(`Server responded with status code ${response.status}: ${errorMessage}`);
         }
     } catch (error) {
-        toastr.error("Error creating authentication options", authenticationTitle);
+        notify.error("Error creating authentication options", authenticationTitle);
         throw error;
     }
 }
@@ -106,14 +106,14 @@ async function fetchAssertionResult(credentials) {
         });
 
         if (response.ok) {
-            toastr.info('Authentication was successful', authenticationTitle);
+            notify.info('Authentication was successful', authenticationTitle);
         }
         else {
             const responseBody = await response.json();
             throw new Error(responseBody.errorMessage);
         }
     } catch (error) {
-        toastr.error(`Authentication has failed. ${error.message}`, authenticationTitle);
+        notify.error(`Authentication has failed. ${error.message}`, authenticationTitle);
     }
 }
 
