@@ -6,7 +6,12 @@ async function requestCreateCredentialOptions(username, displayName) {
     const optionsRequest = {
         username: username,
         displayName: displayName,
-        attestation: 'direct'
+        attestation: 'direct',
+        authenticatorSelection: {
+            residentKey: 'preferred',
+            userVerification: 'preferred',
+            requireResidentKey: false
+        }
     };
 
     console.log("Start fetching attestation options");
