@@ -1,5 +1,5 @@
 # Overview
-This repository provides a server-side implementation of the WebAuthn web standard that enables secure passwordless and multi-factor authentication (MFA) for web applications. It supports key WebAuthn operations – credential registration and authentication – ensuring compliance with the [WebAuthn Level 2 specification](https://www.w3.org/TR/webauthn-2/) (Web Authentication: An API for accessing Public Key Credentials Level 2).
+This repository provides a server-side implementation of the WebAuthn standard that enables secure passwordless and multi-factor authentication (MFA) for web applications. It supports key WebAuthn operations – credential registration and authentication – ensuring compliance with the [WebAuthn Level 2 specification](https://www.w3.org/TR/webauthn-2/) (Web Authentication: An API for accessing Public Key Credentials Level 2).
 
 ## Supported Features
 - **Attestation flow** for credentials registration
@@ -23,8 +23,17 @@ This repository provides a server-side implementation of the WebAuthn web standa
 # Build Status
 [![build](https://github.com/linuxchata/fido2/actions/workflows/build.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build.yml) [![NuGet](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_packages.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_packages.yml)
 
+# Packages
+| Package Name | Status |
+|-|-|
+| Shark.Fido2.Core | [![NuGet](https://img.shields.io/nuget/v/Shark.Fido2.Core.svg)](https://www.nuget.org/packages/Shark.Fido2.Core/) |
+| Shark.Fido2.DynamoDB | [![NuGet](https://img.shields.io/nuget/v/Shark.Fido2.DynamoDB.svg)](https://www.nuget.org/packages/Shark.Fido2.DynamoDB/) |
+| Shark.Fido2.InMemory | [![NuGet](https://img.shields.io/nuget/v/Shark.Fido2.InMemory.svg)](https://www.nuget.org/packages/Shark.Fido2.InMemory/) |
+| Shark.Fido2.Models | [![NuGet](https://img.shields.io/nuget/v/Shark.Fido2.Models.svg)](https://www.nuget.org/packages/Shark.Fido2.Models/) |
+| Shark.Fido2.SqlServer | [![NuGet](https://img.shields.io/nuget/v/Shark.Fido2.SqlServer.svg)](https://www.nuget.org/packages/Shark.Fido2.SqlServer/) |
+
 # Usage
-The following examples demonstrate how to implement passwordless authentication in your application.
+The following examples demonstrate how to implement passwordless authentication in your application. For complete reference and additional details, see the [full documentation](https://shark-fido2.com/Documentation).
 
 ## Server-side API (ASP.NET Core Controllers)
 The sample C# code below is designed for ASP.NET Core controllers.
@@ -35,6 +44,31 @@ Registers both the credential store (in-memory or alternative) and the core depe
 builder.Services.AddFido2InMemoryStore();
 builder.Services.AddFido2(builder.Configuration);
 ```
+
+### Server-side Configuration
+The server side can be customized using the following configuration options. You can set these options in an `appsettings.json` file.
+
+#### Core Configuration
+| Option | Default | Description |
+|-|-|-|
+| `RelyingPartyId` |  | Valid domain string identifying the Relying Party on whose behalf a given registration or authentication ceremony is being performed. This is a critical parameter in the WebAuthn protocol. It defines the security scope within which credentials are valid. Therefore, careful selection is essential, as an incorrect or overly broad value can lead to unintended credential reuse or security vulnerabilities. |
+| `RelyingPartyIdName` |  | Human-readable identifier for the Relying Party, intended only for display. |
+| `Origins` |  | List of the fully qualified origins of the Relying Party making the request, passed to the authenticator by the browser. |
+| `Timeout` | `60000` | Time, in milliseconds, that the Relying Party is willing to wait for the call to complete.  |
+| `AllowNoneAttestation` | `true` | Value indicating whether None attestation type is acceptable under Relying Party policy. [None attestation](https://www.w3.org/TR/webauthn-2/#none) is used when the authenticator doesn't have any attestation information available. |
+| `AllowSelfAttestation` | `true` | Value indicating whether Self attestation type is acceptable under Relying Party policy. [Self attestation](https://www.w3.org/TR/webauthn-2/#self-attestation) is used when the authenticator doesn't have a dedicated attestation key pair or a vendor-issued certificate. |
+| `EnableTrustedExecutionEnvironmentOnly` | `true` | Value indicating whether the Relying Party trusts only keys that are securely generated and stored in a Trusted Execution Environment (relevant for Android Key Attestation). |
+| `EnableMetadataService` | `true` | Value indicating whether the Relying Party uses the Metadata Service to verify the attestation object. |
+| `EnableStrictAuthenticatorVerification` | `false` | Value indicating whether the Relying Party requires strict verification of authenticators. If enabled, missing metadata for the authenticator would cause attestation to fail. |
+
+#### FIDO Metadata Service Configuration
+| Option | Default | Description |
+|-|-|-|
+| `MetadataBlobLocation` | `https://mds3.fidoalliance.org/` | Location of the centralized and trusted source of information about FIDO authenticators (Metadata Service BLOB). |
+| `RootCertificateLocationUrl` | `http://secure.globalsign.com/cacert/root-r3.crt` | Location of GlobalSign Root R3 certificate for Metadata Service BLOB. |
+| `MaximumTokenSizeInBytes` | `6291456` | Maximum token size in bytes that will be processed. This configuration is related to the Metadata Service BLOB size. |
+
+Example `appsettings.json` file: [appsettings.Production.json](https://github.com/linuxchata/fido2/blob/main/src/Shark.Fido2.Sample/appsettings.Production.json)
 
 ### Attestation (registration)
 Attestation controller
@@ -88,47 +122,13 @@ public async Task<IActionResult> Result(ServerPublicKeyCredentialAssertion reque
 }
 ```
 
-### Server-side Configuration
-The server side can be customized using the following configuration options. You can set these options in an `appsettings.json` file.
-
-#### Core Configuration
-| Option | Default | Description |
-|-|-|-|
-| `RelyingPartyId` |  | Valid domain string identifying the Relying Party on whose behalf a given registration or authentication ceremony is being performed. This is a critical parameter in the WebAuthn protocol. It defines the security scope within which credentials are valid. Therefore, careful selection is essential, as an incorrect or overly broad value can lead to unintended credential reuse or security vulnerabilities. |
-| `RelyingPartyIdName` |  | Human-palatable identifier for the Relying Party, intended only for display. |
-| `Origins` |  | List of the fully qualified origins of the Relying Party making the request, passed to the authenticator by the browser. |
-| `Timeout` | `60000` | Time, in milliseconds, that the Relying Party is willing to wait for the call to complete.  |
-| `AllowNoneAttestation` | `true` | Value indicating whether None attestation type is acceptable under Relying Party policy. [None attestation](https://www.w3.org/TR/webauthn-2/#none) is used when the authenticator doesn't have any attestation information available. |
-| `AllowSelfAttestation` | `true` | Value indicating whether Self attestation type is acceptable under Relying Party policy. [Self attestation](https://www.w3.org/TR/webauthn-2/#self-attestation) is used when the authenticator doesn't have a dedicated attestation key pair or a vendor-issued certificate. |
-| `EnableTrustedExecutionEnvironmentOnly` | `true` | Value indicating whether the Relying Party trusts only keys that are securely generated and stored in a Trusted Execution Environment (Android Key Attestation). |
-| `EnableMetadataService` | `true` | Value indicating whether the Relying Party uses the Metadata Service to verify the attestation object. |
-| `EnableStrictAuthenticatorVerification` | `false` | Value indicating whether the Relying Party requires strict verification of authenticators. If enabled, missing metadata for the authenticator would cause attestation to fail. |
-
-#### FIDO Metadata Service Configuration
-| Option | Default | Description |
-|-|-|-|
-| `MetadataBlobLocation` | `https://mds3.fidoalliance.org/` | Location of the centralized and trusted source of information about FIDO authenticators (Metadata Service BLOB). |
-| `RootCertificateLocationUrl` | `http://secure.globalsign.com/cacert/root-r3.crt` | Location of GlobalSign Root R3 for Metadata Service BLOB. |
-| `MaximumTokenSizeInBytes` | `6291456` | Maximum token size in bytes that will be processed. This configuration is related to the Metadata Service BLOB size. |
-
-Example `appsettings.json` file: [appsettings.Production.json](https://github.com/linuxchata/fido2/blob/main/src/Shark.Fido2.Portal/appsettings.Production.json)
-
 ## Client-side Integration
-To complete the implementation, you must add JavaScript code that communicates with the Web Authentication API in the browser. This API handles the client side of the authentication process. Below you can find sample implementation for communication with the Web Authentication API in the browser:
+To finalize the implementation, you must incorporate JavaScript code that interacts with the browser's Web Authentication API. This API manages the client-side authentication process. The following is a sample implementation:
 
 - [fido2-attestation.js](https://github.com/linuxchata/fido2/blob/main/src/Shark.Fido2.Sample/wwwroot/js/fido2-attestation.js) handles the registration process using the Web Authentication API (`navigator.credentials.create`).
 - [fido2-assertion.js](https://github.com/linuxchata/fido2/blob/main/src/Shark.Fido2.Sample/wwwroot/js/fido2-assertion.js) handles the authentication process using the Web Authentication API (`navigator.credentials.get`).
 
-This JavaScript code bridges the browser's Web Authentication API with the server-side REST API endpoints provided by the ASP.NET Core controllers described above.
-
-# Packages
-| Package Name | Status |
-|-|-|
-| Shark.Fido2.Core | [![NuGet](https://img.shields.io/nuget/v/Shark.Fido2.Core.svg)](https://www.nuget.org/packages/Shark.Fido2.Core/) |
-| Shark.Fido2.DynamoDB | [![NuGet](https://img.shields.io/nuget/v/Shark.Fido2.DynamoDB.svg)](https://www.nuget.org/packages/Shark.Fido2.DynamoDB/) |
-| Shark.Fido2.InMemory | [![NuGet](https://img.shields.io/nuget/v/Shark.Fido2.InMemory.svg)](https://www.nuget.org/packages/Shark.Fido2.InMemory/) |
-| Shark.Fido2.Models | [![NuGet](https://img.shields.io/nuget/v/Shark.Fido2.Models.svg)](https://www.nuget.org/packages/Shark.Fido2.Models/) |
-| Shark.Fido2.SqlServer | [![NuGet](https://img.shields.io/nuget/v/Shark.Fido2.SqlServer.svg)](https://www.nuget.org/packages/Shark.Fido2.SqlServer/) |
+This JavaScript code binds the browser's Web Authentication API to the server-side REST API endpoints provided by the ASP.NET Core controllers described above. More information about the Web Authentication API is available on the MDN Web Docs site at [developer.mozilla.org](https://developer.mozilla.org/en-US/docs/Web/API/Web_Authentication_API) page.
 
 # FIDO Conformance Tests
 All test cases successfully passed using the FIDO Conformance Tool.
