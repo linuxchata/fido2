@@ -1,11 +1,34 @@
+using System.Net.Security;
+using System.Runtime.InteropServices;
+using System.Security.Authentication;
 using Shark.Fido2.Core;
-using Shark.Fido2.DynamoDB;
 using Shark.Fido2.InMemory;
 using Shark.Fido2.Sample.Swagger;
-using Shark.Fido2.SqlServer;
 using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ConfigureHttpsDefaults(listenOptions =>
+    {
+        listenOptions.SslProtocols = SslProtocols.Tls12 | SslProtocols.Tls13;
+
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+        {
+            listenOptions.OnAuthenticate = (context, sslOptions) =>
+            {
+                sslOptions.CipherSuitesPolicy = new CipherSuitesPolicy(
+                [
+                    TlsCipherSuite.TLS_AES_256_GCM_SHA384,
+                    TlsCipherSuite.TLS_AES_128_GCM_SHA256,
+                    TlsCipherSuite.TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
+                    TlsCipherSuite.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+            ]);
+            };
+        }
+    });
+});
 
 builder.Logging.AddSimpleConsole(options =>
 {
