@@ -78,9 +78,7 @@ public sealed class Attestation : IAttestation
                 DisplayName = request.DisplayName.Trim(),
             },
             Challenge = _challengeGenerator.Get(),
-            PublicKeyCredentialParams = CoseAlgorithms.Extended
-                .Select(a => new PublicKeyCredentialParameter { Algorithm = a })
-                .ToArray(),
+            PublicKeyCredentialParams = GetPublicKeyCredentialParams(),
             Timeout = _configuration.Timeout ?? DefaultTimeout,
             ExcludeCredentials = excludeCredentials ?? [],
             AuthenticatorSelection = GetAuthenticatorSelection(request),
@@ -197,6 +195,21 @@ public sealed class Attestation : IAttestation
         await _credentialRepository.Add(credential, cancellationToken);
 
         return AttestationCompleteResult.Create();
+    }
+
+    private PublicKeyCredentialParameter[] GetPublicKeyCredentialParams()
+    {
+        var coseAlgorithms = _configuration.AlgorithmsSet switch
+        {
+            CoseAlgorithmsSet.Extended => CoseAlgorithms.Extended,
+            CoseAlgorithmsSet.Recommended => CoseAlgorithms.Recommended,
+            CoseAlgorithmsSet.Required => CoseAlgorithms.Required,
+            _ => CoseAlgorithms.Extended
+        };
+
+        return coseAlgorithms
+            .Select(a => new PublicKeyCredentialParameter { Algorithm = a })
+            .ToArray();
     }
 
     private static AuthenticatorSelectionCriteria GetAuthenticatorSelection(
