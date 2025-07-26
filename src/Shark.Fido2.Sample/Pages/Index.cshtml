@@ -9,8 +9,8 @@
     <div class="main-controls-container">
         <div id="register-container" class="section p-4 border rounded">
             <h3 class="mb-3">Registration</h3>
-            <input id="username-register" type="text" class="form-control mb-3 input-text" placeholder="Enter username" />
-            <input id="display-name-register" type="text" class="form-control mb-3 input-text" placeholder="Enter display name" />
+            <input id="username-register" type="text" class="form-control mb-3 input-text" maxlength="256" placeholder="Enter username" />
+            <input id="display-name-register" type="text" class="form-control mb-3 input-text" maxlength="256" placeholder="Enter display name" />
             <span id="message-register" class="d-block mt-2 mb-2 text-danger"></span>
             <div class="button-container">
                 <button id="register" data-action="register" class="button btn btn-primary">Register</button>
@@ -18,7 +18,7 @@
         </div>
         <div id="authenticate-container" class="section p-4 border rounded">
             <h3 class="mb-3">Authentication</h3>
-            <input id="username-authenticate" type="text" class="form-control mb-3 input-text" placeholder="Enter username" />
+            <input id="username-authenticate" type="text" class="form-control mb-3 input-text" maxlength="256" placeholder="Enter username" />
             <span id="message-authenticate" class="d-block mt-2 mb-2 text-danger"></span>
             <div class="button-container">
                 <button id="authenticate" data-action="authenticate" class="button btn btn-primary">Authenticate</button>
