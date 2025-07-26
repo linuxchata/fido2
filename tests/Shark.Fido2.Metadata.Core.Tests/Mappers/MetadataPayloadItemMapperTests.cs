@@ -56,15 +56,12 @@ internal class MetadataPayloadItemMapperTests
 
         // Assert
         Assert.That(result, Is.Not.Null);
-        Assert.Multiple(() =>
-        {
-            Assert.That(result!.Aaguid, Is.EqualTo(entry.Aaguid));
-            Assert.That(result.Description, Is.EqualTo(entry.MetadataStatement.Description));
-            Assert.That(result.AttestationTypes, Is.EqualTo(entry.MetadataStatement.AttestationTypes));
-            Assert.That(result.StatusReports, Has.Length.EqualTo(1));
-            Assert.That(result.StatusReports[0].Status, Is.EqualTo(entry.StatusReports[0].Status));
-            Assert.That(result.StatusReports[0].EffectiveDate, Is.EqualTo(entry.StatusReports[0].EffectiveDate));
-        });
+        Assert.That(result!.Aaguid, Is.EqualTo(entry.Aaguid));
+        Assert.That(result.Description, Is.EqualTo(entry.MetadataStatement.Description));
+        Assert.That(result.AttestationTypes, Is.EqualTo(entry.MetadataStatement.AttestationTypes));
+        Assert.That(result.StatusReports, Has.Length.EqualTo(1));
+        Assert.That(result.StatusReports[0].Status, Is.EqualTo(entry.StatusReports[0].Status));
+        Assert.That(result.StatusReports[0].EffectiveDate, Is.EqualTo(entry.StatusReports[0].EffectiveDate));
     }
 
     [Test]
@@ -84,12 +81,9 @@ internal class MetadataPayloadItemMapperTests
 
         // Assert
         Assert.That(result, Is.Not.Null);
-        Assert.Multiple(() =>
-        {
-            Assert.That(result!.Aaguid, Is.EqualTo(entry.Aaguid));
-            Assert.That(result.Description, Is.Null);
-            Assert.That(result.AttestationTypes, Is.Empty);
-            Assert.That(result.StatusReports, Is.Empty);
-        });
+        Assert.That(result!.Aaguid, Is.EqualTo(entry.Aaguid));
+        Assert.That(result.Description, Is.Null);
+        Assert.That(result.AttestationTypes, Is.Empty);
+        Assert.That(result.StatusReports, Is.Empty);
     }
 }

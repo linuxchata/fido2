@@ -15,7 +15,7 @@ public class AndroidKeyAttestationExtensionParserServiceTests
     }
 
     [Test]
-    public void Parse_ValidData_ReturnsCorrectAttestation()
+    public void Parse_WhenValidData_ThenReturnsCorrectAttestation()
     {
         // Arrange
         var validAttestationData = ConvertHexStringToByteArray(
@@ -34,31 +34,25 @@ public class AndroidKeyAttestationExtensionParserServiceTests
         Assert.That(result.UniqueId, Is.Empty);
 
         Assert.That(result.SoftwareEnforced, Is.Not.Null);
-        Assert.Multiple(() =>
-        {
-            Assert.That(result.SoftwareEnforced.Purpose, Is.Zero);
-            Assert.That(result.SoftwareEnforced.IsAllApplicationsPresent, Is.False);
-            Assert.That(result.SoftwareEnforced.Origin, Is.Zero);
-        });
+        Assert.That(result.SoftwareEnforced.Purpose, Is.Zero);
+        Assert.That(result.SoftwareEnforced.IsAllApplicationsPresent, Is.False);
+        Assert.That(result.SoftwareEnforced.Origin, Is.Zero);
 
         Assert.That(result.HardwareEnforced, Is.Not.Null);
-        Assert.Multiple(() =>
-        {
-            Assert.That(result.HardwareEnforced.Purpose, Is.EqualTo(2));
-            Assert.That(result.HardwareEnforced.IsAllApplicationsPresent, Is.False);
-            Assert.That(result.HardwareEnforced.Origin, Is.Zero);
-        });
+        Assert.That(result.HardwareEnforced.Purpose, Is.EqualTo(2));
+        Assert.That(result.HardwareEnforced.IsAllApplicationsPresent, Is.False);
+        Assert.That(result.HardwareEnforced.Origin, Is.Zero);
     }
 
     [Test]
-    public void Parse_NullData_ThrowsArgumentNullException()
+    public void Parse_WhenNullData_ThenThrowsArgumentNullException()
     {
         // Act & Assert
         Assert.That(() => _sut.Parse(null!), Throws.ArgumentNullException);
     }
 
     [Test]
-    public void Parse_EmptyData_ReturnsNull()
+    public void Parse_WhenEmptyData_ThenReturnsNull()
     {
         // Arrange
         var emptyData = Array.Empty<byte>();
@@ -71,7 +65,7 @@ public class AndroidKeyAttestationExtensionParserServiceTests
     }
 
     [Test]
-    public void Parse_InvalidData_ReturnsNull()
+    public void Parse_WhenInvalidData_ThenReturnsNull()
     {
         // Arrange
         var invalidData = new byte[] { 0x01, 0x02, 0x03 };

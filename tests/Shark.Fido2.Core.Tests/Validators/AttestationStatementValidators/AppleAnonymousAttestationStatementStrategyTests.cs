@@ -58,7 +58,7 @@ internal class AppleAnonymousAttestationStatementStrategyTests
     }
 
     [Test]
-    public async Task Validate_WhenAppleAnonymousAttestationWithEc2Algorithm_ShouldValidate()
+    public async Task Validate_WhenAppleAnonymousAttestationWithEc2Algorithm_ThenValidates()
     {
         // Arrange
         var fileName = "AppleAnonymousAttestationWithEc2Algorithm.json";
@@ -78,7 +78,7 @@ internal class AppleAnonymousAttestationStatementStrategyTests
     }
 
     [Test]
-    public void Validate_WhenAttestationObjectDataIsNull_ThrowsArgumentNullException()
+    public void Validate_WhenAttestationObjectDataIsNull_ThenThrowsArgumentNullException()
     {
         // Arrange
         var clientData = ClientDataBuilder.BuildCreate();
@@ -88,7 +88,7 @@ internal class AppleAnonymousAttestationStatementStrategyTests
     }
 
     [Test]
-    public void Validate_WhenClientDataIsNull_ThrowsArgumentNullException()
+    public void Validate_WhenClientDataIsNull_ThenThrowsArgumentNullException()
     {
         // Arrange
         var attestationObjectData = new AttestationObjectData();
@@ -98,7 +98,7 @@ internal class AppleAnonymousAttestationStatementStrategyTests
     }
 
     [Test]
-    public void Validate_WhenAttestationStatementIsNotDictionary_ThrowsArgumentException()
+    public void Validate_WhenAttestationStatementIsNotDictionary_ThenThrowsArgumentException()
     {
         // Arrange
         var attestationObjectData = new AttestationObjectData { AttestationStatement = "not a dictionary" };

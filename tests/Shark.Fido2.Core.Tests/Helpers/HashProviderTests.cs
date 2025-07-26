@@ -12,7 +12,7 @@ public class HashProviderTests
     private static readonly byte[] TestData = Encoding.UTF8.GetBytes("test data");
 
     [Test]
-    public void GetHash_WithSHA1_ReturnsCorrectHash()
+    public void GetHash_WhenWithSHA1_ThenReturnsCorrectHash()
     {
         // Arrange
         var expected = SHA1.HashData(TestData);
@@ -25,7 +25,7 @@ public class HashProviderTests
     }
 
     [Test]
-    public void GetHash_WithSHA256_ReturnsCorrectHash()
+    public void GetHash_WhenWithSHA256_ThenReturnsCorrectHash()
     {
         // Arrange
         var expected = SHA256.HashData(TestData);
@@ -38,7 +38,7 @@ public class HashProviderTests
     }
 
     [Test]
-    public void GetHash_WithSHA384_ReturnsCorrectHash()
+    public void GetHash_WhenWithSHA384_ThenReturnsCorrectHash()
     {
         // Arrange
         var expected = SHA384.HashData(TestData);
@@ -51,7 +51,7 @@ public class HashProviderTests
     }
 
     [Test]
-    public void GetHash_WithSHA512_ReturnsCorrectHash()
+    public void GetHash_WhenWithSHA512_ThenReturnsCorrectHash()
     {
         // Arrange
         var expected = SHA512.HashData(TestData);
@@ -64,21 +64,21 @@ public class HashProviderTests
     }
 
     [Test]
-    public void GetHash_WithNullValue_ThrowsArgumentNullException()
+    public void GetHash_WhenWithNullValue_ThenThrowsArgumentNullException()
     {
         // Act & Assert
         Assert.Throws<ArgumentNullException>(() => HashProvider.GetHash(null!, HashAlgorithmName.SHA256));
     }
 
     [Test]
-    public void GetHash_WithUnsupportedAlgorithm_ThrowsNotSupportedException()
+    public void GetHash_WhenWithUnsupportedAlgorithm_ThenThrowsNotSupportedException()
     {
         // Act & Assert
         Assert.Throws<NotSupportedException>(() => HashProvider.GetHash(TestData, new HashAlgorithmName("MD5")));
     }
 
     [Test]
-    public void GetSha256Hash_WithValidString_ReturnsCorrectHash()
+    public void GetSha256Hash_WhenWithValidString_ThenReturnsCorrectHash()
     {
         // Arrange
         var expected = SHA256.HashData(Encoding.UTF8.GetBytes(TestString));
@@ -91,28 +91,28 @@ public class HashProviderTests
     }
 
     [Test]
-    public void GetSha256Hash_WithNullString_ThrowsArgumentNullException()
+    public void GetSha256Hash_WhenWithNullString_ThenThrowsArgumentNullException()
     {
         // Act & Assert
         Assert.Throws<ArgumentNullException>(() => HashProvider.GetSha256Hash((string)null!));
     }
 
     [Test]
-    public void GetSha256Hash_WithEmptyString_ThrowsArgumentNullException()
+    public void GetSha256Hash_WhenWithEmptyString_ThenThrowsArgumentNullException()
     {
         // Act & Assert
         Assert.Throws<ArgumentNullException>(() => HashProvider.GetSha256Hash(string.Empty));
     }
 
     [Test]
-    public void GetSha256Hash_WithWhiteSpaceString_ThrowsArgumentNullException()
+    public void GetSha256Hash_WhenWithWhiteSpaceString_ThenThrowsArgumentNullException()
     {
         // Act & Assert
         Assert.Throws<ArgumentNullException>(() => HashProvider.GetSha256Hash("   "));
     }
 
     [Test]
-    public void GetSha256Hash_WithByteArray_ReturnsCorrectHash()
+    public void GetSha256Hash_WhenWithByteArray_ThenReturnsCorrectHash()
     {
         // Arrange
         var expected = SHA256.HashData(TestData);
@@ -125,7 +125,7 @@ public class HashProviderTests
     }
 
     [Test]
-    public void GetSha256Hash_WithNullByteArray_ThrowsArgumentNullException()
+    public void GetSha256Hash_WhenWithNullByteArray_ThenThrowsArgumentNullException()
     {
         // Act & Assert
         Assert.Throws<ArgumentNullException>(() => HashProvider.GetSha256Hash((byte[])null!));

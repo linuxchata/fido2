@@ -17,7 +17,7 @@ internal class Fido2ConfigurationValidatorTests
     [TestCase(null!)]
     [TestCase("")]
     [TestCase("   ")]
-    public void Validate_WhenRelyingPartyIdIsEmpty_ReturnsFailure(string relyingPartyId)
+    public void Validate_WhenRelyingPartyIdIsEmpty_ThenReturnsFailure(string relyingPartyId)
     {
         // Arrange
         var fido2Configuration = new Fido2Configuration
@@ -38,7 +38,7 @@ internal class Fido2ConfigurationValidatorTests
     [Test]
     [TestCase("https://localhost")]
     [TestCase("http://localhost")]
-    public void Validate_WhenRelyingPartyIdHasScheme_ReturnsFailure(string relyingPartyId)
+    public void Validate_WhenRelyingPartyIdHasScheme_ThenReturnsFailure(string relyingPartyId)
     {
         // Arrange
         var fido2Configuration = new Fido2Configuration
@@ -61,7 +61,7 @@ internal class Fido2ConfigurationValidatorTests
     [TestCase("localhost:80")]
     [TestCase("localhost:8080")]
     [TestCase("localhost:43589")]
-    public void Validate_WhenRelyingPartyIdHasPort_ReturnsFailure(string relyingPartyId)
+    public void Validate_WhenRelyingPartyIdHasPort_ThenReturnsFailure(string relyingPartyId)
     {
         // Arrange
         var fido2Configuration = new Fido2Configuration
@@ -80,7 +80,7 @@ internal class Fido2ConfigurationValidatorTests
     }
 
     [Test]
-    public void Validate_WhenOriginsIsNull_ReturnsFailure()
+    public void Validate_WhenOriginsIsNull_ThenReturnsFailure()
     {
         // Arrange
         var fido2Configuration = new Fido2Configuration
@@ -99,7 +99,7 @@ internal class Fido2ConfigurationValidatorTests
     }
 
     [Test]
-    public void Validate_WhenOriginsAreEmpty_ReturnsFailure()
+    public void Validate_WhenOriginsAreEmpty_ThenReturnsFailure()
     {
         // Arrange
         var fido2Configuration = new Fido2Configuration
@@ -121,7 +121,7 @@ internal class Fido2ConfigurationValidatorTests
     [TestCase(null!)]
     [TestCase("")]
     [TestCase("   ")]
-    public void Validate_WhenOriginIsEmpty_ReturnsFailure(string origin)
+    public void Validate_WhenOriginIsEmpty_ThenReturnsFailure(string origin)
     {
         // Arrange
         var fido2Configuration = new Fido2Configuration
@@ -140,7 +140,7 @@ internal class Fido2ConfigurationValidatorTests
     }
 
     [Test]
-    public void Validate_WhenFido2ConfigurationIsValid_ReturnsSuccess()
+    public void Validate_WhenFido2ConfigurationIsValid_ThenReturnsSuccess()
     {
         // Arrange
         var fido2Configuration = new Fido2Configuration

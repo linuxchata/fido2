@@ -40,27 +40,24 @@ internal class CredentialMapperTests
         var entity = credential.ToEntity();
 
         // Assert
-        Assert.Multiple(() =>
-        {
-            Assert.That(entity.CredentialId, Is.EqualTo(credential.CredentialId));
-            Assert.That(entity.UserHandle, Is.EqualTo(credential.UserHandle));
-            Assert.That(entity.UserName, Is.EqualTo(credential.UserName));
-            Assert.That(entity.UserDisplayName, Is.EqualTo(credential.UserDisplayName));
-            Assert.That(entity.SignCount, Is.EqualTo(credential.SignCount));
-            Assert.That(entity.Transports, Is.EqualTo("usb;nfc"));
-            Assert.That(entity.CreatedAt, Is.EqualTo(credential.CreatedAt));
-            Assert.That(entity.UpdatedAt, Is.EqualTo(credential.UpdatedAt));
+        Assert.That(entity.CredentialId, Is.EqualTo(credential.CredentialId));
+        Assert.That(entity.UserHandle, Is.EqualTo(credential.UserHandle));
+        Assert.That(entity.UserName, Is.EqualTo(credential.UserName));
+        Assert.That(entity.UserDisplayName, Is.EqualTo(credential.UserDisplayName));
+        Assert.That(entity.SignCount, Is.EqualTo(credential.SignCount));
+        Assert.That(entity.Transports, Is.EqualTo("usb;nfc"));
+        Assert.That(entity.CreatedAt, Is.EqualTo(credential.CreatedAt));
+        Assert.That(entity.UpdatedAt, Is.EqualTo(credential.UpdatedAt));
 
-            // Verify CredentialPublicKey properties
-            Assert.That(entity.CredentialPublicKey.KeyType, Is.EqualTo(credential.CredentialPublicKey.KeyType));
-            Assert.That(entity.CredentialPublicKey.Algorithm, Is.EqualTo(credential.CredentialPublicKey.Algorithm));
-            Assert.That(entity.CredentialPublicKey.Modulus, Is.EqualTo(credential.CredentialPublicKey.Modulus));
-            Assert.That(entity.CredentialPublicKey.Exponent, Is.EqualTo(credential.CredentialPublicKey.Exponent));
-            Assert.That(entity.CredentialPublicKey.Curve, Is.EqualTo(credential.CredentialPublicKey.Curve));
-            Assert.That(entity.CredentialPublicKey.XCoordinate, Is.EqualTo(credential.CredentialPublicKey.XCoordinate));
-            Assert.That(entity.CredentialPublicKey.YCoordinate, Is.EqualTo(credential.CredentialPublicKey.YCoordinate));
-            Assert.That(entity.CredentialPublicKey.Key, Is.EqualTo(credential.CredentialPublicKey.Key));
-        });
+        // Verify CredentialPublicKey properties
+        Assert.That(entity.CredentialPublicKey.KeyType, Is.EqualTo(credential.CredentialPublicKey.KeyType));
+        Assert.That(entity.CredentialPublicKey.Algorithm, Is.EqualTo(credential.CredentialPublicKey.Algorithm));
+        Assert.That(entity.CredentialPublicKey.Modulus, Is.EqualTo(credential.CredentialPublicKey.Modulus));
+        Assert.That(entity.CredentialPublicKey.Exponent, Is.EqualTo(credential.CredentialPublicKey.Exponent));
+        Assert.That(entity.CredentialPublicKey.Curve, Is.EqualTo(credential.CredentialPublicKey.Curve));
+        Assert.That(entity.CredentialPublicKey.XCoordinate, Is.EqualTo(credential.CredentialPublicKey.XCoordinate));
+        Assert.That(entity.CredentialPublicKey.YCoordinate, Is.EqualTo(credential.CredentialPublicKey.YCoordinate));
+        Assert.That(entity.CredentialPublicKey.Key, Is.EqualTo(credential.CredentialPublicKey.Key));
     }
 
     [Test]
@@ -95,31 +92,28 @@ internal class CredentialMapperTests
 
         // Assert
         Assert.That(domain, Is.Not.Null);
-        Assert.Multiple(() =>
-        {
-            Assert.That(domain!.CredentialId, Is.EqualTo(entity.CredentialId));
-            Assert.That(domain.UserHandle, Is.EqualTo(entity.UserHandle));
-            Assert.That(domain.UserName, Is.EqualTo(entity.UserName));
-            Assert.That(domain.UserDisplayName, Is.EqualTo(entity.UserDisplayName));
-            Assert.That(domain.SignCount, Is.EqualTo(entity.SignCount));
-            Assert.That(domain.Transports, Is.EqualTo(ExpectedTransports));
-            Assert.That(domain.CreatedAt, Is.EqualTo(entity.CreatedAt));
-            Assert.That(domain.UpdatedAt, Is.EqualTo(entity.UpdatedAt));
+        Assert.That(domain!.CredentialId, Is.EqualTo(entity.CredentialId));
+        Assert.That(domain.UserHandle, Is.EqualTo(entity.UserHandle));
+        Assert.That(domain.UserName, Is.EqualTo(entity.UserName));
+        Assert.That(domain.UserDisplayName, Is.EqualTo(entity.UserDisplayName));
+        Assert.That(domain.SignCount, Is.EqualTo(entity.SignCount));
+        Assert.That(domain.Transports, Is.EqualTo(ExpectedTransports));
+        Assert.That(domain.CreatedAt, Is.EqualTo(entity.CreatedAt));
+        Assert.That(domain.UpdatedAt, Is.EqualTo(entity.UpdatedAt));
 
-            // Verify CredentialPublicKey properties
-            Assert.That(domain.CredentialPublicKey.KeyType, Is.EqualTo(entity.CredentialPublicKey.KeyType));
-            Assert.That(domain.CredentialPublicKey.Algorithm, Is.EqualTo(entity.CredentialPublicKey.Algorithm));
-            Assert.That(domain.CredentialPublicKey.Modulus, Is.EqualTo(entity.CredentialPublicKey.Modulus));
-            Assert.That(domain.CredentialPublicKey.Exponent, Is.EqualTo(entity.CredentialPublicKey.Exponent));
-            Assert.That(domain.CredentialPublicKey.Curve, Is.EqualTo(entity.CredentialPublicKey.Curve));
-            Assert.That(domain.CredentialPublicKey.XCoordinate, Is.EqualTo(entity.CredentialPublicKey.XCoordinate));
-            Assert.That(domain.CredentialPublicKey.YCoordinate, Is.EqualTo(entity.CredentialPublicKey.YCoordinate));
-            Assert.That(domain.CredentialPublicKey.Key, Is.EqualTo(entity.CredentialPublicKey.Key));
-        });
+        // Verify CredentialPublicKey properties
+        Assert.That(domain.CredentialPublicKey.KeyType, Is.EqualTo(entity.CredentialPublicKey.KeyType));
+        Assert.That(domain.CredentialPublicKey.Algorithm, Is.EqualTo(entity.CredentialPublicKey.Algorithm));
+        Assert.That(domain.CredentialPublicKey.Modulus, Is.EqualTo(entity.CredentialPublicKey.Modulus));
+        Assert.That(domain.CredentialPublicKey.Exponent, Is.EqualTo(entity.CredentialPublicKey.Exponent));
+        Assert.That(domain.CredentialPublicKey.Curve, Is.EqualTo(entity.CredentialPublicKey.Curve));
+        Assert.That(domain.CredentialPublicKey.XCoordinate, Is.EqualTo(entity.CredentialPublicKey.XCoordinate));
+        Assert.That(domain.CredentialPublicKey.YCoordinate, Is.EqualTo(entity.CredentialPublicKey.YCoordinate));
+        Assert.That(domain.CredentialPublicKey.Key, Is.EqualTo(entity.CredentialPublicKey.Key));
     }
 
     [Test]
-    public void ToDomain_WhenEntityIsNull_ReturnsNull()
+    public void ToDomain_WhenEntityIsNull_ThenReturnsNull()
     {
         // Arrange
         CredentialEntity? entity = null;
@@ -147,15 +141,12 @@ internal class CredentialMapperTests
 
         // Assert
         Assert.That(result, Is.Not.Null);
-        Assert.Multiple(() =>
-        {
-            Assert.That(result!.CredentialId, Is.EqualTo(entity.CredentialId));
-            Assert.That(result.Transports, Is.EqualTo(ExpectedTransports));
-        });
+        Assert.That(result!.CredentialId, Is.EqualTo(entity.CredentialId));
+        Assert.That(result.Transports, Is.EqualTo(ExpectedTransports));
     }
 
     [Test]
-    public void ToLightweightDomain_WhenEntityIsNull_ReturnsNull()
+    public void ToLightweightDomain_WhenEntityIsNull_ThenReturnsNull()
     {
         // Arrange
         CredentialDescriptorEntity? entity = null;

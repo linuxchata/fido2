@@ -14,7 +14,7 @@ internal class SubjectAlternativeNameParserServiceTests
     }
 
     [Test]
-    public void Parse_WhensubjectAlternativeNameHasNameNotation_ThenReturnsTpmIssuer()
+    public void Parse_WhenSubjectAlternativeNameHasNameNotation_ThenReturnsTpmIssuer()
     {
         // Arrange
         var subjectAlternativeName = "Directory Address:TPMVersion=id:13 + TPMModel=NPCT6xx + TPMManufacturer=id:4E544300";
@@ -31,7 +31,7 @@ internal class SubjectAlternativeNameParserServiceTests
     }
 
     [Test]
-    public void Parse_WhensubjectAlternativeNameHasNumericNotation_ThenReturnsTpmIssuer()
+    public void Parse_WhenSubjectAlternativeNameHasNumericNotation_ThenReturnsTpmIssuer()
     {
         // Arrange
         var subjectAlternativeName = "DirName:/2.23.133.2.3=id:13+2.23.133.2.2=NPCT6xx+2.23.133.2.1=id:4E544300";

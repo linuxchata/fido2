@@ -4,7 +4,7 @@
 internal class AssertionCompleteResultTests
 {
     [Test]
-    public void Create_ShouldReturnValidResult()
+    public void Create_ThenReturnsValidResult()
     {
         // Act
         var result = AssertionCompleteResult.Create();
@@ -15,7 +15,7 @@ internal class AssertionCompleteResultTests
     }
 
     [Test]
-    public void Create_WhenFailure_ShouldReturnInvalidResultWithMessage()
+    public void Create_WhenFailure_ThenReturnsInvalidResultWithMessage()
     {
         // Arrange
         var expectedMessage = "Authentication failed";
