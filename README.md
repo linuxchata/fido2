@@ -12,7 +12,7 @@ This repository provides a server-side implementation of the WebAuthn standard t
   - FIDO U2F
   - None
   - Apple Anonymous
-- Supported algorithms: ES256, EdDSA, ES384, ES512, PS256, PS384, PS512, ES256K, RS256, RS384, RS512, RS1
+- Supported cryptographic algorithms: ES256, EdDSA, ES384, ES512, PS256, PS384, PS512, ES256K, RS256, RS384, RS512, RS1
 - **Built-in storage providers**:
   - Microsoft SQL Server
   - Amazon DynamoDB
@@ -54,7 +54,8 @@ The server side can be customized using the following configuration options. You
 | `RelyingPartyId` |  | Valid domain string identifying the Relying Party on whose behalf a given registration or authentication ceremony is being performed. This is a critical parameter in the WebAuthn protocol. It defines the security scope within which credentials are valid. Therefore, careful selection is essential, as an incorrect or overly broad value can lead to unintended credential reuse or security vulnerabilities. |
 | `RelyingPartyIdName` |  | Human-readable identifier for the Relying Party, intended only for display. |
 | `Origins` |  | List of the fully qualified origins of the Relying Party making the request, passed to the authenticator by the browser. |
-| `Timeout` | `60000` | Time, in milliseconds, that the Relying Party is willing to wait for the call to complete.  |
+| `Timeout` | `60000` | Time, in milliseconds, that the Relying Party is willing to wait for the call to complete. |
+| `AlgorithmsSet` | `Extended` | Set of the supported cryptographic algorithms. Possible values are `Required`, `Recommended` or `Extended`. More information about the cryptographic algorithms is available on the [fidoalliance.org](https://fidoalliance.org/specs/fido-v2.0-rd-20180702/fido-server-v2.0-rd-20180702.html#other) site. |
 | `AllowNoneAttestation` | `true` | Value indicating whether None attestation type is acceptable under Relying Party policy. [None attestation](https://www.w3.org/TR/webauthn-2/#none) is used when the authenticator doesn't have any attestation information available. |
 | `AllowSelfAttestation` | `true` | Value indicating whether Self attestation type is acceptable under Relying Party policy. [Self attestation](https://www.w3.org/TR/webauthn-2/#self-attestation) is used when the authenticator doesn't have a dedicated attestation key pair or a vendor-issued certificate. |
 | `EnableTrustedExecutionEnvironmentOnly` | `true` | Value indicating whether the Relying Party trusts only keys that are securely generated and stored in a Trusted Execution Environment (relevant for Android Key Attestation). |

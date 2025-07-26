@@ -1,5 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using Microsoft.Extensions.Options;
+using Shark.Fido2.Core.Constants;
 
 namespace Shark.Fido2.Core.Configurations;
 
@@ -30,6 +31,14 @@ public class Fido2ConfigurationValidator : IValidateOptions<Fido2Configuration>
         if (options.Origins.Any(string.IsNullOrWhiteSpace))
         {
             return ValidateOptionsResult.Fail("'Origins' configuration key must not include empty values");
+        }
+
+        if (!string.IsNullOrWhiteSpace(options.AlgorithmsSet) &&
+            !CoseAlgorithmsSet.Supported.Contains(options.AlgorithmsSet))
+        {
+            var supportedValues = string.Join(", ", CoseAlgorithmsSet.Supported);
+            return ValidateOptionsResult.Fail(
+                $"'AlgorithmsSet' configuration key must be one of the following values: {supportedValues}");
         }
 
         return ValidateOptionsResult.Success;

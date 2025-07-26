@@ -1,4 +1,6 @@
-﻿namespace Shark.Fido2.Core.Configurations;
+﻿using Shark.Fido2.Core.Constants;
+
+namespace Shark.Fido2.Core.Configurations;
 
 public sealed class Fido2Configuration
 {
@@ -27,6 +29,11 @@ public sealed class Fido2Configuration
     /// Gets a time, in milliseconds, that the Relying Party is willing to wait for the call to complete.
     /// </summary>
     public ulong? Timeout { get; init; }
+
+    /// <summary>
+    /// Gets or sets a set of the supported cryptographic algorithms.
+    /// </summary>
+    public string AlgorithmsSet { get; set; } = CoseAlgorithmsSet.Extended;
 
     /// <summary>
     /// Gets or sets a value indicating whether None attestation type is acceptable under Relying Party policy. None
