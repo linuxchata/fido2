@@ -31,14 +31,15 @@ internal class ClientDataValidator : IClientDataValidator
 
         // Step 8
         // Verify that the value of C.challenge equals the base64url encoding of options.challenge.
-        if (!string.Equals(expectedChallenge, clientData.Challenge, StringComparison.Ordinal))
+        var result = ValidateChallenge(expectedChallenge, clientData);
+        if (!result.IsValid)
         {
-            return ValidatorInternalResult.Invalid("Challenge mismatch");
+            return result;
         }
 
         // Step 9
         // Verify that the value of C.origin matches the Relying Party's origin.
-        var result = ValidateOrigin(clientData);
+        result = ValidateOrigin(clientData);
         if (!result.IsValid)
         {
             return result;
@@ -71,14 +72,15 @@ internal class ClientDataValidator : IClientDataValidator
 
         // Step 12
         // Verify that the value of C.challenge equals the base64url encoding of options.challenge.
-        if (!string.Equals(expectedChallenge, clientData.Challenge, StringComparison.Ordinal))
+        var result = ValidateChallenge(expectedChallenge, clientData);
+        if (!result.IsValid)
         {
-            return ValidatorInternalResult.Invalid("Challenge mismatch");
+            return result;
         }
 
         // Step 13
         // Verify that the value of C.origin matches the Relying Party's origin.
-        var result = ValidateOrigin(clientData);
+        result = ValidateOrigin(clientData);
         if (!result.IsValid)
         {
             return result;
@@ -92,6 +94,16 @@ internal class ClientDataValidator : IClientDataValidator
         if (!result.IsValid)
         {
             return result;
+        }
+
+        return ValidatorInternalResult.Valid();
+    }
+
+    private ValidatorInternalResult ValidateChallenge(string expectedChallenge, ClientData clientData)
+    {
+        if (!string.Equals(expectedChallenge, clientData.Challenge, StringComparison.Ordinal))
+        {
+            return ValidatorInternalResult.Invalid("Challenge mismatch");
         }
 
         return ValidatorInternalResult.Valid();
