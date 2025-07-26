@@ -40,7 +40,9 @@
 - Safari
 
 ## Android 11
+### Android Authenticator
 - Chrome 138+
 
 ## Android 6
+### Android Authenticator
 - Chrome 106 (WebAuthn is not supported)
