@@ -14,7 +14,7 @@ internal class RsaKeyTypeMapperTests
     [TestCase(CoseAlgorithm.Rs384, "SHA384", RSASignaturePaddingMode.Pkcs1)]
     [TestCase(CoseAlgorithm.Rs512, "SHA512", RSASignaturePaddingMode.Pkcs1)]
     [TestCase(CoseAlgorithm.Rs1, "SHA1", RSASignaturePaddingMode.Pkcs1)]
-    public void Get_WhenValidAlgorithm_ReturnsCorrectAlgorithm(
+    public void Get_WhenValidAlgorithm_ThenReturnsCorrectAlgorithm(
         CoseAlgorithm algorithm,
         string expectedHashAlgorithmName,
         RSASignaturePaddingMode expectedRsaSignaturePaddingMode)
@@ -28,7 +28,7 @@ internal class RsaKeyTypeMapperTests
     }
 
     [Test]
-    public void Get_WhenAlgorithmIsNotSupported_ThrowsReturnsNull()
+    public void Get_WhenAlgorithmIsNotSupported_ThenThrowsReturnsNull()
     {
         // Arrange
         const int algorithm = 999;

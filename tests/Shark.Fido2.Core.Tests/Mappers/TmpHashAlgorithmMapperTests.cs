@@ -8,7 +8,7 @@ namespace Shark.Fido2.Core.Tests.Mappers;
 internal class TmpHashAlgorithmMapperTests
 {
     [Test]
-    public void Get_WhenUnsupportedAlgorithm_ThrowsNotSupportedException()
+    public void Get_WhenUnsupportedAlgorithm_ThenThrowsNotSupportedException()
     {
         // Arrange
         var unsupportedAlgorithm = TpmAlgorithm.TpmAlgorithmRsa;
@@ -18,7 +18,7 @@ internal class TmpHashAlgorithmMapperTests
     }
 
     [TestCaseSource(nameof(HashAlgorithmTestCases))]
-    public void Get_WhenValidAlgorithm_ReturnsExpectedHashAlgorithmName(TpmAlgorithm tpmAlgorithm, HashAlgorithmName expectedHashAlgorithmName)
+    public void Get_WhenValidAlgorithm_ThenReturnsExpectedHashAlgorithmName(TpmAlgorithm tpmAlgorithm, HashAlgorithmName expectedHashAlgorithmName)
     {
         // Act
         var result = TmpHashAlgorithmMapper.Get(tpmAlgorithm);

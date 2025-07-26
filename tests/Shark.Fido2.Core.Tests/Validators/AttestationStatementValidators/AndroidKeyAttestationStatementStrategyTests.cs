@@ -65,7 +65,7 @@ internal class AndroidKeyAttestationStatementStrategyTests
     }
 
     [Test]
-    public async Task Validate_WhenAndroidKeyAttestationWithEc2Algorithm_ShouldValidate()
+    public async Task Validate_WhenAndroidKeyAttestationWithEc2Algorithm_ThenValidates()
     {
         // Arrange
         var fileName = "AndroidKeyAttestationWithEc2Algorithm.json";
@@ -85,7 +85,7 @@ internal class AndroidKeyAttestationStatementStrategyTests
     }
 
     [Test]
-    public void Validate_WhenAttestationObjectDataIsNull_ThrowsArgumentNullException()
+    public void Validate_WhenAttestationObjectDataIsNull_ThenThrowsArgumentNullException()
     {
         // Arrange
         var clientData = ClientDataBuilder.BuildCreate();
@@ -95,7 +95,7 @@ internal class AndroidKeyAttestationStatementStrategyTests
     }
 
     [Test]
-    public void Validate_WhenClientDataIsNull_ThrowsArgumentNullException()
+    public void Validate_WhenClientDataIsNull_ThenThrowsArgumentNullException()
     {
         // Arrange
         var attestationObjectData = new AttestationObjectData();
@@ -105,7 +105,7 @@ internal class AndroidKeyAttestationStatementStrategyTests
     }
 
     [Test]
-    public void Validate_WhenAttestationStatementIsNotDictionary_ThrowsArgumentException()
+    public void Validate_WhenAttestationStatementIsNotDictionary_ThenThrowsArgumentException()
     {
         // Arrange
         var attestationObjectData = new AttestationObjectData { AttestationStatement = "Not a dictionary" };

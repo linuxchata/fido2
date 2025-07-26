@@ -6,7 +6,7 @@ namespace Shark.Fido2.Core.Tests.Helpers;
 public class ChallengeGeneratorTests
 {
     [Test]
-    public void Get_ShouldReturn24BytesChallenge()
+    public void Get_ThenReturns24BytesChallenge()
     {
         // Arrange
         var generator = new ChallengeGenerator();
@@ -19,7 +19,7 @@ public class ChallengeGeneratorTests
     }
 
     [Test]
-    public void Get_ShouldReturnDifferentValuesOnMultipleCalls()
+    public void Get_ThenReturnsDifferentValuesOnMultipleCalls()
     {
         // Arrange
         var generator = new ChallengeGenerator();

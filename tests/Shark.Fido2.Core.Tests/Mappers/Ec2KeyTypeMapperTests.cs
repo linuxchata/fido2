@@ -8,7 +8,7 @@ namespace Shark.Fido2.Core.Tests.Mappers;
 internal class Ec2KeyTypeMapperTests
 {
     [Test]
-    public void Get_WhenEs256_ReturnsCorrectAlgorithm()
+    public void Get_WhenEs256_ThenReturnsCorrectAlgorithm()
     {
         // Arrange
         var algorithm = (int)CoseAlgorithm.Es256;
@@ -23,7 +23,7 @@ internal class Ec2KeyTypeMapperTests
     }
 
     [Test]
-    public void Get_WhenEs384_ReturnsCorrectAlgorithm()
+    public void Get_WhenEs384_ThenReturnsCorrectAlgorithm()
     {
         // Arrange
         var algorithm = (int)CoseAlgorithm.Es384;
@@ -38,7 +38,7 @@ internal class Ec2KeyTypeMapperTests
     }
 
     [Test]
-    public void Get_WhenEs512_ReturnsCorrectAlgorithm()
+    public void Get_WhenEs512_ThenReturnsCorrectAlgorithm()
     {
         // Arrange
         var algorithm = (int)CoseAlgorithm.Es512;
@@ -53,7 +53,7 @@ internal class Ec2KeyTypeMapperTests
     }
 
     [Test]
-    public void Get_WhenEs256K_ReturnsCorrectAlgorithm()
+    public void Get_WhenEs256K_ThenReturnsCorrectAlgorithm()
     {
         // Arrange
         var algorithm = (int)CoseAlgorithm.Es256K;
@@ -68,7 +68,7 @@ internal class Ec2KeyTypeMapperTests
     }
 
     [Test]
-    public void Get_WhenAlgorithmIsNotSupported_ThrowsReturnsNull()
+    public void Get_WhenAlgorithmIsNotSupported_ThenThrowsReturnsNull()
     {
         // Arrange
         const int algorithm = 999;

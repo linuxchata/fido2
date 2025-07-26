@@ -69,7 +69,7 @@ internal class TpmAttestationStatementStrategyTests
     }
 
     [Test]
-    public async Task Validate_WhenTpmAttestationWithRs256Algorithm_ShouldValidate()
+    public async Task Validate_WhenTpmAttestationWithRs256Algorithm_ThenValidates()
     {
         // Arrange
         // Please note that Rs256 algorithm is used by credential public key, not the attestation statement.
@@ -90,7 +90,7 @@ internal class TpmAttestationStatementStrategyTests
     }
 
     [Test]
-    public async Task Validate_WhenTpmAttestationWithEs256Algorithm_ShouldValidate()
+    public async Task Validate_WhenTpmAttestationWithEs256Algorithm_ThenValidates()
     {
         // Arrange
         // Please note that Es256 algorithm is used by credential public key, not the attestation statement.
@@ -111,7 +111,7 @@ internal class TpmAttestationStatementStrategyTests
     }
 
     [Test]
-    public void Validate_WhenAttestationObjectDataIsNull_ThrowsArgumentNullException()
+    public void Validate_WhenAttestationObjectDataIsNull_ThenThrowsArgumentNullException()
     {
         // Arrange
         var clientData = ClientDataBuilder.BuildCreate();
@@ -121,7 +121,7 @@ internal class TpmAttestationStatementStrategyTests
     }
 
     [Test]
-    public void Validate_WhenClientDataIsNull_ThrowsArgumentNullException()
+    public void Validate_WhenClientDataIsNull_ThenThrowsArgumentNullException()
     {
         // Arrange
         var attestationObjectData = new AttestationObjectData();
@@ -131,7 +131,7 @@ internal class TpmAttestationStatementStrategyTests
     }
 
     [Test]
-    public void Validate_WhenAttestationStatementIsNull_ThrowsArgumentNullException()
+    public void Validate_WhenAttestationStatementIsNull_ThenThrowsArgumentNullException()
     {
         // Arrange
         var attestationObjectData = new AttestationObjectData { AttestationStatement = null };
@@ -142,7 +142,7 @@ internal class TpmAttestationStatementStrategyTests
     }
 
     [Test]
-    public void Validate_WhenAttestationStatementIsNotDictionary_ThrowsArgumentException()
+    public void Validate_WhenAttestationStatementIsNotDictionary_ThenThrowsArgumentException()
     {
         // Arrange
         var attestationObjectData = new AttestationObjectData { AttestationStatement = "not a dictionary" };

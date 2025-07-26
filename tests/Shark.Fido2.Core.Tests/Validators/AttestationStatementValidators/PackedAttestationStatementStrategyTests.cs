@@ -63,7 +63,7 @@ internal class PackedAttestationStatementStrategyTests
     }
 
     [Test]
-    public async Task Validate_WhenPackedAttestationWithRs256Algorithm_ShouldValidate()
+    public async Task Validate_WhenPackedAttestationWithRs256Algorithm_ThenValidates()
     {
         // Arrange
         var fileName = "PackedAttestationWithRs256Algorithm.json";
@@ -83,7 +83,7 @@ internal class PackedAttestationStatementStrategyTests
     }
 
     [Test]
-    public async Task Validate_WhenPackedAttestationWithEc2Algorithm_ShouldValidate()
+    public async Task Validate_WhenPackedAttestationWithEc2Algorithm_ThenValidates()
     {
         // Arrange
         // Source https://fidoalliance.org/specs/fido-v2.0-rd-20180702/fido-server-v2.0-rd-20180702.html#packed-attestation
@@ -103,7 +103,7 @@ internal class PackedAttestationStatementStrategyTests
     }
 
     [Test]
-    public async Task Validate_WhenPackedAttestationWithOkpAlgorithm_ShouldValidate()
+    public async Task Validate_WhenPackedAttestationWithOkpAlgorithm_ThenValidates()
     {
         // Arrange
         var fileName = "PackedAttestationWithOkpAlgorithm.json";
@@ -123,7 +123,7 @@ internal class PackedAttestationStatementStrategyTests
     }
 
     [Test]
-    public void Validate_WhenAttestationObjectDataIsNull_ThrowsArgumentNullException()
+    public void Validate_WhenAttestationObjectDataIsNull_ThenThrowsArgumentNullException()
     {
         // Arrange
         var clientData = ClientDataBuilder.BuildCreate();
@@ -133,7 +133,7 @@ internal class PackedAttestationStatementStrategyTests
     }
 
     [Test]
-    public void Validate_WhenClientDataIsNull_ThrowsArgumentNullException()
+    public void Validate_WhenClientDataIsNull_ThenThrowsArgumentNullException()
     {
         // Arrange
         var attestationObjectData = new AttestationObjectData();
@@ -143,7 +143,7 @@ internal class PackedAttestationStatementStrategyTests
     }
 
     [Test]
-    public void Validate_WhenAttestationStatementIsNull_ThrowsArgumentNullException()
+    public void Validate_WhenAttestationStatementIsNull_ThenThrowsArgumentNullException()
     {
         // Arrange
         var attestationObjectData = new AttestationObjectData { AttestationStatement = null };
@@ -154,7 +154,7 @@ internal class PackedAttestationStatementStrategyTests
     }
 
     [Test]
-    public void Validate_WhenAttestationStatementIsNotDictionary_ThrowsArgumentException()
+    public void Validate_WhenAttestationStatementIsNotDictionary_ThenThrowsArgumentException()
     {
         // Arrange
         var attestationObjectData = new AttestationObjectData { AttestationStatement = "not a dictionary" };

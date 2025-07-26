@@ -8,7 +8,7 @@ public class BytesArrayHelperTests
     #region Concatenate Tests
 
     [Test]
-    public void Concatenate_WhenBothArraysAreNull_ReturnsEmptyArray()
+    public void Concatenate_WhenBothArraysAreNull_ThenReturnsEmptyArray()
     {
         // Act
         var result = BytesArrayHelper.Concatenate(null, null);
@@ -19,7 +19,7 @@ public class BytesArrayHelperTests
     }
 
     [Test]
-    public void Concatenate_WhenLeftArrayIsNull_ReturnsRightArrayCopy()
+    public void Concatenate_WhenLeftArrayIsNull_ThenReturnsRightArrayCopy()
     {
         // Arrange
         var right = new byte[] { 1, 2, 3 };
@@ -33,7 +33,7 @@ public class BytesArrayHelperTests
     }
 
     [Test]
-    public void Concatenate_WhenRightArrayIsNull_ReturnsLeftArrayCopy()
+    public void Concatenate_WhenRightArrayIsNull_ThenReturnsLeftArrayCopy()
     {
         // Arrange
         var left = new byte[] { 1, 2, 3 };
@@ -47,7 +47,7 @@ public class BytesArrayHelperTests
     }
 
     [Test]
-    public void Concatenate_WhenBothArraysAreNonNull_ReturnsConcatenatedArray()
+    public void Concatenate_WhenBothArraysAreNonNull_ThenReturnsConcatenatedArray()
     {
         // Arrange
         var left = new byte[] { 1, 2, 3 };
@@ -62,7 +62,7 @@ public class BytesArrayHelperTests
     }
 
     [Test]
-    public void Concatenate_WhenRightArrayIsEmpty_ReturnsCopyOfLeftArray()
+    public void Concatenate_WhenRightArrayIsEmpty_ThenReturnsCopyOfLeftArray()
     {
         // Arrange
         var left = new byte[] { 1, 2, 3 };
@@ -84,7 +84,7 @@ public class BytesArrayHelperTests
     #region Split Tests
 
     [Test]
-    public void Split_WhenArrayIsNull_ReturnsTwoEmptyArrays()
+    public void Split_WhenArrayIsNull_ThenReturnsTwoEmptyArrays()
     {
         // Act
         var (left, right) = BytesArrayHelper.Split(null);
@@ -97,7 +97,7 @@ public class BytesArrayHelperTests
     }
 
     [Test]
-    public void Split_WhenArrayIsEmpty_ReturnsTwoEmptyArrays()
+    public void Split_WhenArrayIsEmpty_ThenReturnsTwoEmptyArrays()
     {
         // Arrange
         var array = Array.Empty<byte>();
@@ -113,7 +113,7 @@ public class BytesArrayHelperTests
     }
 
     [Test]
-    public void Split_WhenArrayHasOddLength_ReturnsTwoEmptyArrays()
+    public void Split_WhenArrayHasOddLength_ThenReturnsTwoEmptyArrays()
     {
         // Arrange
         var array = new byte[] { 1, 2, 3 };
@@ -129,7 +129,7 @@ public class BytesArrayHelperTests
     }
 
     [Test]
-    public void Split_WhenArrayHasEventLength_ReturnsTwoEqualParts()
+    public void Split_WhenArrayHasEventLength_ThenReturnsTwoEqualParts()
     {
         // Arrange
         var array = new byte[] { 1, 2, 3, 4 };
@@ -145,7 +145,7 @@ public class BytesArrayHelperTests
     }
 
     [Test]
-    public void Split_WhenLargerArrayHasEventLength_ReturnsTwoEqualParts()
+    public void Split_WhenLargerArrayHasEventLength_ThenReturnsTwoEqualParts()
     {
         // Arrange
         var array = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 };

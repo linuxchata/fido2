@@ -6,7 +6,7 @@ namespace Shark.Fido2.Core.Tests.Comparers;
 internal class BytesArrayComparerTests
 {
     [Test]
-    public void CompareNullable_WhenBothNull_ReturnsTrue()
+    public void CompareNullable_WhenBothNull_ThenReturnsTrue()
     {
         // Arrange
         byte[]? expected = null;
@@ -20,7 +20,7 @@ internal class BytesArrayComparerTests
     }
 
     [Test]
-    public void CompareNullable_WhenExpectedNull_ReturnsFalse()
+    public void CompareNullable_WhenExpectedNull_ThenReturnsFalse()
     {
         // Arrange
         byte[]? expected = null;
@@ -34,7 +34,7 @@ internal class BytesArrayComparerTests
     }
 
     [Test]
-    public void CompareNullable_WhenActualNull_ReturnsFalse()
+    public void CompareNullable_WhenActualNull_ThenReturnsFalse()
     {
         // Arrange
         byte[] expected = [1, 2, 3];
@@ -48,7 +48,7 @@ internal class BytesArrayComparerTests
     }
 
     [Test]
-    public void CompareNullable_WhenSameReference_ReturnsTrue()
+    public void CompareNullable_WhenSameReference_ThenReturnsTrue()
     {
         // Arrange
         byte[] expected = [1, 2, 3];
@@ -62,7 +62,7 @@ internal class BytesArrayComparerTests
     }
 
     [Test]
-    public void CompareNullable_WhenDifferentLengths_ReturnsFalse()
+    public void CompareNullable_WhenDifferentLengths_ThenReturnsFalse()
     {
         // Arrange
         byte[] expected = [1, 2, 3];
@@ -76,7 +76,7 @@ internal class BytesArrayComparerTests
     }
 
     [Test]
-    public void CompareNullable_WhenSameContent_ReturnsTrue()
+    public void CompareNullable_WhenSameContent_ThenReturnsTrue()
     {
         // Arrange
         byte[] expected = [1, 2, 3];
@@ -90,7 +90,7 @@ internal class BytesArrayComparerTests
     }
 
     [Test]
-    public void CompareNullable_WhenDifferentContent_ReturnsFalse()
+    public void CompareNullable_WhenDifferentContent_ThenReturnsFalse()
     {
         // Arrange
         byte[] expected = [1, 2, 3];
@@ -104,7 +104,7 @@ internal class BytesArrayComparerTests
     }
 
     [Test]
-    public void CompareAsSpan_WhenEmpty_ReturnsTrue()
+    public void CompareAsSpan_WhenEmpty_ThenReturnsTrue()
     {
         // Arrange
         ReadOnlySpan<byte> expected = [];
@@ -118,7 +118,7 @@ internal class BytesArrayComparerTests
     }
 
     [Test]
-    public void CompareAsSpan_WhenSameContent_ReturnsTrue()
+    public void CompareAsSpan_WhenSameContent_ThenReturnsTrue()
     {
         // Arrange
         ReadOnlySpan<byte> expected = new byte[] { 1, 2, 3 };
@@ -132,7 +132,7 @@ internal class BytesArrayComparerTests
     }
 
     [Test]
-    public void CompareAsSpan_WhenDifferentContent_ReturnsFalse()
+    public void CompareAsSpan_WhenDifferentContent_ThenReturnsFalse()
     {
         // Arrange
         ReadOnlySpan<byte> expected = new byte[] { 1, 2, 3 };

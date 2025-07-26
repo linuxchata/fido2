@@ -62,7 +62,7 @@ internal class AndroidSafetyNetAttestationStatementStrategyTests
 
     [Ignore("Valid Android Safety Net attestation to be generated")]
     [Test]
-    public async Task Validate_WhenAndroidSafetyNetAttestationWithRs256Algorithm_ShouldValidate()
+    public async Task Validate_WhenAndroidSafetyNetAttestationWithRs256Algorithm_ThenValidates()
     {
         // Arrange
         var fileName = "AndroidSafetyNetAttestationWithRs256Algorithm.json";
@@ -82,7 +82,7 @@ internal class AndroidSafetyNetAttestationStatementStrategyTests
     }
 
     [Test]
-    public void Validate_WhenAttestationObjectDataIsNull_ThrowsArgumentNullException()
+    public void Validate_WhenAttestationObjectDataIsNull_ThenThrowsArgumentNullException()
     {
         // Arrange
         var clientData = ClientDataBuilder.BuildCreate();
@@ -92,7 +92,7 @@ internal class AndroidSafetyNetAttestationStatementStrategyTests
     }
 
     [Test]
-    public void Validate_WhenClientDataIsNull_ThrowsArgumentNullException()
+    public void Validate_WhenClientDataIsNull_ThenThrowsArgumentNullException()
     {
         // Arrange
         var attestationObjectData = new AttestationObjectData();
@@ -102,7 +102,7 @@ internal class AndroidSafetyNetAttestationStatementStrategyTests
     }
 
     [Test]
-    public void Validate_WhenAttestationStatementIsNotDictionary_ThrowsArgumentException()
+    public void Validate_WhenAttestationStatementIsNotDictionary_ThenThrowsArgumentException()
     {
         // Arrange
         var attestationObjectData = new AttestationObjectData { AttestationStatement = "not a dictionary" };

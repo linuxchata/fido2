@@ -14,7 +14,7 @@ public class UserIdGeneratorTests
     }
 
     [Test]
-    public void Get_WithoutSeed_ReturnsRandomBytes()
+    public void Get_WithoutSeed_ThenReturnsRandomBytes()
     {
         // Act
         var result1 = _sut.Get();
@@ -27,7 +27,7 @@ public class UserIdGeneratorTests
     }
 
     [Test]
-    public void Get_WithEmptySeed_ReturnsRandomBytes()
+    public void Get_WithEmptySeed_ThenReturnsRandomBytes()
     {
         // Act
         var result = _sut.Get(string.Empty);
@@ -37,7 +37,7 @@ public class UserIdGeneratorTests
     }
 
     [Test]
-    public void Get_WithWhiteSpaceSeed_ReturnsRandomBytes()
+    public void Get_WithWhiteSpaceSeed_ThenReturnsRandomBytes()
     {
         // Act
         var result = _sut.Get("   ");
@@ -47,7 +47,7 @@ public class UserIdGeneratorTests
     }
 
     [Test]
-    public void Get_WithValidSeed_ReturnsDeterministicBytes()
+    public void Get_WithValidSeed_ThenReturnsDeterministicBytes()
     {
         // Arrange
         var seed = "AQIDBA=="; // Base64Url for [1,2,3,4]
@@ -83,7 +83,7 @@ public class UserIdGeneratorTests
     [TestCase("あいうえお")]
     [TestCase("アイウエオ")]
     [TestCase("😀🔥🍣")]
-    public void Get_WithValidSeed_ReturnsNotEmptyBytes(string seed)
+    public void Get_WithValidSeed_ThenReturnsNotEmptyBytes(string seed)
     {
         // Act
         var result = _sut.Get(seed);
@@ -94,7 +94,7 @@ public class UserIdGeneratorTests
     }
 
     [Test]
-    public void Get_WithSameSeed_ReturnsSameBytes()
+    public void Get_WithSameSeed_ThenReturnsSameBytes()
     {
         // Arrange
         var seed = "AQIDBA==";
@@ -108,7 +108,7 @@ public class UserIdGeneratorTests
     }
 
     [Test]
-    public void Get_WithLongSeed_ReturnsRandomBytes()
+    public void Get_WithLongSeed_ThenReturnsRandomBytes()
     {
         // Act
         var result = _sut.Get("ExtremelyLongSeedForUserIdentifierGenerationUsingHighEntropySecureAlgorithm");
