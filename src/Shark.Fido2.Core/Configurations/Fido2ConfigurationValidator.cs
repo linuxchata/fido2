@@ -33,16 +33,10 @@ public class Fido2ConfigurationValidator : IValidateOptions<Fido2Configuration>
             return ValidateOptionsResult.Fail("'Origins' configuration key must not include empty values");
         }
 
-        if (options.Origins.Any(string.IsNullOrWhiteSpace))
-        {
-            return ValidateOptionsResult.Fail("'Origins' configuration key must not include empty values");
-        }
-
         if (!string.IsNullOrWhiteSpace(options.AlgorithmsSet) &&
             !CoseAlgorithmsSet.Supported.Contains(options.AlgorithmsSet))
         {
             var supportedValues = string.Join(", ", CoseAlgorithmsSet.Supported);
-
             return ValidateOptionsResult.Fail(
                 $"'AlgorithmsSet' configuration key must be one of the following values: {supportedValues}");
         }
