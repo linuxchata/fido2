@@ -1,6 +1,3 @@
-using System.Net.Security;
-using System.Runtime.InteropServices;
-using System.Security.Authentication;
 using Shark.Fido2.Core;
 using Shark.Fido2.InMemory;
 using Shark.Fido2.Sample.Swagger;
