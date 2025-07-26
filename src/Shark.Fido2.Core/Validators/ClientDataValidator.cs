@@ -99,16 +99,6 @@ internal class ClientDataValidator : IClientDataValidator
         return ValidatorInternalResult.Valid();
     }
 
-    private ValidatorInternalResult ValidateChallenge(string expectedChallenge, ClientData clientData)
-    {
-        if (!string.Equals(expectedChallenge, clientData.Challenge, StringComparison.Ordinal))
-        {
-            return ValidatorInternalResult.Invalid("Challenge mismatch");
-        }
-
-        return ValidatorInternalResult.Valid();
-    }
-
     private ValidatorInternalResult ValidateOrigin(ClientData clientData)
     {
         if (!Uri.TryCreate(clientData.Origin, UriKind.Absolute, out var originUri))
@@ -119,6 +109,16 @@ internal class ClientDataValidator : IClientDataValidator
         if (_configuration.Origins.All(o => !string.Equals(originUri.Host, o, StringComparison.OrdinalIgnoreCase)))
         {
             return ValidatorInternalResult.Invalid("Client data origin mismatch");
+        }
+
+        return ValidatorInternalResult.Valid();
+    }
+
+    private static ValidatorInternalResult ValidateChallenge(string expectedChallenge, ClientData clientData)
+    {
+        if (!string.Equals(expectedChallenge, clientData.Challenge, StringComparison.Ordinal))
+        {
+            return ValidatorInternalResult.Invalid("Challenge mismatch");
         }
 
         return ValidatorInternalResult.Valid();

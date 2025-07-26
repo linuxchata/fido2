@@ -33,7 +33,7 @@ public static class EnumExtensions
             }
         }
 
-        throw new ArgumentException($"Value '{value}' can not be convert to {typeof(T).Name}");
+        throw new ArgumentException($"Value '{value}' cannot be convert to {typeof(T).Name} enum");
     }
 
     public static T? ToNullableEnum<T>(this string? value)
