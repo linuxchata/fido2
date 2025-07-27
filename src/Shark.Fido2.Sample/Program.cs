@@ -50,8 +50,8 @@ if (!app.Environment.IsDevelopment())
 
     app.Use(async (context, next) =>
     {
-        // Disable TRACE and TRACK methods
-        if (HttpMethods.IsTrace(context.Request.Method))
+        // Disable OPTIONS, TRACE and TRACK methods
+        if (HttpMethods.IsTrace(context.Request.Method) || HttpMethods.IsOptions(context.Request.Method))
         {
             context.Response.StatusCode = StatusCodes.Status405MethodNotAllowed;
             return;
