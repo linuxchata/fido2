@@ -50,18 +50,6 @@ if (!app.Environment.IsDevelopment())
 
     app.Use(async (context, next) =>
     {
-        // Disable OPTIONS, TRACE and TRACK methods
-        if (HttpMethods.IsTrace(context.Request.Method) || HttpMethods.IsOptions(context.Request.Method))
-        {
-            context.Response.StatusCode = StatusCodes.Status405MethodNotAllowed;
-            return;
-        }
-
-        await next();
-    });
-
-    app.Use(async (context, next) =>
-    {
         context.Response.Headers.Append("X-Frame-Options", "DENY");
         context.Response.Headers.Append("Content-Security-Policy", "default-src 'self'; img-src 'self' data:; form-action 'self'; frame-ancestors 'none';");
         context.Response.Headers.Append("X-Content-Type-Options", "nosniff");
