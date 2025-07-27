@@ -75,6 +75,9 @@ public static class DependencyInjection
         services.AddKeyedTransient<IAttestationStatementStrategy, AppleAnonymousAttestationStatementStrategy>(
             AttestationStatementFormatIdentifier.Apple);
 
+        services.AddTransient<IAttestationParametersValidator, AttestationParametersValidator>();
+        services.AddTransient<IAssertionParametersValidator, AssertionParametersValidator>();
+
         services.AddTransient<IAttestation, Attestation>();
         services.AddTransient<IAssertion, Assertion>();
 

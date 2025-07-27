@@ -3,6 +3,7 @@ using Shark.Fido2.Common.Extensions;
 using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Core.Abstractions.Handlers;
 using Shark.Fido2.Core.Abstractions.Repositories;
+using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Configurations;
 using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Domain;
@@ -16,6 +17,7 @@ public sealed class Attestation : IAttestation
 {
     private const ulong DefaultTimeout = 60000;
 
+    private readonly IAttestationParametersValidator _attestationParametersValidator;
     private readonly IClientDataHandler _clientDataHandler;
     private readonly IAttestationObjectHandler _attestationObjectHandler;
     private readonly IChallengeGenerator _challengeGenerator;
@@ -24,6 +26,7 @@ public sealed class Attestation : IAttestation
     private readonly Fido2Configuration _configuration;
 
     public Attestation(
+        IAttestationParametersValidator attestationParametersValidator,
         IClientDataHandler clientDataHandler,
         IAttestationObjectHandler attestationObjectHandler,
         IChallengeGenerator challengeGenerator,
@@ -31,6 +34,7 @@ public sealed class Attestation : IAttestation
         ICredentialRepository credentialRepository,
         IOptions<Fido2Configuration> options)
     {
+        _attestationParametersValidator = attestationParametersValidator;
         _clientDataHandler = clientDataHandler;
         _attestationObjectHandler = attestationObjectHandler;
         _challengeGenerator = challengeGenerator;
@@ -43,9 +47,7 @@ public sealed class Attestation : IAttestation
         PublicKeyCredentialCreationOptionsRequest request,
         CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(request);
-        ArgumentNullException.ThrowIfNullOrWhiteSpace(request.UserName);
-        ArgumentNullException.ThrowIfNullOrWhiteSpace(request.DisplayName);
+        _attestationParametersValidator.Validate(request);
 
         var userName = request.UserName.Trim();
 
@@ -105,23 +107,13 @@ public sealed class Attestation : IAttestation
         PublicKeyCredentialCreationOptions creationOptions,
         CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(publicKeyCredentialAttestation);
-        ArgumentNullException.ThrowIfNullOrWhiteSpace(publicKeyCredentialAttestation.Id);
-        ArgumentNullException.ThrowIfNullOrWhiteSpace(publicKeyCredentialAttestation.RawId);
-
-        ArgumentNullException.ThrowIfNull(creationOptions);
-        ArgumentNullException.ThrowIfNull(creationOptions.RelyingParty);
-        ArgumentNullException.ThrowIfNull(creationOptions.User);
-        ArgumentNullException.ThrowIfNull(creationOptions.PublicKeyCredentialParams);
-        ArgumentNullException.ThrowIfNull(creationOptions.ExcludeCredentials);
-        ArgumentNullException.ThrowIfNull(creationOptions.AuthenticatorSelection);
-        ArgumentNullException.ThrowIfNullOrWhiteSpace(creationOptions.Attestation);
+        _attestationParametersValidator.Validate(publicKeyCredentialAttestation, creationOptions);
 
         //// 7.1. Registering a New Credential
 
         if (!publicKeyCredentialAttestation.Id.IsBase64Url())
         {
-            return AttestationCompleteResult.CreateFailure("Attestation identifier is not base64url encode");
+            return AttestationCompleteResult.CreateFailure("Attestation identifier is not base64url-encoded");
         }
 
         if (!string.Equals(publicKeyCredentialAttestation.Type, PublicKeyCredentialType.PublicKey))

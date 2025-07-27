@@ -15,6 +15,7 @@ namespace Shark.Fido2.Core;
 
 public sealed class Assertion : IAssertion
 {
+    private readonly IAssertionParametersValidator _assertionParametersValidator;
     private readonly IClientDataHandler _clientDataHandler;
     private readonly IAssertionObjectHandler _assertionObjectHandler;
     private readonly IUserHandlerValidator _userHandlerValidator;
@@ -23,6 +24,7 @@ public sealed class Assertion : IAssertion
     private readonly Fido2Configuration _configuration;
 
     public Assertion(
+        IAssertionParametersValidator assertionParametersValidator,
         IClientDataHandler clientDataHandler,
         IAssertionObjectHandler assertionObjectHandler,
         IUserHandlerValidator userHandlerValidator,
@@ -30,6 +32,7 @@ public sealed class Assertion : IAssertion
         ICredentialRepository credentialRepository,
         IOptions<Fido2Configuration> options)
     {
+        _assertionParametersValidator = assertionParametersValidator;
         _clientDataHandler = clientDataHandler;
         _assertionObjectHandler = assertionObjectHandler;
         _userHandlerValidator = userHandlerValidator;
@@ -42,7 +45,7 @@ public sealed class Assertion : IAssertion
         PublicKeyCredentialRequestOptionsRequest request,
         CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(request);
+        _assertionParametersValidator.Validate(request);
 
         var username = request.Username?.Trim();
 
@@ -89,14 +92,13 @@ public sealed class Assertion : IAssertion
         PublicKeyCredentialRequestOptions requestOptions,
         CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(publicKeyCredentialAssertion);
-        ArgumentNullException.ThrowIfNull(requestOptions);
+        _assertionParametersValidator.Validate(publicKeyCredentialAssertion, requestOptions);
 
         //// 7.2. Verifying an Authentication Assertion
 
         if (!publicKeyCredentialAssertion.Id.IsBase64Url())
         {
-            return AssertionCompleteResult.CreateFailure("Assertion identifier is not base64url encode");
+            return AssertionCompleteResult.CreateFailure("Assertion identifier is not base64url-encoded");
         }
 
         if (!string.Equals(publicKeyCredentialAssertion.Type, PublicKeyCredentialType.PublicKey))
