@@ -5,6 +5,11 @@ using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.AddServerHeader = false;
+});
+
 builder.Logging.AddSimpleConsole(options =>
 {
     options.IncludeScopes = false;
