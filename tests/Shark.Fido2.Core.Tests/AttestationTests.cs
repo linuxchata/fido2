@@ -19,7 +19,7 @@ namespace Shark.Fido2.Core.Tests;
 public class AttestationTests
 {
     private const string UserName = "UserName";
-    private const string UserDisplayName = "UserDisplayName";
+    private const string DisplayName = "DisplayName";
     private const string CredentialId = "AQIDBA=="; // Base64 for [1,2,3,4]
     private const string CredentialRawId = "AQIDBA==";
 
@@ -41,6 +41,11 @@ public class AttestationTests
     public void Setup()
     {
         _attestationParametersValidatorMock = new Mock<IAttestationParametersValidator>();
+        _attestationParametersValidatorMock
+            .Setup(a => a.Validate(
+                It.IsAny<PublicKeyCredentialAttestation>(),
+                It.IsAny<PublicKeyCredentialCreationOptions>()))
+            .Returns(AttestationCompleteResult.Create());
 
         _clientDataHandlerMock = new Mock<IClientDataHandler>();
         _clientDataHandlerMock
@@ -114,7 +119,7 @@ public class AttestationTests
         {
             Id = Encoding.UTF8.GetBytes(UserName),
             Name = UserName,
-            DisplayName = UserDisplayName,
+            DisplayName = DisplayName,
         };
 
         _publicKeyCredentialCreationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
@@ -153,7 +158,7 @@ public class AttestationTests
         var request = new PublicKeyCredentialCreationOptionsRequest
         {
             UserName = UserName,
-            DisplayName = UserDisplayName,
+            DisplayName = DisplayName,
             AuthenticatorSelection = null,
             Attestation = AttestationConveyancePreference.Direct,
         };
@@ -176,7 +181,7 @@ public class AttestationTests
         var request = new PublicKeyCredentialCreationOptionsRequest
         {
             UserName = UserName,
-            DisplayName = UserDisplayName,
+            DisplayName = DisplayName,
             AuthenticatorSelection = null,
             Attestation = null,
         };
@@ -206,7 +211,7 @@ public class AttestationTests
         var request = new PublicKeyCredentialCreationOptionsRequest
         {
             UserName = UserName,
-            DisplayName = UserDisplayName,
+            DisplayName = DisplayName,
             AuthenticatorSelection = null,
             Attestation = AttestationConveyancePreference.Direct,
         };
@@ -232,7 +237,7 @@ public class AttestationTests
         var request = new PublicKeyCredentialCreationOptionsRequest
         {
             UserName = UserName,
-            DisplayName = UserDisplayName,
+            DisplayName = DisplayName,
             AuthenticatorSelection = new AuthenticatorSelectionCriteria
             {
                 AuthenticatorAttachment = AuthenticatorAttachment.Platform,
@@ -281,36 +286,6 @@ public class AttestationTests
         // Act & Assert
         Assert.ThrowsAsync<ArgumentNullException>(() =>
             _sut.Complete(_publicKeyCredentialAttestation!, _publicKeyCredentialCreationOptions));
-    }
-
-    [Test]
-    public async Task Complete_WhenPublicKeyCredentialAttestationIdIsInvalid_ThenReturnsFailure()
-    {
-        // Arrange
-        _publicKeyCredentialAttestation.Id = "aaa";
-
-        // Act
-        var result = await _sut.Complete(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions);
-
-        // Assert
-        Assert.That(result, Is.Not.Null);
-        Assert.That(result.IsValid, Is.False);
-        Assert.That(result.Message, Is.EqualTo("Attestation identifier is not base64url encode"));
-    }
-
-    [Test]
-    public async Task Complete_WhenPublicKeyCredentialAttestationTypeIsInvalid_ThenReturnsFailure()
-    {
-        // Arrange
-        _publicKeyCredentialAttestation.Type = "invalid-type";
-
-        // Act
-        var result = await _sut.Complete(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions);
-
-        // Assert
-        Assert.That(result, Is.Not.Null);
-        Assert.That(result.IsValid, Is.False);
-        Assert.That(result.Message, Is.EqualTo("Attestation type is not set to \"public-key\""));
     }
 
     [Test]

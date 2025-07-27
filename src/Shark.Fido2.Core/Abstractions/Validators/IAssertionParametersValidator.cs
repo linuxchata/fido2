@@ -7,7 +7,7 @@ public interface IAssertionParametersValidator
 {
     void Validate(PublicKeyCredentialRequestOptionsRequest request);
 
-    void Validate(
+    AssertionCompleteResult Validate(
         PublicKeyCredentialAssertion publicKeyCredentialAssertion,
         PublicKeyCredentialRequestOptions requestOptions);
 }

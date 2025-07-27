@@ -107,19 +107,15 @@ public sealed class Attestation : IAttestation
         PublicKeyCredentialCreationOptions creationOptions,
         CancellationToken cancellationToken = default)
     {
-        _attestationParametersValidator.Validate(publicKeyCredentialAttestation, creationOptions);
-
-        //// 7.1. Registering a New Credential
-
-        if (!publicKeyCredentialAttestation.Id.IsBase64Url())
+        var validationResult = _attestationParametersValidator.Validate(
+            publicKeyCredentialAttestation,
+            creationOptions);
+        if (!validationResult.IsValid)
         {
-            return AttestationCompleteResult.CreateFailure("Attestation identifier is not Base64URL-encoded");
+            return AttestationCompleteResult.CreateFailure(validationResult.Message!);
         }
 
-        if (!string.Equals(publicKeyCredentialAttestation.Type, PublicKeyCredentialType.PublicKey))
-        {
-            return AttestationCompleteResult.CreateFailure("Attestation type is not set to \"public-key\"");
-        }
+        // 7.1. Registering a New Credential
 
         // Step 3
         // Let response be credential.response. If response is not an instance of AuthenticatorAttestationResponse,

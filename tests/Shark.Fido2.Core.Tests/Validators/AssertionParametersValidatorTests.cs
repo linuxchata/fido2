@@ -1,6 +1,4 @@
-﻿using System.Text;
-using Shark.Fido2.Core.Configurations;
-using Shark.Fido2.Core.Validators;
+﻿using Shark.Fido2.Core.Validators;
 using Shark.Fido2.Domain;
 using Shark.Fido2.Domain.Constants;
 using Shark.Fido2.Domain.Enums;
@@ -77,5 +75,35 @@ public class AssertionParametersValidatorTests
         // Act & Assert
         Assert.Throws<ArgumentNullException>(() =>
             _sut.Validate(_publicKeyCredentialAssertion, requestOptions!));
+    }
+
+    [Test]
+    public void Validate_WhenPublicKeyCredentialAttestationIdIsInvalid_ThenReturnsFailure()
+    {
+        // Arrange
+        _publicKeyCredentialAssertion.Id = "aaa";
+
+        // Act
+        var result = _sut.Validate(_publicKeyCredentialAssertion, _publicKeyCredentialRequestOptions);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.IsValid, Is.False);
+        Assert.That(result.Message, Is.EqualTo("Assertion identifier is not Base64URL-encoded"));
+    }
+
+    [Test]
+    public void Validate_WhenPublicKeyCredentialAssertionTypeIsInvalid_ThenReturnsFailure()
+    {
+        // Arrange
+        _publicKeyCredentialAssertion.Type = "invalid-type";
+
+        // Act
+        var result = _sut.Validate(_publicKeyCredentialAssertion, _publicKeyCredentialRequestOptions);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.IsValid, Is.False);
+        Assert.That(result.Message, Is.EqualTo("Assertion type is not set to \"public-key\""));
     }
 }

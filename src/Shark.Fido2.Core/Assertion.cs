@@ -7,7 +7,6 @@ using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Comparers;
 using Shark.Fido2.Core.Configurations;
 using Shark.Fido2.Domain;
-using Shark.Fido2.Domain.Constants;
 using Shark.Fido2.Domain.Enums;
 using Shark.Fido2.Domain.Options;
 
@@ -92,19 +91,15 @@ public sealed class Assertion : IAssertion
         PublicKeyCredentialRequestOptions requestOptions,
         CancellationToken cancellationToken = default)
     {
-        _assertionParametersValidator.Validate(publicKeyCredentialAssertion, requestOptions);
-
-        //// 7.2. Verifying an Authentication Assertion
-
-        if (!publicKeyCredentialAssertion.Id.IsBase64Url())
+        var validationResult = _assertionParametersValidator.Validate(
+            publicKeyCredentialAssertion,
+            requestOptions);
+        if (!validationResult.IsValid)
         {
-            return AssertionCompleteResult.CreateFailure("Assertion identifier is not Base64URL-encoded");
+            return AssertionCompleteResult.CreateFailure(validationResult.Message!);
         }
 
-        if (!string.Equals(publicKeyCredentialAssertion.Type, PublicKeyCredentialType.PublicKey))
-        {
-            return AssertionCompleteResult.CreateFailure("Assertion type is not set to \"public-key\"");
-        }
+        // 7.2. Verifying an Authentication Assertion
 
         // Step 3
         // Let response be credential.response. If response is not an instance of AuthenticatorAssertionResponse,

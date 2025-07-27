@@ -1,6 +1,4 @@
-﻿using Shark.Fido2.Domain.Enums;
-
-namespace Shark.Fido2.Core.Constants;
+﻿namespace Shark.Fido2.Core.Constants;
 
 internal static class CoseAlgorithmsSet
 {

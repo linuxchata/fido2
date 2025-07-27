@@ -19,7 +19,7 @@ namespace Shark.Fido2.Core.Tests;
 public class AssertionTests
 {
     private const string UserName = "UserName";
-    private const string UserDisplayName = "UserDisplayName";
+    private const string DisplayName = "DisplayName";
     private const string CredentialIdBase64 = "AQIDBA=="; // Base64 for [1,2,3,4]
     private const string CredentialRawId = "AQIDBA==";
 
@@ -42,6 +42,11 @@ public class AssertionTests
     public void Setup()
     {
         _assertionParametersValidatorMock = new Mock<IAssertionParametersValidator>();
+        _assertionParametersValidatorMock
+            .Setup(a => a.Validate(
+                It.IsAny<PublicKeyCredentialAssertion>(),
+                It.IsAny<PublicKeyCredentialRequestOptions>()))
+            .Returns(AssertionCompleteResult.Create());
 
         _clientDataHandlerMock = new Mock<IClientDataHandler>();
         _clientDataHandlerMock
@@ -237,36 +242,6 @@ public class AssertionTests
     }
 
     [Test]
-    public async Task Complete_WhenPublicKeyCredentialAttestationIdIsInvalid_ThenReturnsFailure()
-    {
-        // Arrange
-        _publicKeyCredentialAssertion.Id = "aaa";
-
-        // Act
-        var result = await _sut.Complete(_publicKeyCredentialAssertion, _publicKeyCredentialRequestOptions);
-
-        // Assert
-        Assert.That(result, Is.Not.Null);
-        Assert.That(result.IsValid, Is.False);
-        Assert.That(result.Message, Is.EqualTo("Attestation identifier is not Base64URL-encoded"));
-    }
-
-    [Test]
-    public async Task Complete_WhenPublicKeyCredentialAssertionTypeIsInvalid_ThenReturnsFailure()
-    {
-        // Arrange
-        _publicKeyCredentialAssertion.Type = "invalid-type";
-
-        // Act
-        var result = await _sut.Complete(_publicKeyCredentialAssertion, _publicKeyCredentialRequestOptions);
-
-        // Assert
-        Assert.That(result, Is.Not.Null);
-        Assert.That(result.IsValid, Is.False);
-        Assert.That(result.Message, Is.EqualTo("Assertion type is not set to \"public-key\""));
-    }
-
-    [Test]
     public async Task Complete_WhenResponseIsNull_ThenReturnsFailure()
     {
         // Arrange
@@ -346,7 +321,7 @@ public class AssertionTests
             CredentialId = _credentialId,
             UserHandle = _userHandle,
             UserName = UserName,
-            UserDisplayName = UserDisplayName,
+            UserDisplayName = DisplayName,
             CredentialPublicKey = new CredentialPublicKey(),
         };
 
@@ -376,7 +351,7 @@ public class AssertionTests
             CredentialId = _credentialId,
             UserHandle = _userHandle,
             UserName = UserName,
-            UserDisplayName = UserDisplayName,
+            UserDisplayName = DisplayName,
             CredentialPublicKey = null!,
         };
 
@@ -406,7 +381,7 @@ public class AssertionTests
             CredentialId = _credentialId,
             UserHandle = _userHandle,
             UserName = UserName,
-            UserDisplayName = UserDisplayName,
+            UserDisplayName = DisplayName,
             CredentialPublicKey = new CredentialPublicKey(),
         };
 
@@ -436,7 +411,7 @@ public class AssertionTests
             CredentialId = _credentialId,
             UserHandle = _userHandle,
             UserName = UserName,
-            UserDisplayName = UserDisplayName,
+            UserDisplayName = DisplayName,
             CredentialPublicKey = new CredentialPublicKey(),
         };
 
@@ -472,7 +447,7 @@ public class AssertionTests
             CredentialId = _credentialId,
             UserHandle = _userHandle,
             UserName = UserName,
-            UserDisplayName = UserDisplayName,
+            UserDisplayName = DisplayName,
             CredentialPublicKey = new CredentialPublicKey(),
             SignCount = 3, // Higher than the authenticator's sign count (2)
         };
@@ -499,7 +474,7 @@ public class AssertionTests
             CredentialId = _credentialId,
             UserHandle = _userHandle,
             UserName = UserName,
-            UserDisplayName = UserDisplayName,
+            UserDisplayName = DisplayName,
             CredentialPublicKey = new CredentialPublicKey(),
             SignCount = 1, // Lower than the authenticator's sign count (2)
         };
@@ -528,7 +503,7 @@ public class AssertionTests
             CredentialId = _credentialId,
             UserHandle = _userHandle,
             UserName = UserName,
-            UserDisplayName = UserDisplayName,
+            UserDisplayName = DisplayName,
             CredentialPublicKey = new CredentialPublicKey(),
             SignCount = 0, // Zero sign count
         };

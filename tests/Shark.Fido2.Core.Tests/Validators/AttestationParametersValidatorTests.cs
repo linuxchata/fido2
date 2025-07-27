@@ -266,7 +266,7 @@ public class AttestationParametersValidatorTests
     [Test]
     [TestCase("")]
     [TestCase("   ")]
-    public void Complete_WhenAttestationIsEmpty_ThenThrowsArgumentException(string attestation)
+    public void Validate_WhenAttestationIsEmpty_ThenThrowsArgumentException(string attestation)
     {
         // Arrange
         _publicKeyCredentialCreationOptions.Attestation = attestation;
@@ -274,5 +274,35 @@ public class AttestationParametersValidatorTests
         // Act & Assert
         Assert.Throws<ArgumentException>(() =>
             _sut.Validate(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions));
+    }
+
+    [Test]
+    public void Validate_WhenPublicKeyCredentialAttestationIdIsInvalid_ThenReturnsFailure()
+    {
+        // Arrange
+        _publicKeyCredentialAttestation.Id = "aaa";
+
+        // Act
+        var result = _sut.Validate(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.IsValid, Is.False);
+        Assert.That(result.Message, Is.EqualTo("Attestation identifier is not Base64URL-encoded"));
+    }
+
+    [Test]
+    public void Validate_WhenPublicKeyCredentialAttestationTypeIsInvalid_ThenReturnsFailure()
+    {
+        // Arrange
+        _publicKeyCredentialAttestation.Type = "invalid-type";
+
+        // Act
+        var result = _sut.Validate(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.IsValid, Is.False);
+        Assert.That(result.Message, Is.EqualTo("Attestation type is not set to \"public-key\""));
     }
 }

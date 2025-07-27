@@ -7,7 +7,7 @@ public interface IAttestationParametersValidator
 {
     void Validate(PublicKeyCredentialCreationOptionsRequest request);
 
-    void Validate(
+    AttestationCompleteResult Validate(
         PublicKeyCredentialAttestation publicKeyCredentialAttestation,
         PublicKeyCredentialCreationOptions creationOptions);
 }
