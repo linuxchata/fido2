@@ -242,6 +242,25 @@ public class AssertionTests
     }
 
     [Test]
+    public async Task Complete_WhenParametersValidatorReturnsFailure_ThenReturnsFailure()
+    {
+        // Arrange
+        _assertionParametersValidatorMock
+            .Setup(a => a.Validate(
+                It.IsAny<PublicKeyCredentialAssertion>(),
+                It.IsAny<PublicKeyCredentialRequestOptions>()))
+            .Returns(AssertionCompleteResult.CreateFailure("Error"));
+
+        // Act
+        var result = await _sut.Complete(_publicKeyCredentialAssertion!, _publicKeyCredentialRequestOptions);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.IsValid, Is.False);
+        Assert.That(result.Message, Is.EqualTo("Error"));
+    }
+
+    [Test]
     public async Task Complete_WhenResponseIsNull_ThenReturnsFailure()
     {
         // Arrange

@@ -289,6 +289,25 @@ public class AttestationTests
     }
 
     [Test]
+    public async Task Complete_WhenParametersValidatorReturnsFailure_ThenReturnsFailure()
+    {
+        // Arrange
+        _attestationParametersValidatorMock
+            .Setup(a => a.Validate(
+                It.IsAny<PublicKeyCredentialAttestation>(),
+                It.IsAny<PublicKeyCredentialCreationOptions>()))
+            .Returns(AttestationCompleteResult.CreateFailure("Error"));
+
+        // Act
+        var result = await _sut.Complete(_publicKeyCredentialAttestation!, _publicKeyCredentialCreationOptions);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.IsValid, Is.False);
+        Assert.That(result.Message, Is.EqualTo("Error"));
+    }
+
+    [Test]
     public async Task Complete_WhenResponseIsNull_ThenReturnsFailure()
     {
         // Arrange
