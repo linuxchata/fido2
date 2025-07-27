@@ -1,0 +1,16 @@
+name: Scan OWASP
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: ZAP Scan
+        uses: zaproxy/action-full-scan@v0.12.0
+        with:
+          target: 'https://app-fido2-dev-01-hcguafdhd6ewfcgv.westeurope-01.azurewebsites.net/'
+          allow_issue_writing: false
