@@ -98,7 +98,7 @@ public sealed class Assertion : IAssertion
 
         if (!publicKeyCredentialAssertion.Id.IsBase64Url())
         {
-            return AssertionCompleteResult.CreateFailure("Assertion identifier is not base64url-encoded");
+            return AssertionCompleteResult.CreateFailure("Assertion identifier is not Base64URL-encoded");
         }
 
         if (!string.Equals(publicKeyCredentialAssertion.Type, PublicKeyCredentialType.PublicKey))

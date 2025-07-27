@@ -248,7 +248,7 @@ public class AssertionTests
         // Assert
         Assert.That(result, Is.Not.Null);
         Assert.That(result.IsValid, Is.False);
-        Assert.That(result.Message, Is.EqualTo("Assertion identifier is not base64url encode"));
+        Assert.That(result.Message, Is.EqualTo("Attestation identifier is not Base64URL-encoded"));
     }
 
     [Test]

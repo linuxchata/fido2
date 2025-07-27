@@ -113,7 +113,7 @@ public sealed class Attestation : IAttestation
 
         if (!publicKeyCredentialAttestation.Id.IsBase64Url())
         {
-            return AttestationCompleteResult.CreateFailure("Attestation identifier is not base64url-encoded");
+            return AttestationCompleteResult.CreateFailure("Attestation identifier is not Base64URL-encoded");
         }
 
         if (!string.Equals(publicKeyCredentialAttestation.Type, PublicKeyCredentialType.PublicKey))
