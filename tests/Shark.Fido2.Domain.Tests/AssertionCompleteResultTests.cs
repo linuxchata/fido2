@@ -4,7 +4,7 @@
 internal class AssertionCompleteResultTests
 {
     [Test]
-    public void Create_ThenReturnsValidResult()
+    public void Create_WhenSuccess_ThenReturnsValidResult()
     {
         // Act
         var result = AssertionCompleteResult.Create();

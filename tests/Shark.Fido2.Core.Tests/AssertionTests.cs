@@ -18,11 +18,12 @@ namespace Shark.Fido2.Core.Tests;
 [TestFixture]
 public class AssertionTests
 {
-    private const string UserName = "johndoe@exaple.com";
-    private const string UserDisplayName = "John Doe";
+    private const string UserName = "UserName";
+    private const string DisplayName = "DisplayName";
     private const string CredentialIdBase64 = "AQIDBA=="; // Base64 for [1,2,3,4]
     private const string CredentialRawId = "AQIDBA==";
 
+    private Mock<IAssertionParametersValidator> _assertionParametersValidatorMock = null!;
     private Mock<IClientDataHandler> _clientDataHandlerMock = null!;
     private Mock<IAssertionObjectHandler> _assertionObjectHandlerMock = null!;
     private Mock<IUserHandlerValidator> _userHandlerValidatorMock = null!;
@@ -40,7 +41,12 @@ public class AssertionTests
     [SetUp]
     public void Setup()
     {
-        _userHandle = Encoding.UTF8.GetBytes(UserName);
+        _assertionParametersValidatorMock = new Mock<IAssertionParametersValidator>();
+        _assertionParametersValidatorMock
+            .Setup(a => a.Validate(
+                It.IsAny<PublicKeyCredentialAssertion>(),
+                It.IsAny<PublicKeyCredentialRequestOptions>()))
+            .Returns(AssertionCompleteResult.Create());
 
         _clientDataHandlerMock = new Mock<IClientDataHandler>();
         _clientDataHandlerMock
@@ -108,7 +114,10 @@ public class AssertionTests
             UserVerification = UserVerificationRequirement.Preferred,
         };
 
+        _userHandle = Encoding.UTF8.GetBytes(UserName);
+
         _sut = new Assertion(
+            _assertionParametersValidatorMock.Object,
             _clientDataHandlerMock.Object,
             _assertionObjectHandlerMock.Object,
             _userHandlerValidatorMock.Object,
@@ -120,13 +129,16 @@ public class AssertionTests
     #region RequestOptions Tests
 
     [Test]
-    public void RequestOptions_WhenRequestIsNull_ThenThrowsArgumentNullException()
+    public void RequestOptions_WhenParametersValidatorThrowsArgumentNullException_ThenThrowsArgumentNullException()
     {
         // Arrange
-        PublicKeyCredentialRequestOptionsRequest? request = null;
+        _assertionParametersValidatorMock
+            .Setup(a => a.Validate(It.IsAny<PublicKeyCredentialRequestOptionsRequest>()))
+            .Throws<ArgumentNullException>();
 
         // Act & Assert
-        Assert.ThrowsAsync<ArgumentNullException>(() => _sut.RequestOptions(request!));
+        Assert.ThrowsAsync<ArgumentNullException>(
+            () => _sut.RequestOptions(It.IsAny<PublicKeyCredentialRequestOptionsRequest>()));
     }
 
     [Test]
@@ -215,55 +227,37 @@ public class AssertionTests
     #region Complete Tests
 
     [Test]
-    public void Complete_WhenPublicKeyCredentialAssertionIsNull_ThenThrowsArgumentNullException()
+    public void Complete_WhenParametersValidatorThrowsArgumentNullException_ThenThrowsArgumentNullException()
     {
         // Arrange
-        PublicKeyCredentialAssertion? publicKeyCredentialAssertion = null;
-
-        // Act & Assert
-        Assert.ThrowsAsync<ArgumentNullException>(
-            () => _sut.Complete(publicKeyCredentialAssertion!, _publicKeyCredentialRequestOptions));
-    }
-
-    [Test]
-    public void Complete_WhenPublicKeyCredentialRequestOptionsIsNull_ThenThrowsArgumentNullException()
-    {
-        // Arrange
-        PublicKeyCredentialRequestOptions? requestOptions = null;
+        _assertionParametersValidatorMock
+            .Setup(a => a.Validate(
+                It.IsAny<PublicKeyCredentialAssertion>(),
+                It.IsAny<PublicKeyCredentialRequestOptions>()))
+            .Throws<ArgumentNullException>();
 
         // Act & Assert
         Assert.ThrowsAsync<ArgumentNullException>(() =>
-            _sut.Complete(_publicKeyCredentialAssertion, requestOptions!));
+            _sut.Complete(_publicKeyCredentialAssertion!, _publicKeyCredentialRequestOptions));
     }
 
     [Test]
-    public async Task Complete_WhenPublicKeyCredentialAttestationIdIsInvalid_ThenReturnsFailure()
+    public async Task Complete_WhenParametersValidatorReturnsFailure_ThenReturnsFailure()
     {
         // Arrange
-        _publicKeyCredentialAssertion.Id = "aaa";
+        _assertionParametersValidatorMock
+            .Setup(a => a.Validate(
+                It.IsAny<PublicKeyCredentialAssertion>(),
+                It.IsAny<PublicKeyCredentialRequestOptions>()))
+            .Returns(AssertionCompleteResult.CreateFailure("Error"));
 
         // Act
-        var result = await _sut.Complete(_publicKeyCredentialAssertion, _publicKeyCredentialRequestOptions);
+        var result = await _sut.Complete(_publicKeyCredentialAssertion!, _publicKeyCredentialRequestOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);
         Assert.That(result.IsValid, Is.False);
-        Assert.That(result.Message, Is.EqualTo("Assertion identifier is not base64url encode"));
-    }
-
-    [Test]
-    public async Task Complete_WhenPublicKeyCredentialAssertionTypeIsInvalid_ThenReturnsFailure()
-    {
-        // Arrange
-        _publicKeyCredentialAssertion.Type = "invalid-type";
-
-        // Act
-        var result = await _sut.Complete(_publicKeyCredentialAssertion, _publicKeyCredentialRequestOptions);
-
-        // Assert
-        Assert.That(result, Is.Not.Null);
-        Assert.That(result.IsValid, Is.False);
-        Assert.That(result.Message, Is.EqualTo("Assertion type is not set to \"public-key\""));
+        Assert.That(result.Message, Is.EqualTo("Error"));
     }
 
     [Test]
@@ -346,7 +340,7 @@ public class AssertionTests
             CredentialId = _credentialId,
             UserHandle = _userHandle,
             UserName = UserName,
-            UserDisplayName = UserDisplayName,
+            UserDisplayName = DisplayName,
             CredentialPublicKey = new CredentialPublicKey(),
         };
 
@@ -376,7 +370,7 @@ public class AssertionTests
             CredentialId = _credentialId,
             UserHandle = _userHandle,
             UserName = UserName,
-            UserDisplayName = UserDisplayName,
+            UserDisplayName = DisplayName,
             CredentialPublicKey = null!,
         };
 
@@ -406,7 +400,7 @@ public class AssertionTests
             CredentialId = _credentialId,
             UserHandle = _userHandle,
             UserName = UserName,
-            UserDisplayName = UserDisplayName,
+            UserDisplayName = DisplayName,
             CredentialPublicKey = new CredentialPublicKey(),
         };
 
@@ -436,7 +430,7 @@ public class AssertionTests
             CredentialId = _credentialId,
             UserHandle = _userHandle,
             UserName = UserName,
-            UserDisplayName = UserDisplayName,
+            UserDisplayName = DisplayName,
             CredentialPublicKey = new CredentialPublicKey(),
         };
 
@@ -472,7 +466,7 @@ public class AssertionTests
             CredentialId = _credentialId,
             UserHandle = _userHandle,
             UserName = UserName,
-            UserDisplayName = UserDisplayName,
+            UserDisplayName = DisplayName,
             CredentialPublicKey = new CredentialPublicKey(),
             SignCount = 3, // Higher than the authenticator's sign count (2)
         };
@@ -499,7 +493,7 @@ public class AssertionTests
             CredentialId = _credentialId,
             UserHandle = _userHandle,
             UserName = UserName,
-            UserDisplayName = UserDisplayName,
+            UserDisplayName = DisplayName,
             CredentialPublicKey = new CredentialPublicKey(),
             SignCount = 1, // Lower than the authenticator's sign count (2)
         };
@@ -528,7 +522,7 @@ public class AssertionTests
             CredentialId = _credentialId,
             UserHandle = _userHandle,
             UserName = UserName,
-            UserDisplayName = UserDisplayName,
+            UserDisplayName = DisplayName,
             CredentialPublicKey = new CredentialPublicKey(),
             SignCount = 0, // Zero sign count
         };

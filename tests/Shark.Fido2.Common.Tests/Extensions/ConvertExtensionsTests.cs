@@ -1,5 +1,4 @@
 using System.Text;
-using NUnit.Framework;
 using Shark.Fido2.Common.Extensions;
 
 namespace Shark.Fido2.Common.Tests.Extensions;
