@@ -5,6 +5,11 @@ using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.AddServerHeader = false;
+});
+
 builder.Logging.AddSimpleConsole(options =>
 {
     options.IncludeScopes = false;
@@ -46,7 +51,7 @@ if (!app.Environment.IsDevelopment())
     app.Use(async (context, next) =>
     {
         context.Response.Headers.Append("X-Frame-Options", "DENY");
-        context.Response.Headers.Append("Content-Security-Policy", "default-src 'self'; img-src 'self' data:;");
+        context.Response.Headers.Append("Content-Security-Policy", "default-src 'self'; img-src 'self' data:; form-action 'self'; frame-ancestors 'none';");
         context.Response.Headers.Append("X-Content-Type-Options", "nosniff");
         context.Response.Headers.Append("Permissions-Policy", "geolocation=(), microphone=(), camera=()");
         context.Response.Headers.Append("Referrer-Policy", "no-referrer");
