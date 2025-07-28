@@ -133,7 +133,7 @@ public class AttestationParametersValidatorTests
         // Arrange
         var request = new PublicKeyCredentialCreationOptionsRequest
         {
-            UserName = new string('*', 257),
+            UserName = new string('*', 65),
             DisplayName = DisplayName,
             AuthenticatorSelection = null,
             Attestation = AttestationConveyancePreference.Direct,

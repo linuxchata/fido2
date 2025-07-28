@@ -8,13 +8,17 @@ namespace Shark.Fido2.Core.Validators;
 
 public sealed class AssertionParametersValidator : IAssertionParametersValidator
 {
+    private const int MaxUserNameLength = 64;
+
     public void Validate(PublicKeyCredentialRequestOptionsRequest request)
     {
         ArgumentNullException.ThrowIfNull(request);
 
-        if (!string.IsNullOrWhiteSpace(request.UserName) && request.UserName.Length > 256)
+        if (!string.IsNullOrWhiteSpace(request.UserName) && request.UserName.Length > MaxUserNameLength)
         {
-            throw new ArgumentException("Username cannot be more than 256 characters", nameof(request));
+            throw new ArgumentException(
+                $"Username cannot be more than {MaxUserNameLength} characters",
+                nameof(request));
         }
     }
 

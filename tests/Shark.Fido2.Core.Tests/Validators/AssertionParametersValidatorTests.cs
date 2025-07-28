@@ -61,7 +61,7 @@ public class AssertionParametersValidatorTests
         // Arrange
         var request = new PublicKeyCredentialRequestOptionsRequest
         {
-            UserName = new string('*', 257),
+            UserName = new string('*', 65),
             UserVerification = UserVerificationRequirement.Preferred,
         };
 
