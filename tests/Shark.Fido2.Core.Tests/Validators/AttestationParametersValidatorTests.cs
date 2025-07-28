@@ -128,6 +128,38 @@ public class AttestationParametersValidatorTests
     }
 
     [Test]
+    public void Validate_WhenUserNameIsLongerThanAllowedLength_ThenThrowsArgumentException()
+    {
+        // Arrange
+        var request = new PublicKeyCredentialCreationOptionsRequest
+        {
+            UserName = new string('*', 65),
+            DisplayName = DisplayName,
+            AuthenticatorSelection = null,
+            Attestation = AttestationConveyancePreference.Direct,
+        };
+
+        // Act & Assert
+        Assert.Throws<ArgumentException>(() => _sut.Validate(request));
+    }
+
+    [Test]
+    public void Validate_WhenDisplayNameIsLongerThanAllowedLength_ThenThrowsArgumentException()
+    {
+        // Arrange
+        var request = new PublicKeyCredentialCreationOptionsRequest
+        {
+            UserName = UserName,
+            DisplayName = new string('*', 65),
+            AuthenticatorSelection = null,
+            Attestation = AttestationConveyancePreference.Direct,
+        };
+
+        // Act & Assert
+        Assert.Throws<ArgumentException>(() => _sut.Validate(request));
+    }
+
+    [Test]
     public void Validate_WhenPublicKeyCredentialAttestationIsNull_ThenThrowsArgumentNullException()
     {
         // Arrange

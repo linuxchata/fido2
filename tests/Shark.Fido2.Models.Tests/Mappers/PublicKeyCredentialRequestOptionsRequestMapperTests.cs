@@ -23,7 +23,7 @@ public class PublicKeyCredentialRequestOptionsRequestMapperTests
 
         // Assert
         Assert.That(result, Is.Not.Null);
-        Assert.That(result.Username, Is.EqualTo(request.Username));
+        Assert.That(result.UserName, Is.EqualTo(request.Username));
         Assert.That(result.UserVerification, Is.EqualTo(UserVerificationRequirement.Required));
     }
 
@@ -42,7 +42,7 @@ public class PublicKeyCredentialRequestOptionsRequestMapperTests
 
         // Assert
         Assert.That(result, Is.Not.Null);
-        Assert.That(result.Username, Is.EqualTo(request.Username));
+        Assert.That(result.UserName, Is.EqualTo(request.Username));
         Assert.That(result.UserVerification, Is.Null);
     }
 }

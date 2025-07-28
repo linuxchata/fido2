@@ -12,7 +12,7 @@ public static class PublicKeyCredentialRequestOptionsRequestMapper
     {
         return new PublicKeyCredentialRequestOptionsRequest
         {
-            Username = request.Username,
+            UserName = request.Username,
             UserVerification = request.UserVerification.ToNullableEnum<UserVerificationRequirement>(),
         };
     }

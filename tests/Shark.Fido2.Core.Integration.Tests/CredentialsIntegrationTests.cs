@@ -126,7 +126,7 @@ internal class CredentialsIntegrationTests
 
         var request = new PublicKeyCredentialRequestOptionsRequest
         {
-            Username = "UserName",
+            UserName = "UserName",
             UserVerification = UserVerificationRequirement.Required,
         };
 

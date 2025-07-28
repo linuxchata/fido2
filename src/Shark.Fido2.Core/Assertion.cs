@@ -46,12 +46,12 @@ public sealed class Assertion : IAssertion
     {
         _assertionParametersValidator.Validate(request);
 
-        var username = request.Username?.Trim();
+        var userName = request.UserName?.Trim();
 
         List<CredentialDescriptor>? credentials = null;
-        if (!string.IsNullOrWhiteSpace(username))
+        if (!string.IsNullOrWhiteSpace(userName))
         {
-            credentials = await _credentialRepository.Get(username, cancellationToken);
+            credentials = await _credentialRepository.Get(userName, cancellationToken);
         }
 
         var appId = _configuration.AppId;
@@ -68,7 +68,7 @@ public sealed class Assertion : IAssertion
                     Transports = c.Transports?.Select(t => t.ToEnum<AuthenticatorTransport>()).ToArray() ?? [],
                 })
                 .ToArray(),
-            Username = username,
+            Username = userName,
             UserVerification = request.UserVerification ?? UserVerificationRequirement.Preferred,
             Extensions = new AuthenticationExtensionsClientInputs
             {

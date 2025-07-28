@@ -150,7 +150,7 @@ public class AssertionTests
         // Arrange
         var request = new PublicKeyCredentialRequestOptionsRequest
         {
-            Username = username,
+            UserName = username,
             UserVerification = UserVerificationRequirement.Required,
         };
 
@@ -173,7 +173,7 @@ public class AssertionTests
         // Arrange
         var request = new PublicKeyCredentialRequestOptionsRequest
         {
-            Username = UserName,
+            UserName = UserName,
             UserVerification = UserVerificationRequirement.Required,
         };
 
@@ -210,7 +210,7 @@ public class AssertionTests
         // Arrange
         var request = new PublicKeyCredentialRequestOptionsRequest
         {
-            Username = UserName,
+            UserName = UserName,
             UserVerification = null,
         };
 
