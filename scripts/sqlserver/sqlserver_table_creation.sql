@@ -2,7 +2,7 @@ CREATE TABLE [Credential] (
     [CredentialId] VARBINARY(255) NOT NULL,
     [UserHandle] VARBINARY(64) NOT NULL,
     [UserName] NVARCHAR(64) NOT NULL,
-    [UserDisplayName] NVARCHAR(256) NOT NULL,
+    [UserDisplayName] NVARCHAR(64) NOT NULL,
     [CredentialPublicKeyJson] NVARCHAR(2048) NOT NULL,
     [SignCount] BIGINT NOT NULL,
     [Transports] NVARCHAR(50) NULL,
