@@ -56,6 +56,20 @@ public class AssertionParametersValidatorTests
     }
 
     [Test]
+    public void Validate_WhenUserNameIsLongerThanAllowedLength_ThenThrowsArgumentException()
+    {
+        // Arrange
+        var request = new PublicKeyCredentialRequestOptionsRequest
+        {
+            UserName = new string('*', 257),
+            UserVerification = UserVerificationRequirement.Preferred,
+        };
+
+        // Act & Assert
+        Assert.Throws<ArgumentException>(() => _sut.Validate(request));
+    }
+
+    [Test]
     public void Validate_WhenPublicKeyCredentialAssertionIsNull_ThenThrowsArgumentNullException()
     {
         // Arrange

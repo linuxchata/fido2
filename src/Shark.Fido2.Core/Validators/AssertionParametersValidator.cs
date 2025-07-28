@@ -11,6 +11,11 @@ public sealed class AssertionParametersValidator : IAssertionParametersValidator
     public void Validate(PublicKeyCredentialRequestOptionsRequest request)
     {
         ArgumentNullException.ThrowIfNull(request);
+
+        if (!string.IsNullOrWhiteSpace(request.UserName) && request.UserName.Length > 256)
+        {
+            throw new ArgumentException("Username cannot be more than 256 characters", nameof(request));
+        }
     }
 
     public AssertionCompleteResult Validate(

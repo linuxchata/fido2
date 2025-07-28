@@ -13,6 +13,16 @@ public sealed class AttestationParametersValidator : IAttestationParametersValid
         ArgumentNullException.ThrowIfNull(request);
         ArgumentNullException.ThrowIfNullOrWhiteSpace(request.UserName);
         ArgumentNullException.ThrowIfNullOrWhiteSpace(request.DisplayName);
+
+        if (request.UserName.Length > 256)
+        {
+            throw new ArgumentException("Username cannot be more than 256 characters", nameof(request));
+        }
+
+        if (request.DisplayName.Length > 64)
+        {
+            throw new ArgumentException("Display name be more than 64 characters", nameof(request));
+        }
     }
 
     public AttestationCompleteResult Validate(
