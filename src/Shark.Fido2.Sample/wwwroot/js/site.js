@@ -57,10 +57,6 @@
     });
 });
 
-function isRegister(actionType) {
-    return actionType === "register";
-}
-
 function isValidInput(value) {
     return value && value.trim().length > 0;
 }
