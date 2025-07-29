@@ -1,8 +1,8 @@
-﻿// Registration
+﻿// Registration of a public key credential using the Web Authentication API
 
 const registrationTitle = 'Web Authentication';
 
-async function requestCreateCredentialOptions(optionsRequest) {
+async function registration(optionsRequest) {
     console.log("Start fetching attestation options");
 
     const options = await fetchAttestationOptions(optionsRequest);
@@ -131,4 +131,4 @@ async function fetchAttestationResult(credentials) {
     }
 }
 
-window.requestCreateCredentialOptions = requestCreateCredentialOptions;
+window.registration = registration;
