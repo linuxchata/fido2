@@ -1,19 +1,8 @@
-﻿// Registration of non-discoverable credentials
+﻿// Registration
 
 const registrationTitle = 'Web Authentication';
 
-async function requestCreateCredentialOptions(username, displayName) {
-    const optionsRequest = {
-        username: username,
-        displayName: displayName,
-        attestation: 'direct',
-        authenticatorSelection: {
-            residentKey: 'preferred',
-            userVerification: 'preferred',
-            requireResidentKey: false
-        }
-    };
-
+async function requestCreateCredentialOptions(optionsRequest) {
     console.log("Start fetching attestation options");
 
     const options = await fetchAttestationOptions(optionsRequest);

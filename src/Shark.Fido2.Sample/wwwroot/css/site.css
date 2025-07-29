@@ -98,6 +98,7 @@ input:-webkit-autofill {
 
     .form-select:disabled {
         opacity: .45 !important;
+        background-color: #fff;
     }
 
 .input-text {

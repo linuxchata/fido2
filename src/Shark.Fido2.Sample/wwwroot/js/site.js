@@ -24,12 +24,64 @@
         const previousText = button.innerHTML;
         disableButton(button);
 
-        requestCreateCredentialOptions(username, displayName)
-            .finally(() => {
-                usernameInput.prop("readonly", false);
-                displayNameInput.prop("readonly", false);
-                enableButton(button, previousText);
-            });
+        const pageValue = $('[data-page]').data('page');
+        if (pageValue === 'non-discoverable-credentials') {
+            const optionsRequest = {
+                username: username,
+                displayName: displayName,
+                attestation: 'direct',
+                authenticatorSelection: {
+                    residentKey: 'preferred',
+                    userVerification: 'preferred',
+                    requireResidentKey: false
+                }
+            };
+
+            requestCreateCredentialOptions(optionsRequest)
+                .finally(() => {
+                    usernameInput.prop("readonly", false);
+                    displayNameInput.prop("readonly", false);
+                    enableButton(button, previousText);
+                });
+        }
+        else if (pageValue === 'custom-credentials') {
+            const userVerificationSelect = $("#user-verification-register");
+            const attachmentSelect = $("#attachment-register");
+            const residentKeySelect = $("#resident-key-register");
+            const attestationSelect = $("#attestation-register");
+            const userVerification = userVerificationSelect.val();
+            const attachment = attachmentSelect.val();
+            const residentKey = residentKeySelect.val();
+            const attestation = attestationSelect.val();
+
+            userVerificationSelect.prop("disabled", true);
+            attachmentSelect.prop("disabled", true);
+            residentKeySelect.prop("disabled", true);
+            attestationSelect.prop("disabled", true);
+
+            const optionsRequest = {
+                username: username,
+                displayName: displayName,
+                attestation: attestation,
+                authenticatorSelection: {
+                    residentKey: residentKey,
+                    userVerification: userVerification,
+                    requireResidentKey: residentKey === 'required',
+                    authenticatorAttachment: attachment || null
+                }
+            };
+
+            requestCreateCredentialOptions(optionsRequest)
+                .finally(() => {
+                    usernameInput.prop("readonly", false);
+                    displayNameInput.prop("readonly", false);
+                    userVerificationSelect.prop("disabled", false);
+                    attachmentSelect.prop("disabled", false);
+                    residentKeySelect.prop("disabled", false);
+                    attestationSelect.prop("disabled", false);
+                    enableButton(button, previousText);
+                });
+        }
     });
 
     $("#authenticate").on("click", function (event) {
@@ -49,11 +101,36 @@
         const previousText = button.innerHTML;
         disableButton(button);
 
-        requestVerifyCredentialOptions(username)
-            .finally(() => {
-                usernameInput.prop("readonly", false);
-                enableButton(button, previousText);
-            });
+        const pageValue = $('[data-page]').data('page');
+        if (pageValue === 'non-discoverable-credentials') {
+            const optionsRequest = {
+                username: username
+            };
+
+            requestVerifyCredentialOptions(optionsRequest)
+                .finally(() => {
+                    usernameInput.prop("readonly", false);
+                    enableButton(button, previousText);
+                });
+        }
+        else if (pageValue === 'custom-credentials') {
+            const userVerificationSelect = $("#user-verification-authenticate");
+            const userVerification = userVerificationSelect.val();
+
+            userVerificationSelect.prop("disabled", true);
+
+            const optionsRequest = {
+                username: username,
+                userVerification: userVerification
+            };
+
+            requestVerifyCredentialOptions(optionsRequest)
+                .finally(() => {
+                    usernameInput.prop("readonly", false);
+                    userVerificationSelect.prop("disabled", false);
+                    enableButton(button, previousText);
+                });
+        }
     });
 });
 

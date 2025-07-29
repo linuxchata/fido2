@@ -1,12 +1,8 @@
-﻿// Authentication with non-discoverable credentials
+﻿// Authentication
 
 const authenticationTitle = 'Web Authentication';
 
-async function requestVerifyCredentialOptions(username) {
-    const optionsRequest = {
-        username: username
-    };
-
+async function requestVerifyCredentialOptions(optionsRequest) {
     console.log("Start fetching assertion options");
 
     const options = await fetchAssertionOptions(optionsRequest);
