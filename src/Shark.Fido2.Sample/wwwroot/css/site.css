@@ -5,19 +5,18 @@
     --color-footer-bg: #111827;
     --color-footer-text: #fff;
     --border-radius: 0.375rem;
-    --font-size-sm:  1rem;
+    --font-size-sm: 1rem;
     --box-shadow-btn-hover: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 html {
-    font-size: 14px;
     position: relative;
     min-height: 100%;
 }
 
 @media (min-width: 768px) {
     html {
-        font-size: 16px;
+        font-size: var(--font-size-sm);
     }
 }
 
@@ -87,24 +86,29 @@ input:-webkit-autofill {
     opacity: .45 !important;
 }
 
+.form-label {
+    font-size: var(--font-size-sm);
+}
+
 .form-select {
+    width: 99%;
     padding: 12px;
-    font-size: 16px;
+    font-size: var(--font-size-sm);
 }
 
-.form-select:focus {
-    outline: none;
-    box-shadow: none;
-    border-color: #6366f1;
-}
+    .form-select:focus {
+        outline: none;
+        box-shadow: none;
+        border-color: #6366f1;
+    }
 
-.form-select:disabled {
-    opacity: .45 !important;
-}
+    .form-select:disabled {
+        opacity: .45 !important;
+    }
 
 .input-text {
     padding: 12px;
-    font-size: 16px;
+    font-size: var(--font-size-sm);
     background-color: #fff !important;
     background-clip: padding-box;
     transition: all 0.3s ease;
@@ -153,7 +157,7 @@ input:-webkit-autofill {
 .button {
     flex-grow: 1;
     padding: 12px 24px;
-    font-size: 16px;
+    font-size: var(--font-size-sm);
 }
 
 .notyf {
