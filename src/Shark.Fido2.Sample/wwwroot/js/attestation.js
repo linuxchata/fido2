@@ -2,7 +2,22 @@
 
 const registrationTitle = 'Web Authentication';
 
-async function registration(optionsRequest) {
+async function registration(username, displayName) {
+    var optionsRequest = {
+        username: username,
+        displayName: displayName,
+        attestation: 'direct',
+        authenticatorSelection: {
+            residentKey: 'preferred',
+            userVerification: 'preferred',
+            requireResidentKey: false
+        }
+    };
+
+    await registrationCustom(optionsRequest);
+}
+
+async function registrationCustom(optionsRequest) {
     console.log("Start fetching attestation options");
 
     const options = await fetchAttestationOptions(optionsRequest);
@@ -132,3 +147,4 @@ async function fetchAttestationResult(credentials) {
 }
 
 window.registration = registration;
+window.registrationCustom = registrationCustom;

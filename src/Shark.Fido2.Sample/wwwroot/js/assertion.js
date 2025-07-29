@@ -2,7 +2,13 @@
 
 const authenticationTitle = 'Web Authentication';
 
-async function authentication(optionsRequest) {
+async function authentication(username, displayName) {
+    var optionsRequest = { username };
+
+    await authenticationCustom(optionsRequest);
+}
+
+async function authenticationCustom(optionsRequest) {
     console.log("Start fetching assertion options");
 
     const options = await fetchAssertionOptions(optionsRequest);
@@ -114,3 +120,4 @@ async function fetchAssertionResult(credentials) {
 }
 
 window.authentication = authentication;
+window.authenticationCustom = authenticationCustom;
