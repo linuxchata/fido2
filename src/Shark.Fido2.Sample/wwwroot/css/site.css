@@ -37,20 +37,22 @@ input:-webkit-autofill {
     transition: background-color 5000s ease-in-out 0s;
 }
 
-.btn-primary {
-    font-weight: 500;
-    background-color: var(--color-primary);
-    color: var(--color-light);
+.navbar {
+    background-color: var(--color-background);
 }
 
-    .btn-primary:hover {
-        background-color: var(--color-primary-hover);
-        box-shadow: var(--box-shadow-btn-hover);
-    }
+.navbar-toggler {
+    border: none;
+    padding: 0 0.75rem 0 0;
+    font-size: 1rem;
+    outline: none !important;
+    box-shadow: none !important;
+}
 
-    .btn-primary:disabled {
-        opacity: .45;
-    }
+.banner {
+    font-weight: 500;
+    color: var(--color-link);
+}
 
 .main {
     display: flex;
@@ -95,6 +97,38 @@ input:-webkit-autofill {
     -webkit-appearance: none;
     -moz-appearance: none;
 }
+
+.btn-primary {
+    font-weight: 500;
+    background-color: var(--color-primary);
+    color: var(--color-light);
+}
+
+    .btn-primary:hover {
+        background-color: var(--color-primary-hover);
+        box-shadow: var(--box-shadow-btn-hover);
+    }
+
+    .btn-primary:disabled {
+        opacity: .45;
+    }
+
+.btn-github {
+    color: var(--color-link);
+    border-radius: var(--border-radius);
+    display: inline-flex;
+    align-items: center;
+    padding: .5rem 0;
+}
+
+    /* Remove the browser's default focus outline */
+    .btn-github:hover,
+    .btn-github:focus,
+    .btn-github:active,
+    .btn-github:visited {
+        outline: none !important;
+        box-shadow: none !important;
+    }
 
 .button-container {
     display: flex;

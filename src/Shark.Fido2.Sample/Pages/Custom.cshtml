@@ -1,0 +1,79 @@
+@page
+@using Shark.Fido2.Sample.Pages
+@model CustomModel
+
+<div class="main">
+    <h1 class="display-4 mb-4 text-center">Custom Configuration</h1>
+
+    <div class="main-controls-container">
+        <div id="register-container" class="section p-4 border rounded">
+            <h3 class="mb-3">Registration</h3>
+            <input id="username-register" type="text" class="form-control mb-3 input-text" maxlength="64" placeholder="Enter username" />
+            <input id="display-name-register" type="text" class="form-control mb-3 input-text" maxlength="64" placeholder="Enter display name" />
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="user-verification-register" class="form-label">User Verification</label>
+                    <select id="user-verification-register" class="form-select">
+                        <option value="required">Required</option>
+                        <option value="preferred" selected>Preferred</option>
+                        <option value="discouraged">Discouraged</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="attachment-register" class="form-label">Attachment</label>
+                    <select id="attachment-register" class="form-select">
+                        <option value="" selected>Any</option>
+                        <option value="platform">Platform</option>
+                        <option value="cross-platform">Cross-Platform</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="resident-key-register" class="form-label">Discoverable Credential</label>
+                    <select id="resident-key-register" class="form-select">
+                        <option value="preferred" selected>Preferred</option>
+                        <option value="required">Required</option>
+                        <option value="discouraged">Discouraged</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="attestation-register" class="form-label">Attestation</label>
+                    <select id="attestation-register" class="form-select">
+                        <option value="none">None</option>
+                        <option value="indirect">Indirect</option>
+                        <option value="direct" selected>Direct</option>
+                        <option value="enterprise">Enterprise</option>
+                    </select>
+                </div>
+            </div>
+
+            <span id="message-register" class="d-block mt-2 mb-2 text-danger"></span>
+            <div class="button-container">
+                <button id="register" data-action="register" class="button btn btn-primary">Register</button>
+            </div>
+        </div>
+        <div id="authenticate-container" class="section p-4 border rounded">
+            <h3 class="mb-3">Authentication</h3>
+            <input id="username-authenticate" type="text" class="form-control mb-3 input-text" maxlength="64" placeholder="Enter username" />
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="user-verification-authenticate" class="form-label">User Verification</label>
+                    <select id="user-verification-authenticate" class="form-select">
+                        <option value="required">Required</option>
+                        <option value="preferred" selected>Preferred</option>
+                        <option value="discouraged">Discouraged</option>
+                    </select>
+                </div>
+            </div>
+
+            <span id="message-authenticate" class="d-block mt-2 mb-2 text-danger"></span>
+            <div class="button-container">
+                <button id="authenticate" data-action="authenticate" class="button btn btn-primary">Authenticate</button>
+            </div>
+        </div>
+    </div>
+</div>
