@@ -3,7 +3,7 @@
 const registrationTitle = 'Web Authentication';
 
 async function registration(username, displayName) {
-    var optionsRequest = {
+    const optionsRequest = {
         username: username,
         displayName: displayName,
         attestation: 'direct',

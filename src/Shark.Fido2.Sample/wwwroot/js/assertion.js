@@ -3,7 +3,7 @@
 const authenticationTitle = 'Web Authentication';
 
 async function authentication(username, displayName) {
-    var optionsRequest = { username };
+    const optionsRequest = { username };
 
     await authenticationCustom(optionsRequest);
 }
