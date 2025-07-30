@@ -1,0 +1,82 @@
+@page
+@using Shark.Fido2.Sample.Pages
+@model CustomModel
+
+<div class="main">
+    <h1 class="display-4 mb-4 text-center">Custom</h1>
+
+    <div class="main-controls-container">
+        <div id="registration-container" class="section p-4 border rounded">
+            <h3 class="mb-3">Registration</h3>
+            <label for="username-registration" class="form-label">Username</label>
+            <input id="username-registration" type="text" class="form-control mb-3 input-text" maxlength="64" placeholder="Enter username" />
+            <label for="display-name-registration" class="form-label">Display Name</label>
+            <input id="display-name-registration" type="text" class="form-control mb-3 input-text" maxlength="64" placeholder="Enter display name" />
+
+            <div class="row g-3 mb-3">
+                <div class="col-12 col-md-6">
+                    <label for="user-verification-registration" class="form-label">User Verification</label>
+                    <select id="user-verification-registration" class="form-select">
+                        <option value="required">Required</option>
+                        <option value="preferred" selected>Preferred</option>
+                        <option value="discouraged">Discouraged</option>
+                    </select>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label for="attachment-registration" class="form-label">Attachment</label>
+                    <select id="attachment-registration" class="form-select">
+                        <option value="" selected>Any</option>
+                        <option value="platform">Platform</option>
+                        <option value="cross-platform">Cross-Platform</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row g-3 mb-3">
+                <div class="col-12 col-md-6">
+                    <label for="resident-key-registration" class="form-label">Discoverable Credential</label>
+                    <select id="resident-key-registration" class="form-select">
+                        <option value="preferred" selected>Preferred</option>
+                        <option value="required">Required</option>
+                        <option value="discouraged">Discouraged</option>
+                    </select>
+                </div>
+                <div class="col-12 col-md-6">
+                    <label for="attestation-regiregistrationster" class="form-label">Attestation</label>
+                    <select id="attestation-registration" class="form-select">
+                        <option value="none">None</option>
+                        <option value="indirect">Indirect</option>
+                        <option value="direct" selected>Direct</option>
+                        <option value="enterprise">Enterprise</option>
+                    </select>
+                </div>
+            </div>
+
+            <span id="error-message-registration" class="d-block mt-2 mb-2 text-danger"></span>
+            <div class="button-container">
+                <button id="registration-custom" data-action="registration" class="button btn btn-primary">Register</button>
+            </div>
+        </div>
+        <div id="authentication-container" class="section p-4 border rounded">
+            <h3 class="mb-3">Authentication</h3>
+            <label for="username-authentication" class="form-label">Username</label>
+            <input id="username-authentication" type="text" class="form-control mb-3 input-text" maxlength="64" placeholder="Enter username" />
+
+            <div class="row g-3 mb-3">
+                <div class="col-12 col-md-6">
+                    <label for="user-verification-authentication" class="form-label">User Verification</label>
+                    <select id="user-verification-authentication" class="form-select">
+                        <option value="required">Required</option>
+                        <option value="preferred" selected>Preferred</option>
+                        <option value="discouraged">Discouraged</option>
+                    </select>
+                </div>
+            </div>
+
+            <span id="error-message-authentication" class="d-block mt-2 mb-2 text-danger"></span>
+            <div class="button-container">
+                <button id="authentication-custom" data-action="authentication" class="button btn btn-primary">Authenticate</button>
+            </div>
+        </div>
+    </div>
+</div>

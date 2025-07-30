@@ -1,12 +1,14 @@
-﻿// Authentication with non-discoverable credentials
+﻿// Authentication with a public key credential using the Web Authentication API
 
 const authenticationTitle = 'Web Authentication';
 
-async function requestVerifyCredentialOptions(username) {
-    const optionsRequest = {
-        username: username
-    };
+async function authentication(username, displayName) {
+    const optionsRequest = { username };
 
+    await authenticationCustom(optionsRequest);
+}
+
+async function authenticationCustom(optionsRequest) {
     console.log("Start fetching assertion options");
 
     const options = await fetchAssertionOptions(optionsRequest);
@@ -117,4 +119,5 @@ async function fetchAssertionResult(credentials) {
     }
 }
 
-window.requestVerifyCredentialOptions = requestVerifyCredentialOptions;
+window.authentication = authentication;
+window.authenticationCustom = authenticationCustom;

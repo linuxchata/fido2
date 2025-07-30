@@ -1,8 +1,9 @@
 ﻿$(function () {
-    $("#register").on("click", function (event) {
-        const usernameInput = $("#username-register");
-        const displayNameInput = $("#display-name-register");
-        const messageSpan = $("#message-register");
+    $("#registration").on("click", function (event) {
+        const usernameInput = $("#username-registration");
+        const displayNameInput = $("#display-name-registration");
+        const messageSpan = $("#message-registration");
+
         const username = usernameInput.val();
         const displayName = displayNameInput.val();
 
@@ -24,7 +25,7 @@
         const previousText = button.innerHTML;
         disableButton(button);
 
-        requestCreateCredentialOptions(username, displayName)
+        registration(username, displayName)
             .finally(() => {
                 usernameInput.prop("readonly", false);
                 displayNameInput.prop("readonly", false);
@@ -32,9 +33,9 @@
             });
     });
 
-    $("#authenticate").on("click", function (event) {
-        const usernameInput = $("#username-authenticate");
-        const messageSpan = $("#message-authenticate");
+    $("#authentication").on("click", function (event) {
+        const usernameInput = $("#username-authentication");
+        const messageSpan = $("#message-authentication");
         const username = usernameInput.val();
 
         if (!isValidInput(username)) {
@@ -49,17 +50,13 @@
         const previousText = button.innerHTML;
         disableButton(button);
 
-        requestVerifyCredentialOptions(username)
+        authentication(username)
             .finally(() => {
                 usernameInput.prop("readonly", false);
                 enableButton(button, previousText);
             });
     });
 });
-
-function isRegister(actionType) {
-    return actionType === "register";
-}
 
 function isValidInput(value) {
     return value && value.trim().length > 0;

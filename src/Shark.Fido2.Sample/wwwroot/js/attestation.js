@@ -1,8 +1,8 @@
-﻿// Registration of non-discoverable credentials
+﻿// Registration of a public key credential using the Web Authentication API
 
 const registrationTitle = 'Web Authentication';
 
-async function requestCreateCredentialOptions(username, displayName) {
+async function registration(username, displayName) {
     const optionsRequest = {
         username: username,
         displayName: displayName,
@@ -14,6 +14,10 @@ async function requestCreateCredentialOptions(username, displayName) {
         }
     };
 
+    await registrationCustom(optionsRequest);
+}
+
+async function registrationCustom(optionsRequest) {
     console.log("Start fetching attestation options");
 
     const options = await fetchAttestationOptions(optionsRequest);
@@ -142,4 +146,5 @@ async function fetchAttestationResult(credentials) {
     }
 }
 
-window.requestCreateCredentialOptions = requestCreateCredentialOptions;
+window.registration = registration;
+window.registrationCustom = registrationCustom;

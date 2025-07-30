@@ -5,20 +5,13 @@
     --color-footer-bg: #111827;
     --color-footer-text: #fff;
     --border-radius: 0.375rem;
-    --font-size-sm:  1rem;
+    --font-size-sm: 1rem;
     --box-shadow-btn-hover: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 html {
-    font-size: 14px;
     position: relative;
     min-height: 100%;
-}
-
-@media (min-width: 768px) {
-    html {
-        font-size: 16px;
-    }
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
@@ -37,20 +30,22 @@ input:-webkit-autofill {
     transition: background-color 5000s ease-in-out 0s;
 }
 
-.btn-primary {
-    font-weight: 500;
-    background-color: var(--color-primary);
-    color: var(--color-light);
+.navbar {
+    background-color: var(--color-background);
 }
 
-    .btn-primary:hover {
-        background-color: var(--color-primary-hover);
-        box-shadow: var(--box-shadow-btn-hover);
-    }
+.navbar-toggler {
+    border: none;
+    padding: 0 0.75rem 0 0;
+    font-size: 1rem;
+    outline: none !important;
+    box-shadow: none !important;
+}
 
-    .btn-primary:disabled {
-        opacity: .45;
-    }
+.banner {
+    font-weight: 500;
+    color: var(--color-link);
+}
 
 .main {
     display: flex;
@@ -85,9 +80,30 @@ input:-webkit-autofill {
     opacity: .45 !important;
 }
 
+.form-label {
+    font-size: var(--font-size-sm);
+}
+
+.form-select {
+    width: 99%;
+    padding: 12px;
+    font-size: var(--font-size-sm);
+}
+
+    .form-select:focus {
+        outline: none;
+        box-shadow: none;
+        border-color: #6366f1;
+    }
+
+    .form-select:disabled {
+        opacity: .45 !important;
+        background-color: #fff;
+    }
+
 .input-text {
     padding: 12px;
-    font-size: 16px;
+    font-size: var(--font-size-sm);
     background-color: #fff !important;
     background-clip: padding-box;
     transition: all 0.3s ease;
@@ -95,6 +111,38 @@ input:-webkit-autofill {
     -webkit-appearance: none;
     -moz-appearance: none;
 }
+
+.btn-primary {
+    font-weight: 500;
+    background-color: var(--color-primary);
+    color: var(--color-light);
+}
+
+    .btn-primary:hover {
+        background-color: var(--color-primary-hover);
+        box-shadow: var(--box-shadow-btn-hover);
+    }
+
+    .btn-primary:disabled {
+        opacity: .45;
+    }
+
+.btn-github {
+    color: var(--color-link);
+    border-radius: var(--border-radius);
+    display: inline-flex;
+    align-items: center;
+    padding: .5rem 0;
+}
+
+    /* Remove the browser's default focus outline */
+    .btn-github:hover,
+    .btn-github:focus,
+    .btn-github:active,
+    .btn-github:visited {
+        outline: none !important;
+        box-shadow: none !important;
+    }
 
 .button-container {
     display: flex;
@@ -104,7 +152,7 @@ input:-webkit-autofill {
 .button {
     flex-grow: 1;
     padding: 12px 24px;
-    font-size: 16px;
+    font-size: var(--font-size-sm);
 }
 
 .notyf {
@@ -133,6 +181,14 @@ input:-webkit-autofill {
     }
 
 @media (max-width: 768px) {
+    html {
+        font-size: var(--font-size-sm);
+    }
+
+    .main {
+        padding: 0 1rem;
+    }
+
     .main-controls-container {
         flex-direction: column;
         gap: 10px;
