@@ -40,7 +40,7 @@ internal class CredentialsIntegrationTests
     }
 
     [Test]
-    public async Task CreateOptions_WhenPackedWindowsHelloAttestation_ThenReturnsSuccess()
+    public async Task BeginRegistration_WhenPackedWindowsHelloAttestation_ThenReturnsSuccess()
     {
         // Arrange
         var attestation = _serviceProvider.GetRequiredService<IAttestation>();
@@ -60,7 +60,7 @@ internal class CredentialsIntegrationTests
         };
 
         // Act
-        var result = await attestation.CreateOptions(request, CancellationToken.None);
+        var result = await attestation.BeginRegistration(request, CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -81,7 +81,7 @@ internal class CredentialsIntegrationTests
     }
 
     [Test]
-    public async Task Complete_WhenPackedWindowsHelloAttestation_ThenReturnsSuccess()
+    public async Task CompleteRegistration_WhenPackedWindowsHelloAttestation_ThenReturnsSuccess()
     {
         // Arrange
         var attestation = _serviceProvider.GetRequiredService<IAttestation>();
@@ -90,7 +90,7 @@ internal class CredentialsIntegrationTests
         var creationOptions = DataReader.ReadCreationOptions(PackedWindowsHelloCreationOptions);
 
         // Act
-        var result = await attestation.Complete(attestationData, creationOptions, CancellationToken.None);
+        var result = await attestation.CompleteRegistration(attestationData, creationOptions, CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -99,7 +99,7 @@ internal class CredentialsIntegrationTests
     }
 
     [Test]
-    public async Task Complete_WhenPackedWindowsHelloAttestationUsedTwice_ThenReturnsFailure()
+    public async Task CompleteRegistration_WhenPackedWindowsHelloAttestationUsedTwice_ThenReturnsFailure()
     {
         // Arrange
         var attestation = _serviceProvider.GetRequiredService<IAttestation>();
@@ -107,10 +107,10 @@ internal class CredentialsIntegrationTests
         var attestationData = DataReader.ReadAttestationData(PackedWindowsHelloAttestation);
         var creationOptions = DataReader.ReadCreationOptions(PackedWindowsHelloCreationOptions);
 
-        await attestation.Complete(attestationData, creationOptions, CancellationToken.None);
+        await attestation.CompleteRegistration(attestationData, creationOptions, CancellationToken.None);
 
         // Act
-        var result = await attestation.Complete(attestationData, creationOptions, CancellationToken.None);
+        var result = await attestation.CompleteRegistration(attestationData, creationOptions, CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -119,7 +119,7 @@ internal class CredentialsIntegrationTests
     }
 
     [Test]
-    public async Task RequestOptions_WhenPackedWindowsHelloAssertion_ThenReturnsSuccess()
+    public async Task BeginAuthentication_WhenPackedWindowsHelloAssertion_ThenReturnsSuccess()
     {
         // Arrange
         var assertion = _serviceProvider.GetRequiredService<IAssertion>();
@@ -131,7 +131,7 @@ internal class CredentialsIntegrationTests
         };
 
         // Act
-        var result = await assertion.RequestOptions(request, CancellationToken.None);
+        var result = await assertion.BeginAuthentication(request, CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -150,7 +150,7 @@ internal class CredentialsIntegrationTests
     }
 
     [Test]
-    public async Task Complete_WhenPackedWindowsHelloAssertion_ThenReturnsSuccess()
+    public async Task CompleteAuthentication_WhenPackedWindowsHelloAssertion_ThenReturnsSuccess()
     {
         // Arrange
         var assertion = _serviceProvider.GetRequiredService<IAssertion>();
@@ -158,13 +158,13 @@ internal class CredentialsIntegrationTests
 
         var attestationData = DataReader.ReadAttestationData(PackedWindowsHelloAttestation);
         var creationOptions = DataReader.ReadCreationOptions(PackedWindowsHelloCreationOptions);
-        await attestation.Complete(attestationData, creationOptions, CancellationToken.None);
+        await attestation.CompleteRegistration(attestationData, creationOptions, CancellationToken.None);
 
         var assertionData = DataReader.ReadAssertionData(PackedWindowsHelloAssertion);
         var requestOptions = DataReader.ReadRequestOptions(PackedWindowsHelloRequestOptions);
 
         // Act
-        var result = await assertion.Complete(assertionData, requestOptions, CancellationToken.None);
+        var result = await assertion.CompleteAuthentication(assertionData, requestOptions, CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -173,7 +173,7 @@ internal class CredentialsIntegrationTests
     }
 
     [Test]
-    public async Task Complete_WhenPackedWindowsHelloAssertionUsedTwice_ThenReturnsFailure()
+    public async Task CompleteAuthentication_WhenPackedWindowsHelloAssertionUsedTwice_ThenReturnsFailure()
     {
         // Arrange
         var assertion = _serviceProvider.GetRequiredService<IAssertion>();
@@ -181,15 +181,15 @@ internal class CredentialsIntegrationTests
 
         var attestationData = DataReader.ReadAttestationData(PackedWindowsHelloAttestation);
         var creationOptions = DataReader.ReadCreationOptions(PackedWindowsHelloCreationOptions);
-        await attestation.Complete(attestationData, creationOptions, CancellationToken.None);
+        await attestation.CompleteRegistration(attestationData, creationOptions, CancellationToken.None);
 
         var assertionData = DataReader.ReadAssertionData(PackedWindowsHelloAssertion);
         var requestOptions = DataReader.ReadRequestOptions(PackedWindowsHelloRequestOptions);
 
-        await assertion.Complete(assertionData, requestOptions, CancellationToken.None);
+        await assertion.CompleteAuthentication(assertionData, requestOptions, CancellationToken.None);
 
         // Act
-        var result = await assertion.Complete(assertionData, requestOptions, CancellationToken.None);
+        var result = await assertion.CompleteAuthentication(assertionData, requestOptions, CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
