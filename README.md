@@ -1,5 +1,5 @@
 # Overview
-This repository provides a server-side implementation of the WebAuthn standard that enables secure passwordless and multi-factor authentication (MFA) for web applications. It supports key WebAuthn operations – credential registration and authentication – ensuring compliance with the [WebAuthn Level 2 specification](https://www.w3.org/TR/webauthn-2/) (Web Authentication: An API for accessing Public Key Credentials Level 2).
+This repository provides a server-side implementation of the WebAuthn standard, enabling secure passwordless and multi-factor authentication (MFA) for web applications. It supports key WebAuthn operations – credential registration and authentication – ensuring compliance with the [WebAuthn Level 2 specification](https://www.w3.org/TR/webauthn-2/) (Web Authentication: An API for accessing Public Key Credentials Level 2).
 
 ## Supported Features
 - **Attestation flow** for credentials registration
@@ -73,52 +73,52 @@ Example `appsettings.json` file: [appsettings.Production.json](https://github.co
 
 ### Attestation (registration)
 Attestation controller
-1. Get create options.
+1. Begin registration by retrieving create options.
 ```csharp
 [HttpPost("options")]
 public async Task<IActionResult> Options(ServerPublicKeyCredentialCreationOptionsRequest request, CancellationToken cancellationToken)
 {
-    var createOptions = await _attestation.CreateOptions(request.Map(), cancellationToken);
+    var createOptions = await _attestation.BeginRegistration(request.Map(), cancellationToken);
     var response = createOptions.Map();
     HttpContext.Session.SetString("CreateOptions", JsonSerializer.Serialize(createOptions));
     return Ok(response);
 }
 ```
 
-2. Create credential.
+2. Complete registration to create credential.
 ```csharp
 [HttpPost("result")]
 public async Task<IActionResult> Result(ServerPublicKeyCredentialAttestation request, CancellationToken cancellationToken)
 {
     var createOptionsString = HttpContext.Session.GetString("CreateOptions");
     var createOptions = JsonSerializer.Deserialize<PublicKeyCredentialCreationOptions>(createOptionsString!);
-    await _attestation.Complete(request.Map(), createOptions!, cancellationToken);
+    await _attestation.CompleteRegistration(request.Map(), createOptions!, cancellationToken);
     return Ok(ServerResponse.Create());
 }
 ```
 
 ### Assertion (authentication)
 Assertion controller
-1. Get request options.
+1. Begin authentication by retrieving request options.
 ```csharp
 [HttpPost("options")]
 public async Task<IActionResult> Options(ServerPublicKeyCredentialGetOptionsRequest request, CancellationToken cancellationToken)
 {
-    var requestOptions = await _assertion.RequestOptions(request.Map(), cancellationToken);
+    var requestOptions = await _assertion.BeginAuthentication(request.Map(), cancellationToken);
     var response = requestOptions.Map();
     HttpContext.Session.SetString("RequestOptions", JsonSerializer.Serialize(requestOptions));
     return Ok(response);
 }
 ```
 
-2. Validate credential.
+2. Complete authentication to validate credential.
 ```csharp
 [HttpPost("result")]
 public async Task<IActionResult> Result(ServerPublicKeyCredentialAssertion request, CancellationToken cancellationToken)
 {
     var requestOptionsString = HttpContext.Session.GetString("RequestOptions");
     var requestOptions = JsonSerializer.Deserialize<PublicKeyCredentialRequestOptions>(requestOptionsString!);
-    await _assertion.Complete(request.Map(), requestOptions!, cancellationToken);
+    await _assertion.CompleteAuthentication(request.Map(), requestOptions!, cancellationToken);
     return Ok(ServerResponse.Create());
 }
 ```
