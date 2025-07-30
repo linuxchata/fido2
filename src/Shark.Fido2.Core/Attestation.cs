@@ -43,7 +43,7 @@ public sealed class Attestation : IAttestation
         _configuration = options.Value;
     }
 
-    public async Task<PublicKeyCredentialCreationOptions> CreateOptions(
+    public async Task<PublicKeyCredentialCreationOptions> BeginRegistration(
         PublicKeyCredentialCreationOptionsRequest request,
         CancellationToken cancellationToken = default)
     {
@@ -102,7 +102,7 @@ public sealed class Attestation : IAttestation
         return credentialCreationOptions;
     }
 
-    public async Task<AttestationCompleteResult> Complete(
+    public async Task<AttestationCompleteResult> CompleteRegistration(
         PublicKeyCredentialAttestation publicKeyCredentialAttestation,
         PublicKeyCredentialCreationOptions creationOptions,
         CancellationToken cancellationToken = default)

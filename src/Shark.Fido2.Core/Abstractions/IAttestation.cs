@@ -15,7 +15,7 @@ public interface IAttestation
     /// <param name="request">The request containing parameters for generating credential creation options.</param>
     /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>Credential creation options to be sent to the client.</returns>
-    Task<PublicKeyCredentialCreationOptions> CreateOptions(
+    Task<PublicKeyCredentialCreationOptions> BeginRegistration(
         PublicKeyCredentialCreationOptionsRequest request,
         CancellationToken cancellationToken = default);
 
@@ -26,7 +26,7 @@ public interface IAttestation
     /// <param name="creationOptions">The original creation options that were sent to the client.</param>
     /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>The result of the attestation verification process.</returns>
-    Task<AttestationCompleteResult> Complete(
+    Task<AttestationCompleteResult> CompleteRegistration(
         PublicKeyCredentialAttestation publicKeyCredentialAttestation,
         PublicKeyCredentialCreationOptions creationOptions,
         CancellationToken cancellationToken = default);

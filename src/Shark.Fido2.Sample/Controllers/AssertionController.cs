@@ -38,7 +38,7 @@ public class AssertionController(IAssertion assertion, ILogger<AssertionControll
         ServerPublicKeyCredentialGetOptionsRequest request,
         CancellationToken cancellationToken)
     {
-        var requestOptions = await _assertion.RequestOptions(request.Map(), cancellationToken);
+        var requestOptions = await _assertion.BeginAuthentication(request.Map(), cancellationToken);
 
         var response = requestOptions.Map();
 
@@ -74,7 +74,7 @@ public class AssertionController(IAssertion assertion, ILogger<AssertionControll
         logger.LogInformation("Assertion create options: {RequestOptionsString}", requestOptionsString);
         logger.LogInformation("Assertion: {Request}", JsonSerializer.Serialize(request.Map()));
 
-        var response = await _assertion.Complete(request.Map(), requestOptions!, cancellationToken);
+        var response = await _assertion.CompleteAuthentication(request.Map(), requestOptions!, cancellationToken);
 
         if (response.IsValid)
         {

@@ -126,10 +126,10 @@ public class AssertionTests
             Options.Create(_fido2Configuration));
     }
 
-    #region RequestOptions Tests
+    #region BeginAuthentication Tests
 
     [Test]
-    public void RequestOptions_WhenParametersValidatorThrowsArgumentNullException_ThenThrowsArgumentNullException()
+    public void BeginAuthentication_WhenParametersValidatorThrowsArgumentNullException_ThenThrowsArgumentNullException()
     {
         // Arrange
         _assertionParametersValidatorMock
@@ -138,14 +138,14 @@ public class AssertionTests
 
         // Act & Assert
         Assert.ThrowsAsync<ArgumentNullException>(
-            () => _sut.RequestOptions(It.IsAny<PublicKeyCredentialRequestOptionsRequest>()));
+            () => _sut.BeginAuthentication(It.IsAny<PublicKeyCredentialRequestOptionsRequest>()));
     }
 
     [Test]
     [TestCase(null!)]
     [TestCase("")]
     [TestCase("   ")]
-    public async Task RequestOptions_WhenUsernameIsEmpty_ThenReturnsOptionsWithoutAllowCredentials(string username)
+    public async Task BeginAuthentication_WhenUsernameIsEmpty_ThenReturnsOptionsWithoutAllowCredentials(string username)
     {
         // Arrange
         var request = new PublicKeyCredentialRequestOptionsRequest
@@ -155,7 +155,7 @@ public class AssertionTests
         };
 
         // Act
-        var result = await _sut.RequestOptions(request);
+        var result = await _sut.BeginAuthentication(request);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -168,7 +168,7 @@ public class AssertionTests
     }
 
     [Test]
-    public async Task RequestOptions_WhenUsernameIsProvided_ThenReturnsOptionsWithAllowCredentials()
+    public async Task BeginAuthentication_WhenUsernameIsProvided_ThenReturnsOptionsWithAllowCredentials()
     {
         // Arrange
         var request = new PublicKeyCredentialRequestOptionsRequest
@@ -189,7 +189,7 @@ public class AssertionTests
         _credentialRepositoryMock.Setup(a => a.Get(UserName, CancellationToken.None)).ReturnsAsync(credentials);
 
         // Act
-        var result = await _sut.RequestOptions(request);
+        var result = await _sut.BeginAuthentication(request);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -205,7 +205,7 @@ public class AssertionTests
     }
 
     [Test]
-    public async Task RequestOptions_WhenUserVerificationIsNull_ThenReturnsOptionsWithPreferredUserVerification()
+    public async Task BeginAuthentication_WhenUserVerificationIsNull_ThenReturnsOptionsWithPreferredUserVerification()
     {
         // Arrange
         var request = new PublicKeyCredentialRequestOptionsRequest
@@ -215,7 +215,7 @@ public class AssertionTests
         };
 
         // Act
-        var result = await _sut.RequestOptions(request);
+        var result = await _sut.BeginAuthentication(request);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -224,10 +224,10 @@ public class AssertionTests
 
     #endregion
 
-    #region Complete Tests
+    #region CompleteAuthentication Tests
 
     [Test]
-    public void Complete_WhenParametersValidatorThrowsArgumentNullException_ThenThrowsArgumentNullException()
+    public void CompleteAuthentication_WhenParametersValidatorThrowsArgumentNullException_ThenThrowsArgumentNullException()
     {
         // Arrange
         _assertionParametersValidatorMock
@@ -238,11 +238,11 @@ public class AssertionTests
 
         // Act & Assert
         Assert.ThrowsAsync<ArgumentNullException>(() =>
-            _sut.Complete(_publicKeyCredentialAssertion!, _publicKeyCredentialRequestOptions));
+            _sut.CompleteAuthentication(_publicKeyCredentialAssertion!, _publicKeyCredentialRequestOptions));
     }
 
     [Test]
-    public async Task Complete_WhenParametersValidatorReturnsFailure_ThenReturnsFailure()
+    public async Task CompleteAuthentication_WhenParametersValidatorReturnsFailure_ThenReturnsFailure()
     {
         // Arrange
         _assertionParametersValidatorMock
@@ -252,7 +252,7 @@ public class AssertionTests
             .Returns(AssertionCompleteResult.CreateFailure("Error"));
 
         // Act
-        var result = await _sut.Complete(_publicKeyCredentialAssertion!, _publicKeyCredentialRequestOptions);
+        var result = await _sut.CompleteAuthentication(_publicKeyCredentialAssertion!, _publicKeyCredentialRequestOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -261,13 +261,13 @@ public class AssertionTests
     }
 
     [Test]
-    public async Task Complete_WhenResponseIsNull_ThenReturnsFailure()
+    public async Task CompleteAuthentication_WhenResponseIsNull_ThenReturnsFailure()
     {
         // Arrange
         _publicKeyCredentialAssertion.Response = null!;
 
         // Act
-        var result = await _sut.Complete(_publicKeyCredentialAssertion, _publicKeyCredentialRequestOptions);
+        var result = await _sut.CompleteAuthentication(_publicKeyCredentialAssertion, _publicKeyCredentialRequestOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -276,7 +276,7 @@ public class AssertionTests
     }
 
     [Test]
-    public async Task Complete_WhenCredentialIdNotInAllowCredentials_ThenReturnsFailure()
+    public async Task CompleteAuthentication_WhenCredentialIdNotInAllowCredentials_ThenReturnsFailure()
     {
         // Arrange
         var requestOptions = new PublicKeyCredentialRequestOptions
@@ -293,7 +293,7 @@ public class AssertionTests
         };
 
         // Act
-        var result = await _sut.Complete(_publicKeyCredentialAssertion, requestOptions);
+        var result = await _sut.CompleteAuthentication(_publicKeyCredentialAssertion, requestOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -302,7 +302,7 @@ public class AssertionTests
     }
 
     [Test]
-    public async Task Complete_WhenCredentialNotFound_ThenReturnsFailure()
+    public async Task CompleteAuthentication_WhenCredentialNotFound_ThenReturnsFailure()
     {
         // Arrange
         var requestOptions = new PublicKeyCredentialRequestOptions
@@ -323,7 +323,7 @@ public class AssertionTests
             .ReturnsAsync((Credential?)null);
 
         // Act
-        var result = await _sut.Complete(_publicKeyCredentialAssertion, requestOptions);
+        var result = await _sut.CompleteAuthentication(_publicKeyCredentialAssertion, requestOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -332,7 +332,7 @@ public class AssertionTests
     }
 
     [Test]
-    public async Task Complete_WhenUserValidationFails_ThenReturnsFailure()
+    public async Task CompleteAuthentication_WhenUserValidationFails_ThenReturnsFailure()
     {
         // Arrange
         var credential = new Credential
@@ -353,7 +353,7 @@ public class AssertionTests
             .Returns(ValidatorInternalResult.Invalid("User is not the owner of the credential"));
 
         // Act
-        var result = await _sut.Complete(_publicKeyCredentialAssertion, _publicKeyCredentialRequestOptions);
+        var result = await _sut.CompleteAuthentication(_publicKeyCredentialAssertion, _publicKeyCredentialRequestOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -362,7 +362,7 @@ public class AssertionTests
     }
 
     [Test]
-    public async Task Complete_WhenCredentialPublicKeyIsNull_ThenReturnsFailure()
+    public async Task CompleteAuthentication_WhenCredentialPublicKeyIsNull_ThenReturnsFailure()
     {
         // Arrange
         var credential = new Credential
@@ -383,7 +383,7 @@ public class AssertionTests
             .Returns(ValidatorInternalResult.Valid());
 
         // Act
-        var result = await _sut.Complete(_publicKeyCredentialAssertion, _publicKeyCredentialRequestOptions);
+        var result = await _sut.CompleteAuthentication(_publicKeyCredentialAssertion, _publicKeyCredentialRequestOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -392,7 +392,7 @@ public class AssertionTests
     }
 
     [Test]
-    public async Task Complete_WhenClientDataHasError_ThenReturnsFailure()
+    public async Task CompleteAuthentication_WhenClientDataHasError_ThenReturnsFailure()
     {
         // Arrange
         var credential = new Credential
@@ -413,7 +413,7 @@ public class AssertionTests
             .Returns(new InternalResult<ClientData>("Client data cannot be read"));
 
         // Act
-        var result = await _sut.Complete(_publicKeyCredentialAssertion, _publicKeyCredentialRequestOptions);
+        var result = await _sut.CompleteAuthentication(_publicKeyCredentialAssertion, _publicKeyCredentialRequestOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -422,7 +422,7 @@ public class AssertionTests
     }
 
     [Test]
-    public async Task Complete_WhenAssertionObjectHasError_ThenReturnsFailure()
+    public async Task CompleteAuthentication_WhenAssertionObjectHasError_ThenReturnsFailure()
     {
         // Arrange
         var credential = new Credential
@@ -449,7 +449,7 @@ public class AssertionTests
             .Returns(new InternalResult<AuthenticatorData>("Assertion object validation failed"));
 
         // Act
-        var result = await _sut.Complete(_publicKeyCredentialAssertion, _publicKeyCredentialRequestOptions);
+        var result = await _sut.CompleteAuthentication(_publicKeyCredentialAssertion, _publicKeyCredentialRequestOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -458,7 +458,7 @@ public class AssertionTests
     }
 
     [Test]
-    public async Task Complete_WhenSignCountIsLessOrEqualToStoredSignCount_ThenReturnsFailure()
+    public async Task CompleteAuthentication_WhenSignCountIsLessOrEqualToStoredSignCount_ThenReturnsFailure()
     {
         // Arrange
         var credential = new Credential
@@ -476,7 +476,7 @@ public class AssertionTests
             .ReturnsAsync(credential);
 
         // Act
-        var result = await _sut.Complete(_publicKeyCredentialAssertion, _publicKeyCredentialRequestOptions);
+        var result = await _sut.CompleteAuthentication(_publicKeyCredentialAssertion, _publicKeyCredentialRequestOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -485,7 +485,7 @@ public class AssertionTests
     }
 
     [Test]
-    public async Task Complete_WhenAssertionIsValid_ThenUpdatesSignCountAndReturnsSuccess()
+    public async Task CompleteAuthentication_WhenAssertionIsValid_ThenUpdatesSignCountAndReturnsSuccess()
     {
         // Arrange
         var credential = new Credential
@@ -503,7 +503,7 @@ public class AssertionTests
             .ReturnsAsync(credential);
 
         // Act
-        var result = await _sut.Complete(_publicKeyCredentialAssertion, _publicKeyCredentialRequestOptions);
+        var result = await _sut.CompleteAuthentication(_publicKeyCredentialAssertion, _publicKeyCredentialRequestOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -514,7 +514,7 @@ public class AssertionTests
     }
 
     [Test]
-    public async Task Complete_WhenBothSignCountsAreZero_ThenReturnsSuccess()
+    public async Task CompleteAuthentication_WhenBothSignCountsAreZero_ThenReturnsSuccess()
     {
         // Arrange
         var credential = new Credential
@@ -546,7 +546,7 @@ public class AssertionTests
             }));
 
         // Act
-        var result = await _sut.Complete(_publicKeyCredentialAssertion, _publicKeyCredentialRequestOptions);
+        var result = await _sut.CompleteAuthentication(_publicKeyCredentialAssertion, _publicKeyCredentialRequestOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);

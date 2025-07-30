@@ -40,7 +40,7 @@ public sealed class Assertion : IAssertion
         _configuration = options.Value;
     }
 
-    public async Task<PublicKeyCredentialRequestOptions> RequestOptions(
+    public async Task<PublicKeyCredentialRequestOptions> BeginAuthentication(
         PublicKeyCredentialRequestOptionsRequest request,
         CancellationToken cancellationToken = default)
     {
@@ -86,7 +86,7 @@ public sealed class Assertion : IAssertion
         return publicKeyCredentialRequestOptions;
     }
 
-    public async Task<AssertionCompleteResult> Complete(
+    public async Task<AssertionCompleteResult> CompleteAuthentication(
         PublicKeyCredentialAssertion publicKeyCredentialAssertion,
         PublicKeyCredentialRequestOptions requestOptions,
         CancellationToken cancellationToken = default)

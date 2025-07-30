@@ -136,10 +136,10 @@ public class AttestationTests
             Options.Create(_fido2Configuration));
     }
 
-    #region CreateOptions Tests
+    #region BeginRegistration Tests
 
     [Test]
-    public void CreateOptions_WhenParametersValidatorThrowsArgumentNullException_ThenThrowsArgumentNullException()
+    public void BeginRegistration_WhenParametersValidatorThrowsArgumentNullException_ThenThrowsArgumentNullException()
     {
         // Arrange
         _attestationParametersValidatorMock
@@ -148,11 +148,11 @@ public class AttestationTests
 
         // Act & Assert
         Assert.ThrowsAsync<ArgumentNullException>(
-            () => _sut.CreateOptions(It.IsAny<PublicKeyCredentialCreationOptionsRequest>()));
+            () => _sut.BeginRegistration(It.IsAny<PublicKeyCredentialCreationOptionsRequest>()));
     }
 
     [Test]
-    public async Task CreateOptions_WhenAuthenticatorSelectionIsNull_ThenReturnsOptions()
+    public async Task BeginRegistration_WhenAuthenticatorSelectionIsNull_ThenReturnsOptions()
     {
         // Arrange
         var request = new PublicKeyCredentialCreationOptionsRequest
@@ -164,7 +164,7 @@ public class AttestationTests
         };
 
         // Act
-        var result = await _sut.CreateOptions(request);
+        var result = await _sut.BeginRegistration(request);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -175,7 +175,7 @@ public class AttestationTests
     }
 
     [Test]
-    public async Task CreateOptions_WhenAttestationIsNull_ThenReturnsOptions()
+    public async Task BeginRegistration_WhenAttestationIsNull_ThenReturnsOptions()
     {
         // Arrange
         var request = new PublicKeyCredentialCreationOptionsRequest
@@ -187,7 +187,7 @@ public class AttestationTests
         };
 
         // Act
-        var result = await _sut.CreateOptions(request);
+        var result = await _sut.BeginRegistration(request);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -195,7 +195,7 @@ public class AttestationTests
     }
 
     [Test]
-    public async Task CreateOptions_WhenCredentialExists_ThenReturnsOptions()
+    public async Task BeginRegistration_WhenCredentialExists_ThenReturnsOptions()
     {
         // Arrange
         var credential = new CredentialDescriptor
@@ -217,7 +217,7 @@ public class AttestationTests
         };
 
         // Act
-        var result = await _sut.CreateOptions(request);
+        var result = await _sut.BeginRegistration(request);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -231,7 +231,7 @@ public class AttestationTests
     [TestCase(AttestationConveyancePreference.Indirect)]
     [TestCase(AttestationConveyancePreference.Direct)]
     [TestCase(AttestationConveyancePreference.Enterprise)]
-    public async Task CreateOptions_WhenRequestIsValid_ThenReturnsOptions(string attestationConveyancePreference)
+    public async Task BeginRegistration_WhenRequestIsValid_ThenReturnsOptions(string attestationConveyancePreference)
     {
         // Arrange
         var request = new PublicKeyCredentialCreationOptionsRequest
@@ -249,7 +249,7 @@ public class AttestationTests
         };
 
         // Act
-        var result = await _sut.CreateOptions(request);
+        var result = await _sut.BeginRegistration(request);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -271,10 +271,10 @@ public class AttestationTests
 
     #endregion
 
-    #region Complete Tests
+    #region CompleteRegistration Tests
 
     [Test]
-    public void Complete_WhenParametersValidatorThrowsArgumentNullException_ThenThrowsArgumentNullException()
+    public void CompleteRegistration_WhenParametersValidatorThrowsArgumentNullException_ThenThrowsArgumentNullException()
     {
         // Arrange
         _attestationParametersValidatorMock
@@ -285,11 +285,11 @@ public class AttestationTests
 
         // Act & Assert
         Assert.ThrowsAsync<ArgumentNullException>(() =>
-            _sut.Complete(_publicKeyCredentialAttestation!, _publicKeyCredentialCreationOptions));
+            _sut.CompleteRegistration(_publicKeyCredentialAttestation!, _publicKeyCredentialCreationOptions));
     }
 
     [Test]
-    public async Task Complete_WhenParametersValidatorReturnsFailure_ThenReturnsFailure()
+    public async Task CompleteRegistration_WhenParametersValidatorReturnsFailure_ThenReturnsFailure()
     {
         // Arrange
         _attestationParametersValidatorMock
@@ -299,7 +299,7 @@ public class AttestationTests
             .Returns(AttestationCompleteResult.CreateFailure("Error"));
 
         // Act
-        var result = await _sut.Complete(_publicKeyCredentialAttestation!, _publicKeyCredentialCreationOptions);
+        var result = await _sut.CompleteRegistration(_publicKeyCredentialAttestation!, _publicKeyCredentialCreationOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -308,13 +308,13 @@ public class AttestationTests
     }
 
     [Test]
-    public async Task Complete_WhenResponseIsNull_ThenReturnsFailure()
+    public async Task CompleteRegistration_WhenResponseIsNull_ThenReturnsFailure()
     {
         // Arrange
         _publicKeyCredentialAttestation.Response = null!;
 
         // Act
-        var result = await _sut.Complete(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions);
+        var result = await _sut.CompleteRegistration(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -323,7 +323,7 @@ public class AttestationTests
     }
 
     [Test]
-    public async Task Complete_WhenClientDataHasError_ThenReturnsFailure()
+    public async Task CompleteRegistration_WhenClientDataHasError_ThenReturnsFailure()
     {
         // Arrange
         _publicKeyCredentialAttestation.Response = new AuthenticatorAttestationResponse
@@ -338,7 +338,7 @@ public class AttestationTests
             .Returns(new InternalResult<ClientData>("Client data validation failed"));
 
         // Act
-        var result = await _sut.Complete(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions);
+        var result = await _sut.CompleteRegistration(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -347,7 +347,7 @@ public class AttestationTests
     }
 
     [Test]
-    public async Task Complete_WhenAttestationObjectHasError_ThenReturnsFailure()
+    public async Task CompleteRegistration_WhenAttestationObjectHasError_ThenReturnsFailure()
     {
         // Arrange
         _publicKeyCredentialAttestation.Response = new AuthenticatorAttestationResponse
@@ -365,7 +365,7 @@ public class AttestationTests
             .ReturnsAsync(new InternalResult<AttestationObjectData>("Attestation object validation failed"));
 
         // Act
-        var result = await _sut.Complete(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions);
+        var result = await _sut.CompleteRegistration(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -374,7 +374,7 @@ public class AttestationTests
     }
 
     [Test]
-    public async Task Complete_WhenCredentialAlreadyExists_ThenReturnsFailure()
+    public async Task CompleteRegistration_WhenCredentialAlreadyExists_ThenReturnsFailure()
     {
         // Arrange
         _credentialRepositoryMock
@@ -382,7 +382,7 @@ public class AttestationTests
             .ReturnsAsync(true);
 
         // Act
-        var result = await _sut.Complete(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions);
+        var result = await _sut.CompleteRegistration(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -391,7 +391,7 @@ public class AttestationTests
     }
 
     [Test]
-    public async Task Complete_WhenPublicKeyCredentialAttestationIsValid_ThenAddsCredentialAndReturnsSuccess()
+    public async Task CompleteRegistration_WhenPublicKeyCredentialAttestationIsValid_ThenAddsCredentialAndReturnsSuccess()
     {
         // Arrange
         Credential? credential = null;
@@ -401,7 +401,7 @@ public class AttestationTests
             .Returns(Task.CompletedTask);
 
         // Act
-        var result = await _sut.Complete(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions);
+        var result = await _sut.CompleteRegistration(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -420,7 +420,7 @@ public class AttestationTests
     }
 
     [Test]
-    public async Task Complete_WheniPhoneAndPublicKeyCredentialAttestationIsValid_ThenReturnsSuccess()
+    public async Task CompleteRegistration_WheniPhoneAndPublicKeyCredentialAttestationIsValid_ThenReturnsSuccess()
     {
         // Arrange
         var publicKeyCredentialAttestation = new PublicKeyCredentialAttestation
@@ -442,7 +442,7 @@ public class AttestationTests
         _publicKeyCredentialCreationOptions.User = _publicKeyCredentialUserEntity;
 
         // Act
-        var result = await _sut.Complete(publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions);
+        var result = await _sut.CompleteRegistration(publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -451,7 +451,7 @@ public class AttestationTests
     }
 
     [Test]
-    public async Task Complete_WhenWindowsAndPublicKeyCredentialAttestationIsValid_ThenReturnsSuccess()
+    public async Task CompleteRegistration_WhenWindowsAndPublicKeyCredentialAttestationIsValid_ThenReturnsSuccess()
     {
         // Arrange
         var publicKeyCredentialAttestation = new PublicKeyCredentialAttestation
@@ -473,7 +473,7 @@ public class AttestationTests
         _publicKeyCredentialCreationOptions.User = _publicKeyCredentialUserEntity;
 
         // Act
-        var result = await _sut.Complete(publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions);
+        var result = await _sut.CompleteRegistration(publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);
