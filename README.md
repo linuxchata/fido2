@@ -126,8 +126,8 @@ public async Task<IActionResult> Result(ServerPublicKeyCredentialAssertion reque
 ## Client-side Integration
 To finalize the implementation, you must incorporate JavaScript code that interacts with the browser's Web Authentication API. This API manages the client-side authentication process. The following is a sample implementation:
 
-- [fido2-attestation.js](https://github.com/linuxchata/fido2/blob/main/src/Shark.Fido2.Sample/wwwroot/js/fido2-attestation.js) handles the registration process using the Web Authentication API (`navigator.credentials.create`).
-- [fido2-assertion.js](https://github.com/linuxchata/fido2/blob/main/src/Shark.Fido2.Sample/wwwroot/js/fido2-assertion.js) handles the authentication process using the Web Authentication API (`navigator.credentials.get`).
+- [attestation.js](https://github.com/linuxchata/fido2/blob/main/src/Shark.Fido2.Sample/wwwroot/js/attestation.js) handles the registration process using the Web Authentication API (`navigator.credentials.create`).
+- [assertion.js](https://github.com/linuxchata/fido2/blob/main/src/Shark.Fido2.Sample/wwwroot/js/assertion.js) handles the authentication process using the Web Authentication API (`navigator.credentials.get`).
 
 This JavaScript code binds the browser's Web Authentication API to the server-side REST API endpoints provided by the ASP.NET Core controllers described above. More information about the Web Authentication API is available on the MDN Web Docs site at [developer.mozilla.org](https://developer.mozilla.org/en-US/docs/Web/API/Web_Authentication_API) page.
 
