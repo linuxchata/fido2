@@ -2,8 +2,8 @@
 This repository provides a server-side implementation of the WebAuthn standard, enabling secure passwordless and multi-factor authentication (MFA) for web applications. It supports key WebAuthn operations – credential registration and authentication – ensuring compliance with the [WebAuthn Level 2 specification](https://www.w3.org/TR/webauthn-2/) (Web Authentication: An API for accessing Public Key Credentials Level 2).
 
 ## Supported Features
-- **Attestation flow** for credentials registration
-- **Assertion flow** for credentials verification
+- **Attestation flow** for public key credential registration
+- **Assertion flow** for public key credential verification
 - **Supported attestation statement formats**:
   - Packed
   - TPM
@@ -17,11 +17,11 @@ This repository provides a server-side implementation of the WebAuthn standard, 
   - Microsoft SQL Server
   - Amazon DynamoDB
   - In-memory storage
- - **FIDO metadata service**
+ - **FIDO Metadata Service**
  - Code samples and demo website
 
 # Build Status
-[![build](https://github.com/linuxchata/fido2/actions/workflows/build.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build.yml) [![NuGet](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_packages.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_packages.yml)
+[![build](https://github.com/linuxchata/fido2/actions/workflows/build.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build.yml) [![NuGet](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_packages.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_packages.yml) [![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](https://github.com/linuxchata/fido2/blob/main/LICENSE)
 
 # Packages
 | Package Name | Status |
@@ -59,7 +59,7 @@ The server side can be customized using the following configuration options. You
 | `AllowNoneAttestation` | `true` | Value indicating whether None attestation type is acceptable under Relying Party policy. [None attestation](https://www.w3.org/TR/webauthn-2/#none) is used when the authenticator doesn't have any attestation information available. |
 | `AllowSelfAttestation` | `true` | Value indicating whether Self attestation type is acceptable under Relying Party policy. [Self attestation](https://www.w3.org/TR/webauthn-2/#self-attestation) is used when the authenticator doesn't have a dedicated attestation key pair or a vendor-issued certificate. |
 | `EnableTrustedExecutionEnvironmentOnly` | `true` | Value indicating whether the Relying Party trusts only keys that are securely generated and stored in a Trusted Execution Environment (relevant for Android Key Attestation). |
-| `EnableMetadataService` | `true` | Value indicating whether the Relying Party uses the Metadata Service to verify the attestation object. |
+| `EnableMetadataService` | `true` | Value indicating whether the Relying Party uses the FIDO Metadata Service to verify the attestation object. |
 | `EnableStrictAuthenticatorVerification` | `false` | Value indicating whether the Relying Party requires strict verification of authenticators. If enabled, missing metadata for the authenticator would cause attestation to fail. |
 
 #### FIDO Metadata Service Configuration
@@ -130,6 +130,21 @@ To finalize the implementation, you must incorporate JavaScript code that intera
 - [assertion.js](https://github.com/linuxchata/fido2/blob/main/src/Shark.Fido2.Sample/wwwroot/js/assertion.js) handles the authentication process using the Web Authentication API (`navigator.credentials.get`).
 
 This JavaScript code binds the browser's Web Authentication API to the server-side REST API endpoints provided by the ASP.NET Core controllers described above. More information about the Web Authentication API is available on the MDN Web Docs site at [developer.mozilla.org](https://developer.mozilla.org/en-US/docs/Web/API/Web_Authentication_API) page.
+
+# Docker
+The sample relying party can be run using Docker (Linux container). Make sure [Docker](https://docs.docker.com/get-docker/) is installed and running on your machine.
+
+## Pull and Run the Image
+
+```bash
+docker pull linuxchata/shark-fido2-sample:latest
+```
+
+```bash
+docker run -d -e ASPNETCORE_ENVIRONMENT=Development -p 8080:8080 linuxchata/shark-fido2-sample:latest
+```
+
+The application will be accessible at [http://localhost:8080](http://localhost:8080).
 
 # FIDO Conformance Tests
 All test cases successfully passed using the FIDO Conformance Tool.
