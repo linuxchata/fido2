@@ -45,19 +45,12 @@ $(function () {
 
     $("#authentication-custom").on("click", function (event) {
         const usernameInput = $("#username-authentication");
-        const errorMessageSpan = $("#error-message-authentication");
         const username = usernameInput.val();
-
-        if (!isValidInput(username)) {
-            errorMessageSpan.text("Please input a username");
-            return;
-        }
 
         const selects = [$("#user-verification-authentication")];
 
         setInputsReadonly([usernameInput], true);
         setSelectsDisabled(selects, true);
-        errorMessageSpan.text("");
 
         const button = event.target;
         const previousText = button.innerHTML;
