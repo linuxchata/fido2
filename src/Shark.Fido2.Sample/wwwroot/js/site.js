@@ -2,24 +2,24 @@
     $("#registration").on("click", function (event) {
         const usernameInput = $("#username-registration");
         const displayNameInput = $("#display-name-registration");
-        const messageSpan = $("#message-registration");
+        const errorMessageSpan = $("#error-message-registration");
 
         const username = usernameInput.val();
         const displayName = displayNameInput.val();
 
         if (!isValidInput(username)) {
-            messageSpan.text("Please input a username");
+            errorMessageSpan.text("Please input a username");
             return;
         }
 
         if (!isValidInput(displayName)) {
-            messageSpan.text("Please input a display name");
+            errorMessageSpan.text("Please input a display name");
             return;
         }
 
         usernameInput.prop("readonly", true);
         displayNameInput.prop("readonly", true);
-        messageSpan.text("");
+        errorMessageSpan.text("");
 
         const button = event.target;
         const previousText = button.innerHTML;
@@ -35,16 +35,16 @@
 
     $("#authentication").on("click", function (event) {
         const usernameInput = $("#username-authentication");
-        const messageSpan = $("#message-authentication");
+        const errorMessageSpan = $("#error-message-authentication");
         const username = usernameInput.val();
 
         if (!isValidInput(username)) {
-            messageSpan.text("Please input a username");
+            errorMessageSpan.text("Please input a username");
             return;
         }
 
         usernameInput.prop("readonly", true);
-        messageSpan.text("");
+        errorMessageSpan.text("");
 
         const button = event.target;
         const previousText = button.innerHTML;
