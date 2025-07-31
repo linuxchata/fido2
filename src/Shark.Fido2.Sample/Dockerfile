@@ -18,6 +18,8 @@ COPY . .
 WORKDIR "/src/Shark.Fido2.Sample"
 RUN dotnet build "./Shark.Fido2.Sample.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
+RUN rm -f appsettings.Production.json appsettings.Test.json || true
+
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "./Shark.Fido2.Sample.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
