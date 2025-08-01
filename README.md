@@ -21,7 +21,10 @@ This repository provides a server-side implementation of the WebAuthn standard, 
  - Code samples and demo website
 
 # Build Status
-[![build](https://github.com/linuxchata/fido2/actions/workflows/build.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build.yml) [![NuGet](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_packages.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_packages.yml) [![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](https://github.com/linuxchata/fido2/blob/main/LICENSE)
+[![build](https://github.com/linuxchata/fido2/actions/workflows/build.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build.yml)
+[![NuGet](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_packages.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_packages.yml)
+[![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](https://github.com/linuxchata/fido2/blob/main/LICENSE)
+[![Docker](https://badgen.net/badge/icon/docker?icon=docker&label)](https://hub.docker.com/repository/docker/linuxchata/shark-fido2-sample)
 
 # Packages
 | Package Name | Status |
