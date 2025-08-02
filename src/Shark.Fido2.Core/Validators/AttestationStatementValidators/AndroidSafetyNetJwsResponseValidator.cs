@@ -18,6 +18,13 @@ internal sealed class AndroidSafetyNetJwsResponseValidator : IAndroidSafetyNetJw
 
     private const string ApkPackageName = "com.google.android.gms";
 
+    private readonly TimeProvider _timeProvider;
+
+    public AndroidSafetyNetJwsResponseValidator(TimeProvider timeProvider)
+    {
+        _timeProvider = timeProvider;
+    }
+
     public ValidatorInternalResult PreValidate(JwsResponse jwsResponse)
     {
         if (jwsResponse.CtsProfileMatch == null)
@@ -37,7 +44,7 @@ internal sealed class AndroidSafetyNetJwsResponseValidator : IAndroidSafetyNetJw
             return ValidatorInternalResult.Invalid($"{Prefix} APK information is not found");
         }
 
-        if (jwsResponse.Certificates == null)
+        if (jwsResponse.Certificates == null || jwsResponse.Certificates.Count == 0)
         {
             return ValidatorInternalResult.Invalid($"{Prefix} certificates are not found");
         }
@@ -68,6 +75,27 @@ internal sealed class AndroidSafetyNetJwsResponseValidator : IAndroidSafetyNetJw
         return ValidatorInternalResult.Valid();
     }
 
+    private bool IsTimestampValid(JwsResponse jwsResponse)
+    {
+        if (!long.TryParse(
+            jwsResponse.TimestampMs,
+            NumberStyles.Integer,
+            CultureInfo.InvariantCulture,
+            out long unixTimestampMs))
+        {
+            return false;
+        }
+
+        var timestamp = DateTimeOffset.FromUnixTimeMilliseconds(unixTimestampMs).UtcDateTime;
+        var now = _timeProvider.GetUtcNow();
+        if (timestamp > now || timestamp < now.AddSeconds(-60))
+        {
+            return false;
+        }
+
+        return true;
+    }
+
     private static bool IsSignatureValid(JwsResponse jwsResponse, X509Certificate2 certificate)
     {
         // JwsResponse includes certificates, but the attestation certificate is passed separately to delegate
@@ -77,9 +105,9 @@ internal sealed class AndroidSafetyNetJwsResponseValidator : IAndroidSafetyNetJw
         {
             ValidateIssuer = false,
             ValidateAudience = false,
+            ValidateLifetime = false,
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = securityKey,
-            ValidateLifetime = true,
         };
 
         try
@@ -95,28 +123,6 @@ internal sealed class AndroidSafetyNetJwsResponseValidator : IAndroidSafetyNetJw
         {
             return false;
         }
-
-        return true;
-    }
-
-    private static bool IsTimestampValid(JwsResponse jwsResponse)
-    {
-        if (!long.TryParse(
-            jwsResponse.TimestampMs,
-            NumberStyles.Integer,
-            CultureInfo.InvariantCulture,
-            out long unixTimestampMs))
-        {
-            return false;
-        }
-
-        var timestamp = DateTimeOffset.FromUnixTimeMilliseconds(unixTimestampMs).UtcDateTime;
-        if (timestamp > DateTime.UtcNow)
-        {
-            return false;
-        }
-
-        //// TODO: Define other validation rules for timestamp
 
         return true;
     }

@@ -16,10 +16,10 @@ namespace Shark.Fido2.Core.Tests.Validators.AttestationStatementValidators;
 [TestFixture]
 internal class TpmAttestationStatementStrategyTests
 {
-    private Mock<IAttestationObjectValidator> _attestationObjectValidatorMock;
-    private AttestationObjectHandler _attestationObjectHandler;
-    private AuthenticatorDataParserService _authenticatorDataProvider;
-    private PublicKeyCredentialCreationOptions _creationOptions;
+    private Mock<IAttestationObjectValidator> _attestationObjectValidatorMock = null!;
+    private AttestationObjectHandler _attestationObjectHandler = null!;
+    private AuthenticatorDataParserService _authenticatorDataProvider = null!;
+    private PublicKeyCredentialCreationOptions _creationOptions = null!;
 
     private TpmAttestationStatementStrategy _sut = null!;
 

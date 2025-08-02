@@ -59,20 +59,20 @@ internal class AndroidSafetyNetAttestationStatementStrategy : IAttestationStatem
         // SafetyNet online documentation. As of this writing, there is only one format of the SafetyNet response and
         // ver is reserved for future use.
         if (!attestationStatementDict.TryGetValue(AttestationStatement.Version, out var version) ||
-            version is not string)
+            version is not string versionString || string.IsNullOrWhiteSpace(versionString))
         {
             return ValidatorInternalResult.Invalid(
                 "Android SafetyNet attestation statement version is missing or invalid");
         }
 
         if (!attestationStatementDict.TryGetValue(AttestationStatement.Response, out var response) ||
-            response is not byte[])
+            response is not byte[] responseBytes || responseBytes.Length == 0)
         {
             return ValidatorInternalResult.Invalid(
                 "Android SafetyNet attestation statement response is missing or invalid");
         }
 
-        var jwsResponse = _jwsResponseParserService.Parse((byte[])response);
+        var jwsResponse = _jwsResponseParserService.Parse(responseBytes);
         if (jwsResponse == null)
         {
             return ValidatorInternalResult.Invalid(
