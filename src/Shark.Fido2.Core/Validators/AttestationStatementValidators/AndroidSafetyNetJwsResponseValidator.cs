@@ -75,27 +75,6 @@ internal sealed class AndroidSafetyNetJwsResponseValidator : IAndroidSafetyNetJw
         return ValidatorInternalResult.Valid();
     }
 
-    private bool IsTimestampValid(JwsResponse jwsResponse)
-    {
-        if (!long.TryParse(
-            jwsResponse.TimestampMs,
-            NumberStyles.Integer,
-            CultureInfo.InvariantCulture,
-            out long unixTimestampMs))
-        {
-            return false;
-        }
-
-        var timestamp = DateTimeOffset.FromUnixTimeMilliseconds(unixTimestampMs).UtcDateTime;
-        var now = _timeProvider.GetUtcNow();
-        if (timestamp > now || timestamp < now.AddSeconds(-60))
-        {
-            return false;
-        }
-
-        return true;
-    }
-
     private static bool IsSignatureValid(JwsResponse jwsResponse, X509Certificate2 certificate)
     {
         // JwsResponse includes certificates, but the attestation certificate is passed separately to delegate
@@ -130,6 +109,27 @@ internal sealed class AndroidSafetyNetJwsResponseValidator : IAndroidSafetyNetJw
     private static bool IsPackageNameValid(JwsResponse jwsResponse)
     {
         if (!string.Equals(jwsResponse.ApkPackageName, ApkPackageName, StringComparison.InvariantCultureIgnoreCase))
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    private bool IsTimestampValid(JwsResponse jwsResponse)
+    {
+        if (!long.TryParse(
+            jwsResponse.TimestampMs,
+            NumberStyles.Integer,
+            CultureInfo.InvariantCulture,
+            out long unixTimestampMs))
+        {
+            return false;
+        }
+
+        var timestamp = DateTimeOffset.FromUnixTimeMilliseconds(unixTimestampMs).UtcDateTime;
+        var now = _timeProvider.GetUtcNow().UtcDateTime;
+        if (timestamp > now || timestamp < now.AddSeconds(-60))
         {
             return false;
         }
