@@ -20,10 +20,12 @@ internal sealed class CredentialRepository : ICredentialRepository
     private const string UserNameIndex = "UserNameIndex";
 
     private readonly IAmazonDynamoDB _client;
+    private readonly TimeProvider _timeProvider;
 
-    public CredentialRepository(IAmazonDynamoDB client)
+    public CredentialRepository(IAmazonDynamoDB client, TimeProvider timeProvider)
     {
         _client = client;
+        _timeProvider = timeProvider;
     }
 
     public async Task<Credential?> Get(byte[]? credentialId, CancellationToken cancellationToken = default)
@@ -125,7 +127,7 @@ internal sealed class CredentialRepository : ICredentialRepository
 
         var entity = credential.ToEntity();
 
-        var dateTimeString = GetDateTimeString();
+        var dateTimeString = GetUtcDateTimeString();
 
         var request = new PutItemRequest
         {
@@ -142,7 +144,7 @@ internal sealed class CredentialRepository : ICredentialRepository
     {
         ArgumentNullException.ThrowIfNull(credentialId);
 
-        var dateTimeString = GetDateTimeString();
+        var dateTimeString = GetUtcDateTimeString();
 
         var request = new UpdateItemRequest
         {
@@ -169,7 +171,7 @@ internal sealed class CredentialRepository : ICredentialRepository
     {
         ArgumentNullException.ThrowIfNull(credentialId);
 
-        var dateTimeString = GetDateTimeString();
+        var dateTimeString = GetUtcDateTimeString();
 
         var request = new UpdateItemRequest
         {
@@ -190,16 +192,16 @@ internal sealed class CredentialRepository : ICredentialRepository
         ValidateResponse(response);
     }
 
-    private static string GetDateTimeString()
-    {
-        return DateTime.UtcNow.ToString("o");
-    }
-
     private static void ValidateResponse(AmazonWebServiceResponse response)
     {
         if (response.HttpStatusCode != System.Net.HttpStatusCode.OK)
         {
             throw new InvalidOperationException("Request to DynamoDB did not complete successfully");
         }
+    }
+
+    private string GetUtcDateTimeString()
+    {
+        return _timeProvider.GetUtcNow().UtcDateTime.ToString("o");
     }
 }

@@ -27,15 +27,17 @@ internal sealed class CredentialRepository : ICredentialRepository
     };
 
     private readonly IDistributedCache _cache;
+    private readonly TimeProvider _timeProvider;
 
     private readonly DistributedCacheEntryOptions _options = new()
     {
         AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(24),
     };
 
-    public CredentialRepository(IDistributedCache cache)
+    public CredentialRepository(IDistributedCache cache, TimeProvider timeProvider)
     {
         _cache = cache;
+        _timeProvider = timeProvider;
     }
 
     public async Task<Credential?> Get(byte[]? credentialId, CancellationToken cancellationToken = default)
@@ -116,7 +118,7 @@ internal sealed class CredentialRepository : ICredentialRepository
 
         var entity = credential.ToEntity();
 
-        entity.CreatedAt = DateTime.UtcNow;
+        entity.CreatedAt = GetUtcDateTime();
 
         await _operationLock.WaitAsync(cancellationToken);
 
@@ -138,7 +140,7 @@ internal sealed class CredentialRepository : ICredentialRepository
             credentialId,
             entity =>
             {
-                var now = DateTime.UtcNow;
+                var now = GetUtcDateTime();
                 entity.SignCount = signCount;
                 entity.UpdatedAt = now;
                 entity.LastUsedAt = now;
@@ -152,7 +154,7 @@ internal sealed class CredentialRepository : ICredentialRepository
             credentialId,
             entity =>
             {
-                entity.LastUsedAt = DateTime.UtcNow;
+                entity.LastUsedAt = GetUtcDateTime();
             },
             cancellationToken);
     }
@@ -233,5 +235,10 @@ internal sealed class CredentialRepository : ICredentialRepository
         {
             _operationLock.Release();
         }
+    }
+
+    private DateTime GetUtcDateTime()
+    {
+        return _timeProvider.GetUtcNow().UtcDateTime;
     }
 }
