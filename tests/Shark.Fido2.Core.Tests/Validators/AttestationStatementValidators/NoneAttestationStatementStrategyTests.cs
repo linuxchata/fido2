@@ -14,10 +14,10 @@ namespace Shark.Fido2.Core.Tests.Validators.AttestationStatementValidators;
 [TestFixture]
 internal class NoneAttestationStatementStrategyTests
 {
-    private Mock<IAttestationObjectValidator> _attestationObjectValidatorMock;
-    private AttestationObjectHandler _attestationObjectHandler;
-    private AuthenticatorDataParserService _provider;
-    private PublicKeyCredentialCreationOptions _creationOptions;
+    private Mock<IAttestationObjectValidator> _attestationObjectValidatorMock = null!;
+    private AttestationObjectHandler _attestationObjectHandler = null!;
+    private AuthenticatorDataParserService _provider = null!;
+    private PublicKeyCredentialCreationOptions _creationOptions = null!;
 
     private NoneAttestationStatementStrategy _sut = null!;
 
