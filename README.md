@@ -151,7 +151,7 @@ The application will be accessible at [http://localhost:8080](http://localhost:8
 
 # FIDO Conformance Tests
 All test cases successfully passed using the FIDO Conformance Tool.
-![image](https://github.com/user-attachments/assets/993b3dc5-7600-4e4f-8176-a5bbff8aa4b7)
+<img alt="FIDO Conformance Tests" src="https://github.com/user-attachments/assets/dc5a22df-40a6-4efa-ab18-9ce23ff89938" />
 
 ## License
 This project is licensed under the [BSD 3-Clause License](LICENSE).
