@@ -312,7 +312,7 @@ internal class AttestationCertificateValidator : IAttestationCertificateValidato
 
         const string Prefix = "Android SafetyNet attestation statement";
 
-        if (certificates.Count < 2)
+        if (certificates.Count == 1)
         {
             return ValidatorInternalResult.Invalid($"{Prefix} self-signed certificate is not supported");
         }

@@ -25,6 +25,7 @@ internal sealed class AndroidSafetyNetJwsResponseParserService : IAndroidSafetyN
     {
         ArgumentNullException.ThrowIfNull(response);
 
+        // Response is the UTF-8 encoded result of the getJwsResult() call of the SafetyNet API.
         var jwsResponse = Encoding.UTF8.GetString(response);
 
         if (string.IsNullOrWhiteSpace(jwsResponse))
@@ -42,9 +43,9 @@ internal sealed class AndroidSafetyNetJwsResponseParserService : IAndroidSafetyN
 
         var certificates = new List<object>();
         if (jwtToken.Header.TryGetValue(AttestationStatement.Certificate, out var x5c) &&
-            x5c is List<object>)
+            x5c is List<object> x5cList)
         {
-            certificates.AddRange((List<object>)x5c);
+            certificates.AddRange(x5cList);
         }
 
         var nonce = GetClaim(jwtToken.Claims, ClaimTypeNonce);

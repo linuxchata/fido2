@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Time.Testing;
 using Moq;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Handlers;
@@ -42,7 +43,8 @@ internal class AndroidSafetyNetAttestationStatementStrategyTests
 
         var jwsResponseParserService = new AndroidSafetyNetJwsResponseParserService();
 
-        var jwsResponseValidator = new AndroidSafetyNetJwsResponseValidator();
+        var fakeTimeProvider = new FakeTimeProvider();
+        var jwsResponseValidator = new AndroidSafetyNetJwsResponseValidator(fakeTimeProvider);
 
         var attestationCertificateProviderService = new AttestationCertificateProviderService();
 
@@ -60,7 +62,7 @@ internal class AndroidSafetyNetAttestationStatementStrategyTests
             attestationCertificateValidator);
     }
 
-    [Ignore("Valid Android Safety Net attestation to be generated")]
+    [Ignore("The Android SafetyNet Attestation API was deprecated in 2022 and fully turned down in January 2025")]
     [Test]
     public async Task Validate_WhenAndroidSafetyNetAttestationWithRs256Algorithm_ThenValidates()
     {
