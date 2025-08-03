@@ -388,7 +388,7 @@ public class AssertionTests
         // Assert
         Assert.That(result, Is.Not.Null);
         Assert.That(result.IsValid, Is.False);
-        Assert.That(result.Message, Is.EqualTo("Registered credential's credential public key is not found"));
+        Assert.That(result.Message, Is.EqualTo("Registered credential's public key is not found"));
     }
 
     [Test]
