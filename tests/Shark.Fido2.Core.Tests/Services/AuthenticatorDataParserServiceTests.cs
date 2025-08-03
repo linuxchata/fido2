@@ -1,5 +1,6 @@
 ﻿using Shark.Fido2.Common.Extensions;
 using Shark.Fido2.Core.Services;
+using Shark.Fido2.Domain.Enums;
 
 namespace Shark.Fido2.Core.Tests.Services;
 
@@ -12,6 +13,23 @@ internal class AuthenticatorDataParserServiceTests
     public void Setup()
     {
         _sut = new AuthenticatorDataParserService();
+    }
+
+    [Test]
+    public void Parse_WhenAttestedCredentialDataIncludedAndOkpKeyType_ThenReturnsAuthenticatorData()
+    {
+        // Arrange
+        var authenticatorDataString = "SZYN5YgOjGh0NBcPZHZgW4_krrmihjLHmVzzuoMdl2PBAAAAOpHf6teVnkR1rSabDUgr4IkAIF2TeBnaMTBOXASzJjipW39k1FtVPIBkXsJiwnHNkMxrpAEBAycgBiFYIG96voHdPa0IRHQKjR5ssYwb3gh3PtA5m2QSRPUGyRJwoA";
+        var authenticatorData = authenticatorDataString.FromBase64Url();
+
+        // Act
+        var result = _sut.Parse(authenticatorData);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result!.AttestedCredentialData, Is.Not.Null);
+        Assert.That(result.AttestedCredentialData.CredentialPublicKey, Is.Not.Null);
+        Assert.That(result.AttestedCredentialData.CredentialPublicKey.KeyType, Is.EqualTo((int)KeyType.Okp));
     }
 
     [Test]
@@ -28,6 +46,7 @@ internal class AuthenticatorDataParserServiceTests
         Assert.That(result, Is.Not.Null);
         Assert.That(result!.AttestedCredentialData, Is.Not.Null);
         Assert.That(result.AttestedCredentialData.CredentialPublicKey, Is.Not.Null);
+        Assert.That(result.AttestedCredentialData.CredentialPublicKey.KeyType, Is.EqualTo((int)KeyType.Ec2));
     }
 
     [Test]
@@ -44,6 +63,8 @@ internal class AuthenticatorDataParserServiceTests
         Assert.That(result, Is.Not.Null);
         Assert.That(result!.AttestedCredentialData, Is.Not.Null);
         Assert.That(result.AttestedCredentialData.CredentialPublicKey, Is.Not.Null);
+
+        Assert.That(result.AttestedCredentialData.CredentialPublicKey.KeyType, Is.EqualTo((int)KeyType.Rsa));
     }
 
     [Test]
