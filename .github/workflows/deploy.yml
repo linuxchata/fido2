@@ -4,13 +4,13 @@ on:
   push:
     branches:
       - main
-    paths:
-      - src/**
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
       - uses: actions/checkout@v4
@@ -35,11 +35,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: build
-    environment:
-      name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
       id-token: write
+      contents: read
 
     steps:
       - name: Download artifact from build job
@@ -50,14 +48,15 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_02B3B2F5A1F44132B08C9522CDED9F0F }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_63A6AB4AEC864A17836B9C058420DE2C }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_9A71FF6724F54FD29C4633D7C6C1B03D }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'app-fido2-dev-01'
+          app-name: 'app-fido2-dev-04'
           slot-name: 'Production'
           package: .
+
