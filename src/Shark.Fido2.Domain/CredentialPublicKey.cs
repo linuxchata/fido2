@@ -1,7 +1,7 @@
 ﻿namespace Shark.Fido2.Domain;
 
 /// <summary>
-/// Credential Public Key.
+/// The credential's public key.
 /// </summary>
 public sealed class CredentialPublicKey
 {
