@@ -10,17 +10,19 @@ public sealed class UserIdGenerator : IUserIdGenerator
     // with a maximum size of 64 bytes, and is not meant to be displayed to the user.
     private const int MaxUserIdLength = 64;
 
+    private const int DefaultUserIdLength = 48;
+
     public byte[] Get(string? seed = null)
     {
-        if (string.IsNullOrWhiteSpace(seed))
+        if (!string.IsNullOrWhiteSpace(seed))
         {
-            return RandomNumberGenerator.GetBytes(48);
+            var userId = Encoding.UTF8.GetBytes(seed);
+            if (userId.Length <= MaxUserIdLength)
+            {
+                return userId;
+            }
         }
 
-        var userId = Encoding.UTF8.GetBytes(seed);
-
-        return userId.Length <= MaxUserIdLength
-            ? userId
-            : RandomNumberGenerator.GetBytes(48);
+        return RandomNumberGenerator.GetBytes(DefaultUserIdLength);
     }
 }
