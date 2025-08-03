@@ -63,7 +63,7 @@ The server side can be customized using the following configuration options. You
 | `AllowNoneAttestation` | `true` | Value indicating whether None attestation type is acceptable under Relying Party policy. [None attestation](https://www.w3.org/TR/webauthn-2/#none) is used when the authenticator doesn't have any attestation information available. |
 | `AllowSelfAttestation` | `true` | Value indicating whether Self attestation type is acceptable under Relying Party policy. [Self attestation](https://www.w3.org/TR/webauthn-2/#self-attestation) is used when the authenticator doesn't have a dedicated attestation key pair or a vendor-issued certificate. |
 | `EnableTrustedExecutionEnvironmentOnly` | `true` | Value indicating whether the Relying Party trusts only keys that are securely generated and stored in a Trusted Execution Environment (relevant for Android Key Attestation). |
-| `EnableMetadataService` | `true` | Value indicating whether the Relying Party uses the FIDO Metadata Service to verify the attestation object. |
+| `EnableMetadataService` | `true` | Value indicating whether the Relying Party uses the FIDO Metadata Service to verify the attestation object. Metadata from the FIDO Metadata Service is stored in an in-memory cache and remains valid until the `nextUpdate` timestamp, which is received from the metadata BLOB and indicates the latest time a new metadata BLOB may be provided. |
 | `EnableStrictAuthenticatorVerification` | `false` | Value indicating whether the Relying Party requires strict verification of authenticators. If enabled, missing metadata for the authenticator would cause attestation to fail. |
 
 #### FIDO Metadata Service Configuration
