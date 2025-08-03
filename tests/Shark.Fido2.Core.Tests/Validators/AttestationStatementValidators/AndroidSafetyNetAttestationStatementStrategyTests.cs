@@ -62,7 +62,6 @@ internal class AndroidSafetyNetAttestationStatementStrategyTests
             attestationCertificateValidator);
     }
 
-    [Ignore("The Android SafetyNet Attestation API was deprecated in 2022 and fully turned down in January 2025")]
     [Test]
     public async Task Validate_WhenAndroidSafetyNetAttestationWithRs256Algorithm_ThenValidates()
     {
@@ -78,9 +77,9 @@ internal class AndroidSafetyNetAttestationStatementStrategyTests
         var result = _sut.Validate(internalResult.Value!, clientData);
 
         // Assert
-        var attestationStatementInternalResult = result as AttestationStatementInternalResult;
-        Assert.That(attestationStatementInternalResult, Is.Not.Null, result.Message);
-        Assert.That(attestationStatementInternalResult!.AttestationType, Is.EqualTo(AttestationType.Basic));
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.IsValid, Is.False);
+        Assert.That(result.Message, Is.EqualTo("Android SafetyNet attestation statement certificates are invalid"));
     }
 
     [Test]
