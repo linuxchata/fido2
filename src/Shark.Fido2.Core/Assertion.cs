@@ -144,7 +144,7 @@ public sealed class Assertion : IAssertion
         // look up the corresponding credential public key and let credentialPublicKey be that credential public key.
         if (credential.CredentialPublicKey == null)
         {
-            return AssertionCompleteResult.CreateFailure("Registered credential's credential public key is not found");
+            return AssertionCompleteResult.CreateFailure("Registered credential's public key is not found");
         }
 
         // Step 8
