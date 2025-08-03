@@ -18,6 +18,7 @@ This repository provides a server-side implementation of the WebAuthn standard, 
   - Amazon DynamoDB
   - In-memory storage
  - **FIDO Metadata Service**
+ - **Fully tested** with the [FIDO Conformance Tool](https://fidoalliance.org/certification/conformance/) – all test cases successfully passed
  - Code samples and demo website
 
 # Build Status
@@ -150,7 +151,7 @@ docker run -d -e ASPNETCORE_ENVIRONMENT=Development -p 8080:8080 linuxchata/shar
 The application will be accessible at [http://localhost:8080](http://localhost:8080).
 
 # FIDO Conformance Tests
-All test cases successfully passed using the FIDO Conformance Tool.
+All test cases successfully passed using the [FIDO Conformance Tool](https://fidoalliance.org/certification/conformance/).
 <img alt="FIDO Conformance Tests" src="https://github.com/user-attachments/assets/dc5a22df-40a6-4efa-ab18-9ce23ff89938" />
 
 ## License
@@ -171,7 +172,7 @@ See [Contributing](https://github.com/linuxchata/fido2/blob/main/CONTRIBUTING.md
 - [Web Authentication: An API for accessing Public Key Credentials Level 3](https://www.w3.org/TR/webauthn-3/)
 - [PublicKeyCredential](https://developer.mozilla.org/en-US/docs/Web/API/PublicKeyCredential)
 
-## Metadata Service
+## FIDO Metadata Service
 - [FIDO Metadata Service](https://fidoalliance.org/specs/mds/fido-metadata-service-v3.0-ps-20210518.html)
 - [FIDO Metadata Statement](https://fidoalliance.org/specs/mds/fido-metadata-statement-v3.0-ps-20210518.html)
 
