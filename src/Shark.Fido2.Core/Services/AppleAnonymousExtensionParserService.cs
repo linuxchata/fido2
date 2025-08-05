@@ -3,9 +3,6 @@ using Shark.Fido2.Core.Abstractions.Services;
 
 namespace Shark.Fido2.Core.Services;
 
-/// <summary>
-/// Apple Anonymous attestation extension parser service.
-/// </summary>
 internal sealed class AppleAnonymousExtensionParserService : IAppleAnonymousExtensionParserService
 {
     private const string Prefix = "Apple Anonymous attestation statement certificate's";

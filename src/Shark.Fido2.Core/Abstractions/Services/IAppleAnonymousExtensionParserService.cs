@@ -1,14 +1,14 @@
 namespace Shark.Fido2.Core.Abstractions.Services;
 
 /// <summary>
-/// Apple Anonymous attestation extension parser service.
+/// The interface representing the logic to parse Apple Anonymous attestation extension data.
 /// </summary>
 public interface IAppleAnonymousExtensionParserService
 {
     /// <summary>
     /// Parses Apple Anonymous attestation extension data.
     /// </summary>
-    /// <param name="rawData">Raw extension data.</param>
-    /// <returns>Parsed extension data or null if parsing failed.</returns>
+    /// <param name="rawData">The raw byte array containing the Apple Anonymous attestation extension data.</param>
+    /// <returns>The parsed nonce if successful; otherwise, null.</returns>
     byte[]? Parse(byte[] rawData);
 }

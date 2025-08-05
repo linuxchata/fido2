@@ -4,7 +4,7 @@ using Shark.Fido2.Domain.Options;
 namespace Shark.Fido2.Core.Abstractions.Validators;
 
 /// <summary>
-/// Defines methods for validating attestation parameters during WebAuthn registration.
+/// The interface representing the logic to validate attestation parameters.
 /// </summary>
 public interface IAttestationParametersValidator
 {
@@ -17,9 +17,9 @@ public interface IAttestationParametersValidator
     /// <summary>
     /// Validates the attestation response and creation options.
     /// </summary>
-    /// <param name="publicKeyCredentialAttestation">The credential attestation response received from the client.</param>
-    /// <param name="creationOptions">The original creation options that were sent to the client.</param>
-    /// <returns>An <see cref="AttestationCompleteResult"/> indicating the outcome of the validation.</returns>
+    /// <param name="publicKeyCredentialAttestation">The credential attestation response.</param>
+    /// <param name="creationOptions">The original creation options.</param>
+    /// <returns>A validation result indicating success or failure with error details.</returns>
     AttestationCompleteResult Validate(
         PublicKeyCredentialAttestation publicKeyCredentialAttestation,
         PublicKeyCredentialCreationOptions creationOptions);

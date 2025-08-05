@@ -5,29 +5,26 @@ using Shark.Fido2.Domain;
 namespace Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 
 /// <summary>
-/// Validates X.509 certificates used in FIDO2 attestation statements.
-/// This validator ensures that attestation certificates meet the requirements specified in the FIDO2 standard
-/// for different attestation formats.
+/// The interface representing the logic to validate X.509 certificates.
 /// </summary>
 public interface IAttestationCertificateValidator
 {
     /// <summary>
-    /// Validates a certificate for Packed attestation format according to § 8.2.1 requirements.
+    /// Validates a certificate for Packed attestation format.
     /// </summary>
-    /// <param name="attestationCertificate">The X.509 certificate to validate.</param>
-    /// <param name="attestationObjectData">The attestation object data containing AAGUID and other metadata.</param>
+    /// <param name="attestationCertificate">The X.509 certificate.</param>
+    /// <param name="attestationObjectData">The attestation object data.</param>
     /// <returns>A validation result indicating success or failure with error details.</returns>
     ValidatorInternalResult ValidatePacked(
         X509Certificate2 attestationCertificate,
         AttestationObjectData attestationObjectData);
 
     /// <summary>
-    /// Validates a certificate for TPM attestation format according to § 8.3.1 requirements.
+    /// Validates a certificate for TPM attestation format.
     /// </summary>
-    /// <param name="attestationCertificate">The X.509 certificate to validate.</param>
-    /// <param name="attestationObjectData">The attestation object data containing AAGUID and other metadata.</param>
+    /// <param name="attestationCertificate">The X.509 certificate.</param>
+    /// <param name="attestationObjectData">The attestation object data.</param>
     /// <returns>A validation result indicating success or failure with error details.</returns>
-    /// <remarks>
     ValidatorInternalResult ValidateTpm(
         X509Certificate2 attestationCertificate,
         AttestationObjectData attestationObjectData);
@@ -35,10 +32,9 @@ public interface IAttestationCertificateValidator
     /// <summary>
     /// Validates a certificate for Android Key attestation format.
     /// </summary>
-    /// <param name="attestationCertificate">The X.509 certificate to validate.</param>
+    /// <param name="attestationCertificate">The X.509 certificate.</param>
     /// <param name="clientData">The client data containing challenge hash.</param>
     /// <returns>A validation result indicating success or failure with error details.</returns>
-    /// <remarks>
     ValidatorInternalResult ValidateAndroidKey(
         X509Certificate2 attestationCertificate,
         ClientData clientData);
@@ -46,7 +42,7 @@ public interface IAttestationCertificateValidator
     /// <summary>
     /// Validates a certificate for Android SafetyNet attestation format.
     /// </summary>
-    /// <param name="attestationCertificate">The X.509 certificate to validate.</param>
+    /// <param name="attestationCertificate">The X.509 certificate.</param>
     /// <returns>A validation result indicating success or failure with error details.</returns>
     ValidatorInternalResult ValidateAndroidSafetyNet(X509Certificate2 attestationCertificate);
 
@@ -60,14 +56,14 @@ public interface IAttestationCertificateValidator
     /// <summary>
     /// Validates a certificate for FIDO U2F attestation format.
     /// </summary>
-    /// <param name="attestationCertificate">The X.509 certificate to validate.</param>
+    /// <param name="attestationCertificate">The X.509 certificate.</param>
     /// <returns>A validation result indicating success or failure with error details.</returns>
     ValidatorInternalResult ValidateFidoU2F(X509Certificate2 attestationCertificate);
 
     /// <summary>
     /// Validates a certificate for Apple Anonymous attestation format.
     /// </summary>
-    /// <param name="attestationCertificate">The X.509 certificate to validate.</param>
+    /// <param name="attestationCertificate">The X.509 certificate.</param>
     /// <param name="nonce">The nonce to verify against the certificate extension.</param>
     /// <returns>A validation result indicating success or failure with error details.</returns>
     ValidatorInternalResult ValidateAppleAnonymous(X509Certificate2 attestationCertificate, byte[] nonce);

@@ -4,23 +4,23 @@ using Shark.Fido2.Domain;
 namespace Shark.Fido2.Core.Abstractions.Validators;
 
 /// <summary>
-/// Validates the client data received during a WebAuthn ceremony.
+/// The interface representing the logic to validate client data.
 /// </summary>
 public interface IClientDataValidator
 {
     /// <summary>
-    /// Validates the client data against WebAuthn specification requirements.
+    /// Validates the client data for the attestation.
     /// </summary>
-    /// <param name="clientData">The client data to validate.</param>
-    /// <param name="expectedChallenge">The challenge that was originally sent to the client.</param>
-    /// <returns>A ValidatorInternalResult indicating whether the client data is valid.</returns>
+    /// <param name="clientData">The client data.</param>
+    /// <param name="expectedChallenge">The challenge.</param>
+    /// <returns>A validation result indicating success or failure with error details.</returns>
     ValidatorInternalResult ValidateForAttestation(ClientData clientData, string expectedChallenge);
 
     /// <summary>
-    /// Validates the client data against WebAuthn specification requirements.
+    /// Validates the client data for the assertion.
     /// </summary>
-    /// <param name="clientData">The client data to validate.</param>
-    /// <param name="expectedChallenge">The challenge that was originally sent to the client.</param>
-    /// <returns>A ValidatorInternalResult indicating whether the client data is valid.</returns>
+    /// <param name="clientData">The client data.</param>
+    /// <param name="expectedChallenge">The challenge.</param>
+    /// <returns>A validation result indicating success or failure with error details.</returns>
     ValidatorInternalResult ValidateForAssertion(ClientData clientData, string expectedChallenge);
 }
