@@ -4,17 +4,16 @@ using Shark.Fido2.Domain.Options;
 namespace Shark.Fido2.Core.Abstractions;
 
 /// <summary>
-/// Interface for handling FIDO2 attestations (registration).
-/// Provides functionality for generating credential creation options and verifying registration responses.
+/// The interface representing the logic to handle attestations (registration).
 /// </summary>
 public interface IAttestation
 {
     /// <summary>
-    /// Generates credential creation options for a WebAuthn registration ceremony.
+    /// Generates credential creation options.
     /// </summary>
     /// <param name="request">The request containing parameters for generating credential creation options.</param>
     /// <param name="cancellationToken">A cancellation token.</param>
-    /// <returns>Credential creation options to be sent to the client.</returns>
+    /// <returns>Credential creation options.</returns>
     Task<PublicKeyCredentialCreationOptions> BeginRegistration(
         PublicKeyCredentialCreationOptionsRequest request,
         CancellationToken cancellationToken = default);
@@ -22,8 +21,8 @@ public interface IAttestation
     /// <summary>
     /// Verifies an attestation from a client and completes the registration process.
     /// </summary>
-    /// <param name="publicKeyCredentialAttestation">The credential attestation response received from the client.</param>
-    /// <param name="creationOptions">The original creation options that were sent to the client.</param>
+    /// <param name="publicKeyCredentialAttestation">The credential attestation response.</param>
+    /// <param name="creationOptions">The original creation options.</param>
     /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>The result of the attestation verification process.</returns>
     Task<AttestationCompleteResult> CompleteRegistration(

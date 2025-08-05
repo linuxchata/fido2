@@ -4,7 +4,7 @@ using Shark.Fido2.Domain.Options;
 namespace Shark.Fido2.Core.Abstractions.Validators;
 
 /// <summary>
-/// Defines methods for validating assertion parameters during WebAuthn authentication.
+/// The interface representing the logic to validate assertion parameters.
 /// </summary>
 public interface IAssertionParametersValidator
 {
@@ -17,9 +17,9 @@ public interface IAssertionParametersValidator
     /// <summary>
     /// Validates the assertion response and request options.
     /// </summary>
-    /// <param name="publicKeyCredentialAssertion">The credential assertion response received from the client.</param>
-    /// <param name="requestOptions">The original request options that were sent to the client.</param>
-    /// <returns>An <see cref="AssertionCompleteResult"/> indicating the outcome of the validation.</returns>
+    /// <param name="publicKeyCredentialAssertion">The credential assertion response.</param>
+    /// <param name="requestOptions">The original request options.</param>
+    /// <returns>A validation result indicating success or failure with error details.</returns>
     AssertionCompleteResult Validate(
         PublicKeyCredentialAssertion publicKeyCredentialAssertion,
         PublicKeyCredentialRequestOptions requestOptions);

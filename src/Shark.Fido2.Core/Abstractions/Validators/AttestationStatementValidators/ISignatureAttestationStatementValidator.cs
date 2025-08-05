@@ -6,7 +6,7 @@ using Shark.Fido2.Domain.Enums;
 namespace Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 
 /// <summary>
-/// Validates signatures in attestation statements for different attestation formats.
+/// The interface representing the logic to validate signatures in attestation statements.
 /// </summary>
 public interface ISignatureAttestationStatementValidator
 {
@@ -14,19 +14,19 @@ public interface ISignatureAttestationStatementValidator
     /// Validates a signature.
     /// </summary>
     /// <param name="data">The signed data.</param>
-    /// <param name="signature">The signature to verify.</param>
+    /// <param name="signature">The signature.</param>
     /// <param name="credentialPublicKey">The credential's public key.</param>
-    /// <returns>A validation result indicating success or failure.</returns>
+    /// <returns>A validation result indicating success or failure with error details.</returns>
     ValidatorInternalResult Validate(byte[] data, byte[] signature, CredentialPublicKey credentialPublicKey);
 
     /// <summary>
     /// Validates a generic attestation statement signature.
     /// </summary>
     /// <param name="data">The signed data.</param>
-    /// <param name="attestationStatementDict">The attestation statement dictionary containing The signature to verify.</param>
+    /// <param name="attestationStatementDict">The attestation statement dictionary.</param>
     /// <param name="credentialPublicKey">The credential's public key.</param>
-    /// <param name="attestationCertificate">Optional attestation certificate.</param>
-    /// <returns>A validation result indicating success or failure.</returns>
+    /// <param name="attestationCertificate">The X.509 attestation certificate.</param>
+    /// <returns>A validation result indicating success or failure with error details.</returns>
     ValidatorInternalResult Validate(
         byte[] data,
         Dictionary<string, object> attestationStatementDict,
@@ -37,11 +37,11 @@ public interface ISignatureAttestationStatementValidator
     /// Validates a TPM attestation statement signature.
     /// </summary>
     /// <param name="data">The signed data.</param>
-    /// <param name="attestationStatementDict">The attestation statement dictionary containing the TPM-specific data.</param>
-    /// <param name="keyType">The type of key used in the TPM.</param>
-    /// <param name="algorithm">The algorithm used for signing.</param>
-    /// <param name="attestationCertificate">The TPM attestation certificate.</param>
-    /// <returns>A validation result indicating success or failure.</returns>
+    /// <param name="attestationStatementDict">The attestation statement dictionary.</param>
+    /// <param name="keyType">The key type.</param>
+    /// <param name="algorithm">The signing algorithm.</param>
+    /// <param name="attestationCertificate">The X.509 attestation certificate.</param>
+    /// <returns>A validation result indicating success or failure with error details.</returns>
     ValidatorInternalResult ValidateTpm(
         byte[] data,
         Dictionary<string, object> attestationStatementDict,
@@ -53,10 +53,10 @@ public interface ISignatureAttestationStatementValidator
     /// Validates a FIDO U2F attestation statement signature.
     /// </summary>
     /// <param name="data">The signed data.</param>
-    /// <param name="attestationStatementDict">The attestation statement dictionary containing the U2F-specific data.</param>
+    /// <param name="attestationStatementDict">The attestation statement dictionary.</param>
     /// <param name="credentialPublicKey">The credential's public key.</param>
-    /// <param name="attestationCertificate">The U2F attestation certificate.</param>
-    /// <returns>A validation result indicating success or failure.</returns>
+    /// <param name="attestationCertificate">The X.509 attestation certificate.</param>
+    /// <returns>A validation result indicating success or failure with error details.</returns>
     ValidatorInternalResult ValidateFido2U2f(
         byte[] data,
         Dictionary<string, object> attestationStatementDict,
