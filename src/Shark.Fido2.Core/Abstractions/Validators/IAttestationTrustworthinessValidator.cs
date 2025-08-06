@@ -1,5 +1,5 @@
 using Shark.Fido2.Core.Results;
-using Shark.Fido2.Metadata.Core.Domain;
+using Shark.Fido2.Domain;
 
 namespace Shark.Fido2.Core.Abstractions.Validators;
 
@@ -11,10 +11,10 @@ public interface IAttestationTrustworthinessValidator
     /// <summary>
     /// Validates the attestation statement trustworthiness.
     /// </summary>
+    /// <param name="authenticatorData">The authenticator data.</param>
     /// <param name="attestationStatementResult">The result from attestation statement validation.</param>
-    /// <param name="metadataPayloadItem">The authenticator metadata.</param>
     /// <returns>A validation result indicating success or failure with error details.</returns>
-    ValidatorInternalResult Validate(
-        AttestationStatementInternalResult attestationStatementResult,
-        MetadataPayloadItem? metadataPayloadItem);
+    Task<ValidatorInternalResult> Validate(
+        AuthenticatorData authenticatorData,
+        AttestationStatementInternalResult attestationStatementResult);
 }

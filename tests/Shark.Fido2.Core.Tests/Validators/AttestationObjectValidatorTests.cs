@@ -9,8 +9,6 @@ using Shark.Fido2.Core.Validators;
 using Shark.Fido2.Domain;
 using Shark.Fido2.Domain.Enums;
 using Shark.Fido2.Domain.Options;
-using Shark.Fido2.Metadata.Core.Abstractions;
-using Shark.Fido2.Metadata.Core.Domain;
 
 namespace Shark.Fido2.Core.Tests.Validators;
 
@@ -29,15 +27,15 @@ internal class AttestationObjectValidatorTests
 
         var attestationTrustworthinessValidatorMock = new Mock<IAttestationTrustworthinessValidator>();
         attestationTrustworthinessValidatorMock
-            .Setup(a => a.Validate(It.IsAny<AttestationStatementInternalResult>(), It.IsAny<MetadataPayloadItem?>()))
-            .Returns(ValidatorInternalResult.Valid());
+            .Setup(a => a.Validate(It.IsAny<AuthenticatorData>(), It.IsAny<AttestationStatementInternalResult>()))
+            .ReturnsAsync(ValidatorInternalResult.Valid());
 
-        var metadataCachedServiceMock = new Mock<IMetadataCachedService>();
+        var attestationTrustAnchorValidatorMock = new Mock<IAttestationTrustAnchorValidator>();
 
         _sut = new AttestationObjectValidator(
             attestationStatementValidatorMock.Object,
             attestationTrustworthinessValidatorMock.Object,
-            metadataCachedServiceMock.Object,
+            attestationTrustAnchorValidatorMock.Object,
             Options.Create(Fido2ConfigurationBuilder.Build()));
     }
 

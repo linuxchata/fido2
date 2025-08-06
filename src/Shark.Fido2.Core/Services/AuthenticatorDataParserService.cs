@@ -49,7 +49,7 @@ internal sealed class AuthenticatorDataParserService : IAuthenticatorDataParserS
 
         if (authenticatorData.AttestedCredentialDataIncluded)
         {
-            // AAGUID of the authenticator
+            // The authenticator attestation GUID
             var aaguidArray = authenticatorDataArray.AsSpan(startIndex, AaguidLength);
             authenticatorData.AttestedCredentialData.AaGuid = new Guid(aaguidArray, bigEndian: true);
             startIndex += AaguidLength;

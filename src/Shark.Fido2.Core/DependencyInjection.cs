@@ -38,6 +38,7 @@ public static class DependencyInjection
         services.AddTransient<IAuthenticatorDataParserService, AuthenticatorDataParserService>();
         services.AddTransient<IAttestationObjectValidator, AttestationObjectValidator>();
         services.AddTransient<IAssertionObjectValidator, AssertionResponseValidator>();
+        services.AddTransient<IAttestationTrustAnchorValidator, AttestationFidoMetadataServiceValidator>();
         services.AddTransient<IAttestationTrustworthinessValidator, AttestationTrustworthinessValidator>();
         services.AddTransient<IAttestationStatementValidator, AttestationStatementValidator>();
         services.AddTransient<IAttestationObjectHandler, AttestationObjectHandler>();

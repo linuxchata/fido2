@@ -4,24 +4,29 @@ using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Configurations;
 using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Results;
-using Shark.Fido2.Metadata.Core.Domain;
+using Shark.Fido2.Domain;
 
 namespace Shark.Fido2.Core.Validators;
 
 internal class AttestationTrustworthinessValidator : IAttestationTrustworthinessValidator
 {
+    private readonly IAttestationTrustAnchorValidator _attestationTrustAnchorValidator;
     private readonly TimeProvider _timeProvider;
     private readonly Fido2Configuration _configuration;
 
-    public AttestationTrustworthinessValidator(TimeProvider timeProvider, IOptions<Fido2Configuration> options)
+    public AttestationTrustworthinessValidator(
+        IAttestationTrustAnchorValidator attestationTrustAnchorValidator,
+        TimeProvider timeProvider,
+        IOptions<Fido2Configuration> options)
     {
+        _attestationTrustAnchorValidator = attestationTrustAnchorValidator;
         _timeProvider = timeProvider;
         _configuration = options.Value;
     }
 
-    public ValidatorInternalResult Validate(
-        AttestationStatementInternalResult attestationStatementResult,
-        MetadataPayloadItem? metadataPayloadItem)
+    public async Task<ValidatorInternalResult> Validate(
+        AuthenticatorData authenticatorData,
+        AttestationStatementInternalResult attestationStatementResult)
     {
         if (attestationStatementResult == null)
         {
@@ -44,13 +49,14 @@ internal class AttestationTrustworthinessValidator : IAttestationTrustworthiness
                 : ValidatorInternalResult.Invalid("Self attestation type is not allowed under current policy");
         }
 
-        // Self attestation cannot contains full attestation (trust path)
-        if (metadataPayloadItem?.AttestationTypes?.Length == 1 &&
-            metadataPayloadItem.AttestationTypes[0] == Metadata.Core.Domain.Constants.AttestationType.BasicSurrogate &&
-            attestationStatementResult.TrustPath?.Length > 0)
+        // If only basic surrogate attestation is supported by the authenticator, verify that attestation does not
+        // contain a full trust path.
+        var result = await _attestationTrustAnchorValidator.ValidateBasicAttestation(
+            authenticatorData,
+            attestationStatementResult.TrustPath);
+        if (!result.IsValid)
         {
-            return ValidatorInternalResult.Invalid(
-                $"{Metadata.Core.Domain.Constants.AttestationType.BasicSurrogate} (self) attestation type cannot have trust path");
+            return result;
         }
 
         // Otherwise, use the X.509 certificates returned as the attestation trust path from the verification
@@ -62,9 +68,7 @@ internal class AttestationTrustworthinessValidator : IAttestationTrustworthiness
                 $"Trust path is required for {attestationStatementResult.AttestationType} attestation type");
         }
 
-        var result = ValidateTrustPath(attestationStatementResult);
-
-        return result;
+        return ValidateTrustPath(attestationStatementResult);
     }
 
     private ValidatorInternalResult ValidateTrustPath(AttestationStatementInternalResult attestationStatementResult)
@@ -92,8 +96,7 @@ internal class AttestationTrustworthinessValidator : IAttestationTrustworthiness
             }
         }
 
-        var isValid = chain.Build(leafCertificate);
-        if (!isValid)
+        if (!chain.Build(leafCertificate))
         {
             var statuses = chain.ChainStatus.Select(a => a.StatusInformation);
             return ValidatorInternalResult.Invalid(string.Join(' ', statuses.ToList()));

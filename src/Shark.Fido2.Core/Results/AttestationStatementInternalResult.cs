@@ -25,9 +25,9 @@ public class AttestationStatementInternalResult : ValidatorInternalResult
         TrustPath = trustedPath;
     }
 
-    public string AttestationStatementFormat { get; set; }
+    public string AttestationStatementFormat { get; }
 
-    public AttestationType AttestationType { get; set; }
+    public AttestationType AttestationType { get; }
 
-    public X509Certificate2[]? TrustPath { get; set; }
+    public X509Certificate2[]? TrustPath { get; }
 }
