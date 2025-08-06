@@ -15,8 +15,6 @@ namespace Shark.Fido2.Core.Tests.Validators;
 [TestFixture]
 public class AttestationTrustworthinessValidatorTests
 {
-    private readonly Guid aaGuid = Guid.NewGuid();
-
     private Mock<IAttestationTrustAnchorValidator> _attestationTrustAnchorValidatorMock = null!;
 
     private AuthenticatorData _authenticatorData;
