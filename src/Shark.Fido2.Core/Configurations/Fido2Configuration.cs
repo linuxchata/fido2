@@ -8,7 +8,7 @@ public sealed class Fido2Configuration
 
     /// <summary>
     /// Gets a valid domain string identifying the Relying Party on whose behalf a given registration or authentication
-    /// ceremony is being performed. This is a critical parameter in the WebAuthn protocol. It defines the security scope
+    /// ceremony is being performed. This is a critical parameter in the WebAuthn standard. It defines the security scope
     /// within which credentials are valid. Therefore, careful selection is essential, as an incorrect or overly broad value
     /// can lead to unintended credential reuse or security vulnerabilities.
     /// </summary>
