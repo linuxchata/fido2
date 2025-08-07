@@ -17,17 +17,17 @@ public class AttestationStatementInternalResult : ValidatorInternalResult
     public AttestationStatementInternalResult(
         string attestationStatementFormat,
         AttestationType attestationType,
-        X509Certificate2[] trustedPath)
+        X509Certificate2[] trustPath)
         : base(true)
     {
         AttestationStatementFormat = attestationStatementFormat;
         AttestationType = attestationType;
-        TrustPath = trustedPath;
+        TrustPath = trustPath;
     }
 
-    public string AttestationStatementFormat { get; set; }
+    public string AttestationStatementFormat { get; }
 
-    public AttestationType AttestationType { get; set; }
+    public AttestationType AttestationType { get; }
 
-    public X509Certificate2[]? TrustPath { get; set; }
+    public X509Certificate2[]? TrustPath { get; }
 }

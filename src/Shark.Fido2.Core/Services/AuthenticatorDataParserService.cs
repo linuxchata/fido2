@@ -9,7 +9,7 @@ namespace Shark.Fido2.Core.Services;
 
 /// <summary>
 /// Authenticator Data provider
-/// See 6.1. Authenticator Data of Web Authentication: An API for accessing Public Key Credentials Level 2.
+/// See: 6.1. Authenticator Data of Web Authentication: An API for accessing Public Key Credentials Level 2.
 /// </summary>
 internal sealed class AuthenticatorDataParserService : IAuthenticatorDataParserService
 {
@@ -49,7 +49,7 @@ internal sealed class AuthenticatorDataParserService : IAuthenticatorDataParserS
 
         if (authenticatorData.AttestedCredentialDataIncluded)
         {
-            // AAGUID of the authenticator
+            // The authenticator attestation GUID
             var aaguidArray = authenticatorDataArray.AsSpan(startIndex, AaguidLength);
             authenticatorData.AttestedCredentialData.AaGuid = new Guid(aaguidArray, bigEndian: true);
             startIndex += AaguidLength;

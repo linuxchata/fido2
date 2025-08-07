@@ -8,7 +8,7 @@ using Shark.Fido2.Domain.Options;
 namespace Shark.Fido2.Core.Tests.Validators;
 
 [TestFixture]
-public class AttestationParametersValidatorTests
+internal class AttestationParametersValidatorTests
 {
     private const string UserName = "UserName";
     private const string DisplayName = "DisplayName";

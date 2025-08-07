@@ -4,7 +4,7 @@ using Shark.Fido2.Models.Responses;
 namespace Shark.Fido2.Models.Tests.Mappers;
 
 [TestFixture]
-public class PublicKeyCredentialAttestationMapperTests
+internal class PublicKeyCredentialAttestationMapperTests
 {
     [Test]
     public void Map_WhenAttestationIsNull_ThenThrowsArgumentNullException()

@@ -7,7 +7,7 @@ using Shark.Fido2.Domain.Options;
 namespace Shark.Fido2.Core.Tests.Validators;
 
 [TestFixture]
-public class AssertionParametersValidatorTests
+internal class AssertionParametersValidatorTests
 {
     private const string CredentialIdBase64 = "AQIDBA=="; // Base64 for [1,2,3,4]
     private const string CredentialRawId = "AQIDBA==";

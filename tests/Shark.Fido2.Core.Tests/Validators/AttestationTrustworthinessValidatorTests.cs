@@ -1,32 +1,54 @@
+using System.Security.Cryptography.X509Certificates;
 using Microsoft.Extensions.Options;
+using Moq;
+using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Configurations;
 using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Core.Tests.DataReaders;
 using Shark.Fido2.Core.Validators;
+using Shark.Fido2.Domain;
 using Shark.Fido2.Domain.Enums;
 
 namespace Shark.Fido2.Core.Tests.Validators;
 
 [TestFixture]
-public class AttestationTrustworthinessValidatorTests
+internal class AttestationTrustworthinessValidatorTests
 {
-    private AttestationTrustworthinessValidator _sut = null!;
+    private Mock<IAttestationTrustAnchorValidator> _attestationTrustAnchorValidatorMock = null!;
+
+    private AuthenticatorData _authenticatorData;
     private Fido2Configuration _configuration;
+
+    private AttestationTrustworthinessValidator _sut = null!;
 
     [SetUp]
     public void Setup()
     {
+        _attestationTrustAnchorValidatorMock = new Mock<IAttestationTrustAnchorValidator>();
+        _attestationTrustAnchorValidatorMock
+            .Setup(a => a.ValidateBasicAttestation(It.IsAny<AuthenticatorData>(), It.IsAny<X509Certificate2[]>()))
+            .ReturnsAsync(ValidatorInternalResult.Valid());
+
+        _authenticatorData = new AuthenticatorData
+        {
+            AttestedCredentialData = new AttestedCredentialData(),
+        };
+
         _configuration = Fido2ConfigurationBuilder.Build();
         var options = Options.Create(_configuration);
-        _sut = new AttestationTrustworthinessValidator(TimeProvider.System, options);
+
+        _sut = new AttestationTrustworthinessValidator(
+            _attestationTrustAnchorValidatorMock.Object,
+            TimeProvider.System,
+            options);
     }
 
     [Test]
-    public void Validate_WhenNullAttestationStatementResult_ThenReturnsInvalid()
+    public async Task Validate_WhenAttestationStatementResultIsNull_ThenReturnsInvalid()
     {
         // Act
-        var result = _sut.Validate(null!, null);
+        var result = await _sut.Validate(_authenticatorData, null!);
 
         // Assert
         Assert.That(result.IsValid, Is.False);
@@ -35,7 +57,7 @@ public class AttestationTrustworthinessValidatorTests
 
     [TestCase(true)]
     [TestCase(false)]
-    public void Validate_WhenNoneAttestation_ThenReturnsExpectedResult(bool allowNoneAttestation)
+    public async Task Validate_WhenNoneAttestation_ThenReturnsExpectedResult(bool allowNoneAttestation)
     {
         // Arrange
         _configuration.AllowNoneAttestation = allowNoneAttestation;
@@ -44,7 +66,7 @@ public class AttestationTrustworthinessValidatorTests
             AttestationType.None);
 
         // Act
-        var result = _sut.Validate(attestationResult, null);
+        var result = await _sut.Validate(_authenticatorData, attestationResult);
 
         // Assert
         Assert.That(result.IsValid, Is.EqualTo(allowNoneAttestation));
@@ -56,7 +78,7 @@ public class AttestationTrustworthinessValidatorTests
 
     [TestCase(true)]
     [TestCase(false)]
-    public void Validate_WhenSelfAttestation_ThenReturnsExpectedResult(bool allowSelfAttestation)
+    public async Task Validate_WhenSelfAttestation_ThenReturnsExpectedResult(bool allowSelfAttestation)
     {
         // Arrange
         _configuration.AllowSelfAttestation = allowSelfAttestation;
@@ -65,7 +87,7 @@ public class AttestationTrustworthinessValidatorTests
             AttestationType.Self);
 
         // Act
-        var result = _sut.Validate(attestationResult, null);
+        var result = await _sut.Validate(_authenticatorData, attestationResult);
 
         // Assert
         Assert.That(result.IsValid, Is.EqualTo(allowSelfAttestation));
@@ -76,7 +98,7 @@ public class AttestationTrustworthinessValidatorTests
     }
 
     [Test]
-    public void Validate_WhenBasicAttestationWithoutTrustPath_ThenReturnsInvalid()
+    public async Task Validate_WhenBasicAttestationWithoutTrustPath_ThenReturnsInvalid()
     {
         // Arrange
         var attestationResult = new AttestationStatementInternalResult(
@@ -84,7 +106,7 @@ public class AttestationTrustworthinessValidatorTests
             AttestationType.Basic);
 
         // Act
-        var result = _sut.Validate(attestationResult, null);
+        var result = await _sut.Validate(_authenticatorData, attestationResult);
 
         // Assert
         Assert.That(result.IsValid, Is.False);
@@ -92,7 +114,24 @@ public class AttestationTrustworthinessValidatorTests
     }
 
     [Test]
-    public void Validate_WhenBasicAttestationWithEmptyTrustPath_ThenReturnsInvalid()
+    public async Task Validate_WhenBasicAttestationWithNullTrustPath_ThenReturnsInvalid()
+    {
+        // Arrange
+        var attestationResult = new AttestationStatementInternalResult(
+            AttestationStatementFormatIdentifier.None,
+            AttestationType.Basic,
+            null!);
+
+        // Act
+        var result = await _sut.Validate(_authenticatorData, attestationResult);
+
+        // Assert
+        Assert.That(result.IsValid, Is.False);
+        Assert.That(result.Message, Is.EqualTo("Trust path is required for Basic attestation type"));
+    }
+
+    [Test]
+    public async Task Validate_WhenBasicAttestationWithEmptyTrustPath_ThenReturnsInvalid()
     {
         // Arrange
         var attestationResult = new AttestationStatementInternalResult(
@@ -101,7 +140,7 @@ public class AttestationTrustworthinessValidatorTests
             []);
 
         // Act
-        var result = _sut.Validate(attestationResult, null);
+        var result = await _sut.Validate(_authenticatorData, attestationResult);
 
         // Assert
         Assert.That(result.IsValid, Is.False);
@@ -109,19 +148,18 @@ public class AttestationTrustworthinessValidatorTests
     }
 
     [Test]
-    public void Validate_WhenBasicAttestationWithTrustPathWitAndroidKeyCertificates_ThenReturnsValid()
+    public async Task Validate_WhenBasicAttestationWithTrustPathWitAndroidKeyCertificates_ThenReturnsValid()
     {
         // Arrange
-        var fileName = "AndroidKey.pem";
-        var certificateData = CertificateDataReader.Read(fileName);
+        var certificates = CertificateDataReader.Read("AndroidKey.pem");
 
         var attestationResult = new AttestationStatementInternalResult(
             AttestationStatementFormatIdentifier.AndroidKey,
             AttestationType.Basic,
-            certificateData);
+            certificates);
 
         // Act
-        var result = _sut.Validate(attestationResult, null);
+        var result = await _sut.Validate(_authenticatorData, attestationResult);
 
         // Assert
         Assert.That(result.IsValid, Is.True);
@@ -129,19 +167,43 @@ public class AttestationTrustworthinessValidatorTests
     }
 
     [Test]
-    public void Validate_WhenAnonCaAttestationWithTrustPathWithAppleAnonymousCertificates_ThenReturnsValid()
+    public async Task Validate_WhenBasicSurrogateAttestationWithTrustPathWithPackedCertificates_ThenReturnsInvalid()
     {
         // Arrange
-        var fileName = "AppleAnonymous.pem";
-        var certificateData = CertificateDataReader.Read(fileName);
+        var errorMessage = $"basic_surrogate (self) attestation type cannot have trust path";
+
+        _attestationTrustAnchorValidatorMock
+            .Setup(a => a.ValidateBasicAttestation(It.IsAny<AuthenticatorData>(), It.IsAny<X509Certificate2[]>()))
+            .ReturnsAsync(ValidatorInternalResult.Invalid(errorMessage));
+
+        var certificates = CertificateDataReader.Read("Packed.pem");
+
+        var attestationResult = new AttestationStatementInternalResult(
+            AttestationStatementFormatIdentifier.Packed,
+            AttestationType.AttCA,
+            certificates);
+
+        // Act
+        var result = await _sut.Validate(_authenticatorData, attestationResult);
+
+        // Assert
+        Assert.That(result.IsValid, Is.False);
+        Assert.That(result.Message, Is.EqualTo(errorMessage));
+    }
+
+    [Test]
+    public async Task Validate_WhenAnonCaAttestationWithTrustPathWithAppleAnonymousCertificates_ThenReturnsValid()
+    {
+        // Arrange
+        var certificates = CertificateDataReader.Read("AppleAnonymous.pem");
 
         var attestationResult = new AttestationStatementInternalResult(
             AttestationStatementFormatIdentifier.Apple,
             AttestationType.AnonCA,
-            certificateData);
+            certificates);
 
         // Act
-        var result = _sut.Validate(attestationResult, null);
+        var result = await _sut.Validate(_authenticatorData, attestationResult);
 
         // Assert
         Assert.That(result.IsValid, Is.False);
@@ -149,19 +211,18 @@ public class AttestationTrustworthinessValidatorTests
     }
 
     [Test]
-    public void Validate_WhenAttCaAttestationWithTrustPathWithTpmCertificates_ThenReturnsValid()
+    public async Task Validate_WhenAttCaAttestationWithTrustPathWithTpmCertificates_ThenReturnsValid()
     {
         // Arrange
-        var fileName = "Tpm.pem";
-        var certificateData = CertificateDataReader.Read(fileName);
+        var certificates = CertificateDataReader.Read("Tpm.pem");
 
         var attestationResult = new AttestationStatementInternalResult(
             AttestationStatementFormatIdentifier.Tpm,
             AttestationType.AttCA,
-            certificateData);
+            certificates);
 
         // Act
-        var result = _sut.Validate(attestationResult, null);
+        var result = await _sut.Validate(_authenticatorData, attestationResult);
 
         // Assert
         Assert.That(result.IsValid, Is.True);
@@ -169,19 +230,18 @@ public class AttestationTrustworthinessValidatorTests
     }
 
     [Test]
-    public void Validate_WhenAttCaAttestationWithTrustPathWithPackedCertificates_ThenReturnsValid()
+    public async Task Validate_WhenAttCaAttestationWithTrustPathWithPackedCertificates_ThenReturnsValid()
     {
         // Arrange
-        var fileName = "Packed.pem";
-        var certificateData = CertificateDataReader.Read(fileName);
+        var certificates = CertificateDataReader.Read("Packed.pem");
 
         var attestationResult = new AttestationStatementInternalResult(
             AttestationStatementFormatIdentifier.Packed,
             AttestationType.AttCA,
-            certificateData);
+            certificates);
 
         // Act
-        var result = _sut.Validate(attestationResult, null);
+        var result = await _sut.Validate(_authenticatorData, attestationResult);
 
         // Assert
         Assert.That(result.IsValid, Is.True);
@@ -189,19 +249,18 @@ public class AttestationTrustworthinessValidatorTests
     }
 
     [Test]
-    public void Validate_WhenAttCaAttestationWithTrustPathWithPackedCertificatesWithCa_ThenReturnsValid()
+    public async Task Validate_WhenAttCaAttestationWithTrustPathWithPackedCertificatesWithCa_ThenReturnsValid()
     {
         // Arrange
-        var fileName = "PackedWithCa.pem";
-        var certificateData = CertificateDataReader.Read(fileName);
+        var certificates = CertificateDataReader.Read("PackedWithCa.pem");
 
         var attestationResult = new AttestationStatementInternalResult(
             AttestationStatementFormatIdentifier.Packed,
             AttestationType.AttCA,
-            certificateData);
+            certificates);
 
         // Act
-        var result = _sut.Validate(attestationResult, null);
+        var result = await _sut.Validate(_authenticatorData, attestationResult);
 
         // Assert
         Assert.That(result.IsValid, Is.True);
@@ -209,19 +268,18 @@ public class AttestationTrustworthinessValidatorTests
     }
 
     [Test]
-    public void Validate_WhenAttCaAttestationWithTrustPathWitFidoU2fCertificates_ThenReturnsValid()
+    public async Task Validate_WhenAttCaAttestationWithTrustPathWitFidoU2fCertificates_ThenReturnsValid()
     {
         // Arrange
-        var fileName = "FidoU2f.pem";
-        var certificateData = CertificateDataReader.Read(fileName);
+        var certificates = CertificateDataReader.Read("FidoU2f.pem");
 
         var attestationResult = new AttestationStatementInternalResult(
             AttestationStatementFormatIdentifier.FidoU2F,
             AttestationType.AttCA,
-            certificateData);
+            certificates);
 
         // Act
-        var result = _sut.Validate(attestationResult, null);
+        var result = await _sut.Validate(_authenticatorData, attestationResult);
 
         // Assert
         Assert.That(result.IsValid, Is.True);

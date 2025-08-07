@@ -11,7 +11,7 @@ public sealed class AttestedCredentialData
     }
 
     /// <summary>
-    /// Gets or sets the AAGUID of the authenticator.
+    /// Gets or sets the authenticator attestation GUID.
     /// </summary>
     public Guid AaGuid { get; set; }
 

@@ -3,7 +3,7 @@ using Shark.Fido2.Core.Helpers;
 namespace Shark.Fido2.Core.Tests.Helpers;
 
 [TestFixture]
-public class ChallengeGeneratorTests
+internal class ChallengeGeneratorTests
 {
     [Test]
     public void Get_ThenReturns24BytesChallenge()

@@ -16,7 +16,7 @@ using Shark.Fido2.Domain.Options;
 namespace Shark.Fido2.Core.Tests;
 
 [TestFixture]
-public class AttestationTests
+internal class AttestationTests
 {
     private const string UserName = "UserName";
     private const string DisplayName = "DisplayName";

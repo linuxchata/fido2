@@ -11,7 +11,7 @@ public enum TestEnum
 }
 
 [TestFixture]
-public class EnumExtensionsTests
+internal class EnumExtensionsTests
 {
     [Test]
     public void GetValue_WhenValueWithEnumMemberAttribute_ThenReturnsCustomValue()

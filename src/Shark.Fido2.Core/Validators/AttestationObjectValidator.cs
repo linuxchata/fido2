@@ -9,8 +9,6 @@ using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain;
 using Shark.Fido2.Domain.Enums;
 using Shark.Fido2.Domain.Options;
-using Shark.Fido2.Metadata.Core.Abstractions;
-using Shark.Fido2.Metadata.Core.Domain;
 
 namespace Shark.Fido2.Core.Validators;
 
@@ -18,18 +16,18 @@ internal class AttestationObjectValidator : IAttestationObjectValidator
 {
     private readonly IAttestationStatementValidator _attestationStatementValidator;
     private readonly IAttestationTrustworthinessValidator _attestationTrustworthinessValidator;
-    private readonly IMetadataCachedService _metadataService;
+    private readonly IAttestationTrustAnchorValidator _attestationTrustAnchorValidator;
     private readonly Fido2Configuration _configuration;
 
     public AttestationObjectValidator(
         IAttestationStatementValidator attestationStatementValidator,
         IAttestationTrustworthinessValidator attestationTrustworthinessValidator,
-        IMetadataCachedService metadataService,
+        IAttestationTrustAnchorValidator attestationTrustAnchorValidator,
         IOptions<Fido2Configuration> options)
     {
         _attestationStatementValidator = attestationStatementValidator;
         _attestationTrustworthinessValidator = attestationTrustworthinessValidator;
-        _metadataService = metadataService;
+        _attestationTrustAnchorValidator = attestationTrustAnchorValidator;
         _configuration = options.Value;
     }
 
@@ -124,31 +122,18 @@ internal class AttestationObjectValidator : IAttestationObjectValidator
         // for that attestation type and attestation statement format fmt, from a trusted source or from policy.
         // For example, the FIDO Metadata Service [FIDOMetadataService] provides one way to obtain such information,
         // using the aaguid in the attestedCredentialData in authData.
-        var aaGuid = attestationObjectData.AuthenticatorData!.AttestedCredentialData.AaGuid;
-        MetadataPayloadItem? authenticatorMetadata = null;
-        if (_configuration.EnableMetadataService)
+        var trustAnchorValidationResult = await _attestationTrustAnchorValidator.Validate(
+            attestationObjectData.AuthenticatorData!);
+        if (!trustAnchorValidationResult.IsValid)
         {
-            authenticatorMetadata = await _metadataService.Get(aaGuid);
-            if (authenticatorMetadata != null)
-            {
-                if (authenticatorMetadata.HasIncreasedRisk())
-                {
-                    return ValidatorInternalResult.Invalid(
-                        $"Authenticator {aaGuid} has {authenticatorMetadata.GetLastStatus()} status (increased risk)");
-                }
-            }
-            else if (_configuration.EnableStrictAuthenticatorVerification)
-            {
-                return ValidatorInternalResult.Invalid($"Metadata for authenticator {aaGuid} is not available");
-            }
+            return trustAnchorValidationResult;
         }
 
         // Step 21
         // Assess the attestation trustworthiness using the outputs of the verification procedure in step 19
-        var attestationStatementResult = (AttestationStatementInternalResult)result;
-        var trustworthinessResult = _attestationTrustworthinessValidator.Validate(
-            attestationStatementResult,
-            authenticatorMetadata);
+        var trustworthinessResult = await _attestationTrustworthinessValidator.Validate(
+            attestationObjectData.AuthenticatorData!,
+            (AttestationStatementInternalResult)result);
         if (!trustworthinessResult.IsValid)
         {
             return trustworthinessResult;
