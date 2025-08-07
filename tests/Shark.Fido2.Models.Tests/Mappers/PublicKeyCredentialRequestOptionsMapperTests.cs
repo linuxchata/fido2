@@ -7,7 +7,7 @@ using Shark.Fido2.Models.Mappers;
 namespace Shark.Fido2.Models.Tests.Mappers;
 
 [TestFixture]
-public class PublicKeyCredentialRequestOptionsMapperTests
+internal class PublicKeyCredentialRequestOptionsMapperTests
 {
     [Test]
     public void MapRequestOptions_WhenOptionsAreValid_ThenReturnsServerResponse()

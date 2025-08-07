@@ -7,7 +7,7 @@ using Shark.Fido2.Core.Services;
 namespace Shark.Fido2.Core.Tests.Services;
 
 [TestFixture]
-public class AndroidSafetyNetJwsResponseParserServiceTests
+internal class AndroidSafetyNetJwsResponseParserServiceTests
 {
     private AndroidSafetyNetJwsResponseParserService _sut = null!;
     private JwtSecurityTokenHandler _tokenHandler = null!;

@@ -4,7 +4,7 @@ using Shark.Fido2.Common.Extensions;
 namespace Shark.Fido2.Common.Tests.Extensions;
 
 [TestFixture]
-public class ConvertExtensionsTests
+internal class ConvertExtensionsTests
 {
     [Test]
     public void ToBase64Url_ThenEncodesCorrectly()

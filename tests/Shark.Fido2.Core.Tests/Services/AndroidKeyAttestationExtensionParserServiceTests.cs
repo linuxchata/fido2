@@ -4,7 +4,7 @@ using Shark.Fido2.Domain.Enums;
 namespace Shark.Fido2.Core.Tests.Services;
 
 [TestFixture]
-public class AndroidKeyAttestationExtensionParserServiceTests
+internal class AndroidKeyAttestationExtensionParserServiceTests
 {
     private AndroidKeyAttestationExtensionParserService _sut;
 

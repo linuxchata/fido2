@@ -3,7 +3,7 @@ using Shark.Fido2.Core.Helpers;
 namespace Shark.Fido2.Core.Tests.Helpers;
 
 [TestFixture]
-public class BytesArrayHelperTests
+internal class BytesArrayHelperTests
 {
     #region Concatenate Tests
 

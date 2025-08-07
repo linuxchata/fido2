@@ -3,7 +3,7 @@
 namespace Shark.Fido2.Core.Tests.Helpers;
 
 [TestFixture]
-public class UserIdGeneratorTests
+internal class UserIdGeneratorTests
 {
     private UserIdGenerator _sut = null!;
 
