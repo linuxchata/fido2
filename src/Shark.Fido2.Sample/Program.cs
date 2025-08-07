@@ -1,5 +1,6 @@
 using Shark.Fido2.Core;
 using Shark.Fido2.InMemory;
+using Shark.Fido2.Sample.Middlewares;
 using Shark.Fido2.Sample.Swagger;
 using Swashbuckle.AspNetCore.Filters;
 
@@ -38,6 +39,19 @@ builder.Services.AddSwaggerGen(c =>
 });
 builder.Services.AddSwaggerExamplesFromAssemblyOf<ServerPublicKeyCredentialCreationOptionsRequestExample>();
 
+builder.Services.AddHsts(options =>
+{
+    options.Preload = true;
+    options.IncludeSubDomains = true;
+    options.MaxAge = TimeSpan.FromDays(365);
+});
+
+builder.Services.AddHttpsRedirection(options =>
+{
+    options.RedirectStatusCode = StatusCodes.Status308PermanentRedirect;
+    options.HttpsPort = 443;
+});
+
 builder.Services.AddFido2InMemoryStore();
 builder.Services.AddFido2(builder.Configuration);
 
@@ -65,6 +79,8 @@ app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+app.UseMiddleware<DisableTrackMiddleware>();
 
 app.UseRouting();
 
