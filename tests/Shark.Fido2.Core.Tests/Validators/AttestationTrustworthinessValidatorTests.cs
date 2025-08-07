@@ -151,13 +151,12 @@ internal class AttestationTrustworthinessValidatorTests
     public async Task Validate_WhenBasicAttestationWithTrustPathWitAndroidKeyCertificates_ThenReturnsValid()
     {
         // Arrange
-        var fileName = "AndroidKey.pem";
-        var certificateData = CertificateDataReader.Read(fileName);
+        var certificates = CertificateDataReader.Read("AndroidKey.pem");
 
         var attestationResult = new AttestationStatementInternalResult(
             AttestationStatementFormatIdentifier.AndroidKey,
             AttestationType.Basic,
-            certificateData);
+            certificates);
 
         // Act
         var result = await _sut.Validate(_authenticatorData, attestationResult);
@@ -177,13 +176,12 @@ internal class AttestationTrustworthinessValidatorTests
             .Setup(a => a.ValidateBasicAttestation(It.IsAny<AuthenticatorData>(), It.IsAny<X509Certificate2[]>()))
             .ReturnsAsync(ValidatorInternalResult.Invalid(errorMessage));
 
-        var fileName = "Packed.pem";
-        var certificateData = CertificateDataReader.Read(fileName);
+        var certificates = CertificateDataReader.Read("Packed.pem");
 
         var attestationResult = new AttestationStatementInternalResult(
             AttestationStatementFormatIdentifier.Packed,
             AttestationType.AttCA,
-            certificateData);
+            certificates);
 
         // Act
         var result = await _sut.Validate(_authenticatorData, attestationResult);
@@ -197,13 +195,12 @@ internal class AttestationTrustworthinessValidatorTests
     public async Task Validate_WhenAnonCaAttestationWithTrustPathWithAppleAnonymousCertificates_ThenReturnsValid()
     {
         // Arrange
-        var fileName = "AppleAnonymous.pem";
-        var certificateData = CertificateDataReader.Read(fileName);
+        var certificates = CertificateDataReader.Read("AppleAnonymous.pem");
 
         var attestationResult = new AttestationStatementInternalResult(
             AttestationStatementFormatIdentifier.Apple,
             AttestationType.AnonCA,
-            certificateData);
+            certificates);
 
         // Act
         var result = await _sut.Validate(_authenticatorData, attestationResult);
@@ -217,13 +214,12 @@ internal class AttestationTrustworthinessValidatorTests
     public async Task Validate_WhenAttCaAttestationWithTrustPathWithTpmCertificates_ThenReturnsValid()
     {
         // Arrange
-        var fileName = "Tpm.pem";
-        var certificateData = CertificateDataReader.Read(fileName);
+        var certificates = CertificateDataReader.Read("Tpm.pem");
 
         var attestationResult = new AttestationStatementInternalResult(
             AttestationStatementFormatIdentifier.Tpm,
             AttestationType.AttCA,
-            certificateData);
+            certificates);
 
         // Act
         var result = await _sut.Validate(_authenticatorData, attestationResult);
@@ -237,13 +233,12 @@ internal class AttestationTrustworthinessValidatorTests
     public async Task Validate_WhenAttCaAttestationWithTrustPathWithPackedCertificates_ThenReturnsValid()
     {
         // Arrange
-        var fileName = "Packed.pem";
-        var certificateData = CertificateDataReader.Read(fileName);
+        var certificates = CertificateDataReader.Read("Packed.pem");
 
         var attestationResult = new AttestationStatementInternalResult(
             AttestationStatementFormatIdentifier.Packed,
             AttestationType.AttCA,
-            certificateData);
+            certificates);
 
         // Act
         var result = await _sut.Validate(_authenticatorData, attestationResult);
@@ -257,13 +252,12 @@ internal class AttestationTrustworthinessValidatorTests
     public async Task Validate_WhenAttCaAttestationWithTrustPathWithPackedCertificatesWithCa_ThenReturnsValid()
     {
         // Arrange
-        var fileName = "PackedWithCa.pem";
-        var certificateData = CertificateDataReader.Read(fileName);
+        var certificates = CertificateDataReader.Read("PackedWithCa.pem");
 
         var attestationResult = new AttestationStatementInternalResult(
             AttestationStatementFormatIdentifier.Packed,
             AttestationType.AttCA,
-            certificateData);
+            certificates);
 
         // Act
         var result = await _sut.Validate(_authenticatorData, attestationResult);
@@ -277,13 +271,12 @@ internal class AttestationTrustworthinessValidatorTests
     public async Task Validate_WhenAttCaAttestationWithTrustPathWitFidoU2fCertificates_ThenReturnsValid()
     {
         // Arrange
-        var fileName = "FidoU2f.pem";
-        var certificateData = CertificateDataReader.Read(fileName);
+        var certificates = CertificateDataReader.Read("FidoU2f.pem");
 
         var attestationResult = new AttestationStatementInternalResult(
             AttestationStatementFormatIdentifier.FidoU2F,
             AttestationType.AttCA,
-            certificateData);
+            certificates);
 
         // Act
         var result = await _sut.Validate(_authenticatorData, attestationResult);
