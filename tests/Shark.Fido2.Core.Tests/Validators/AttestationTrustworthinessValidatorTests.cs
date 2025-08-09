@@ -207,7 +207,7 @@ internal class AttestationTrustworthinessValidatorTests
 
         // Assert
         Assert.That(result.IsValid, Is.False);
-        Assert.That(result.Message, Is.EqualTo("A required certificate is not within its validity period when verifying against the current system clock or the timestamp in the signed file."));
+        Assert.That(result.Message, Is.Not.Empty); // Windows and Linux returns different messages
     }
 
     [Test]
