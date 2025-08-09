@@ -3,12 +3,14 @@
   <PropertyGroup>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <IsPackable>true</IsPackable>
-    <Description>Amazon DynamoDB data store for Shark WebAuthn .NET library</Description>
     <PackageId>Shark.Fido2.DynamoDB</PackageId>
+    <Description>Amazon DynamoDB data store for Shark WebAuthn .NET library</Description>
+    <Authors>linuxchata</Authors>
     <PackageTags>security;passwordless;passwordless-authentication;webauthn;fido2;fido2-standard;passkeys</PackageTags>
     <RepositoryUrl>https://github.com/linuxchata/fido2</RepositoryUrl>
     <Product>Amazon DynamoDB data store for Shark WebAuthn .NET library</Product>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageReleaseNotes>https://github.com/linuxchata/fido2/releases</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
