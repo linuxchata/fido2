@@ -63,6 +63,7 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
+
     app.UseHsts();
 
     app.Use(async (context, next) =>
@@ -75,12 +76,13 @@ if (!app.Environment.IsDevelopment())
 
         await next();
     });
+
+    app.UseHttpsRedirection();
 }
 
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseMiddleware<DisableTrackMiddleware>();
