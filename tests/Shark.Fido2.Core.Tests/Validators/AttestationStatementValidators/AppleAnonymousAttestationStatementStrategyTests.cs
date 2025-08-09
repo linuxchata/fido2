@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Options;
 using Moq;
 using Shark.Fido2.Core.Abstractions.Validators;
+using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Handlers;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Core.Services;
@@ -51,10 +52,13 @@ internal class AppleAnonymousAttestationStatementStrategyTests
 
         var certificatePublicKeyValidator = new CertificatePublicKeyValidator();
 
+        var certificateReaderService = new CertificateReaderService();
+
         _sut = new AppleAnonymousAttestationStatementStrategy(
             attestationCertificateProviderService,
             attestationCertificateValidator,
-            certificatePublicKeyValidator);
+            certificatePublicKeyValidator,
+            certificateReaderService);
     }
 
     [Test]
@@ -69,12 +73,16 @@ internal class AppleAnonymousAttestationStatementStrategyTests
             attestationResponseData!.AttestationObject, clientData, _creationOptions);
 
         // Act
-        var result = _sut.Validate(internalResult.Value!, clientData);
+        var validatorInternalResult = _sut.Validate(internalResult.Value!, clientData);
 
         // Assert
-        var attestationStatementInternalResult = result as AttestationStatementInternalResult;
-        Assert.That(attestationStatementInternalResult, Is.Not.Null);
-        Assert.That(attestationStatementInternalResult!.AttestationType, Is.EqualTo(AttestationType.AnonCA));
+        var result = validatorInternalResult as AttestationStatementInternalResult;
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.IsValid, Is.True);
+        Assert.That(result.Message, Is.Null);
+        Assert.That(result.AttestationStatementFormat, Is.EqualTo(AttestationStatementFormatIdentifier.Apple));
+        Assert.That(result.AttestationType, Is.EqualTo(AttestationType.AnonCA));
+        Assert.That(result.TrustPath!.Length, Is.EqualTo(3));
     }
 
     [Test]

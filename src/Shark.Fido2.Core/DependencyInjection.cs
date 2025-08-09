@@ -44,6 +44,8 @@ public static class DependencyInjection
         services.AddTransient<IAttestationObjectHandler, AttestationObjectHandler>();
         services.AddTransient<IAssertionObjectHandler, AssertionObjectHandler>();
 
+        services.AddTransient<ICertificateReaderService, CertificateReaderService>();
+
         services.AddTransient<IRsaCryptographyValidator, RsaCryptographyValidator>();
         services.AddTransient<IEc2CryptographyValidator, Ec2CryptographyValidator>();
         services.AddTransient<IOkpCryptographyValidator, OkpCryptographyValidator>();

@@ -1,5 +1,6 @@
 ﻿using Moq;
 using Shark.Fido2.Core.Abstractions.Validators;
+using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Handlers;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Core.Services;
@@ -54,11 +55,15 @@ internal class NoneAttestationStatementStrategyTests
             attestationResponseData!.AttestationObject, clientData, _creationOptions);
 
         // Act
-        var result = _sut.Validate(internalResult.Value!, clientData);
+        var validatorInternalResult = _sut.Validate(internalResult.Value!, clientData);
 
         // Assert
-        var attestationStatementInternalResult = result as AttestationStatementInternalResult;
-        Assert.That(attestationStatementInternalResult, Is.Not.Null, result.Message);
-        Assert.That(attestationStatementInternalResult!.AttestationType, Is.EqualTo(AttestationType.None));
+        var result = validatorInternalResult as AttestationStatementInternalResult;
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.IsValid, Is.True);
+        Assert.That(result.Message, Is.Null);
+        Assert.That(result.AttestationStatementFormat, Is.EqualTo(AttestationStatementFormatIdentifier.None));
+        Assert.That(result.AttestationType, Is.EqualTo(AttestationType.None));
+        Assert.That(result.TrustPath!.Length, Is.Zero);
     }
 }

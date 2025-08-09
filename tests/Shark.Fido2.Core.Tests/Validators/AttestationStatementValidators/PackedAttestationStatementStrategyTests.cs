@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using Moq;
 using Shark.Fido2.Core.Abstractions.Validators;
+using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Handlers;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Core.Services;
@@ -74,12 +75,16 @@ internal class PackedAttestationStatementStrategyTests
             attestationResponseData!.AttestationObject, clientData, _creationOptions);
 
         // Act
-        var result = _sut.Validate(internalResult.Value!, clientData);
+        var validatorInternalResult = _sut.Validate(internalResult.Value!, clientData);
 
         // Assert
-        var attestationStatementInternalResult = result as AttestationStatementInternalResult;
-        Assert.That(attestationStatementInternalResult, Is.Not.Null, result.Message);
-        Assert.That(attestationStatementInternalResult!.AttestationType, Is.EqualTo(AttestationType.Self));
+        var result = validatorInternalResult as AttestationStatementInternalResult;
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.IsValid, Is.True);
+        Assert.That(result.Message, Is.Null);
+        Assert.That(result.AttestationStatementFormat, Is.EqualTo(AttestationStatementFormatIdentifier.Packed));
+        Assert.That(result.AttestationType, Is.EqualTo(AttestationType.Self));
+        Assert.That(result.TrustPath, Is.Null);
     }
 
     [Test]
@@ -95,11 +100,11 @@ internal class PackedAttestationStatementStrategyTests
             attestationResponseData!.AttestationObject, clientData, _creationOptions);
 
         // Act
-        var result = _sut.Validate(internalResult.Value!, clientData);
+        var validatorInternalResult = _sut.Validate(internalResult.Value!, clientData);
 
         // Assert
-        Assert.That(result.IsValid, Is.False);
-        Assert.That(result.Message, Is.EqualTo("Trust path contains a root certificate"));
+        Assert.That(validatorInternalResult.IsValid, Is.False);
+        Assert.That(validatorInternalResult.Message, Is.EqualTo("Trust path contains a root certificate"));
     }
 
     [Test]
@@ -114,12 +119,16 @@ internal class PackedAttestationStatementStrategyTests
             attestationResponseData!.AttestationObject, clientData, _creationOptions);
 
         // Act
-        var result = _sut.Validate(internalResult.Value!, clientData);
+        var validatorInternalResult = _sut.Validate(internalResult.Value!, clientData);
 
         // Assert
-        var attestationStatementInternalResult = result as AttestationStatementInternalResult;
-        Assert.That(attestationStatementInternalResult, Is.Not.Null, result.Message);
-        Assert.That(attestationStatementInternalResult!.AttestationType, Is.EqualTo(AttestationType.Self));
+        var result = validatorInternalResult as AttestationStatementInternalResult;
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.IsValid, Is.True);
+        Assert.That(result.Message, Is.Null);
+        Assert.That(result.AttestationStatementFormat, Is.EqualTo(AttestationStatementFormatIdentifier.Packed));
+        Assert.That(result.AttestationType, Is.EqualTo(AttestationType.Self));
+        Assert.That(result.TrustPath, Is.Null);
     }
 
     [Test]

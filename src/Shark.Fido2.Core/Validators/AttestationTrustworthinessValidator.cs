@@ -105,16 +105,23 @@ internal class AttestationTrustworthinessValidator : IAttestationTrustworthiness
         return ValidatorInternalResult.Valid();
     }
 
-    private static X509VerificationFlags GetVerificationFlags(string attestationStatementFormat)
+    private static X509VerificationFlags GetVerificationFlags(string attestationFormat)
     {
         // Some Android devices may generate an attestation certificate with a default date of January 1, 1970.
         // See https://source.android.com/docs/security/features/keystore/attestation#tbscertificate-sequence.
         if (string.Equals(
-            attestationStatementFormat,
+            attestationFormat,
             AttestationStatementFormatIdentifier.AndroidKey,
             StringComparison.OrdinalIgnoreCase))
         {
             return X509VerificationFlags.IgnoreNotTimeValid | X509VerificationFlags.AllowUnknownCertificateAuthority;
+        }
+        else if (string.Equals(
+            attestationFormat,
+            AttestationStatementFormatIdentifier.Apple,
+            StringComparison.OrdinalIgnoreCase))
+        {
+            return X509VerificationFlags.NoFlag;
         }
 
         return X509VerificationFlags.AllowUnknownCertificateAuthority;
