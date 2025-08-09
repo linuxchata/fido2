@@ -64,6 +64,6 @@ internal class NoneAttestationStatementStrategyTests
         Assert.That(result.Message, Is.Null);
         Assert.That(result.AttestationStatementFormat, Is.EqualTo(AttestationStatementFormatIdentifier.None));
         Assert.That(result.AttestationType, Is.EqualTo(AttestationType.None));
-        Assert.That(result.TrustPath!.Length, Is.Zero);
+        Assert.That(result.TrustPath, Is.Null);
     }
 }
