@@ -3,11 +3,11 @@
   <PropertyGroup>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <IsPackable>true</IsPackable>
-    <Description>FIDO2 WebAuthn library in-memory datastore</Description>
+    <Description>In-memory datastore for Shark WebAuthn .NET library</Description>
     <PackageId>Shark.Fido2.InMemory</PackageId>
     <PackageTags>security;passwordless;passwordless-authentication;webauthn;fido2;fido2-standard;passkeys</PackageTags>
     <RepositoryUrl>https://github.com/linuxchata/fido2</RepositoryUrl>
-    <Product>FIDO2 WebAuthn library in-memory datastore</Product>
+    <Product>In-memory datastore for Shark WebAuthn .NET library</Product>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
 
