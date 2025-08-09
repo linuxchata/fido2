@@ -45,8 +45,8 @@ The sample C# code below is designed for ASP.NET Core controllers.
 ### Dependencies Registration
 Registers both the credential store (in-memory or alternative) and the core dependencies.
 ```csharp
-builder.Services.AddFido2InMemoryStore();
 builder.Services.AddFido2(builder.Configuration);
+builder.Services.AddFido2InMemoryStore();
 ```
 
 ### Server-side Configuration
