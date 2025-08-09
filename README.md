@@ -148,7 +148,7 @@ docker pull linuxchata/shark-fido2-sample:latest
 docker run -d -e ASPNETCORE_ENVIRONMENT=Development -p 8080:8080 linuxchata/shark-fido2-sample:latest
 ```
 
-The application will be accessible at [http://localhost:8080](http://localhost:8080).
+The application will be accessible at `http://localhost:8080`.
 
 # FIDO Conformance Tests
 All test cases successfully passed using the [FIDO Conformance Tool](https://fidoalliance.org/certification/conformance/).
