@@ -62,7 +62,7 @@ internal class AppleAnonymousAttestationStatementStrategyTests
     }
 
     [Test]
-    public async Task Validate_WhenAppleAnonymousAttestationWithEc2Algorithm_ThenValidates()
+    public async Task Validate_WhenAttestationWithEc2Algorithm_ThenReturnsValidResult()
     {
         // Arrange
         var fileName = "AppleAnonymousAttestationWithEc2Algorithm.json";
