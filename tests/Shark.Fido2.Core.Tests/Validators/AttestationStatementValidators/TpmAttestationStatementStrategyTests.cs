@@ -81,12 +81,12 @@ internal class TpmAttestationStatementStrategyTests
             attestationResponseData.AttestationObject, clientData, _creationOptions);
 
         // Act
-        var result = _sut.Validate(internalResult.Value!, clientData);
+        var validatorInternalResult = _sut.Validate(internalResult.Value!, clientData);
 
         // Assert
-        var attestationStatementInternalResult = result as AttestationStatementInternalResult;
-        Assert.That(attestationStatementInternalResult, Is.Not.Null, result.Message);
-        Assert.That(attestationStatementInternalResult!.AttestationType, Is.EqualTo(AttestationType.AttCA));
+        var result = validatorInternalResult as AttestationStatementInternalResult;
+        Assert.That(result, Is.Not.Null, validatorInternalResult.Message);
+        Assert.That(result!.AttestationType, Is.EqualTo(AttestationType.AttCA));
     }
 
     [Test]
@@ -102,12 +102,12 @@ internal class TpmAttestationStatementStrategyTests
             attestationResponseData.AttestationObject, clientData, _creationOptions);
 
         // Act
-        var result = _sut.Validate(internalResult.Value!, clientData);
+        var validatorInternalResult = _sut.Validate(internalResult.Value!, clientData);
 
         // Assert
-        var attestationStatementInternalResult = result as AttestationStatementInternalResult;
-        Assert.That(attestationStatementInternalResult, Is.Not.Null, result.Message);
-        Assert.That(attestationStatementInternalResult!.AttestationType, Is.EqualTo(AttestationType.AttCA));
+        var result = validatorInternalResult as AttestationStatementInternalResult;
+        Assert.That(result, Is.Not.Null, validatorInternalResult.Message);
+        Assert.That(result!.AttestationType, Is.EqualTo(AttestationType.AttCA));
     }
 
     [Test]

@@ -207,7 +207,7 @@ internal class AttestationTrustworthinessValidatorTests
 
         // Assert
         Assert.That(result.IsValid, Is.False);
-        Assert.That(result.Message, Is.Not.Null);
+        Assert.That(result.Message, Is.Not.Empty); // Windows and Linux returns different messages
     }
 
     [Test]

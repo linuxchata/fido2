@@ -73,12 +73,12 @@ internal class AndroidSafetyNetAttestationStatementStrategyTests
             attestationResponseData!.AttestationObject, clientData, _creationOptions);
 
         // Act
-        var result = _sut.Validate(internalResult.Value!, clientData);
+        var validatorInternalResult = _sut.Validate(internalResult.Value!, clientData);
 
         // Assert
-        Assert.That(result, Is.Not.Null);
-        Assert.That(result.IsValid, Is.False);
-        Assert.That(result.Message, Is.EqualTo("Android SafetyNet attestation statement certificates are invalid"));
+        Assert.That(validatorInternalResult, Is.Not.Null);
+        Assert.That(validatorInternalResult.IsValid, Is.False);
+        Assert.That(validatorInternalResult.Message, Is.EqualTo("Android SafetyNet attestation statement certificates are invalid"));
     }
 
     [Test]

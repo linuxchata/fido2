@@ -16,18 +16,23 @@ namespace Shark.Fido2.Core.Validators.AttestationStatementValidators;
 /// </summary>
 internal class AppleAnonymousAttestationStatementStrategy : IAttestationStatementStrategy
 {
+    private const string AppleWebAuthnRootCa = "Apple_WebAuthn_Root_CA.pem";
+
     private readonly IAttestationCertificateProviderService _attestationCertificateProviderService;
     private readonly IAttestationCertificateValidator _attestationCertificateValidator;
     private readonly ICertificatePublicKeyValidator _certificatePublicKeyValidator;
+    private readonly ICertificateReaderService _certificateReaderService;
 
     public AppleAnonymousAttestationStatementStrategy(
         IAttestationCertificateProviderService attestationCertificateProviderService,
         IAttestationCertificateValidator attestationCertificateValidator,
-        ICertificatePublicKeyValidator certificatePublicKeyValidator)
+        ICertificatePublicKeyValidator certificatePublicKeyValidator,
+        ICertificateReaderService certificateReaderService)
     {
         _attestationCertificateProviderService = attestationCertificateProviderService;
         _attestationCertificateValidator = attestationCertificateValidator;
         _certificatePublicKeyValidator = certificatePublicKeyValidator;
+        _certificateReaderService = certificateReaderService;
     }
 
     /// <summary>
@@ -77,11 +82,14 @@ internal class AppleAnonymousAttestationStatementStrategy : IAttestationStatemen
             return result;
         }
 
+        // Add root CA certificate to the trust path.
+        var appleWebAuthnRootCaCertificate = _certificateReaderService.Read(AppleWebAuthnRootCa);
+
         // If successful, return implementation-specific values representing attestation type Anonymization CA
         // and attestation trust path x5c.
         return new AttestationStatementInternalResult(
             AttestationStatementFormatIdentifier.Apple,
             AttestationType.AnonCA,
-            [.. certificates]);
+            [.. certificates, appleWebAuthnRootCaCertificate]);
     }
 }
