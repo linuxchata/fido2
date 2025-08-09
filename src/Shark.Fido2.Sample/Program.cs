@@ -52,8 +52,8 @@ builder.Services.AddHttpsRedirection(options =>
     options.HttpsPort = 443;
 });
 
-builder.Services.AddFido2InMemoryStore();
 builder.Services.AddFido2(builder.Configuration);
+builder.Services.AddFido2InMemoryStore();
 
 var app = builder.Build();
 
