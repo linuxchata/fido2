@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using Moq;
 using Shark.Fido2.Core.Abstractions.Validators;
+using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Handlers;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Core.Services;
@@ -69,7 +70,7 @@ internal class TpmAttestationStatementStrategyTests
     }
 
     [Test]
-    public async Task Validate_WhenTpmAttestationWithRs256Algorithm_ThenValidates()
+    public async Task Validate_WhenAttestationWithRs256Algorithm_ThenReturnsValidResult()
     {
         // Arrange
         // Please note that Rs256 algorithm is used by credential public key, not the attestation statement.
@@ -87,10 +88,17 @@ internal class TpmAttestationStatementStrategyTests
         var result = validatorInternalResult as AttestationStatementInternalResult;
         Assert.That(result, Is.Not.Null, validatorInternalResult.Message);
         Assert.That(result!.AttestationType, Is.EqualTo(AttestationType.AttCA));
+
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.IsValid, Is.True);
+        Assert.That(result.Message, Is.Null);
+        Assert.That(result.AttestationStatementFormat, Is.EqualTo(AttestationStatementFormatIdentifier.Tpm));
+        Assert.That(result.AttestationType, Is.EqualTo(AttestationType.AttCA));
+        Assert.That(result.TrustPath!.Length, Is.EqualTo(2));
     }
 
     [Test]
-    public async Task Validate_WhenTpmAttestationWithEs256Algorithm_ThenValidates()
+    public async Task Validate_WhenAttestationWithEs256Algorithm_ThenReturnsValidResult()
     {
         // Arrange
         // Please note that Es256 algorithm is used by credential public key, not the attestation statement.
@@ -106,8 +114,12 @@ internal class TpmAttestationStatementStrategyTests
 
         // Assert
         var result = validatorInternalResult as AttestationStatementInternalResult;
-        Assert.That(result, Is.Not.Null, validatorInternalResult.Message);
-        Assert.That(result!.AttestationType, Is.EqualTo(AttestationType.AttCA));
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.IsValid, Is.True);
+        Assert.That(result.Message, Is.Null);
+        Assert.That(result.AttestationStatementFormat, Is.EqualTo(AttestationStatementFormatIdentifier.Tpm));
+        Assert.That(result.AttestationType, Is.EqualTo(AttestationType.AttCA));
+        Assert.That(result.TrustPath!.Length, Is.EqualTo(2));
     }
 
     [Test]

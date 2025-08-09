@@ -44,7 +44,7 @@ internal class NoneAttestationStatementStrategyTests
     }
 
     [Test]
-    public async Task Validate_WhenNoneAttestation_ThenValidates()
+    public async Task Validate_WhenAttestationIsValid_ThenReturnsValidResult()
     {
         // Arrange
         var fileName = "NoneAttestation.json";

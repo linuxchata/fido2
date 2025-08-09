@@ -63,7 +63,7 @@ internal class FidoU2FAttestationStatementStrategyTests
     }
 
     [Test]
-    public async Task Validate_WhenFidoU2FAttestationWithEc2Algorithm_ThenValidates()
+    public async Task Validate_WhenAttestationWithEc2Algorithm_ThenReturnsValidResult()
     {
         // Arrange
         var fileName = "FidoU2fAttestationWithEc2Algorithm.json";

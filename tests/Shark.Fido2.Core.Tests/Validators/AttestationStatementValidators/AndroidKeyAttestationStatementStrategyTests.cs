@@ -66,7 +66,7 @@ internal class AndroidKeyAttestationStatementStrategyTests
     }
 
     [Test]
-    public async Task Validate_WhenAndroidKeyAttestationWithEc2Algorithm_ThenValidates()
+    public async Task Validate_WhenAttestationWithEc2Algorithm_ThenReturnsValidResult()
     {
         // Arrange
         var fileName = "AndroidKeyAttestationWithEc2Algorithm.json";

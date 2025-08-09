@@ -62,7 +62,7 @@ internal class AndroidSafetyNetAttestationStatementStrategyTests
     }
 
     [Test]
-    public async Task Validate_WhenAndroidSafetyNetAttestationWithRs256Algorithm_ThenValidates()
+    public async Task Validate_WhenAttestationWithRs256AlgorithmAndInvalidCertificate_ThenReturnsInvalidResult()
     {
         // Arrange
         var fileName = "AndroidSafetyNetAttestationWithRs256Algorithm.json";

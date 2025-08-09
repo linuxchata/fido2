@@ -64,7 +64,7 @@ internal class PackedAttestationStatementStrategyTests
     }
 
     [Test]
-    public async Task Validate_WhenPackedAttestationWithRs256Algorithm_ThenValidates()
+    public async Task Validate_WhenAttestationWithRs256Algorithm_ThenReturnsValidResult()
     {
         // Arrange
         var fileName = "PackedAttestationWithRs256Algorithm.json";
@@ -88,11 +88,11 @@ internal class PackedAttestationStatementStrategyTests
     }
 
     [Test]
-    public async Task Validate_WhenPackedAttestationWithEc2Algorithm_ThenValidates()
+    public async Task Validate_WhenAttestationWithEc2AlgorithmAndWithRootCertificate_ThenReturnsInvalidResult()
     {
         // Arrange
         // Source https://fidoalliance.org/specs/fido-v2.0-rd-20180702/fido-server-v2.0-rd-20180702.html#packed-attestation
-        var fileName = "PackedAttestationWithEc2Algorithm.json";
+        var fileName = "PackedAttestationWithEc2AlgorithmWithRootCertificate.json";
         var attestationResponseData = AttestationResponseDataReader.Read(fileName);
         var clientData = ClientDataBuilder.Build(attestationResponseData!.ClientDataJson);
 
@@ -108,7 +108,31 @@ internal class PackedAttestationStatementStrategyTests
     }
 
     [Test]
-    public async Task Validate_WhenPackedAttestationWithOkpAlgorithm_ThenValidates()
+    public async Task Validate_WhenAttestationWithEc2Algorithm_ThenReturnsValidResult()
+    {
+        // Arrange
+        var fileName = "PackedAttestationWithEc2Algorithm.json";
+        var attestationResponseData = AttestationResponseDataReader.Read(fileName);
+        var clientData = ClientDataBuilder.Build(attestationResponseData!.ClientDataJson);
+
+        var internalResult = await _attestationObjectHandler.Handle(
+            attestationResponseData!.AttestationObject, clientData, _creationOptions);
+
+        // Act
+        var validatorInternalResult = _sut.Validate(internalResult.Value!, clientData);
+
+        // Assert
+        var result = validatorInternalResult as AttestationStatementInternalResult;
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.IsValid, Is.True);
+        Assert.That(result.Message, Is.Null);
+        Assert.That(result.AttestationStatementFormat, Is.EqualTo(AttestationStatementFormatIdentifier.Packed));
+        Assert.That(result.AttestationType, Is.EqualTo(AttestationType.Basic));
+        Assert.That(result.TrustPath!.Length, Is.EqualTo(1));
+    }
+
+    [Test]
+    public async Task Validate_WhenAttestationWithOkpAlgorithm_ThenReturnsValidResult()
     {
         // Arrange
         var fileName = "PackedAttestationWithOkpAlgorithm.json";

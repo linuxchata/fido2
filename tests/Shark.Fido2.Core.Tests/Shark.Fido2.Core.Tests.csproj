@@ -23,6 +23,9 @@
     <Content Include="Data\Certificates\PackedWithCa.pem">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Data\PackedAttestationWithEc2Algorithm.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Data\PackedAttestationWithOkpAlgorithm.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -56,7 +59,7 @@
     <Content Include="Data\NoneAttestation.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\PackedAttestationWithEc2Algorithm.json">
+    <Content Include="Data\PackedAttestationWithEc2AlgorithmWithRootCertificate.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Data\PackedAttestationWithRs256Algorithm.json">
