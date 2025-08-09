@@ -1,5 +1,5 @@
 # Contributing to Shark WebAuthn .NET library
-Thank you for your interest in contributing to the **Shark WebAuthn .NET library**.
+Thank you for your interest in contributing to the Shark WebAuthn .NET library.
 
 This document outlines how to get started, coding conventions, and how to submit issues or changes.
 
@@ -31,20 +31,20 @@ This document outlines how to get started, coding conventions, and how to submit
 
    `git checkout -b feature/your-feature-name`
 
-- Commit messages should be concise and follow this format:
+- Commit message should be concise and follow this format:
   - Add support for XYZ
-  - Hsndle null case in ABC
+  - Handle null case in ABC
   - Clarify usage in README
 - Open a pull request with a clear title and description.
-- Link to any related issues.
+- Link to a related issue.
 
 ## Reporting Issues
 Please include:
-- Steps to reproduce
-- Expected vs actual behavior
-- Environment details (OS, .NET version, browser if relevant)
+- Steps to reproduce.
+- Expected vs actual behavior.
+- Environment details (OS, browser, authenticator and mobile device if relevant).
 
-Open issues via: https://github.com/linuxchata/fido2/issues
+Open issue via: https://github.com/linuxchata/fido2/issues
 
 ## Security
 If you find a security issue, do **not** open a public issue. Instead, email: security@shark-fido2.com
