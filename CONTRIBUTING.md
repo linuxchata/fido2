@@ -31,22 +31,22 @@ This document outlines how to get started, coding conventions, and how to submit
 
    `git checkout -b feature/your-feature-name`
 
-- Commit message should be concise and follow this format:
+- Commit messages should be concise and follow this format::
   - Add support for XYZ
   - Handle null case in ABC
   - Clarify usage in README
-- Open a pull request with a clear title and description.
-- Link to a related issue.
+- Open a pull request with a clear title and description and include link to related issue.
 
 ## Reporting Issues
 Please include:
 - Steps to reproduce.
 - Expected vs actual behavior.
-- Environment details (OS, browser, authenticator and mobile device if relevant).
+- Code samples.
+- Environment details (OS, browser, authenticator and mobile device if applicable).
 
 Open issue via: https://github.com/linuxchata/fido2/issues
 
 ## Security
-If you find a security issue, do **not** open a public issue. Instead, email: security@shark-fido2.com
+If you find a security issue, do **not** open a public issue. Instead, email: [security@shark-fido2.com](mailto:security@shark-fido2.com)
 
-Thanks again for helping improve this project!
+Thank you again for helping improve this project!
