@@ -6,6 +6,10 @@ using Shark.Fido2.Domain.Tpm;
 
 namespace Shark.Fido2.Core.Services;
 
+/// <summary>
+/// TCG EK Credential Profile For TPM Family 2.0; Level 0.
+/// https://trustedcomputinggroup.org/wp-content/uploads/Credential_Profile_EK_V2.0_R14_published.pdf.
+/// </summary>
 internal sealed class SubjectAlternativeNameParserService : ISubjectAlternativeNameParserService
 {
     private const string TpmManufacturerName = "TPMManufacturer";
