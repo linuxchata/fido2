@@ -81,7 +81,6 @@ internal class AttestationCertificateValidator : IAttestationCertificateValidato
         // If the related attestation root certificate is used for multiple authenticator models, the Extension OID
         // 1.3.6.1.4.1.45724.1.1.4 (id-fido-gen-ce-aaguid) MUST be present, containing the AAGUID as a 16-byte
         // OCTET STRING.
-        // TODO: How check for multiple authenticator models?
         var idFidoGenCeAaguid = attestationCertificate.Extensions?.FirstOrDefault(
             e => string.Equals(e.Oid?.Value, IdFidoGenCeAaguidExtension, StringComparison.Ordinal));
         if (idFidoGenCeAaguid != null)
@@ -102,8 +101,8 @@ internal class AttestationCertificateValidator : IAttestationCertificateValidato
         }
 
         // TODO: An Authority Information Access (AIA) extension with entry id-ad-ocsp and a CRL Distribution Point
-        // extension [RFC5280] are both OPTIONAL as the status  of many attestation certificates is available through
-        // authenticator metadata  services. See, for example, the FIDO Metadata Service [FIDOMetadataService].
+        // extension [RFC5280] are both OPTIONAL as the status of many attestation certificates is available through
+        // authenticator metadata services. See, for example, the FIDO Metadata Service [FIDOMetadataService].
 
         // If attestnCert contains an extension with OID 1.3.6.1.4.1.45724.1.1.4 (id-fido-gen-ce-aaguid) verify that
         // the value of this extension matches the aaguid in authenticatorData.
