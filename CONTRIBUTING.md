@@ -31,7 +31,7 @@ This document outlines how to get started, coding conventions, and how to submit
 
    `git checkout -b feature/your-feature-name`
 
-- Commit messages should be concise and follow this format::
+- Commit messages should be concise and follow this format:
   - Add support for XYZ
   - Handle null case in ABC
   - Clarify usage in README
