@@ -21,8 +21,8 @@ internal static class TpmCapabilitiesVendors
         { "48504900", "HPI" },
         { "48504500", "HPE" },
         { "48495349", "Huawei" },
-        { "49424D00", "IBM" }, // To address mismatch between TPM Specification and TCG TPM Vendor ID Registry
-        { "49424d00", "IBM" },
+        { "49424D00", "IBM" },
+        { "49424d00", "IBM" }, // To address mismatch between TPM Specification and TCG TPM Vendor ID Registry
         { "49465800", "Infineon" },
         { "494E5443", "Intel" },
         { "4C454E00", "Lenovo" },

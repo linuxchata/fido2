@@ -121,8 +121,8 @@ internal class BytesArrayComparerTests
     public void CompareAsSpan_WhenSameContent_ThenReturnsTrue()
     {
         // Arrange
-        ReadOnlySpan<byte> expected = new byte[] { 1, 2, 3 };
-        ReadOnlySpan<byte> actual = new byte[] { 1, 2, 3 };
+        ReadOnlySpan<byte> expected = [1, 2, 3];
+        ReadOnlySpan<byte> actual = [1, 2, 3];
 
         // Act
         var result = BytesArrayComparer.CompareAsSpan(expected, actual);
@@ -135,8 +135,8 @@ internal class BytesArrayComparerTests
     public void CompareAsSpan_WhenDifferentContent_ThenReturnsFalse()
     {
         // Arrange
-        ReadOnlySpan<byte> expected = new byte[] { 1, 2, 3 };
-        ReadOnlySpan<byte> actual = new byte[] { 1, 2, 4 };
+        ReadOnlySpan<byte> expected = [1, 2, 3];
+        ReadOnlySpan<byte> actual = [1, 2, 4];
 
         // Act
         var result = BytesArrayComparer.CompareAsSpan(expected, actual);
