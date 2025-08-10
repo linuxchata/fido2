@@ -38,13 +38,13 @@ This document outlines how to get started, coding conventions, and how to submit
 - Open a pull request with a clear title and description and include link to related issue.
 
 ## Reporting Issues
+Open issue via: https://github.com/linuxchata/fido2/issues
+
 Please include:
 - Steps to reproduce.
 - Expected vs actual behavior.
 - Code samples.
 - Environment details (OS, browser, authenticator and mobile device if applicable).
-
-Open issue via: https://github.com/linuxchata/fido2/issues
 
 ## Security
 If you find a security issue, do **not** open a public issue. Instead, email: [security@shark-fido2.com](mailto:security@shark-fido2.com)
