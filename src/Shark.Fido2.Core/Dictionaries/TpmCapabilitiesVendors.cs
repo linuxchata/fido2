@@ -1,13 +1,14 @@
 ﻿namespace Shark.Fido2.Core.Dictionaries;
 
 /// <summary>
+/// Vendor ID Registry
 /// https://trustedcomputinggroup.org/resource/vendor-id-registry/
 /// TCG TPM Vendor ID Registry Family 1.2 and 2.0
 /// https://trustedcomputinggroup.org/wp-content/uploads/TCG-TPM-Vendor-ID-Registry-Family-1.2-and-2.0-Version-1.07-Revision-0.02_pub.pdf.
 /// </summary>
 internal static class TpmCapabilitiesVendors
 {
-    private static readonly Dictionary<string, string> Vendors = new()
+    private static readonly Dictionary<string, string> Vendors = new(StringComparer.Ordinal)
     {
         { "414D4400", "AMD" },
         { "414E5400", "Ant Group" },
@@ -21,6 +22,7 @@ internal static class TpmCapabilitiesVendors
         { "48504500", "HPE" },
         { "48495349", "Huawei" },
         { "49424D00", "IBM" },
+        { "49424d00", "IBM" }, // To address mismatch between TPM Specification and TCG TPM Vendor ID Registry
         { "49465800", "Infineon" },
         { "494E5443", "Intel" },
         { "4C454E00", "Lenovo" },
