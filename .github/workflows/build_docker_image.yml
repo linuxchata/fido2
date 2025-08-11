@@ -17,6 +17,6 @@ jobs:
       run: |
         docker build . --file ./src/Shark.Fido2.Sample/Dockerfile \
           --tag ${{ secrets.DOCKERHUB_USERNAME }}/shark-fido2-sample:latest \
-          --tag ${{ secrets.DOCKERHUB_USERNAME }}/shark-fido2-sample:v1.1.1
+          --tag ${{ secrets.DOCKERHUB_USERNAME }}/shark-fido2-sample:v1.1.2
         docker push ${{ secrets.DOCKERHUB_USERNAME }}/shark-fido2-sample:latest
-        docker push ${{ secrets.DOCKERHUB_USERNAME }}/shark-fido2-sample:v1.1.1
+        docker push ${{ secrets.DOCKERHUB_USERNAME }}/shark-fido2-sample:v1.1.2
