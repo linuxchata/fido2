@@ -2,7 +2,7 @@
 
 ## Windows 10
 ### Windows Hello Authenticator
-- Chrome 138+
+- Chrome 139+
 - Firefox 140+
 - Opera 119+
 - Microsoft Edge 138+
@@ -16,6 +16,8 @@
 - Firefox 140+ (Not supported)
 - Opera 119+
 - Microsoft Edge 138+
+### Bitwarden Authenticator
+- Chrome 139+
 
 ## Windows 11
 ### Windows Hello Authenticator
@@ -46,3 +48,4 @@
 ## Android 6
 ### Android Authenticator
 - Chrome 106 (WebAuthn is not supported)
+
