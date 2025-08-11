@@ -48,3 +48,4 @@
 ## Android 6
 ### Android Authenticator
 - Chrome 106 (WebAuthn is not supported)
+
