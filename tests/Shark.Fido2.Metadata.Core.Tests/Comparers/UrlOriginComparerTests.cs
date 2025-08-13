@@ -6,45 +6,36 @@ namespace Shark.Fido2.Metadata.Core.Tests.Comparers;
 internal class UrlOriginComparerTests
 {
     [Test]
-    public void CompareOrigins_WhenBothUrlsAreNull_ThenReturnsFalse()
+    public void CompareOrigins_WhenBothUrlsAreNull_ThenThrowsArgumentNullException()
     {
         // Arrange
         string? left = null;
         string? right = null;
 
-        // Act
-        var result = UrlOriginComparer.CompareOrigins(left!, right!);
-
-        // Assert
-        Assert.That(result, Is.False);
+        // Act & Assert
+        Assert.Throws<ArgumentNullException>(() => UrlOriginComparer.CompareOrigins(left!, right!));
     }
 
     [Test]
-    public void CompareOrigins_WhenLeftUrlIsNull_ThenReturnsFalse()
+    public void CompareOrigins_WhenLeftUrlIsNull_ThenThrowsArgumentNullException()
     {
         // Arrange
         string? left = null;
         var right = "https://example.com";
 
-        // Act
-        var result = UrlOriginComparer.CompareOrigins(left!, right);
-
-        // Assert
-        Assert.That(result, Is.False);
+        // Act & Assert
+        Assert.Throws<ArgumentNullException>(() => UrlOriginComparer.CompareOrigins(left!, right));
     }
 
     [Test]
-    public void CompareOrigins_WhenRightUrlIsNull_ThenReturnsFalse()
+    public void CompareOrigins_WhenRightUrlIsNull_ThenThrowsArgumentNullException()
     {
         // Arrange
         var left = "https://example.com";
         string? right = null;
 
-        // Act
-        var result = UrlOriginComparer.CompareOrigins(left, right!);
-
-        // Assert
-        Assert.That(result, Is.False);
+        // Act & Assert
+        Assert.Throws<ArgumentNullException>(() => UrlOriginComparer.CompareOrigins(left, right!));
     }
 
     [Test]
@@ -146,7 +137,7 @@ internal class UrlOriginComparerTests
     }
 
     [Test]
-    public void CompareOrigins_WhenUrlsHaveDifferentPorts_ThenReturnsFalse()
+    public void CompareOrigins_WhenUrlsHaveDifferentPorts_ThenReturnsTrue()
     {
         // Arrange
         var left = "https://example.com:8080";
@@ -156,7 +147,7 @@ internal class UrlOriginComparerTests
         var result = UrlOriginComparer.CompareOrigins(left, right);
 
         // Assert
-        Assert.That(result, Is.False);
+        Assert.That(result, Is.True);
     }
 
     [Test]
@@ -174,7 +165,7 @@ internal class UrlOriginComparerTests
     }
 
     [Test]
-    public void CompareOrigins_WhenOneUrlHasDefaultPortAndOtherDoesNot_ThenReturnsFalse()
+    public void CompareOrigins_WhenOneUrlHasDefaultPortAndOtherDoesNot_ThenReturnsTrue()
     {
         // Arrange
         var left = "https://example.com";
@@ -184,7 +175,7 @@ internal class UrlOriginComparerTests
         var result = UrlOriginComparer.CompareOrigins(left, right);
 
         // Assert
-        Assert.That(result, Is.False);
+        Assert.That(result, Is.True);
     }
 
     [Test]
