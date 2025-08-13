@@ -1,10 +1,12 @@
-﻿using System.Net.Http.Json;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Net.Http.Json;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
 using Shark.Fido2.Metadata.Core.Abstractions.Repositories;
 
 namespace Shark.Fido2.Metadata.Core.Repositories;
 
+[ExcludeFromCodeCoverage]
 internal class HttpClientConformanceTestRepository : IHttpClientConformanceTestRepository
 {
     public async Task<List<string>> GetMetadataBlobEndpoints(string remoteUrl, CancellationToken cancellationToken)
