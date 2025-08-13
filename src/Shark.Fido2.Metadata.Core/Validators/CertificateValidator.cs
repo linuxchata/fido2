@@ -14,23 +14,21 @@ internal sealed class CertificateValidator : ICertificateValidator
 
     public void ValidateX509Chain(X509Certificate2? rootCertificate, List<X509Certificate2> certificates)
     {
-        if (rootCertificate == null)
-        {
-            throw new InvalidOperationException("Root certificate is required");
-        }
+        ArgumentNullException.ThrowIfNull(rootCertificate);
+        ArgumentNullException.ThrowIfNull(certificates);
 
         using var chain = new X509Chain();
-        chain.ChainPolicy.RevocationMode = X509RevocationMode.Online; // Configuration
+        chain.ChainPolicy.RevocationMode = X509RevocationMode.Online;
         chain.ChainPolicy.VerificationFlags = X509VerificationFlags.NoFlag;
         chain.ChainPolicy.VerificationTime = _timeProvider.GetLocalNow().DateTime;
 
-        // Root certificate
+        // Add root certificate
         chain.ChainPolicy.TrustMode = X509ChainTrustMode.CustomRootTrust;
         chain.ChainPolicy.CustomTrustStore.Add(rootCertificate);
 
+        // Add intermediate certificates
         foreach (var intermediateCertificate in certificates.Skip(1))
         {
-            // Intermediate certificate
             chain.ChainPolicy.ExtraStore.Add(intermediateCertificate);
         }
 
