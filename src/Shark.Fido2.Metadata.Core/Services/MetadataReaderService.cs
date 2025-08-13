@@ -36,6 +36,9 @@ internal sealed class MetadataReaderService : IMetadataReaderService
         X509Certificate2 rootCertificate,
         CancellationToken cancellationToken)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(metadataBlob);
+        ArgumentNullException.ThrowIfNull(rootCertificate);
+
         var metadataBlobToken = ReadBlob(metadataBlob);
 
         // Step 4
@@ -150,8 +153,6 @@ internal sealed class MetadataReaderService : IMetadataReaderService
 
     private JwtSecurityToken ReadBlob(string metadataBlob)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(metadataBlob);
-
         var handler = new JwtSecurityTokenHandler
         {
             MaximumTokenSizeInBytes = _configuration.MaximumTokenSizeInBytes,
