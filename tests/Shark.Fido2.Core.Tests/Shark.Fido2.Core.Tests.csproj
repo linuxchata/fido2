@@ -93,6 +93,7 @@
     <ProjectReference Include="..\..\src\Shark.Fido2.Core\Shark.Fido2.Core.csproj" />
     <ProjectReference Include="..\..\src\Shark.Fido2.Domain\Shark.Fido2.Domain.csproj" />
     <ProjectReference Include="..\..\src\Shark.Fido2.Metadata.Core\Shark.Fido2.Metadata.Core.csproj" />
+    <ProjectReference Include="..\Shark.Fido2.Tests.Common\Shark.Fido2.Tests.Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>

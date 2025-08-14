@@ -1,10 +1,10 @@
 ﻿using System.Security.Cryptography.X509Certificates;
 
-namespace Shark.Fido2.Core.Tests.DataReaders;
+namespace Shark.Fido2.Tests.Common.DataReaders;
 
-internal static class CertificateDataReader
+public static class CertificateDataReader
 {
-    internal static X509Certificate2[] Read(string fileName)
+    public static X509Certificate2[] Read(string fileName)
     {
         var baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
         var certificatesPath = Path.Combine(baseDirectory, "Data/Certificates", fileName);
