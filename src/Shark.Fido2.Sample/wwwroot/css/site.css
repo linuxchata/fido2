@@ -57,6 +57,10 @@ input:-webkit-autofill {
     padding: 0 2rem;
 }
 
+    .main h1 {
+        font-size: 2.25rem;
+    }
+
 .main-controls-container {
     display: flex;
     gap: 40px;
@@ -206,5 +210,10 @@ input:-webkit-autofill {
     .main-controls-container {
         flex-direction: column;
         gap: 10px;
+    }
+
+    .btn-logout {
+        margin-top: 8px !important;
+        margin-bottom: 8px !important;
     }
 }

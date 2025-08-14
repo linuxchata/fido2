@@ -1,6 +1,9 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Shark.Fido2.Core;
 using Shark.Fido2.InMemory;
+using Shark.Fido2.Sample.Abstractions.Services;
 using Shark.Fido2.Sample.Middlewares;
+using Shark.Fido2.Sample.Services;
 using Shark.Fido2.Sample.Swagger;
 using Swashbuckle.AspNetCore.Filters;
 
@@ -30,6 +33,20 @@ builder.Services.AddSession(options =>
     options.Cookie.SameSite = SameSiteMode.Unspecified;
 });
 
+builder.Services
+    .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Index";
+        options.LogoutPath = "/Logout";
+        options.ExpireTimeSpan = TimeSpan.FromDays(1);
+        options.SlidingExpiration = true;
+        options.Cookie.Name = "AspNetCore.Auth";
+        options.Cookie.HttpOnly = true;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+        options.Cookie.SameSite = SameSiteMode.Lax;
+    });
+
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -57,6 +74,9 @@ if (!builder.Environment.IsDevelopment())
 
 builder.Services.AddFido2(builder.Configuration);
 builder.Services.AddFido2InMemoryStore();
+
+builder.Services.AddTransient<ILoginService, LoginService>();
+builder.Services.AddTransient<ICredentialService, CredentialService>();
 
 var app = builder.Build();
 
@@ -89,6 +109,7 @@ app.UseMiddleware<DisableTrackMiddleware>();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();

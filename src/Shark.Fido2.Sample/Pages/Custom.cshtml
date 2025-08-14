@@ -3,7 +3,7 @@
 @model CustomModel
 
 <div class="main">
-    <h1 class="display-4 mb-4 text-center">Custom</h1>
+    <h1 class="mb-4 text-center">Custom</h1>
 
     <div class="main-controls-container">
         <div id="registration-container" class="section p-4 border rounded">
@@ -54,7 +54,9 @@
 
             <span id="error-message-registration" class="d-block mt-2 mb-2 text-danger"></span>
             <div class="button-container">
-                <button id="registration-custom" data-action="registration" class="button btn btn-primary">Register</button>
+                <button id="registration-custom" data-action="registration" class="button btn btn-primary">
+                    <i class="fas fa-user-plus me-2"></i>Register
+                </button>
             </div>
         </div>
         <div id="authentication-container" class="section p-4 border rounded">
@@ -74,12 +76,17 @@
             </div>
 
             <div class="button-container">
-                <button id="authentication-custom" data-action="authentication" class="button btn btn-primary">Authenticate</button>
+                <button id="authentication-custom" data-action="authentication" class="button btn btn-primary">
+                    <i class="fas fa-key me-2"></i>Authenticate
+                </button>
             </div>
         </div>
     </div>
 
     <div class="disclaimer">
         <p>Credentials are temporarily stored in memory cache for a maximum of 24 hours.</p>
+    </div>
+    <div class="disclaimer">
+        <p>This application uses optional cookies that are created only after you complete authentication. These cookies are used solely to demonstrate the use of authentication cookies. No tracking, analytics, or advertising cookies are used.</p>
     </div>
 </div>

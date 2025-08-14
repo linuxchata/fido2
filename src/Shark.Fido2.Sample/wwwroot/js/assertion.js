@@ -108,7 +108,10 @@ async function fetchAssertionResult(credentials) {
         });
 
         if (response.ok) {
-            notify.info('Authentication was successful', authenticationTitle);
+            const notification = notify.info('Authentication was successful', authenticationTitle);
+            // Wait for notification to be visible before redirect
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            window.location.href = `/CredentialDetails?credentialId=${encodeURIComponent(credentials.id)}`;
         }
         else {
             const responseBody = await response.json();
