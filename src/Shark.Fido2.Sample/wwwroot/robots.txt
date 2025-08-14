@@ -6,6 +6,8 @@ User-agent: *
 # Disallow crawling of public pages
 Disallow: /
 Disallow: /Index
+Disallow: /Custom
+Disallow: /CredentialDetails
 
 # Disallow static assets
 Disallow: /css/
