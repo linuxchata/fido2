@@ -29,4 +29,9 @@ public class LoginService : ILoginService
                 ExpiresUtc = DateTimeOffset.UtcNow.AddDays(1),
             });
     }
+
+    public async Task Logout(HttpContext httpContext)
+    {
+        await httpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+    }
 }

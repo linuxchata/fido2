@@ -1,14 +1,13 @@
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using Shark.Fido2.Sample.Abstractions.Services;
 
 namespace Shark.Fido2.Sample.Controllers;
 
 /// <summary>
-/// Logout controller.
+/// Logout.
 /// </summary>
 [Route("[controller]")]
-public class LogoutController : Controller
+public class LogoutController(ILoginService loginService) : Controller
 {
     /// <summary>
     /// Logs out the authenticated user.
@@ -17,7 +16,7 @@ public class LogoutController : Controller
     [HttpPost]
     public async Task<IActionResult> Index()
     {
-        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        await loginService.Logout(HttpContext);
 
         return RedirectToPage("/Index");
     }
