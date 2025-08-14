@@ -109,6 +109,7 @@ async function fetchAssertionResult(credentials) {
 
         if (response.ok) {
             notify.info('Authentication was successful', authenticationTitle);
+            window.location.reload();
         }
         else {
             const responseBody = await response.json();
