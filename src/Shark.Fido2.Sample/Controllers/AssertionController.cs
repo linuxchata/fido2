@@ -1,11 +1,13 @@
 ﻿using System.Net.Mime;
 using System.Text.Json;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Domain.Options;
 using Shark.Fido2.Models.Mappers;
 using Shark.Fido2.Models.Requests;
 using Shark.Fido2.Models.Responses;
+using Shark.Fido2.Sample.Abstractions.Services;
 using Shark.Fido2.Sample.Filters;
 using Shark.Fido2.Sample.Swagger;
 using Swashbuckle.AspNetCore.Filters;
@@ -18,7 +20,10 @@ namespace Shark.Fido2.Sample.Controllers;
 [Route("[controller]")]
 [ApiController]
 [TypeFilter(typeof(RestApiExceptionFilter))]
-public class AssertionController(IAssertion assertion, ILogger<AssertionController> logger) : ControllerBase
+public class AssertionController(
+    IAssertion assertion,
+    ILoginService loginService,
+    ILogger<AssertionController> logger) : ControllerBase
 {
     private readonly IAssertion _assertion = assertion;
 
@@ -78,6 +83,8 @@ public class AssertionController(IAssertion assertion, ILogger<AssertionControll
 
         if (response.IsValid)
         {
+            await loginService.Login(HttpContext, requestOptions?.Username);
+
             return Ok(ServerResponse.Create());
         }
         else
