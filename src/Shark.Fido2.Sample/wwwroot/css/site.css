@@ -211,4 +211,9 @@ input:-webkit-autofill {
         flex-direction: column;
         gap: 10px;
     }
+
+    .btn-logout {
+        margin-top: 8px !important;
+        margin-bottom: 8px !important;
+    }
 }
