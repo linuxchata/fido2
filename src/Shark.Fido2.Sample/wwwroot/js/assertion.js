@@ -109,7 +109,7 @@ async function fetchAssertionResult(credentials) {
 
         if (response.ok) {
             notify.info('Authentication was successful', authenticationTitle);
-            window.location.reload();
+            window.location.href = `/CredentialDetails?credentialId=${encodeURIComponent(credentials.id)}`;
         }
         else {
             const responseBody = await response.json();

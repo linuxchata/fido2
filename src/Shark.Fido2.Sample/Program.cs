@@ -37,6 +37,7 @@ builder.Services
     .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
+        options.LoginPath = "/Index";
         options.LogoutPath = "/Logout";
         options.ExpireTimeSpan = TimeSpan.FromDays(1);
         options.SlidingExpiration = true;
@@ -75,6 +76,7 @@ builder.Services.AddFido2(builder.Configuration);
 builder.Services.AddFido2InMemoryStore();
 
 builder.Services.AddTransient<ILoginService, LoginService>();
+builder.Services.AddTransient<ICredentialService, CredentialService>();
 
 var app = builder.Build();
 
