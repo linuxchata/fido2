@@ -1,6 +1,11 @@
 # Overview
 This repository provides a server-side implementation of the WebAuthn standard, enabling secure passwordless and multi-factor authentication (MFA) for web applications. It supports key WebAuthn operations – credential registration and authentication – ensuring compliance with the [WebAuthn Level 2 specification](https://www.w3.org/TR/webauthn-2/) (Web Authentication: An API for accessing Public Key Credentials Level 2).
 
+[![build](https://github.com/linuxchata/fido2/actions/workflows/build.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build.yml)
+[![NuGet](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_packages.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_packages.yml)
+[![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](https://github.com/linuxchata/fido2/blob/main/LICENSE)
+[![Docker](https://badgen.net/badge/icon/docker?icon=docker&label)](https://hub.docker.com/r/linuxchata/shark-fido2-sample)
+
 ## Supported Features
 - **Attestation flow** for public key credential registration
 - **Assertion flow** for public key credential verification
@@ -20,12 +25,6 @@ This repository provides a server-side implementation of the WebAuthn standard, 
  - **FIDO Metadata Service**
  - **Fully tested** with the [FIDO Conformance Tool](https://fidoalliance.org/certification/conformance/) – all test cases successfully passed
  - Code samples and demo website
-
-# Build Status
-[![build](https://github.com/linuxchata/fido2/actions/workflows/build.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build.yml)
-[![NuGet](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_packages.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build_nuget_packages.yml)
-[![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](https://github.com/linuxchata/fido2/blob/main/LICENSE)
-[![Docker](https://badgen.net/badge/icon/docker?icon=docker&label)](https://hub.docker.com/r/linuxchata/shark-fido2-sample)
 
 # Packages
 | Package Name | Status |
