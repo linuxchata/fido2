@@ -33,7 +33,7 @@
                         <div class="nav-item d-flex align-items-center text-end">
                             <small class="text-muted me-3">
                                 Welcome, <strong>@(User.Identity.Name ?? "User")</strong>!
-                                <br><span class="text-success">Authenticated via WebAuthn</span>
+                                <br><span class="text-muted">Authenticated via WebAuthn</span>
                             </small>
                             <form method="post" action="/Logout" class="d-inline">
                                 <button type="submit" class="btn btn-sm btn-outline-danger">
