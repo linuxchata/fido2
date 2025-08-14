@@ -18,6 +18,10 @@ public class LogoutController(ILoginService loginService) : Controller
     {
         await loginService.Logout(HttpContext);
 
-        return RedirectToPage("/Index");
+        var returnUrl = Request.Headers.Referer.ToString();
+
+        return !string.IsNullOrEmpty(returnUrl) ?
+            Redirect(returnUrl) :
+            RedirectToPage("/Index");
     }
 }

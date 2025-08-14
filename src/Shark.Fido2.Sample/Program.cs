@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Shark.Fido2.Core;
-using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.InMemory;
 using Shark.Fido2.Sample.Abstractions.Services;
 using Shark.Fido2.Sample.Middlewares;
