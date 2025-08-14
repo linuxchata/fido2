@@ -53,14 +53,11 @@ internal class PublicKeyCredentialRequestOptionsMapperTests
         Assert.That(result.Timeout, Is.EqualTo(options.Timeout));
         Assert.That(result.RpId, Is.EqualTo(options.RpId));
         Assert.That(result.UserVerification, Is.EqualTo(UserVerificationRequirement.Required.GetValue()));
-
         Assert.That(result.AllowCredentials, Has.Length.EqualTo(1));
-        var credential = result.AllowCredentials[0];
-        Assert.That(credential.Type, Is.EqualTo("public-key"));
-        Assert.That(credential.Id, Is.EqualTo(credentialId.ToBase64Url()));
-        Assert.That(credential.Transports, Has.Length.EqualTo(1));
-        Assert.That(credential.Transports[0], Is.EqualTo(AuthenticatorTransport.Internal.GetValue()));
-
+        Assert.That(result.AllowCredentials[0].Type, Is.EqualTo("public-key"));
+        Assert.That(result.AllowCredentials[0].Id, Is.EqualTo(credentialId.ToBase64Url()));
+        Assert.That(result.AllowCredentials[0].Transports, Has.Length.EqualTo(1));
+        Assert.That(result.AllowCredentials[0].Transports[0], Is.EqualTo(AuthenticatorTransport.Internal.GetValue()));
         Assert.That(result.Extensions, Is.Not.Null);
         Assert.That(result.Extensions.AppId, Is.EqualTo(options.Extensions.AppId));
         Assert.That(result.Extensions.UserVerificationMethod, Is.EqualTo(options.Extensions.UserVerificationMethod));
