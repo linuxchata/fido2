@@ -21,15 +21,15 @@
         displayNameInput.prop("readonly", true);
         errorMessageSpan.text("");
 
-        const button = event.target;
-        const previousText = button.innerHTML;
+        const button = event.target.closest('button');
+        const previousInnerHtml = button.innerHTML;
         disableButton(button);
 
         registration(username, displayName)
             .finally(() => {
                 usernameInput.prop("readonly", false);
                 displayNameInput.prop("readonly", false);
-                enableButton(button, previousText);
+                enableButton(button, previousInnerHtml);
             });
     });
 
@@ -67,7 +67,7 @@ function disableButton(button) {
     button.disabled = true;
 }
 
-function enableButton(button, previousText) {
-    button.innerHTML = previousText;
+function enableButton(button, previousInnerHtml) {
+    button.innerHTML = previousInnerHtml;
     button.disabled = false;
 }
