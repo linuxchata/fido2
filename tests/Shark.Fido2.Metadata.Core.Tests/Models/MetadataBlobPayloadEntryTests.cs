@@ -7,6 +7,7 @@ namespace Shark.Fido2.Metadata.Core.Tests.Models;
 internal class MetadataBlobPayloadEntryTests
 {
     [Test]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1861:Avoid constant arrays as arguments", Justification = "For improved unit test readability")]
     public void DeserializeWindowsHelloHardwareAuthenticator_ShouldDeserializeCorrectly()
     {
         // Arrange
