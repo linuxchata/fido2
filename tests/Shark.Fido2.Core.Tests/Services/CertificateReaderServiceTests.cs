@@ -1,101 +1,80 @@
 using System.Security.Cryptography.X509Certificates;
 using Shark.Fido2.Core.Services;
-using Shark.Fido2.Core.Tests.DataReaders;
-using Shark.Fido2.Tests.Common.DataReaders;
 
 namespace Shark.Fido2.Core.Tests.Services;
 
 [TestFixture]
 internal class CertificateReaderTests
 {
-    private const string FileName = "certificate.pem";
-
-    private string _directory = null!;
+    private const string EmbeddedCertificateName = "certificate.pem";
 
     private CertificateReaderService _sut = null!;
 
     [SetUp]
     public void Setup()
     {
-        _directory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
-        Directory.CreateDirectory(_directory);
-
         _sut = new CertificateReaderService();
     }
 
-    [TearDown]
-    public void Cleanup()
-    {
-        if (Directory.Exists(_directory))
-        {
-            Directory.Delete(_directory, recursive: true);
-        }
-    }
-
     [Test]
-    public void Read_WhenFileNameIsNull_ThenThrowsArgumentNullException()
+    public void Read_WhenEmbeddedCertificateNameIsNull_ThenThrowsArgumentNullException()
     {
         // Act & Assert
-        Assert.Throws<ArgumentNullException>(() => _sut.Read(null!, _directory));
+        Assert.Throws<ArgumentNullException>(() => _sut.Read(null!));
     }
 
     [TestCase("")]
     [TestCase("   ")]
-    public void Read_WhenFileNameIsEmpty_ThenThrowsArgumentException(string fileName)
+    public void Read_WhenEmbeddedCertificateNameIsEmpty_ThenThrowsArgumentException(string embeddedCertificateName)
     {
         // Act & Assert
-        Assert.Throws<ArgumentException>(() => _sut.Read(fileName, _directory));
+        Assert.Throws<ArgumentException>(() => _sut.Read(embeddedCertificateName));
     }
 
     [Test]
-    public void Read_WhenFileIsEmpty_ThenThrowsFileNotFoundException()
+    public void Read_WhenEmbeddedCertificateIsEmpty_ThenThrowsFileNotFoundException()
     {
         // Arrange
-        var filePath = Path.Combine(_directory, FileName);
-        File.WriteAllText(filePath, string.Empty);
 
         // Act & Assert
-        Assert.Throws<FileNotFoundException>(() => _sut.Read(FileName, _directory));
+        Assert.Throws<FileNotFoundException>(() => _sut.ParseCertiticate(EmbeddedCertificateName, []));
     }
 
     [Test]
-    public void Read_WhenFileHasMultipleLines_ThenThrowsInvalidOperationException()
+    public void Read_WhenEmbeddedCertificateHasMultipleLines_ThenThrowsInvalidOperationException()
     {
         // Arrange
-        var filePath = Path.Combine(_directory, FileName);
-        File.WriteAllLines(filePath, ["line1", "line2"]);
+        var certificates = new List<string>
+        {
+            "MIICEjCCAZmgAw...",
+            "MIICEjCCAZmgAw...",
+        };
 
         // Act & Assert
-        Assert.Throws<InvalidOperationException>(() => _sut.Read(FileName, _directory));
+        Assert.Throws<InvalidOperationException>(() => _sut.ParseCertiticate(EmbeddedCertificateName, certificates));
     }
 
     [Test]
-    public void Read_WhenFileHasValidBase64Certificate_ThenReturnsCertificate()
+    public void Read_WhenEmbeddedCertificateHasInvalidBase64_ThenThrowsFormatException()
     {
         // Arrange
-        var certificates = CertificateDataReader.Read("FidoU2f.pem");
-        var certificate = certificates[0].Export(X509ContentType.Cert);
-        var base64 = Convert.ToBase64String(certificate);
+        var certificates = new List<string>
+        {
+            "not-a-valid-base64",
+        };
 
-        var filePath = Path.Combine(_directory, FileName);
-        File.WriteAllText(filePath, base64);
+        // Act & Assert
+        Assert.Throws<FormatException>(() => _sut.ParseCertiticate(EmbeddedCertificateName, certificates));
+    }
 
+    [Test]
+    public void Read_WhenEmbeddedCertificateHasValidBase64Certificate_ThenReturnsCertificate()
+    {
         // Act
-        var result = _sut.Read(FileName, _directory);
+        var result = _sut.Read("Apple_WebAuthn_Root_CA.pem");
 
         // Assert
         Assert.That(result, Is.Not.Null);
         Assert.That(result, Is.TypeOf<X509Certificate2>());
-    }
-
-    [Test]
-    public void Read_WhenFileHasInvalidBase64_ThenThrowsFormatException()
-    {
-        // Arrange
-        var filePath = Path.Combine(_directory, FileName);
-        File.WriteAllText(filePath, "not-a-valid-base64");
-
-        // Act & Assert
-        Assert.Throws<FormatException>(() => _sut.Read(FileName, _directory));
     }
 }

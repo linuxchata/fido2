@@ -3,15 +3,14 @@
 namespace Shark.Fido2.Core.Abstractions.Services;
 
 /// <summary>
-/// The interface representing the logic to read a certificate from a file.
+/// The interface representing the logic to read a certificate from an embedded resource.
 /// </summary>
 internal interface ICertificateReaderService
 {
     /// <summary>
-    /// Reads a certificate from the specified file.
+    /// Reads a certificate from the specified embedded resource located in 'Data/Certificates' directory.
     /// </summary>
-    /// <param name="fileName">The file name.</param>
-    /// <param name="certificatesDirectory">The certificates directory.</param>
+    /// <param name="embeddedCertificateName">The embedded certificate name.</param>
     /// <returns>The X509 certificate.</returns>
-    X509Certificate2 Read(string fileName, string certificatesDirectory = "Data/Certificates");
+    X509Certificate2 Read(string embeddedCertificateName);
 }
