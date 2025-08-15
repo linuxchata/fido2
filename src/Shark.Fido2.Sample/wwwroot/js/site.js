@@ -46,14 +46,14 @@
         usernameInput.prop("readonly", true);
         errorMessageSpan.text("");
 
-        const button = event.target;
-        const previousText = button.innerHTML;
+        const button = event.target.closest('button');
+        const previousInnerHtml = button.innerHTML;
         disableButton(button);
 
         authentication(username)
             .finally(() => {
                 usernameInput.prop("readonly", false);
-                enableButton(button, previousText);
+                enableButton(button, previousInnerHtml);
             });
     });
 });
