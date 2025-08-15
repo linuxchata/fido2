@@ -7,6 +7,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:
+      CI: true # Enable deterministic builds
+
     strategy:
       matrix:
         project:
@@ -18,6 +21,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Required for Source Link to work with full git history
+        
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
@@ -30,13 +36,17 @@ jobs:
       run: dotnet build ${{ matrix.project }} --configuration Release --no-restore
 
     - name: Pack
-      run: dotnet pack ${{ matrix.project }} --configuration Release --no-restore --output ./nupkg /p:Version=1.1.2.${{ github.run_number }}
+      run: dotnet pack ${{ matrix.project }} --configuration Release --no-restore --output ./nupkg /p:Version=1.1.2.${{ github.run_number }} /p:EmbedUntrackedSources=true /p:IncludeSymbols=true /p:SymbolPackageFormat=snupkg /p:ContinuousIntegrationBuild=true /p:DebugType=portable /p:DebugSymbols=true
 
     - name: Add nuget source
       run: dotnet nuget add source --username linuxchata --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/linuxchata/index.json"
 
     - name: Push packages to github.com
-      run: dotnet nuget push "./nupkg/Shark.Fido2.*.*.nupkg" --api-key ${{ secrets.OAUTH_GITHUB_PAT }} --source "github" --skip-duplicate
+      run: |
+        dotnet nuget push "./nupkg/Shark.Fido2.*.*.nupkg" --api-key ${{ secrets.OAUTH_GITHUB_PAT }} --source "github" --skip-duplicate
+        dotnet nuget push "./nupkg/Shark.Fido2.*.*.snupkg" --api-key ${{ secrets.OAUTH_GITHUB_PAT }} --source "github" --skip-duplicate
 
     - name: Push packages to nuget.org
-      run: dotnet nuget push "./nupkg/Shark.Fido2.*.*.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+      run: |
+        dotnet nuget push "./nupkg/Shark.Fido2.*.*.nupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+        dotnet nuget push "./nupkg/Shark.Fido2.*.*.snupkg" --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
