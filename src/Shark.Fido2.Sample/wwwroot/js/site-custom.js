@@ -30,7 +30,7 @@ $(function () {
         setSelectsDisabled(selects, true);
         errorMessageSpan.text("");
 
-        const button = event.target;
+        const button = event.target.closest('button');
         const previousInnerHtml = button.innerHTML;
         disableButton(button);
 
@@ -53,7 +53,7 @@ $(function () {
         setSelectsDisabled(selects, true);
 
         const button = event.target.closest('button');
-        const previousText = button.innerHTML;
+        const previousInnerHtml = button.innerHTML;
         disableButton(button);
 
         const optionsRequest = buildAuthenticationOptions(username, selects);
@@ -61,7 +61,7 @@ $(function () {
             .finally(() => {
                 setInputsReadonly([usernameInput], false);
                 setSelectsDisabled(selects, false);
-                enableButton(button, previousText);
+                enableButton(button, previousInnerHtml);
             });
     });
 });
