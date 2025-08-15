@@ -100,7 +100,7 @@ internal class AttestationCertificateValidator : IAttestationCertificateValidato
             return ValidatorInternalResult.Invalid($"{Prefix} authority is invalid");
         }
 
-        // TODO: An Authority Information Access (AIA) extension with entry id-ad-ocsp and a CRL Distribution Point
+        // Note: An Authority Information Access (AIA) extension with entry id-ad-ocsp and a CRL Distribution Point
         // extension [RFC5280] are both OPTIONAL as the status of many attestation certificates is available through
         // authenticator metadata services. See, for example, the FIDO Metadata Service [FIDOMetadataService].
 
@@ -198,7 +198,7 @@ internal class AttestationCertificateValidator : IAttestationCertificateValidato
             return ValidatorInternalResult.Invalid($"{Prefix} authority is invalid");
         }
 
-        // TODO: An Authority Information Access (AIA) extension with entry id-ad-ocsp and a CRL Distribution Point
+        // Note: An Authority Information Access (AIA) extension with entry id-ad-ocsp and a CRL Distribution Point
         // extension [RFC5280] are both OPTIONAL as the status of many attestation certificates is available through
         // metadata services. See, for example, the FIDO Metadata Service [FIDOMetadataService].
 
