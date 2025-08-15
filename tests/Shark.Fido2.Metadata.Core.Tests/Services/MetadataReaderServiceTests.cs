@@ -82,66 +82,16 @@ internal class MetadataReaderServiceTests
     }
 
     [Test]
-    public void ValidateAndRead_WhenMetadataBlobIsInvalidJwt_ThenThrowsInvalidOperationException()
+    [TestCase("not.a.valid.jwt")]
+    [TestCase("this-is-not-a-jwt-at-all")]
+    [TestCase("eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.invalid.signature")]
+    [TestCase(".eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.signature")]
+    [TestCase("eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9..signature")]
+    public void ValidateAndRead_WhenMetadataBlobIsInvalid_ThenThrowsInvalidOperationException(string metadataBlob)
     {
-        // Arrange
-        var invalidJwt = "not.a.valid.jwt";
-
         // Act & Assert
         Assert.ThrowsAsync<InvalidOperationException>(() => _sut.ValidateAndRead(
-            invalidJwt,
-            _rootCertificateMock.Object,
-            _cancellationToken));
-    }
-
-    [Test]
-    public void ValidateAndRead_WhenMetadataBlobIsNotJwtFormat_ThenThrowsInvalidOperationException()
-    {
-        // Arrange
-        var notJwt = "this-is-not-a-jwt-at-all";
-
-        // Act & Assert
-        Assert.ThrowsAsync<InvalidOperationException>(() => _sut.ValidateAndRead(
-            notJwt,
-            _rootCertificateMock.Object,
-            _cancellationToken));
-    }
-
-    [Test]
-    public void ValidateAndRead_WhenMetadataBlobHasInvalidFormat_ThenThrowsArgumentException()
-    {
-        // Arrange
-        var malformedJwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.invalid.signature";
-
-        // Act & Assert
-        Assert.ThrowsAsync<ArgumentException>(() => _sut.ValidateAndRead(
-            malformedJwt,
-            _rootCertificateMock.Object,
-            _cancellationToken));
-    }
-
-    [Test]
-    public void ValidateAndRead_WhenJwtHeaderIsMissing_ThenThrowsInvalidOperationException()
-    {
-        // Arrange
-        var jwtWithoutHeader = ".eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.signature";
-
-        // Act & Assert
-        Assert.ThrowsAsync<InvalidOperationException>(() => _sut.ValidateAndRead(
-            jwtWithoutHeader,
-            _rootCertificateMock.Object,
-            _cancellationToken));
-    }
-
-    [Test]
-    public void ValidateAndRead_WhenJwtPayloadIsMissing_ThenThrowsInvalidOperationException()
-    {
-        // Arrange
-        var jwtWithoutPayload = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9..signature";
-
-        // Act & Assert
-        Assert.ThrowsAsync<InvalidOperationException>(() => _sut.ValidateAndRead(
-            jwtWithoutPayload,
+            metadataBlob,
             _rootCertificateMock.Object,
             _cancellationToken));
     }
