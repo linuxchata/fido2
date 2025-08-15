@@ -7,10 +7,15 @@
 
   <ItemGroup>
     <None Remove="Data\Certificates\Metadata.pem" />
+    <None Remove="Data\VirtualSecp256R1CTAP2AuthenticatorWithSelfBatchReferencing.json" />
+    <None Remove="Data\WindowsHelloHardwareAuthenticator.json" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="Data\Certificates\Metadata.pem">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\WindowsHelloHardwareAuthenticator.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

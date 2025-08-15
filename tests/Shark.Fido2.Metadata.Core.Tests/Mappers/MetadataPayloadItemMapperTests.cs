@@ -42,7 +42,7 @@ internal class MetadataPayloadItemMapperTests
             },
             StatusReports =
             [
-                new Models.StatusReport
+                new StatusReport
                 {
                     Status = "FIDO_CERTIFIED",
                     EffectiveDate = DateTime.UtcNow.ToString(),
