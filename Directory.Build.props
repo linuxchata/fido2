@@ -5,28 +5,24 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-  </PropertyGroup>
 
-  <!-- Source Link and deterministic build configuration for packable projects -->
-  <PropertyGroup Condition="'$(IsPackable)' == 'true' and '$(Configuration)' == 'Release'">
-    <!-- Source Link -->
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-
-    <!-- Deterministic builds -->
-    <Deterministic>true</Deterministic>
-    <ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
-
-    <!-- Debug information -->
+    <!-- Always generate symbols for debugging -->
     <DebugType>portable</DebugType>
     <DebugSymbols>true</DebugSymbols>
-    <Optimize>false</Optimize>
   </PropertyGroup>
 
-  <!-- Source Link package reference for packable projects only -->
-  <ItemGroup Condition="'$(IsPackable)' == 'true' and '$(Configuration)' == 'Release'">
+  <!-- Source Link only for NuGet packages -->
+  <PropertyGroup Condition="'$(IsPackable)' == 'true'">
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <Deterministic>true</Deterministic>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <ContinuousIntegrationBuild Condition="'$(CI)' == 'true'">true</ContinuousIntegrationBuild>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+  </PropertyGroup>
+
+  <!-- Source Link package for NuGet packages -->
+  <ItemGroup Condition="'$(IsPackable)' == 'true'">
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
   </ItemGroup>
 </Project>
