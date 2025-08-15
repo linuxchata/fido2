@@ -84,13 +84,25 @@ internal class MetadataReaderServiceTests
     [Test]
     [TestCase("not.a.valid.jwt")]
     [TestCase("this-is-not-a-jwt-at-all")]
-    [TestCase("eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.invalid.signature")]
     [TestCase(".eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.signature")]
     [TestCase("eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9..signature")]
     public void ValidateAndRead_WhenMetadataBlobIsInvalid_ThenThrowsInvalidOperationException(string metadataBlob)
     {
         // Act & Assert
         Assert.ThrowsAsync<InvalidOperationException>(() => _sut.ValidateAndRead(
+            metadataBlob,
+            _rootCertificateMock.Object,
+            _cancellationToken));
+    }
+
+    [Test]
+    public void ValidateAndRead_WhenMetadataBlobIsInvalid_ThenThrowsArgumentException()
+    {
+        // Arrrange
+        var metadataBlob = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.invalid.signature";
+
+        // Act & Assert
+        Assert.ThrowsAsync<ArgumentException>(() => _sut.ValidateAndRead(
             metadataBlob,
             _rootCertificateMock.Object,
             _cancellationToken));
