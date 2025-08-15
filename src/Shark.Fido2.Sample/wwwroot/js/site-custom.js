@@ -31,7 +31,7 @@ $(function () {
         errorMessageSpan.text("");
 
         const button = event.target;
-        const previousText = button.innerHTML;
+        const previousInnerHtml = button.innerHTML;
         disableButton(button);
 
         const optionsRequest = buildRegistrationOptions(username, displayName, selects);
@@ -39,7 +39,7 @@ $(function () {
             .finally(() => {
                 setInputsReadonly([usernameInput, displayNameInput], false);
                 setSelectsDisabled(selects, false);
-                enableButton(button, previousText);
+                enableButton(button, previousInnerHtml);
             });
     });
 
@@ -52,7 +52,7 @@ $(function () {
         setInputsReadonly([usernameInput], true);
         setSelectsDisabled(selects, true);
 
-        const button = event.target;
+        const button = event.target.closest('button');
         const previousText = button.innerHTML;
         disableButton(button);
 
@@ -75,8 +75,8 @@ function disableButton(button) {
     button.disabled = true;
 }
 
-function enableButton(button, previousText) {
-    button.innerHTML = previousText;
+function enableButton(button, previousInnerHtml) {
+    button.innerHTML = previousInnerHtml;
     button.disabled = false;
 }
 
