@@ -27,6 +27,7 @@ internal class MetadataBlobPayloadEntryTests
         Assert.That(entry.RogueListHash, Is.Null);
         Assert.That(entry.TimeOfLastStatusChange, Is.EqualTo("2020-08-05"));
         Assert.That(entry.StatusReports, Has.Length.EqualTo(2));
+        Assert.That(entry.ToString(), Is.EqualTo("Windows Hello Hardware Authenticator"));
 
         // First StatusReport
         Assert.That(entry.StatusReports[0].Status, Is.EqualTo("FIDO_CERTIFIED_L1"));
@@ -68,6 +69,11 @@ internal class MetadataBlobPayloadEntryTests
         Assert.That(entry.MetadataStatement.PublicKeyAlgAndEncodings, Is.EqualTo(new[] { "cose" }));
         Assert.That(entry.MetadataStatement.AttestationTypes, Is.EqualTo(new[] { "basic_surrogate", "attca" }));
         Assert.That(entry.MetadataStatement.UserVerificationDetails, Has.Count.EqualTo(4));
+        Assert.That(entry.MetadataStatement.UserVerificationDetails[0], Has.Length.EqualTo(1));
+        Assert.That(entry.MetadataStatement.UserVerificationDetails[0][0].UserVerificationMethod, Is.EqualTo("faceprint_internal"));
+        Assert.That(entry.MetadataStatement.UserVerificationDetails[0][0].CaDesc, Is.Null);
+        Assert.That(entry.MetadataStatement.UserVerificationDetails[0][0].BaDesc, Is.Null);
+        Assert.That(entry.MetadataStatement.UserVerificationDetails[0][0].PaDesc, Is.Null);
         Assert.That(entry.MetadataStatement.KeyProtection, Is.EqualTo(new[] { "hardware" }));
         Assert.That(entry.MetadataStatement.IsKeyRestricted, Is.False);
         Assert.That(entry.MetadataStatement.IsFreshUserVerificationRequired, Is.Null);
@@ -82,5 +88,6 @@ internal class MetadataBlobPayloadEntryTests
         Assert.That(entry.MetadataStatement.Icon, Is.Not.Null);
         Assert.That(entry.MetadataStatement.SupportedExtensions, Is.Null);
         Assert.That(entry.MetadataStatement.AuthenticatorGetInfo, Is.Not.Null);
+        Assert.That(entry.MetadataStatement.ToString(), Is.EqualTo("Windows Hello Hardware Authenticator"));
     }
 }
