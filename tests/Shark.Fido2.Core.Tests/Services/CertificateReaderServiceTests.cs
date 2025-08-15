@@ -1,6 +1,7 @@
 using System.Security.Cryptography.X509Certificates;
 using Shark.Fido2.Core.Services;
 using Shark.Fido2.Core.Tests.DataReaders;
+using Shark.Fido2.Tests.Common.DataReaders;
 
 namespace Shark.Fido2.Core.Tests.Services;
 

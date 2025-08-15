@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Shark.Fido2.Metadata.Core.Abstractions;
 using Shark.Fido2.Metadata.Core.Abstractions.Repositories;
@@ -9,6 +10,7 @@ using Shark.Fido2.Metadata.Core.Validators;
 
 namespace Shark.Fido2.Metadata.Core;
 
+[ExcludeFromCodeCoverage]
 public static class DependencyInjection
 {
     private const string EnvironmentVariableName = "ASPNETCORE_ENVIRONMENT";

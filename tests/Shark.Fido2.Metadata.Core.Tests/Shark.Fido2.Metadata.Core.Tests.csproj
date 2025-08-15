@@ -6,10 +6,26 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Data\Certificates\Metadata.pem" />
+    <None Remove="Data\VirtualSecp256R1CTAP2AuthenticatorWithSelfBatchReferencing.json" />
+    <None Remove="Data\WindowsHelloHardwareAuthenticator.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Data\Certificates\Metadata.pem">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\WindowsHelloHardwareAuthenticator.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" Version="8.10.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
     <PackageReference Include="Moq" Version="4.20.72" />
     <PackageReference Include="NUnit" Version="4.3.2" />
@@ -26,6 +42,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Shark.Fido2.Metadata.Core\Shark.Fido2.Metadata.Core.csproj" />
+    <ProjectReference Include="..\Shark.Fido2.Tests.Common\Shark.Fido2.Tests.Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>

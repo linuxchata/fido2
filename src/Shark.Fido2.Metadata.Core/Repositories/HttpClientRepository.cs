@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.Extensions.Options;
 using Shark.Fido2.Metadata.Core.Abstractions.Repositories;
@@ -5,6 +6,7 @@ using Shark.Fido2.Metadata.Core.Configurations;
 
 namespace Shark.Fido2.Metadata.Core.Repositories;
 
+[ExcludeFromCodeCoverage]
 internal sealed class HttpClientRepository : IHttpClientRepository
 {
     private readonly MetadataServiceConfiguration _configuration;

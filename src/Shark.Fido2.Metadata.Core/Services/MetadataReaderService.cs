@@ -36,6 +36,9 @@ internal sealed class MetadataReaderService : IMetadataReaderService
         X509Certificate2 rootCertificate,
         CancellationToken cancellationToken)
     {
+        ArgumentException.ThrowIfNullOrWhiteSpace(metadataBlob);
+        ArgumentNullException.ThrowIfNull(rootCertificate);
+
         var metadataBlobToken = ReadBlob(metadataBlob);
 
         // Step 4
@@ -114,11 +117,11 @@ internal sealed class MetadataReaderService : IMetadataReaderService
         }
 
         if (!DateTime.TryParseExact(
-                (string)nextUpdateString,
-                NextUpdateDateTimeFormat,
-                CultureInfo.InvariantCulture,
-                DateTimeStyles.AssumeUniversal,
-                out DateTime nextUpdate))
+            (string)nextUpdateString,
+            NextUpdateDateTimeFormat,
+            CultureInfo.InvariantCulture,
+            DateTimeStyles.AssumeUniversal,
+            out DateTime nextUpdate))
         {
             throw new InvalidDataException("Metadata token payload 'nextUpdate' property is not date");
         }
@@ -150,8 +153,6 @@ internal sealed class MetadataReaderService : IMetadataReaderService
 
     private JwtSecurityToken ReadBlob(string metadataBlob)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(metadataBlob);
-
         var handler = new JwtSecurityTokenHandler
         {
             MaximumTokenSizeInBytes = _configuration.MaximumTokenSizeInBytes,
