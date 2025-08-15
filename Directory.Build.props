@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <!-- Source Link and deterministic build configuration for packable projects -->
-  <PropertyGroup Condition="'$(IsPackable)' == 'true'">
+  <PropertyGroup Condition="'$(IsPackable)' == 'true' and '$(Configuration)' == 'Release'">
     <!-- Source Link -->
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
@@ -22,10 +22,11 @@
     <!-- Debug information -->
     <DebugType>portable</DebugType>
     <DebugSymbols>true</DebugSymbols>
+    <Optimize>true</Optimize>
   </PropertyGroup>
 
   <!-- Source Link package reference for packable projects only -->
-  <ItemGroup Condition="'$(IsPackable)' == 'true'">
+  <ItemGroup Condition="'$(IsPackable)' == 'true' and '$(Configuration)' == 'Release'">
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
   </ItemGroup>
 </Project>
