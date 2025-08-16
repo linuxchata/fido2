@@ -11,8 +11,7 @@ namespace Shark.Fido2.DynamoDB;
 /// Amazon DynamoDB implementation of the credential repository.
 /// </summary>
 /// <remarks>
-/// This implementation uses Amazon DynamoDB as the backing store for FIDO2 credentials.
-/// The table structure uses 'cid' as the partition key and includes a GSI on 'un' (username).
+/// This implementation uses Amazon DynamoDB as the persistent data store for FIDO2 credentials.
 /// </remarks>
 internal sealed class CredentialRepository : ICredentialRepository
 {
@@ -75,7 +74,7 @@ internal sealed class CredentialRepository : ICredentialRepository
             {
                 { ExpressionNames.UserName, new AttributeValue { S = userName } },
             },
-            ConsistentRead = false, // GSIs do not support consistent reads
+            ConsistentRead = false,
         };
 
         var response = await _client.QueryAsync(request, cancellationToken);

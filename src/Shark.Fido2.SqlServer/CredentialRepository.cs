@@ -11,7 +11,7 @@ namespace Shark.Fido2.SqlServer;
 /// Microsoft SQL Server implementation of the credential repository.
 /// </summary>
 /// <remarks>
-/// This implementation uses Microsoft SQL Server as the backing store for FIDO2 credentials.
+/// This implementation uses Microsoft SQL Server as the persistent data store for FIDO2 credentials.
 /// </remarks>
 internal sealed class CredentialRepository : ICredentialRepository
 {

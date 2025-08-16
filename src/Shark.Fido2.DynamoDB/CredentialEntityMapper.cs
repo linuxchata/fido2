@@ -18,7 +18,7 @@ internal static class CredentialEntityMapper
             CredentialPublicKeyJson = item[AttributeNames.CredentialPublicKeyJson].S,
             SignCount = uint.Parse(item[AttributeNames.SignCount].N),
             Transports = item[AttributeNames.Transports].S,
-            CreatedAt = GetDateTime(item),
+            CreatedAt = GetDateTime(item, AttributeNames.CreatedAt),
             UpdatedAt = GetNullableDateTime(item, AttributeNames.UpdatedAt),
             LastUsedAt = GetNullableDateTime(item, AttributeNames.LastUsedAt),
         };
@@ -51,15 +51,18 @@ internal static class CredentialEntityMapper
         };
     }
 
-    private static DateTime GetDateTime(Dictionary<string, AttributeValue> item)
+    private static DateTime GetDateTime(Dictionary<string, AttributeValue> item, string attributeName)
     {
-        return DateTime.Parse(item[AttributeNames.CreatedAt].S, DateTimeFormatInfo.InvariantInfo);
+        return DateTime.Parse(item[attributeName].S, DateTimeFormatInfo.InvariantInfo);
     }
 
     private static DateTime? GetNullableDateTime(Dictionary<string, AttributeValue> item, string attributeName)
     {
-        return item.TryGetValue(attributeName, out AttributeValue? value) && !value.NULL == true
-            ? DateTime.Parse(value.S, DateTimeFormatInfo.InvariantInfo)
-            : null;
+        if (item.TryGetValue(attributeName, out AttributeValue? value) && value != null && value.S != null)
+        {
+            return DateTime.Parse(value.S, DateTimeFormatInfo.InvariantInfo);
+        }
+
+        return null;
     }
 }
