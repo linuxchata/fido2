@@ -1,16 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
     <IsPackable>true</IsPackable>
     <PackageId>Shark.Fido2.SqlServer</PackageId>
     <Description>SQL Server data store for Shark WebAuthn .NET library</Description>
-    <Authors>linuxchata</Authors>
-    <PackageTags>security;passwordless;passwordless-authentication;webauthn;fido2;fido2-standard;passkeys</PackageTags>
-    <RepositoryUrl>https://github.com/linuxchata/fido2</RepositoryUrl>
     <Product>SQL Server data store for Shark WebAuthn .NET library</Product>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <PackageReleaseNotes>https://github.com/linuxchata/fido2/releases</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
@@ -37,13 +31,5 @@
       <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))" />
     </ItemGroup>
   </Target>
-
-  <ItemGroup>
-    <None Include="README.md" Pack="true" PackagePath="\" />
-    <None Include="..\..\LICENSE">
-      <Pack>True</Pack>
-      <PackagePath></PackagePath>
-    </None>
-  </ItemGroup>
 
 </Project>
