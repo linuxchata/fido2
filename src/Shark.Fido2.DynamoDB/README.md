@@ -2,4 +2,4 @@ Shark WebAuthn library for .NET provides a server-side implementation of the Web
 
 This package provides Amazon DynamoDB implementation for storing WebAuthn credentials.
 
-Table name is `Credential`. Partition key name is `cid` (by credential identifier). Global Secondary Index name is `UserNameIndex`.
+Table name is `Credential` with partition key `cid` (credential identifier) and no sort key. A global secondary index named `UserNameIndex` uses `un` (username) as its partition key, with no sort key.

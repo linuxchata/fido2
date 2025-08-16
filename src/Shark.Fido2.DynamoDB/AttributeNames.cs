@@ -16,7 +16,7 @@ internal static class AttributeNames
     public const string UserHandle = "uh";
 
     /// <summary>
-    /// User name (GSI key).
+    /// User name (GSI partition key).
     /// </summary>
     public const string UserName = "un";
 

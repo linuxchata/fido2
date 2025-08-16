@@ -3,7 +3,7 @@
 namespace Shark.Fido2.Core.Abstractions.Repositories;
 
 /// <summary>
-/// The interface representing the logic to manage credentials.
+/// The interface representing the logic to retrieve and manage public key credentials.
 /// </summary>
 public interface ICredentialRepository
 {
