@@ -14,6 +14,9 @@ namespace Shark.Fido2.Core.Tests.Validators.AttestationStatementValidators;
 [TestFixture]
 internal class AttestationCertificateValidatorTests
 {
+    private const string NonceBase64 = "XNudkHNARVtjc+Z1K3P8NoRTYCIV+uq7fBZfC62sB8w=";
+    private const string AaGuid = "42383245-4437-3343-3846-423445354132";
+
     private AttestationObjectData _attestationObjectData;
     private ClientData _clientData;
     private byte[] _nonce;
@@ -43,7 +46,7 @@ internal class AttestationCertificateValidatorTests
                         XCoordinate = [5, 6, 7, 8],
                         YCoordinate = [9, 10, 11, 12],
                     },
-                    AaGuid = Guid.Parse("42383245-4437-3343-3846-423445354132"),
+                    AaGuid = Guid.Parse(AaGuid),
                 },
                 SignCount = 1,
             },
@@ -59,7 +62,7 @@ internal class AttestationCertificateValidatorTests
             ClientDataHash = [7],
         };
 
-        _nonce = Convert.FromBase64String("XNudkHNARVtjc+Z1K3P8NoRTYCIV+uq7fBZfC62sB8w=");
+        _nonce = Convert.FromBase64String(NonceBase64);
 
         _subjectAlternativeNameParserServiceMock = new Mock<ISubjectAlternativeNameParserService>();
         _subjectAlternativeNameParserServiceMock
@@ -107,8 +110,6 @@ internal class AttestationCertificateValidatorTests
     public void ValidatePacked_WhenCertificateHasInvalidSubject_ThenReturnsInvalidResult()
     {
         // Arrange
-        _attestationObjectData.AuthenticatorData!.AttestedCredentialData.AaGuid = Guid.Parse("42383245-4437-3343-3846-423445354132");
-
         var certificates = CertificateDataReader.Read("Tpm.pem");
 
         // Act
@@ -141,8 +142,6 @@ internal class AttestationCertificateValidatorTests
     public void ValidatePacked_WhenCertificateIsValid_ThenReturnsValidResult()
     {
         // Arrange
-        _attestationObjectData.AuthenticatorData!.AttestedCredentialData.AaGuid = Guid.Parse("42383245-4437-3343-3846-423445354132");
-
         var certificates = CertificateDataReader.Read("Packed.pem");
 
         // Act
