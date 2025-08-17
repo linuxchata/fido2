@@ -15,7 +15,7 @@ internal sealed class CertificateReaderService : ICertificateReaderService
         return ParseCertiticate(embeddedCertificateName, certificates);
     }
 
-    internal List<string> ReadCertificateFromEmbeddedResource(string embeddedCertificateName)
+    internal static List<string> ReadCertificateFromEmbeddedResource(string embeddedCertificateName)
     {
         var assembly = Assembly.GetExecutingAssembly();
 
@@ -36,7 +36,7 @@ internal sealed class CertificateReaderService : ICertificateReaderService
         return certificates;
     }
 
-    internal X509Certificate2 ParseCertiticate(string embeddedCertificateName, List<string> certificates)
+    internal static X509Certificate2 ParseCertiticate(string embeddedCertificateName, List<string> certificates)
     {
         if (certificates.Count == 0)
         {
