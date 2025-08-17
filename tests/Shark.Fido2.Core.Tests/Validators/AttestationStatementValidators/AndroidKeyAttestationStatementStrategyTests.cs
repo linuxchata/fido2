@@ -66,10 +66,10 @@ internal class AndroidKeyAttestationStatementStrategyTests
     }
 
     [Test]
-    public async Task Validate_WhenAttestationWithEc2Algorithm_ThenReturnsValidResult()
+    public async Task Validate_WhenAttestationWithEs256Algorithm_ThenReturnsValidResult()
     {
         // Arrange
-        var fileName = "AndroidKeyAttestationWithEc2Algorithm.json";
+        var fileName = "AndroidKeyAttestationWithEs256Algorithm.json";
         var attestationResponseData = AttestationResponseDataReader.Read(fileName);
         var clientData = ClientDataBuilder.Build(attestationResponseData!.ClientDataJson);
 
