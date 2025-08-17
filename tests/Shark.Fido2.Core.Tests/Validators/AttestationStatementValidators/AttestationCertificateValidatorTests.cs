@@ -4,7 +4,6 @@ using Microsoft.Extensions.Time.Testing;
 using Moq;
 using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Configurations;
-using Shark.Fido2.Core.Services;
 using Shark.Fido2.Core.Validators.AttestationStatementValidators;
 using Shark.Fido2.Domain;
 using Shark.Fido2.Domain.Tpm;
