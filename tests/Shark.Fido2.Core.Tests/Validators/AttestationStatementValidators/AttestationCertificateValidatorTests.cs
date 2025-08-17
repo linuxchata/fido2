@@ -117,6 +117,23 @@ internal class AttestationCertificateValidatorTests
     }
 
     [Test]
+    public void ValidatePacked_WhenCertificateIsValidAndAaGuidMismatch_ThenReturnsValidResult()
+    {
+        // Arrange
+        _attestationObjectData.AuthenticatorData!.AttestedCredentialData.AaGuid = Guid.NewGuid();
+
+        var certificates = CertificateDataReader.Read("Packed.pem");
+
+        // Act
+        var result = _sut.ValidatePacked(certificates[0], _attestationObjectData!);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.IsValid, Is.False);
+        Assert.That(result.Message, Is.EqualTo("Packed attestation statement AAGUID mismatch"));
+    }
+
+    [Test]
     public void ValidatePacked_WhenCertificateIsValid_ThenReturnsValidResult()
     {
         // Arrange
