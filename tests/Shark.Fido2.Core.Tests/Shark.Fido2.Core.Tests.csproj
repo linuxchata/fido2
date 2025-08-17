@@ -6,46 +6,34 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Data\Certificates\AppleAnonymous.pem" />
-    <None Remove="Data\Certificates\Packed.pem" />
-    <None Remove="Data\Certificates\tpm.pem" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Include="Data\Certificates\AndroidKey.pem">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Certificates\AndroidSafetyNet.pem">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Data\Certificates\AppleAnonymous.pem">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Data\Certificates\FidoU2f.pem">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Data\Certificates\PackedWithCa.pem">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Data\PackedAttestationWithEc2Algorithm.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Data\PackedAttestationWithOkpAlgorithm.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Data\AndroidKeyAttestationWithEc2Algorithm.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Data\AppleAnonymousAttestationWithEc2Algorithm.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Data\Certificates\Packed.pem">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Certificates\FidoU2f.pem">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Data\Certificates\Tpm.pem">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\FidoU2fAttestationWithEc2Algorithm.json">
+    <Content Include="Data\FidoU2fAttestationWithEs256Algorithm.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\AndroidKeyAttestationWithEs256Algorithm.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\AppleAnonymousAttestationWithEs256Algorithm.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Data\AndroidSafetyNetAttestationWithRs256Algorithm.json">
@@ -54,10 +42,16 @@
     <Content Include="Data\NoneAttestation.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\PackedAttestationWithEc2AlgorithmWithRootCertificate.json">
+    <Content Include="Data\PackedAttestationWithEs256AlgorithmWithRootCertificate.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Data\PackedAttestationWithRs256Algorithm.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\PackedAttestationWithEs256Algorithm.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\PackedAttestationWithEddsaAlgorithm.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Data\TpmAttestationWithEs256Algorithm.json">

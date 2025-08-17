@@ -37,7 +37,8 @@ internal class CertificateReaderTests
         // Arrange
 
         // Act & Assert
-        Assert.Throws<FileNotFoundException>(() => _sut.ParseCertiticate(EmbeddedCertificateName, []));
+        Assert.Throws<FileNotFoundException>(
+            () => CertificateReaderService.ParseCertiticate(EmbeddedCertificateName, []));
     }
 
     [Test]
@@ -51,7 +52,8 @@ internal class CertificateReaderTests
         };
 
         // Act & Assert
-        Assert.Throws<InvalidOperationException>(() => _sut.ParseCertiticate(EmbeddedCertificateName, certificates));
+        Assert.Throws<InvalidOperationException>(
+            () => CertificateReaderService.ParseCertiticate(EmbeddedCertificateName, certificates));
     }
 
     [Test]
@@ -64,7 +66,8 @@ internal class CertificateReaderTests
         };
 
         // Act & Assert
-        Assert.Throws<FormatException>(() => _sut.ParseCertiticate(EmbeddedCertificateName, certificates));
+        Assert.Throws<FormatException>(
+            () => CertificateReaderService.ParseCertiticate(EmbeddedCertificateName, certificates));
     }
 
     [Test]

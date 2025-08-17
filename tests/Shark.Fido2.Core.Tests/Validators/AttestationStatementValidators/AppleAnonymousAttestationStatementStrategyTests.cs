@@ -62,10 +62,10 @@ internal class AppleAnonymousAttestationStatementStrategyTests
     }
 
     [Test]
-    public async Task Validate_WhenAttestationWithEc2Algorithm_ThenReturnsValidResult()
+    public async Task Validate_WhenAttestationWithEs256Algorithm_ThenReturnsValidResult()
     {
         // Arrange
-        var fileName = "AppleAnonymousAttestationWithEc2Algorithm.json";
+        var fileName = "AppleAnonymousAttestationWithEs256Algorithm.json";
         var attestationResponseData = AttestationResponseDataReader.Read(fileName);
         var clientData = ClientDataBuilder.Build(attestationResponseData!.ClientDataJson);
 

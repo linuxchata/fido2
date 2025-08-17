@@ -88,11 +88,11 @@ internal class PackedAttestationStatementStrategyTests
     }
 
     [Test]
-    public async Task Validate_WhenAttestationWithEc2AlgorithmAndWithRootCertificate_ThenReturnsInvalidResult()
+    public async Task Validate_WhenAttestationWithEs256AlgorithmAndWithRootCertificate_ThenReturnsInvalidResult()
     {
         // Arrange
         // Source https://fidoalliance.org/specs/fido-v2.0-rd-20180702/fido-server-v2.0-rd-20180702.html#packed-attestation
-        var fileName = "PackedAttestationWithEc2AlgorithmWithRootCertificate.json";
+        var fileName = "PackedAttestationWithEs256AlgorithmWithRootCertificate.json";
         var attestationResponseData = AttestationResponseDataReader.Read(fileName);
         var clientData = ClientDataBuilder.Build(attestationResponseData!.ClientDataJson);
 
@@ -108,10 +108,10 @@ internal class PackedAttestationStatementStrategyTests
     }
 
     [Test]
-    public async Task Validate_WhenAttestationWithEc2Algorithm_ThenReturnsValidResult()
+    public async Task Validate_WhenAttestationWithEs256Algorithm_ThenReturnsValidResult()
     {
         // Arrange
-        var fileName = "PackedAttestationWithEc2Algorithm.json";
+        var fileName = "PackedAttestationWithEs256Algorithm.json";
         var attestationResponseData = AttestationResponseDataReader.Read(fileName);
         var clientData = ClientDataBuilder.Build(attestationResponseData!.ClientDataJson);
 
@@ -132,10 +132,10 @@ internal class PackedAttestationStatementStrategyTests
     }
 
     [Test]
-    public async Task Validate_WhenAttestationWithOkpAlgorithm_ThenReturnsValidResult()
+    public async Task Validate_WhenAttestationWithEddsaAlgorithm_ThenReturnsValidResult()
     {
         // Arrange
-        var fileName = "PackedAttestationWithOkpAlgorithm.json";
+        var fileName = "PackedAttestationWithEddsaAlgorithm.json";
         var attestationResponseData = AttestationResponseDataReader.Read(fileName);
         var clientData = ClientDataBuilder.Build(attestationResponseData!.ClientDataJson);
 
