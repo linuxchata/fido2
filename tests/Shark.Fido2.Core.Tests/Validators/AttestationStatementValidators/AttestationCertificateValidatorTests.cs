@@ -3,6 +3,8 @@ using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Time.Testing;
 using Moq;
 using Shark.Fido2.Core.Abstractions.Services;
+using Shark.Fido2.Core.Configurations;
+using Shark.Fido2.Core.Services;
 using Shark.Fido2.Core.Validators.AttestationStatementValidators;
 using Shark.Fido2.Domain;
 using Shark.Fido2.Domain.Tpm;
@@ -16,8 +18,10 @@ internal class AttestationCertificateValidatorTests
     private AttestationObjectData _attestationObjectData;
     private ClientData _clientData;
     private byte[] _nonce;
+    private Fido2Configuration _fido2Configuration;
 
     private Mock<ISubjectAlternativeNameParserService> _subjectAlternativeNameParserServiceMock;
+    private Mock<IAndroidKeyAttestationExtensionParserService> _androidKeyAttestationExtensionParserService;
     private Mock<IAppleAnonymousExtensionParserService> _appleAnonymousExtensionParserServiceMock;
 
     private AttestationCertificateValidator _sut = null!;
@@ -53,6 +57,7 @@ internal class AttestationCertificateValidatorTests
             Origin = "https://example.com",
             CrossOrigin = false,
             TokenBinding = null,
+            ClientDataHash = [7],
         };
 
         _nonce = Convert.FromBase64String("XNudkHNARVtjc+Z1K3P8NoRTYCIV+uq7fBZfC62sB8w=");
@@ -68,19 +73,19 @@ internal class AttestationCertificateValidatorTests
                 Version = "id:00010102",
             });
 
-        var androidKeyAttestationExtensionParserServiceMock = new Mock<IAndroidKeyAttestationExtensionParserService>();
+        _androidKeyAttestationExtensionParserService = new Mock<IAndroidKeyAttestationExtensionParserService>();
 
         _appleAnonymousExtensionParserServiceMock = new Mock<IAppleAnonymousExtensionParserService>();
 
         var fakeTimeProvider = new FakeTimeProvider();
-        var fido2Configuration = Fido2ConfigurationBuilder.Build();
+        _fido2Configuration = Fido2ConfigurationBuilder.Build();
 
         _sut = new AttestationCertificateValidator(
             _subjectAlternativeNameParserServiceMock.Object,
-            androidKeyAttestationExtensionParserServiceMock.Object,
+            _androidKeyAttestationExtensionParserService.Object,
             _appleAnonymousExtensionParserServiceMock.Object,
             fakeTimeProvider,
-            Options.Create(fido2Configuration));
+            Options.Create(_fido2Configuration));
     }
 
     [Test]
@@ -294,27 +299,305 @@ internal class AttestationCertificateValidatorTests
     }
 
     [Test]
-    public void ValidateAndroidKey_WhenCertificateIsValidAndAndroidKeyAttestationIsNull_ThenReturnsInvalidResult()
+    public void ValidateAndroidKey_WhenCertificateIsValidAndAndroidKeyAttestationIsNotFound_ThenReturnsInvalidResult()
     {
         // Arrange
-        var clientData = new ClientData
-        {
-            Type = "webauthn.create",
-            Challenge = "Challenge",
-            Origin = "https://example.com",
-            CrossOrigin = false,
-            TokenBinding = null,
-        };
+        var certificates = CertificateDataReader.Read("Tpm.pem");
 
+        // Act
+        var result = _sut.ValidateAndroidKey(certificates[0], _clientData);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.IsValid, Is.False);
+        Assert.That(result.Message, Is.EqualTo("Android Key attestation statement certificate 1.3.6.1.4.1.11129.2.1.17 extension is not found"));
+    }
+
+    [Test]
+    public void ValidateAndroidKey_WhenCertificateIsValidAndAndroidKeyAttestationIsInvalid_ThenReturnsInvalidResult()
+    {
+        // Arrange
         var certificates = CertificateDataReader.Read("AndroidKey.pem");
 
         // Act
-        var result = _sut.ValidateAndroidKey(certificates[0], clientData);
+        var result = _sut.ValidateAndroidKey(certificates[0], _clientData);
 
         // Assert
         Assert.That(result, Is.Not.Null);
         Assert.That(result.IsValid, Is.False);
         Assert.That(result.Message, Is.EqualTo("Android Key attestation statement certificate 1.3.6.1.4.1.11129.2.1.17 extension is invalid"));
+    }
+
+    [Test]
+    public void ValidateAndroidKey_WhenCertificateIsValidAndAttestationChallengeIsInvalid_ThenReturnsInvalidResult()
+    {
+        // Arrange
+        var certificates = CertificateDataReader.Read("AndroidKey.pem");
+
+        _androidKeyAttestationExtensionParserService
+            .Setup(x => x.Parse(It.IsAny<byte[]>()))
+            .Returns(new AndroidKeyAttestation
+            {
+                SoftwareEnforced = new AndroidKeyAuthorizationList
+                {
+                    IsAllApplicationsPresent = false,
+                },
+                HardwareEnforced = new AndroidKeyAuthorizationList
+                {
+                    IsAllApplicationsPresent = false,
+                },
+            });
+
+        // Act
+        var result = _sut.ValidateAndroidKey(certificates[0], _clientData);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.IsValid, Is.False);
+        Assert.That(result.Message, Is.EqualTo("Android Key attestation statement certificate attestation challenge has unexpected value"));
+    }
+
+    [Test]
+    [TestCase(false, true)]
+    [TestCase(true, false)]
+    public void ValidateAndroidKey_WhenCertificateIsValidAndIsAllApplicationsPresentIsTrue_ThenReturnsInvalidResult(
+        bool softwareEnforcedIsAllApplicationsPresent,
+        bool hardwareEnforcedIsAllApplicationsPresent)
+    {
+        // Arrange
+        var certificates = CertificateDataReader.Read("AndroidKey.pem");
+
+        _androidKeyAttestationExtensionParserService
+            .Setup(x => x.Parse(It.IsAny<byte[]>()))
+            .Returns(new AndroidKeyAttestation
+            {
+                SoftwareEnforced = new AndroidKeyAuthorizationList
+                {
+                    IsAllApplicationsPresent = softwareEnforcedIsAllApplicationsPresent,
+                },
+                HardwareEnforced = new AndroidKeyAuthorizationList
+                {
+                    IsAllApplicationsPresent = hardwareEnforcedIsAllApplicationsPresent,
+                },
+                AttestationChallenge = [7],
+            });
+
+        // Act
+        var result = _sut.ValidateAndroidKey(certificates[0], _clientData);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.IsValid, Is.False);
+        Assert.That(result.Message, Is.EqualTo("Android Key attestation statement certificate all applications field is present"));
+    }
+
+    [Test]
+    public void ValidateAndroidKey_WhenCertificateIsValidAndTrustedEnvironmentAndOriginIsInvalid_ThenReturnsInvalidResult()
+    {
+        // Arrange
+        var certificates = CertificateDataReader.Read("AndroidKey.pem");
+
+        _androidKeyAttestationExtensionParserService
+            .Setup(x => x.Parse(It.IsAny<byte[]>()))
+            .Returns(new AndroidKeyAttestation
+            {
+                SoftwareEnforced = new AndroidKeyAuthorizationList
+                {
+                },
+                HardwareEnforced = new AndroidKeyAuthorizationList
+                {
+                    Purpose = 2,
+                    IsAllApplicationsPresent = false,
+                    Origin = -1,
+                },
+                AttestationChallenge = [7],
+            });
+
+        // Act
+        var result = _sut.ValidateAndroidKey(certificates[0], _clientData);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.IsValid, Is.False);
+        Assert.That(result.Message, Is.EqualTo("Android Key attestation statement certificate hardware origin field has unexpected value"));
+    }
+
+    [Test]
+    public void ValidateAndroidKey_WhenCertificateIsValidAndTrustedEnvironmentAndPurposeIsInvalid_ThenReturnsInvalidResult()
+    {
+        // Arrange
+        var certificates = CertificateDataReader.Read("AndroidKey.pem");
+
+        _androidKeyAttestationExtensionParserService
+            .Setup(x => x.Parse(It.IsAny<byte[]>()))
+            .Returns(new AndroidKeyAttestation
+            {
+                SoftwareEnforced = new AndroidKeyAuthorizationList
+                {
+                },
+                HardwareEnforced = new AndroidKeyAuthorizationList
+                {
+                    Purpose = 1,
+                    IsAllApplicationsPresent = false,
+                    Origin = 0,
+                },
+                AttestationChallenge = [7],
+            });
+
+        // Act
+        var result = _sut.ValidateAndroidKey(certificates[0], _clientData);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.IsValid, Is.False);
+        Assert.That(result.Message, Is.EqualTo("Android Key attestation statement certificate hardware purpose field has unexpected value"));
+    }
+
+    [Test]
+    public void ValidateAndroidKey_WhenCertificateIsValidAndTrustedEnvironment_ThenReturnsValidResult()
+    {
+        // Arrange
+        var certificates = CertificateDataReader.Read("AndroidKey.pem");
+
+        _androidKeyAttestationExtensionParserService
+            .Setup(x => x.Parse(It.IsAny<byte[]>()))
+            .Returns(new AndroidKeyAttestation
+            {
+                SoftwareEnforced = new AndroidKeyAuthorizationList
+                {
+                },
+                HardwareEnforced = new AndroidKeyAuthorizationList
+                {
+                    Purpose = 2,
+                    IsAllApplicationsPresent = false,
+                    Origin = 0,
+                },
+                AttestationChallenge = [7],
+            });
+
+        // Act
+        var result = _sut.ValidateAndroidKey(certificates[0], _clientData);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.IsValid, Is.True);
+        Assert.That(result.Message, Is.Null);
+    }
+
+    [Test]
+    [TestCase(0, 1)]
+    [TestCase(1, 0)]
+    public void ValidateAndroidKey_WhenCertificateIsValidAndNotTrustedEnvironmentAndOriginIsInvalid_ThenReturnsInvalidResult(
+        int softwareEnforcedOrigin,
+        int hardwareEnforcedOrigin)
+    {
+        // Arrange
+        _fido2Configuration.EnableTrustedExecutionEnvironmentOnly = false;
+
+        var certificates = CertificateDataReader.Read("AndroidKey.pem");
+
+        _androidKeyAttestationExtensionParserService
+            .Setup(x => x.Parse(It.IsAny<byte[]>()))
+            .Returns(new AndroidKeyAttestation
+            {
+                SoftwareEnforced = new AndroidKeyAuthorizationList
+                {
+                    Purpose = 2,
+                    IsAllApplicationsPresent = false,
+                    Origin = softwareEnforcedOrigin,
+                },
+                HardwareEnforced = new AndroidKeyAuthorizationList
+                {
+                    Purpose = 2,
+                    IsAllApplicationsPresent = false,
+                    Origin = hardwareEnforcedOrigin,
+                },
+                AttestationChallenge = [7],
+            });
+
+        // Act
+        var result = _sut.ValidateAndroidKey(certificates[0], _clientData);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.IsValid, Is.False);
+        Assert.That(result.Message, Is.EqualTo("Android Key attestation statement certificate origin field has unexpected value"));
+    }
+
+    [Test]
+    [TestCase(0, 2)]
+    [TestCase(2, 0)]
+    public void ValidateAndroidKey_WhenCertificateIsValidAndNotTrustedEnvironmentAndPurposeIsInvalid_ThenReturnsInvalidResult(
+        int softwareEnforcedPurpose,
+        int hardwareEnforcedPurpose)
+    {
+        // Arrange
+        _fido2Configuration.EnableTrustedExecutionEnvironmentOnly = false;
+
+        var certificates = CertificateDataReader.Read("AndroidKey.pem");
+
+        _androidKeyAttestationExtensionParserService
+            .Setup(x => x.Parse(It.IsAny<byte[]>()))
+            .Returns(new AndroidKeyAttestation
+            {
+                SoftwareEnforced = new AndroidKeyAuthorizationList
+                {
+                    Purpose = softwareEnforcedPurpose,
+                    IsAllApplicationsPresent = false,
+                    Origin = 0,
+                },
+                HardwareEnforced = new AndroidKeyAuthorizationList
+                {
+                    Purpose = hardwareEnforcedPurpose,
+                    IsAllApplicationsPresent = false,
+                    Origin = 0,
+                },
+                AttestationChallenge = [7],
+            });
+
+        // Act
+        var result = _sut.ValidateAndroidKey(certificates[0], _clientData);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.IsValid, Is.False);
+        Assert.That(result.Message, Is.EqualTo("Android Key attestation statement certificate purpose field has unexpected value"));
+    }
+
+    [Test]
+    public void ValidateAndroidKey_WhenCertificateIsValidAndNotTrustedEnvironment_ThenReturnsValidResult()
+    {
+        // Arrange
+        _fido2Configuration.EnableTrustedExecutionEnvironmentOnly = false;
+
+        var certificates = CertificateDataReader.Read("AndroidKey.pem");
+
+        _androidKeyAttestationExtensionParserService
+            .Setup(x => x.Parse(It.IsAny<byte[]>()))
+            .Returns(new AndroidKeyAttestation
+            {
+                SoftwareEnforced = new AndroidKeyAuthorizationList
+                {
+                    Purpose = 2,
+                    IsAllApplicationsPresent = false,
+                    Origin = 0,
+                },
+                HardwareEnforced = new AndroidKeyAuthorizationList
+                {
+                    Purpose = 2,
+                    IsAllApplicationsPresent = false,
+                    Origin = 0,
+                },
+                AttestationChallenge = [7],
+            });
+
+        // Act
+        var result = _sut.ValidateAndroidKey(certificates[0], _clientData);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.IsValid, Is.True);
+        Assert.That(result.Message, Is.Null);
     }
 
     [Test]

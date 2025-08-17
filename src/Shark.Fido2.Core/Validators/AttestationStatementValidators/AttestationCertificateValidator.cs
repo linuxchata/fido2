@@ -243,7 +243,7 @@ internal class AttestationCertificateValidator : IAttestationCertificateValidato
         // to clientDataHash.
         if (!BytesArrayComparer.CompareNullable(androidKeyAttestation.AttestationChallenge, clientData.ClientDataHash))
         {
-            return ValidatorInternalResult.Invalid($"{Prefix} attestationChallenge has unexpected value");
+            return ValidatorInternalResult.Invalid($"{Prefix} attestation challenge has unexpected value");
         }
 
         // The AuthorizationList.allApplications field is not present on either authorization list (softwareEnforced
@@ -251,7 +251,7 @@ internal class AttestationCertificateValidator : IAttestationCertificateValidato
         if (androidKeyAttestation.SoftwareEnforced.IsAllApplicationsPresent ||
             androidKeyAttestation.HardwareEnforced.IsAllApplicationsPresent)
         {
-            return ValidatorInternalResult.Invalid($"{Prefix} allApplications field is present");
+            return ValidatorInternalResult.Invalid($"{Prefix} all applications field is present");
         }
 
         // For the following, use only the teeEnforced authorization list if the RP wants to accept only keys from
