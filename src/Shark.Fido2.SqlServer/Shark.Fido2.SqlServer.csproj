@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <IsPackable>true</IsPackable>
+    <IsNuGetPackable>true</IsNuGetPackable>
     <PackageId>Shark.Fido2.SqlServer</PackageId>
     <Description>SQL Server data store for Shark WebAuthn .NET library</Description>
     <Product>SQL Server data store for Shark WebAuthn .NET library</Product>

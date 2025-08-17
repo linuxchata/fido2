@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <IsPackable>true</IsPackable>
+    <IsNuGetPackable>true</IsNuGetPackable>
     <PackageId>Shark.Fido2.DynamoDB</PackageId>
     <Description>Amazon DynamoDB data store for Shark WebAuthn .NET library</Description>
     <Product>Amazon DynamoDB data store for Shark WebAuthn .NET library</Product>

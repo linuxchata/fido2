@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <IsPackable>true</IsPackable>
+    <IsNuGetPackable>true</IsNuGetPackable>
     <PackageId>Shark.Fido2.InMemory</PackageId>
     <Description>In-memory data store for Shark WebAuthn .NET library</Description>
     <Product>In-memory data store for Shark WebAuthn .NET library</Product>

@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <IsPackable>true</IsPackable>
+    <IsNuGetPackable>true</IsNuGetPackable>
     <PackageId>Shark.Fido2.Models</PackageId>
     <Description>Shark WebAuthn .NET library models</Description>
     <Product>Shark WebAuthn .NET library models</Product>
