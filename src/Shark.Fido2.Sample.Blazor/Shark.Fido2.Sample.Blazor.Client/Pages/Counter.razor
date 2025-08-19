@@ -1,0 +1,16 @@
+﻿@page "/counter"
+@rendermode InteractiveWebAssembly
+
+<PageTitle>Shark WebAuthn library</PageTitle>
+
+<h1>Discoverable Credentials</h1>
+
+<p role="status">This page illustrates the use of discoverable credentials. You'll need to provide a username and a display name during registration. For subsequent logins, neither your username nor any other identifier will be needed to identify you, as the authenticator will provide the necessary information directly.</p>
+
+<button class="btn btn-primary" @onclick="Register">Register</button>
+
+@code {
+    private void Register()
+    {
+    }
+}
