@@ -162,7 +162,7 @@ p {
 /* Responsive design */
 @media (max-width: 768px) {
     .page-container {
-        padding: var(--spacing-4) var(--spacing-2);
+        padding: var(--spacing-8);
     }
 
     .form-container {
