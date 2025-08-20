@@ -4,7 +4,6 @@
     --primary-hover: #fbbd24;
     --text-color: #1f2937;
     --text-secondary: #6b7280;
-    --input-bg: #f9fafb;
     --input-border: #dadce0;
     --input-focus: #3b82f6;
     --container-bg: #ffffff;
@@ -96,10 +95,10 @@ body {
 
 .form-control {
     width: 100%;
-    padding: var(--spacing-3) var(--spacing-4);
+    padding: var(--spacing-4) var(--spacing-4);
     font-size: var(--font-size-base);
+    line-height: 1.5;
     color: var(--text-color);
-    background-color: var(--input-bg);
     border: 1px solid var(--input-border);
     border-radius: var(--radius-md);
     box-sizing: border-box;
