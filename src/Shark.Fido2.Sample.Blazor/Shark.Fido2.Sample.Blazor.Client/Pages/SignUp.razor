@@ -1,4 +1,6 @@
 ﻿@page "/"
+@using Microsoft.JSInterop
+@inject IJSRuntime JSRuntime
 
 <PageTitle>Shark WebAuthn library</PageTitle>
 
@@ -21,11 +23,11 @@
                     <form id="signup-form">
                         <div class="form-group">
                             <label for="signup-username">Username</label>
-                            <input type="text" id="signup-username" name="username" maxlength="256" placeholder="Enter your username" required class="form-control">
+                            <input type="text" id="signup-username" name="username" maxlength="256" placeholder="Enter your username" required class="form-control" @bind="username">
                         </div>
                         <div class="form-group">
                             <label for="signup-display-name">Display Name</label>
-                            <input type="text" id="signup-display-name" name="displayname" maxlength="256" placeholder="Enter your display name" required class="form-control">
+                            <input type="text" id="signup-display-name" name="displayname" maxlength="256" placeholder="Enter your display name" required class="form-control" @bind="displayName">
                         </div>
                         <div class="button-row">
                             <button type="button" id="signup-button" name="signup" class="button" @onclick="Register">
@@ -45,7 +47,25 @@
 </div>
 
 @code {
-    private void Register()
+    private string username = string.Empty;
+    private string displayName = string.Empty;
+
+    private async Task Register()
     {
+        if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(displayName))
+        {
+            await JSRuntime.InvokeVoidAsync("notify.error", "Please enter both username and display name", "Registration");
+            return;
+        }
+
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("notify.info", "Starting registration...", "Registration");
+            await JSRuntime.InvokeVoidAsync("registration", username, displayName);
+        }
+        catch (Exception ex)
+        {
+            await JSRuntime.InvokeVoidAsync("notify.error", $"Registration failed: {ex.Message}", "Registration");
+        }
     }
 }
