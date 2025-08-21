@@ -134,10 +134,7 @@ async function fetchAttestationResult(credentials) {
             body: JSON.stringify(credentials)
         });
 
-        if (response.ok) {
-            window.location.href = `/signin`;
-        }
-        else {
+        if (!response.ok) {
             const responseBody = await response.json();
             throw new Error(responseBody.errorMessage);
         }

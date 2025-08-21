@@ -107,10 +107,7 @@ async function fetchAssertionResult(credentials) {
             body: JSON.stringify(credentials)
         });
 
-        if (response.ok) {
-            window.location.href = `/details`;
-        }
-        else {
+        if (!response.ok) {
             const responseBody = await response.json();
             throw new Error(responseBody.errorMessage);
         }
