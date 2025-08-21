@@ -24,7 +24,6 @@
     --spacing-8: 2rem;
     --radius-sm: 0.375rem;
     --radius-md: 0.5rem;
-    --radius-lg: 0.75rem;
 }
 
 /* Base styles */
@@ -61,7 +60,7 @@ body {
 .form-container {
     background: var(--container-bg);
     border: 1px solid var(--container-border);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-md);
     padding: var(--spacing-8);
     box-shadow: var(--shadow-sm);
     width: 100%;
@@ -174,6 +173,51 @@ p {
     line-height: 1.7;
 }
 
+/* Table styling */
+.details-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--container-bg);
+    border: 1px solid #dadce0;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.details-table td {
+    padding: var(--spacing-2);
+    border-bottom: 1px solid #dadce0;
+    vertical-align: top;
+}
+
+.details-table td:first-child {
+    font-weight: 700;
+    color: var(--text-color);
+    background-color: var(--input-bg);
+    width: 50%;
+}
+
+.details-table td:last-child {
+    color: var(--text-color);
+    word-break: break-all;
+}
+
+.details-table tr:last-child td {
+    border-bottom: none;
+}
+
+.credential-id {
+    font-family: monospace;
+    font-size: var(--font-size-sm);
+    color: #dc2626;
+}
+
+.user-handle {
+    font-family: monospace;
+    font-size: var(--font-size-sm);
+    color: #dc2626;
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
     .page-container {
@@ -197,5 +241,13 @@ p {
 
     .form-container {
         padding: var(--spacing-6);
+    }
+
+    .details-table td:first-child {
+        width: 45%;
+    }
+
+    .details-table td {
+        padding: var(--spacing-1);
     }
 }

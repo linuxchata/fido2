@@ -5,15 +5,50 @@
 <div class="page-container">
     <h1>You are signed in!</h1>
 
-    <div class="content-layout">
-        <div class="content-area">
-            <p>You have successfully signed in using WebAuthn! Below, you can review the details of the public key credentials used for your authentication. These credentials represent the unique keys stored by your authenticator and used to securely verify your identity.</p>
-        </div>
+    <p>You have successfully signed in using WebAuthn! Below, you can review the details of the public key credentials used for your authentication. These credentials represent the unique keys stored by your authenticator and used to securely verify your identity.</p>
 
-        <div>
-            @* Details.... *@
-        </div>
-    </div>
+    <table class="details-table">
+        <tr>
+            <td>Credential identifier</td>
+            <td><span class="credential-id">sa0PYyZG4Dj1FE/nLyuY00KEyqf806GYSKCnQbpEyPw=</span></td>
+        </tr>
+        <tr>
+            <td>User handle</td>
+            <td><span class="user-handle">UH1seXA-</span></td>
+        </tr>
+        <tr>
+            <td>Username</td>
+            <td>Pylyp</td>
+        </tr>
+        <tr>
+            <td>Display name</td>
+            <td>Pylyp</td>
+        </tr>
+        <tr>
+            <td>Sign count</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td>Algorithm</td>
+            <td>RS256 (RSASSA-PKCS1-v1_5 using SHA-256)</td>
+        </tr>
+        <tr>
+            <td>Transports</td>
+            <td>internal</td>
+        </tr>
+        <tr>
+            <td>Time of creation (UTC)</td>
+            <td>2025-08-21 18:24:23</td>
+        </tr>
+        <tr>
+            <td>Time of last update (UTC)</td>
+            <td>2025-08-21 18:24:54</td>
+        </tr>
+        <tr>
+            <td>Time of last use (UTC)</td>
+            <td>2025-08-21 18:24:54</td>
+        </tr>
+    </table>
 </div>
 
 @code {
