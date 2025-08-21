@@ -1,7 +1,7 @@
 ﻿@page "/signin"
+@rendermode InteractiveWebAssembly
 @using Microsoft.JSInterop
 @inject IJSRuntime JSRuntime
-@inject NavigationManager Navigation
 
 <PageTitle>Shark WebAuthn library</PageTitle>
 
@@ -42,14 +42,6 @@
 @code {
     private async Task Authenticate()
     {
-        try
-        {
-            await JSRuntime.InvokeVoidAsync("notify.info", "Starting authentication...", "Authentication");
-            await JSRuntime.InvokeVoidAsync("authentication", "", "");
-        }
-        catch (Exception ex)
-        {
-            await JSRuntime.InvokeVoidAsync("notify.error", $"Authentication failed: {ex.Message}", "Authentication");
-        }
+        await JSRuntime.InvokeVoidAsync("authentication", string.Empty, string.Empty);
     }
 }

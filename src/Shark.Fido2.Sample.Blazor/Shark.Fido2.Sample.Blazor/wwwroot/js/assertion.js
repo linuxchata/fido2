@@ -108,7 +108,6 @@ async function fetchAssertionResult(credentials) {
         });
 
         if (response.ok) {
-            notify.info('Authentication was successful', authenticationTitle);
             window.location.href = `/details`;
         }
         else {
@@ -116,9 +115,8 @@ async function fetchAssertionResult(credentials) {
             throw new Error(responseBody.errorMessage);
         }
     } catch (error) {
-        notify.error(`Authentication has failed. ${error.message}`, authenticationTitle);
+        notify.error(`Sign-in has failed. ${error.message}`, authenticationTitle);
     }
 }
 
 window.authentication = authentication;
-window.authenticationCustom = authenticationCustom;

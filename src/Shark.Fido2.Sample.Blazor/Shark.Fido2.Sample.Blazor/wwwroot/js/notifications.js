@@ -81,3 +81,5 @@ const notify = {
         notyf.error(message);
     }
 };
+
+window.notify = notify;

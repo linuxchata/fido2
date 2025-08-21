@@ -1,4 +1,5 @@
-using Microsoft.AspNetCore.ResponseCompression;
+using Shark.Fido2.Core;
+using Shark.Fido2.InMemory;
 using Shark.Fido2.Sample.Blazor.Components;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,10 +9,16 @@ builder.Services
     .AddRazorComponents()
     .AddInteractiveWebAssemblyComponents();
 
-builder.Services.AddResponseCompression(opts =>
+builder.Services.AddRazorPages();
+builder.Services.AddControllers();
+
+builder.Services.AddSession(options =>
 {
-    opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(["application/octet-stream"]);
+    options.Cookie.SameSite = SameSiteMode.Unspecified;
 });
+
+builder.Services.AddFido2(builder.Configuration);
+builder.Services.AddFido2InMemoryStore();
 
 var app = builder.Build();
 
@@ -27,8 +34,6 @@ else
     app.UseHsts();
 }
 
-app.UseResponseCompression();
-
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
@@ -37,5 +42,9 @@ app.UseAntiforgery();
 app.MapRazorComponents<App>()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(Shark.Fido2.Sample.Blazor.Client._Imports).Assembly);
+
+app.MapControllers();
+
+app.UseSession();
 
 app.Run();

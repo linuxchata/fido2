@@ -135,16 +135,15 @@ async function fetchAttestationResult(credentials) {
         });
 
         if (response.ok) {
-            notify.info('Registration was successful', registrationTitle);
+            window.location.href = `/signin`;
         }
         else {
             const responseBody = await response.json();
             throw new Error(responseBody.errorMessage);
         }
     } catch (error) {
-        notify.error(`Registration has failed. ${error.message}`, registrationTitle);
+        notify.error(`Sign-up failed. ${error.message}`, registrationTitle);
     }
 }
 
 window.registration = registration;
-window.registrationCustom = registrationCustom;

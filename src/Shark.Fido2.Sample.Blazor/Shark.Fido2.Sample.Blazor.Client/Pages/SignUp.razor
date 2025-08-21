@@ -1,4 +1,5 @@
 ﻿@page "/"
+@rendermode InteractiveWebAssembly
 @using Microsoft.JSInterop
 @inject IJSRuntime JSRuntime
 
@@ -54,18 +55,10 @@
     {
         if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(displayName))
         {
-            await JSRuntime.InvokeVoidAsync("notify.error", "Please enter both username and display name", "Registration");
+            await JSRuntime.InvokeVoidAsync("notify.error", "Please fill in all required fields", "Validation Error");
             return;
         }
 
-        try
-        {
-            await JSRuntime.InvokeVoidAsync("notify.info", "Starting registration...", "Registration");
-            await JSRuntime.InvokeVoidAsync("registration", username, displayName);
-        }
-        catch (Exception ex)
-        {
-            await JSRuntime.InvokeVoidAsync("notify.error", $"Registration failed: {ex.Message}", "Registration");
-        }
+        await JSRuntime.InvokeVoidAsync("registration", username, displayName);
     }
 }
