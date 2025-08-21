@@ -26,13 +26,6 @@
     --radius-md: 0.5rem;
 }
 
-/* Base styles */
-body {
-    font-family: var(--font-family);
-    color: var(--text-color);
-    line-height: 1.6;
-}
-
 /* Page container */
 .page-container {
     max-width: 1200px;
@@ -184,27 +177,27 @@ p {
     box-shadow: var(--shadow-sm);
 }
 
-.details-table td {
-    padding: var(--spacing-2);
-    border-bottom: 1px solid #dadce0;
-    vertical-align: top;
-}
+    .details-table td {
+        padding: var(--spacing-2);
+        border-bottom: 1px solid #dadce0;
+        vertical-align: top;
+    }
 
-.details-table td:first-child {
-    font-weight: 700;
-    color: var(--text-color);
-    background-color: var(--input-bg);
-    width: 50%;
-}
+        .details-table td:first-child {
+            font-weight: 700;
+            color: var(--text-color);
+            background-color: var(--input-bg);
+            width: 50%;
+        }
 
-.details-table td:last-child {
-    color: var(--text-color);
-    word-break: break-all;
-}
+        .details-table td:last-child {
+            color: var(--text-color);
+            word-break: break-all;
+        }
 
-.details-table tr:last-child td {
-    border-bottom: none;
-}
+    .details-table tr:last-child td {
+        border-bottom: none;
+    }
 
 .credential-id {
     font-family: monospace;
