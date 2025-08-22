@@ -47,10 +47,14 @@
     {
         isButtonDisabled = true;
 
-        await JSRuntime.InvokeVoidAsync("authentication", string.Empty, string.Empty);
-
-        isButtonDisabled = false;
-
-        Navigation.NavigateTo("/signin");
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("authentication", string.Empty, string.Empty);
+        }
+        finally
+        {
+            isButtonDisabled = false;
+            Navigation.NavigateTo("/signin");
+        }
     }
 }

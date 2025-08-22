@@ -70,10 +70,14 @@
 
         isButtonDisabled = true;
 
-        await JSRuntime.InvokeVoidAsync("registration", username, displayName);
-
-        isButtonDisabled = false;
-
-        Navigation.NavigateTo("/signin");
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("registration", username, displayName);
+        }
+        finally
+        {
+            isButtonDisabled = false;
+            Navigation.NavigateTo("/signin");
+        }
     }
 }
