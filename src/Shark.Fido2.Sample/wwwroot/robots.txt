@@ -17,7 +17,7 @@ Disallow: /favicon.ico
 Disallow: /favicon.svg
 
 # Sitemap location
-Sitemap: https://app-fido2-dev-01-hcguafdhd6ewfcgv.westeurope-01.azurewebsites.net/sitemap.xml
+Sitemap: https://app-fido2-dev-04-dbggbwc5h7edfgcf.westeurope-01.azurewebsites.net/sitemap.xml
 
 # Crawl delay (optional - be respectful to server resources)
 Crawl-delay: 1
