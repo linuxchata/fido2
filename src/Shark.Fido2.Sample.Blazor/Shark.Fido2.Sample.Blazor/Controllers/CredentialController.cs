@@ -42,7 +42,7 @@ public class CredentialController(ICredentialService credentialService) : Contro
         var response = new CredentialDetailsResponse
         {
             CredentialId = credential.CredentialId.ToBase64Url(),
-            UserHandle = credential.CredentialId.ToBase64Url(),
+            UserHandle = credential.UserHandle.ToBase64Url(),
             UserName = credential.UserName,
             UserDisplayName = credential.UserDisplayName,
             SignCount = credential.SignCount,

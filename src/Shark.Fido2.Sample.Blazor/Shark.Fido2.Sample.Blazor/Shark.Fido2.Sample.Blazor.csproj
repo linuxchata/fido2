@@ -1,6 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.19" />
+    <PackageReference Include="Shark.Fido2.Core" Version="1.1.2.62" />
+    <PackageReference Include="Shark.Fido2.InMemory" Version="1.1.2.62" />
+    <PackageReference Include="Shark.Fido2.Models" Version="1.1.2.62" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -8,14 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Shark.Fido2.Common\Shark.Fido2.Common.csproj" />
-    <ProjectReference Include="..\..\Shark.Fido2.Core\Shark.Fido2.Core.csproj" />
-    <ProjectReference Include="..\..\Shark.Fido2.Domain\Shark.Fido2.Domain.csproj" />
-    <ProjectReference Include="..\..\Shark.Fido2.InMemory\Shark.Fido2.InMemory.csproj" />
-    <ProjectReference Include="..\..\Shark.Fido2.Metadata.Core\Shark.Fido2.Metadata.Core.csproj" />
-    <ProjectReference Include="..\..\Shark.Fido2.Models\Shark.Fido2.Models.csproj" />
     <ProjectReference Include="..\Shark.Fido2.Sample.Blazor.Client\Shark.Fido2.Sample.Blazor.Client.csproj" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.19" />
   </ItemGroup>
 
 </Project>
