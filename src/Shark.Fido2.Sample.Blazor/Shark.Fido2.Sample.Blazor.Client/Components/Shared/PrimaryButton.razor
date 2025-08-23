@@ -6,14 +6,14 @@
             name="@Name"
             class="button @CssClass"
             @onclick="HandleClick"
-            disabled="@(IsDisabled || IsLoading)">
+            disabled="@(IsDisabled)">
         @if (Icon != null)
         {
             @Icon
         }
-        @if (IsLoading)
+        @if (IsDisabled)
         {
-            <span>@LoadingText</span>
+            <span>@ProcessingText</span>
         }
         else
         {
@@ -27,15 +27,14 @@
     [Parameter] public string Id { get; set; } = string.Empty;
     [Parameter] public string Name { get; set; } = string.Empty;
     [Parameter] public string CssClass { get; set; } = string.Empty;
-    [Parameter] public string LoadingText { get; set; } = "Loading...";
+    [Parameter] public string ProcessingText { get; set; } = "Processing...";
     [Parameter] public bool IsDisabled { get; set; }
-    [Parameter] public bool IsLoading { get; set; }
     [Parameter] public RenderFragment? Icon { get; set; }
     [Parameter] public EventCallback OnClick { get; set; }
 
     private async Task HandleClick()
     {
-        if (!IsDisabled && !IsLoading)
+        if (!IsDisabled)
         {
             await OnClick.InvokeAsync();
         }
