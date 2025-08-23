@@ -44,6 +44,11 @@
 
     private async Task Authenticate()
     {
+        if (isFormDisabled)
+        {
+            return;
+        }
+
         isFormDisabled = true;
 
         try

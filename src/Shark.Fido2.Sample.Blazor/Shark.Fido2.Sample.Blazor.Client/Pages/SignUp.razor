@@ -55,6 +55,11 @@
 
     private async Task Register()
     {
+        if (isFormDisabled)
+        {
+            return;
+        }
+
         if (string.IsNullOrWhiteSpace(username))
         {
             await JSRuntime.InvokeVoidAsync("notify.error", "Please enter a username", "Validation");
