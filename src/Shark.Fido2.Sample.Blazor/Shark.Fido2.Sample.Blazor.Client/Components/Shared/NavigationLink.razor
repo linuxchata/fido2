@@ -1,0 +1,23 @@
+@namespace Shark.Fido2.Sample.Blazor.Client.Components.UI
+@inject NavigationManager Navigation
+
+<div class="link-row">
+    <a href="#" @onclick="HandleClick" @onclick:preventDefault="true" class="@CssClass">
+        @Text
+    </a>
+</div>
+
+@code {
+    [Parameter] public string Text { get; set; } = string.Empty;
+    [Parameter] public string NavigateTo { get; set; } = string.Empty;
+    [Parameter] public string CssClass { get; set; } = "nav-link";
+    [Parameter] public bool ForceLoad { get; set; }
+
+    private void HandleClick()
+    {
+        if (!string.IsNullOrEmpty(NavigateTo))
+        {
+            Navigation.NavigateTo(NavigateTo, ForceLoad);
+        }
+    }
+}

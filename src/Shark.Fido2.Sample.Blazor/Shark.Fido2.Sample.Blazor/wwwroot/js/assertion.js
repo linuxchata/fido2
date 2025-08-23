@@ -108,7 +108,7 @@ async function fetchAssertionResult(credentials) {
         });
 
         if (response.ok) {
-            window.location.href = `/details?credentialId=${encodeURIComponent(credentials.id)}`;
+            window.location.href = `/credentialdetails?credentialId=${encodeURIComponent(credentials.id)}`;
         }
         else {
             const responseBody = await response.json();

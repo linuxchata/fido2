@@ -67,8 +67,6 @@ public class AssertionController(IAssertion assertion) : ControllerBase
             return BadRequest(ServerResponse.CreateFailed());
         }
 
-        HttpContext.Session.Remove("RequestOptions");
-
         var requestOptionsString = HttpContext.Session.GetString("RequestOptions");
 
         if (string.IsNullOrWhiteSpace(requestOptionsString))

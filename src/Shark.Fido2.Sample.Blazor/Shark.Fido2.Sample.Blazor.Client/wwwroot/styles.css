@@ -130,7 +130,6 @@ input:disabled {
     padding: var(--spacing-4) var(--spacing-6);
     font-size: var(--font-size-base);
     font-weight: 600;
-    align-items: center;
     justify-content: center;
     color: var(--text-color);
     background-color: var(--primary-color);
