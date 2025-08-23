@@ -1,0 +1,73 @@
+﻿@page "/signin"
+
+@rendermode InteractiveWebAssembly
+
+@using Microsoft.JSInterop
+
+@inject IJSRuntime JSRuntime
+
+<PageTitle>Shark WebAuthn .NET library</PageTitle>
+
+<div class="page-container">
+    <h1>Discoverable Credentials</h1>
+
+    <div class="content-layout">
+        <div class="content-area">
+            <p>For sign-in with discoverable credentials, neither your username nor any other identifier will be required, as the authenticator will provide the necessary information. This makes the process both simpler for you and more resistant to phishing attempts.</p>
+
+            <p>This page demonstrates the use of discoverable credentials that were previously created.</p>
+        </div>
+
+        <div class="form-area">
+            <div class="form-container">
+                <div class="section">
+                    <div class="section-header">
+                        <h3>Sign In</h3>
+                    </div>
+                    <form id="signin-form">
+                        <PrimaryButton Text="Sign In with a Passkey"
+                                       Id="signin-button"
+                                       Name="signin"
+                                       OnClick="Authenticate"
+                                       IsDisabled="@_isFormDisabled">
+                            <Icon>
+                                <svg width="20" height="20" viewBox="0 0 22 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M14.422 19.4878H0.728094C0.728094 19.4624 0.728094 19.438 0.728094 19.4135C0.728094 18.7085 0.718798 18.0033 0.730573 17.2986C0.752883 15.9622 1.15385 14.7469 1.94122 13.6655C2.73231 12.5788 3.77222 11.8245 5.04329 11.391C5.66302 11.1797 6.3029 11.0691 6.95764 11.0657C8.09361 11.0598 9.22989 11.0576 10.3659 11.0657C11.1796 11.0713 11.9632 11.2389 12.7137 11.5556C12.7512 11.5714 12.7893 11.6095 12.8067 11.6467C13.172 12.4359 13.6926 13.1031 14.3718 13.6463C14.4074 13.6748 14.4232 13.7023 14.4229 13.7488C14.4217 15.639 14.422 17.5292 14.422 19.4194C14.422 19.4395 14.422 19.46 14.422 19.4878Z" fill="#1f2937" />
+                                    <path d="M13.3681 4.73909C13.3684 7.35467 11.2443 9.47974 8.629 9.48005C6.01033 9.48005 3.88712 7.35436 3.88867 4.7329C3.88991 2.1198 6.01714 -0.00123892 8.6352 5.42951e-07C11.2449 0.00124001 13.3678 2.12723 13.3681 4.73909Z" fill="#1f2937" />
+                                    <path d="M18.9124 12.9177C19.35 13.3552 19.78 13.7853 20.2126 14.2176C19.6837 14.7462 19.1606 15.2693 18.6348 15.7951C19.1668 16.3272 19.6902 16.8505 20.2064 17.3668C19.3245 18.2486 18.451 19.1225 17.5735 19.9997C17.5636 19.9904 17.5444 19.9743 17.5264 19.9563C17.0368 19.467 16.5478 18.9771 16.0573 18.4891C16.0192 18.4513 16.0049 18.4138 16.0049 18.3605C16.0062 16.5373 16.0056 14.714 16.0077 12.8908C16.0077 12.8213 15.9867 12.7897 15.925 12.7575C14.8845 12.2118 14.2229 11.3681 13.9787 10.2175C13.5697 8.29079 14.7825 6.37706 16.6978 5.90451C18.6382 5.42577 20.6077 6.56855 21.1329 8.49871C21.458 9.69293 21.2222 10.7896 20.4664 11.7687C20.0716 12.2803 19.5631 12.6478 18.9657 12.8929C18.9515 12.8988 18.9378 12.9059 18.9124 12.918V12.9177ZM17.5862 9.48316C18.1672 9.48285 18.6397 9.00999 18.64 8.42868C18.64 7.84706 18.1684 7.37359 17.5874 7.37297C17.0018 7.37235 16.5289 7.84551 16.5299 8.43147C16.5308 9.01216 17.0043 9.48378 17.5862 9.48347V9.48316Z" fill="#1f2937" />
+                                </svg>
+                            </Icon>
+                        </PrimaryButton>
+
+                        <NavigationLink Text="Don't have a passkey? Sign up here"
+                                        NavigateTo="/"
+                                        ForceLoad="true" />
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private bool _isFormDisabled;
+
+    private async Task Authenticate()
+    {
+        if (_isFormDisabled)
+        {
+            return;
+        }
+
+        _isFormDisabled = true;
+
+        try
+        {
+            await JSRuntime.InvokeVoidAsync("authentication", string.Empty, string.Empty);
+        }
+        finally
+        {
+            _isFormDisabled = false;
+        }
+    }
+}

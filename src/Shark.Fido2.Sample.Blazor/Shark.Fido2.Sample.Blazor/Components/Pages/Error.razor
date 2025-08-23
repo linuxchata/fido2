@@ -1,0 +1,30 @@
+﻿@page "/Error"
+@using System.Diagnostics
+
+<PageTitle>Shark WebAuthn .NET library</PageTitle>
+
+<div class="page-container">
+    <h1>Error</h1>
+
+    <p>
+        An unexpected error occurred while processing your request.
+    </p>
+
+    @if (ShowRequestId)
+    {
+        <p>
+            <strong>Request ID:</strong> <code>@RequestId</code>
+        </p>
+    }
+</div>
+
+@code {
+    [CascadingParameter]
+    private HttpContext? HttpContext { get; set; }
+
+    private string? RequestId { get; set; }
+    private bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
+
+    protected override void OnInitialized() =>
+        RequestId = Activity.Current?.Id ?? HttpContext?.TraceIdentifier;
+}

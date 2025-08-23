@@ -1,0 +1,30 @@
+@namespace Shark.Fido2.Sample.Blazor.Client.Components.Shared
+
+<div class="form-group">
+    <label for="@Id">@Label</label>
+    <input type="text"
+           id="@Id"
+           maxlength="@MaxLength"
+           placeholder="@Placeholder"
+           required
+           class="form-control"
+           value="@Value"
+           @onchange="HandleValueChanged"
+           disabled="@IsDisabled">
+</div>
+
+@code {
+    [Parameter] public string Label { get; set; } = string.Empty;
+    [Parameter] public string Placeholder { get; set; } = string.Empty;
+    [Parameter] public string Value { get; set; } = string.Empty;
+    [Parameter] public string Id { get; set; } = string.Empty;
+    [Parameter] public int MaxLength { get; set; } = 256;
+    [Parameter] public bool IsDisabled { get; set; }
+    [Parameter] public EventCallback<string> ValueChanged { get; set; }
+
+    private async Task HandleValueChanged(ChangeEventArgs e)
+    {
+        var newValue = e.Value?.ToString() ?? string.Empty;
+        await ValueChanged.InvokeAsync(newValue);
+    }
+}

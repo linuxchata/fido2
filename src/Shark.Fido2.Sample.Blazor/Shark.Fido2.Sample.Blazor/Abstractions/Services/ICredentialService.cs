@@ -1,6 +1,6 @@
 ﻿using Shark.Fido2.Domain;
 
-namespace Shark.Fido2.Sample.Abstractions.Services;
+namespace Shark.Fido2.Sample.Blazor.Abstractions.Services;
 
 /// <summary>
 /// The interface representing the logic to retrieve credential details.

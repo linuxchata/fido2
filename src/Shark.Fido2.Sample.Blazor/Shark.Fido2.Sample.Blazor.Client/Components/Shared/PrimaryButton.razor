@@ -1,0 +1,42 @@
+@namespace Shark.Fido2.Sample.Blazor.Client.Components.Shared
+
+<div class="button-row">
+    <button type="button"
+            id="@Id"
+            name="@Name"
+            class="button @CssClass"
+            @onclick="HandleClick"
+            disabled="@(IsDisabled)">
+        @if (Icon != null)
+        {
+            @Icon
+        }
+        @if (IsDisabled)
+        {
+            <span>@ProcessingText</span>
+        }
+        else
+        {
+            @Text
+        }
+    </button>
+</div>
+
+@code {
+    [Parameter] public string Text { get; set; } = string.Empty;
+    [Parameter] public string Id { get; set; } = string.Empty;
+    [Parameter] public string Name { get; set; } = string.Empty;
+    [Parameter] public string CssClass { get; set; } = string.Empty;
+    [Parameter] public string ProcessingText { get; set; } = "Processing...";
+    [Parameter] public bool IsDisabled { get; set; }
+    [Parameter] public RenderFragment? Icon { get; set; }
+    [Parameter] public EventCallback OnClick { get; set; }
+
+    private async Task HandleClick()
+    {
+        if (!IsDisabled)
+        {
+            await OnClick.InvokeAsync();
+        }
+    }
+}

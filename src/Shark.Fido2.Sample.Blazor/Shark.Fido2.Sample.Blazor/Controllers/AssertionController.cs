@@ -1,30 +1,26 @@
 ﻿using System.Net.Mime;
-using System.Text;
 using System.Text.Json;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Domain.Options;
 using Shark.Fido2.Models.Mappers;
 using Shark.Fido2.Models.Requests;
 using Shark.Fido2.Models.Responses;
-using Shark.Fido2.Sample.Filters;
-using Shark.Fido2.Sample.Swagger;
-using Swashbuckle.AspNetCore.Filters;
 
-namespace Shark.Fido2.Sample.Controllers;
+namespace Shark.Fido2.Sample.Blazor.Controllers;
 
 /// <summary>
-/// Attestation (registration).
+/// Assertion (authentication).
 /// </summary>
 [Route("[controller]")]
 [ApiController]
-[TypeFilter(typeof(RestApiExceptionFilter))]
-public class AttestationController(IAttestation attestation, ILogger<AttestationController> logger) : ControllerBase
+public class AssertionController(IAssertion assertion) : ControllerBase
 {
-    private readonly IAttestation _attestation = attestation;
+    private readonly IAssertion _assertion = assertion;
 
     /// <summary>
-    /// Gets credential create options.
+    /// Gets credential request options.
     /// </summary>
     /// <param name="request">The request.</param>
     /// <param name="cancellationToken">A cancellation token.</param>
@@ -33,11 +29,8 @@ public class AttestationController(IAttestation attestation, ILogger<Attestation
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [SwaggerRequestExample(
-        typeof(ServerPublicKeyCredentialCreationOptionsRequest),
-        typeof(ServerPublicKeyCredentialCreationOptionsRequestExample))]
     public async Task<IActionResult> Options(
-        ServerPublicKeyCredentialCreationOptionsRequest request,
+        ServerPublicKeyCredentialGetOptionsRequest request,
         CancellationToken cancellationToken)
     {
         if (request == null)
@@ -45,17 +38,17 @@ public class AttestationController(IAttestation attestation, ILogger<Attestation
             return BadRequest(ServerResponse.CreateFailed());
         }
 
-        var createOptions = await _attestation.BeginRegistration(request.Map(), cancellationToken);
+        var requestOptions = await _assertion.BeginAuthentication(request.Map(), cancellationToken);
 
-        var response = createOptions.Map();
+        var response = requestOptions.Map();
 
-        HttpContext.Session.SetString("CreateOptions", JsonSerializer.Serialize(createOptions));
+        HttpContext.Session.SetString("RequestOptions", JsonSerializer.Serialize(requestOptions));
 
         return Ok(response);
     }
 
     /// <summary>
-    /// Creates credential.
+    /// Validates credential.
     /// </summary>
     /// <param name="request">The request.</param>
     /// <param name="cancellationToken">A cancellation token.</param>
@@ -66,27 +59,24 @@ public class AttestationController(IAttestation attestation, ILogger<Attestation
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Result(
-        ServerPublicKeyCredentialAttestation request,
+        ServerPublicKeyCredentialAssertion request,
         CancellationToken cancellationToken)
     {
-        if (request == null || request.Response == null)
+        if (request == null)
         {
             return BadRequest(ServerResponse.CreateFailed());
         }
 
-        var createOptionsString = HttpContext.Session.GetString("CreateOptions");
+        var requestOptionsString = HttpContext.Session.GetString("RequestOptions");
 
-        if (string.IsNullOrWhiteSpace(createOptionsString))
+        if (string.IsNullOrWhiteSpace(requestOptionsString))
         {
             return BadRequest(ServerResponse.CreateFailed());
         }
 
-        var createOptions = JsonSerializer.Deserialize<PublicKeyCredentialCreationOptions>(createOptionsString!);
+        var requestOptions = JsonSerializer.Deserialize<PublicKeyCredentialRequestOptions>(requestOptionsString!);
 
-        logger.LogInformation("Attestation create options: {CreateOptions}", createOptionsString);
-        logger.LogInformation("Attestation: {Request}", JsonSerializer.Serialize(request.Map()));
-
-        var response = await _attestation.CompleteRegistration(request.Map(), createOptions!, cancellationToken);
+        var response = await _assertion.CompleteAuthentication(request.Map(), requestOptions!, cancellationToken);
 
         if (response.IsValid)
         {
@@ -94,7 +84,6 @@ public class AttestationController(IAttestation attestation, ILogger<Attestation
         }
         else
         {
-            logger.LogError("{Message}", response.Message);
             return BadRequest(ServerResponse.CreateFailed(response.Message));
         }
     }
