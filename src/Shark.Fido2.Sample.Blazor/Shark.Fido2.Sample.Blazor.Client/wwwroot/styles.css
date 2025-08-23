@@ -258,7 +258,6 @@ p {
 /* Loading and Error States */
 .loading {
     text-align: center;
-    padding: var(--spacing-8);
     color: var(--text-secondary);
 }
 

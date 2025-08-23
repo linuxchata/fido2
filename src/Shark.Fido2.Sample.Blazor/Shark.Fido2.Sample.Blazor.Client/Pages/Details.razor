@@ -3,31 +3,43 @@
 @using System.Text.Json
 @using Microsoft.AspNetCore.WebUtilities
 @using Shark.Fido2.Sample.Blazor.Client.ViewModels
-@inject HttpClient Http
+@inject System.Net.Http.HttpClient Http
 @inject NavigationManager Navigation
 @inject IJSRuntime JSRuntime
 
 <PageTitle>Shark WebAuthn .NET library</PageTitle>
 
 <div class="page-container">
-    <h1>You are signed in!</h1>
-
-    <p>You have successfully signed in using WebAuthn! Below, you can review the details of the public key credentials used for your authentication.</p>
-
     @if (isLoading)
     {
-        <div class="loading">
-            <p>Loading credential details...</p>
+        <h1>Discoverable Credentials</h1>
+
+        <div class="content-layout">
+            <div class="content-area">
+                <div class="loading">
+                    <p>Loading public key credential details...</p>
+                </div>
+            </div>
         </div>
     }
     else if (!string.IsNullOrEmpty(errorMessage))
     {
-        <div class="error">
-            <p style="color: red;">Error: @errorMessage</p>
+        <h1>Discoverable Credentials</h1>
+
+        <div class="content-layout">
+            <div class="content-area">
+                <div class="error">
+                    <p>@errorMessage</p>
+                </div>
+            </div>
         </div>
     }
     else if (credential != null)
     {
+        <h1>You are signed in!</h1>
+
+        <p>You have successfully signed in using WebAuthn! Below, you can review the details of the public key credentials used for your authentication.</p>
+
         <table class="details-table">
             <tr>
                 <td>Credential identifier</td>
@@ -80,7 +92,7 @@
 @code {
     private bool isLoading = true;
     private string? errorMessage;
-    private CredentialDetailsViewModel? credential;
+    private CredentialDetailsViewModel? credential = null!;
 
     protected override async Task OnInitializedAsync()
     {
@@ -90,18 +102,13 @@
             var queryParams = QueryHelpers.ParseQuery(uri.Query);
             var credentialId = queryParams.TryGetValue("credentialId", out var values) ? values.FirstOrDefault() : null;
 
-            if (string.IsNullOrEmpty(credentialId))
-            {
-                credentialId = await JSRuntime.InvokeAsync<string>("sessionStorage.getItem", "credentialId");
-            }
-
             if (!string.IsNullOrEmpty(credentialId))
             {
                 await LoadCredentialDetails(credentialId);
             }
             else
             {
-                errorMessage = "No credential ID found. Please sign in again.";
+                errorMessage = "No public key credential details are available. Please sign in first.";
             }
         }
         catch (Exception ex)
@@ -130,9 +137,9 @@
                 errorMessage = $"Failed to load credential details: {response.StatusCode}";
             }
         }
-        catch (Exception ex)
+        catch
         {
-            errorMessage = $"Error loading credential details: {ex.Message}";
+            errorMessage = $"Error loading credential details";
         }
     }
 }
