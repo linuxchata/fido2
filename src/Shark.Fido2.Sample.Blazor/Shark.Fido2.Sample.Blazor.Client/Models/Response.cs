@@ -1,6 +1,7 @@
 ﻿namespace Shark.Fido2.Sample.Blazor.Client.Models;
 
-public class Response<T> where T : class
+public class Response<T>
+    where T : class
 {
     public T? Result { get; init; }
 
