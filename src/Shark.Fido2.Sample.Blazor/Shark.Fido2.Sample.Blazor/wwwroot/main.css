@@ -1,0 +1,11 @@
+:root {
+    --color-light: #fff;
+}
+
+.notyf {
+    word-break: break-word;
+}
+
+.notyf__icon {
+    color: var(--color-light) !important;
+}

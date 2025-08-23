@@ -1,6 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <ItemGroup>
+    <Content Remove="wwwroot\main.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\main.css" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Shark.Fido2.Common\Shark.Fido2.Common.csproj" />
     <ProjectReference Include="..\..\Shark.Fido2.Core\Shark.Fido2.Core.csproj" />
     <ProjectReference Include="..\..\Shark.Fido2.Domain\Shark.Fido2.Domain.csproj" />

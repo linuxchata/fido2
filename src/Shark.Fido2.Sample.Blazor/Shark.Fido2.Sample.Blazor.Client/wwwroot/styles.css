@@ -273,3 +273,20 @@ p {
     margin: 0;
     color: #dc2626 !important;
 }
+
+/* Link styling */
+.link-row {
+    text-align: center;
+    margin-top: var(--spacing-6);
+}
+
+.nav-link {
+    color: var(--text-color);
+    text-decoration: underline;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.nav-link:hover {
+    opacity: 0.7;
+}

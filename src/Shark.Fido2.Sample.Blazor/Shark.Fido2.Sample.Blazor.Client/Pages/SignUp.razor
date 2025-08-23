@@ -5,6 +5,7 @@
 @using Microsoft.JSInterop
 
 @inject IJSRuntime JSRuntime
+@inject NavigationManager Navigation
 
 <PageTitle>Shark WebAuthn .NET library</PageTitle>
 
@@ -42,6 +43,11 @@
                                 </svg>
                                 Sign Up with a Passkey
                             </button>
+                        </div>
+                        <div class="link-row">
+                            <a href="#" @onclick="NavigateToSignIn" @onclick:preventDefault="true" class="nav-link">
+                                Already have a passkey? Sign in here
+                            </a>
                         </div>
                     </form>
                 </div>
@@ -85,5 +91,10 @@
         {
             _isFormDisabled = false;
         }
+    }
+
+    private void NavigateToSignIn()
+    {
+        Navigation.NavigateTo("/signin", forceLoad: true);
     }
 }

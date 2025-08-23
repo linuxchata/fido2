@@ -2,6 +2,7 @@
     --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     --text-color: #1f2937;
     --spacing-4: 1rem;
+    --color-light: #fff;
 }
 
 body {
