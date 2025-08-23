@@ -16,16 +16,16 @@ public class CredentialClientService : ICredentialClientService
         _httpClient = httpClient;
     }
 
-    public async Task<Response<CredentialDetailsViewModel>> Get(
-        Uri baseUri,
-        string credentialId,
-        CancellationToken cancellationToken)
+    public async Task<Response<CredentialDetailsViewModel>> Get(Uri baseUri, string id, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(baseUri, nameof(baseUri));
+        ArgumentNullException.ThrowIfNullOrWhiteSpace(id, nameof(id));
+
         _httpClient.BaseAddress = baseUri;
 
         try
         {
-            var requestUrl = $"{Path}/{Uri.EscapeDataString(credentialId)}";
+            var requestUrl = $"{Path}/{Uri.EscapeDataString(id)}";
             var response = await _httpClient.GetAsync(requestUrl, cancellationToken);
 
             if (response.IsSuccessStatusCode)
