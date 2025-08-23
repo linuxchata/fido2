@@ -4,7 +4,7 @@
 @using Microsoft.AspNetCore.WebUtilities
 @using Shark.Fido2.Sample.Blazor.Client.Abstractions.Services
 @using Shark.Fido2.Sample.Blazor.Client.ViewModels
-@inject ICredentialService CredentialService
+@inject ICredentialClientService CredentialClientService
 @inject NavigationManager Navigation
 @inject IJSRuntime JSRuntime
 
@@ -124,7 +124,7 @@
 
     private async Task LoadCredentialDetails(string credentialId)
     {
-        var resultModel = await CredentialService.Get(credentialId, CancellationToken.None);
+        var resultModel = await CredentialClientService.Get(credentialId, CancellationToken.None);
 
         if (resultModel.IsSuccess && resultModel.Result is not null)
         {

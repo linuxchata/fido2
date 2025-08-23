@@ -5,16 +5,23 @@ using Shark.Fido2.Sample.Blazor.Client.ViewModels;
 
 namespace Shark.Fido2.Sample.Blazor.Client.Services;
 
-public class CredentialService(HttpClient httpClient) : ICredentialService
+public class CredentialClientService : ICredentialClientService
 {
     private const string BaseUrl = "api/credentialsdetails";
+
+    private readonly HttpClient _httpClient;
+
+    public CredentialClientService(HttpClient httpClient)
+    {
+        _httpClient = httpClient;
+    }
 
     public async Task<ResultModel<CredentialDetailsViewModel>> Get(string credentialId, CancellationToken cancellationToken)
     {
         try
         {
             var requestUrl = $"{BaseUrl}/{Uri.EscapeDataString(credentialId)}";
-            var response = await httpClient.GetAsync(requestUrl, cancellationToken);
+            var response = await _httpClient.GetAsync(requestUrl, cancellationToken);
 
             if (response.IsSuccessStatusCode)
             {
