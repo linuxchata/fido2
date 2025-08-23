@@ -14,9 +14,11 @@ jobs:
         password: ${{ secrets.DOCKERHUB_TOKEN }}
     - uses: actions/checkout@v4
     - name: Build and push Docker image
+      env:
+        DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       run: |
         docker build . --file ./src/Shark.Fido2.Sample/Dockerfile \
-          --tag ${{ secrets.DOCKERHUB_USERNAME }}/shark-fido2-sample:latest \
-          --tag ${{ secrets.DOCKERHUB_USERNAME }}/shark-fido2-sample:v1.1.2
-        docker push ${{ secrets.DOCKERHUB_USERNAME }}/shark-fido2-sample:latest
-        docker push ${{ secrets.DOCKERHUB_USERNAME }}/shark-fido2-sample:v1.1.2
+          --tag $DOCKERHUB_USERNAME/shark-fido2-sample:latest \
+          --tag $DOCKERHUB_USERNAME/shark-fido2-sample:v1.1.2
+        docker push $DOCKERHUB_USERNAME/shark-fido2-sample:latest
+        docker push $DOCKERHUB_USERNAME/shark-fido2-sample:v1.1.2
