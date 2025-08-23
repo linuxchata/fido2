@@ -31,17 +31,25 @@ public class CredentialClientService : ICredentialClientService
             if (response.IsSuccessStatusCode)
             {
                 var result = await response.Content.ReadFromJsonAsync<CredentialDetailsViewModel>(cancellationToken);
-                return Response<CredentialDetailsViewModel>.Create(result);
+                if (result != null)
+                {
+                    return Response<CredentialDetailsViewModel>.Create(result);
+                }
+                else
+                {
+                    var errorMessage = $"An unknown error occurred while fetching public key credential details.";
+                    return Response<CredentialDetailsViewModel>.CreateFailed(errorMessage);
+                }
             }
             else
             {
-                var errorMessage = $"Failed to load public key credential details: {response.StatusCode}";
+                var errorMessage = $"Failed to load public key credential details.";
                 return Response<CredentialDetailsViewModel>.CreateFailed(errorMessage);
             }
         }
         catch
         {
-            var errorMessage = $"Error loading public key credential details";
+            var errorMessage = $"An error occurred while fetching public key credential details.";
             return Response<CredentialDetailsViewModel>.CreateFailed(errorMessage);
         }
     }
