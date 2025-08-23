@@ -1,15 +1,19 @@
 ﻿@page "/details"
+
 @using Microsoft.AspNetCore.WebUtilities
 @using Shark.Fido2.Sample.Blazor.Client.Abstractions.Services
 @using Shark.Fido2.Sample.Blazor.Client.ViewModels
+
 @inject ICredentialClientService CredentialClientService
 @inject NavigationManager Navigation
 @inject IJSRuntime JSRuntime
 
+@implements IDisposable
+
 <PageTitle>Shark WebAuthn .NET library</PageTitle>
 
 <div class="page-container">
-    @if (isLoading)
+    @if (_isLoading)
     {
         <h1>Discoverable Credentials</h1>
 
@@ -21,19 +25,19 @@
             </div>
         </div>
     }
-    else if (!string.IsNullOrEmpty(errorMessage))
+    else if (!string.IsNullOrEmpty(_errorMessage))
     {
         <h1>Discoverable Credentials</h1>
 
         <div class="content-layout">
             <div class="content-area">
                 <div class="error">
-                    <p>@errorMessage</p>
+                    <p>@_errorMessage</p>
                 </div>
             </div>
         </div>
     }
-    else if (credential != null)
+    else if (_credentialDetails != null)
     {
         <h1>You are signed in!</h1>
 
@@ -42,43 +46,46 @@
         <table class="details-table">
             <tr>
                 <td>Credential identifier</td>
-                <td><span class="credential-id">@credential.CredentialId</span></td>
+                <td><span class="credential-id">@_credentialDetails.CredentialId</span></td>
             </tr>
             <tr>
                 <td>User handle</td>
-                <td><span class="user-handle">@credential.UserHandle</span></td>
+                <td><span class="user-handle">@_credentialDetails.UserHandle</span></td>
             </tr>
             <tr>
                 <td>Username</td>
-                <td>@credential.UserName</td>
+                <td>@_credentialDetails.UserName</td>
             </tr>
             <tr>
                 <td>Display name</td>
-                <td>@credential.UserDisplayName</td>
+                <td>@_credentialDetails.UserDisplayName</td>
             </tr>
             <tr>
                 <td>Sign count</td>
-                <td>@credential.SignCount</td>
+                <td>@_credentialDetails.SignCount</td>
             </tr>
             <tr>
                 <td>Algorithm</td>
-                <td>@credential.Algorithm</td>
+                <td>@_credentialDetails.Algorithm</td>
             </tr>
-            <tr>
-                <td>Transports</td>
-                <td>@(credential.Transports?.Length > 0 ? string.Join(", ", credential.Transports) : "Not specified")</td>
-            </tr>
+            @if (_credentialDetails.Transports != null && _credentialDetails.Transports.Any())
+            {
+                <tr>
+                    <td>Transports</td>
+                    <td>@string.Join(", ", _credentialDetails.Transports)</td>
+                </tr>
+            }
             <tr>
                 <td>Time of creation (UTC)</td>
-                <td>@credential.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                <td>@_credentialDetails.CreatedAt.ToString(DateTimeFormat)</td>
             </tr>
             <tr>
                 <td>Time of last update (UTC)</td>
-                <td>@(credential.UpdatedAt?.ToString("yyyy-MM-dd HH:mm:ss") ?? "-")</td>
+                <td>@(_credentialDetails.UpdatedAt?.ToString(DateTimeFormat) ?? "-")</td>
             </tr>
             <tr>
                 <td>Time of last use (UTC)</td>
-                <td>@(credential.LastUsedAt?.ToString("yyyy-MM-dd HH:mm:ss") ?? "-")</td>
+                <td>@(_credentialDetails.LastUsedAt?.ToString(DateTimeFormat) ?? "-")</td>
             </tr>
         </table>
     }
@@ -89,12 +96,17 @@
 </div>
 
 @code {
-    private bool isLoading = true;
-    private string? errorMessage;
-    private CredentialDetailsViewModel? credential = null!;
+    private const string DateTimeFormat = "yyyy-MM-dd HH:mm:ss";
+
+    private bool _isLoading = true;
+    private string? _errorMessage;
+    private CredentialDetailsViewModel? _credentialDetails = null!;
+    private CancellationTokenSource? _cancellationTokenSource;
 
     protected override async Task OnInitializedAsync()
     {
+        _cancellationTokenSource = new CancellationTokenSource();
+
         try
         {
             var uri = new Uri(Navigation.Uri);
@@ -103,35 +115,41 @@
 
             if (!string.IsNullOrEmpty(credentialId))
             {
-                await LoadCredentialDetails(uri, credentialId);
+                await LoadCredentialDetails(uri, credentialId, _cancellationTokenSource.Token);
             }
             else
             {
-                errorMessage = "No public key credential details are available. Please sign in first.";
+                _errorMessage = "No public key credential details are available. Please sign in first.";
             }
         }
         catch (Exception ex)
         {
-            errorMessage = $"Error initializing page: {ex.Message}";
+            _errorMessage = $"Error initializing page: {ex.Message}";
         }
         finally
         {
-            isLoading = false;
+            _isLoading = false;
         }
     }
 
-    private async Task LoadCredentialDetails(Uri baseUri, string credentialId)
+    private async Task LoadCredentialDetails(Uri baseUri, string credentialId, CancellationToken cancellationToken)
     {
-        var response = await CredentialClientService.Get(baseUri, credentialId, CancellationToken.None);
+        var response = await CredentialClientService.Get(baseUri, credentialId, cancellationToken);
 
         if (response.IsSuccess && response.Result is not null)
         {
-            credential = response.Result;
+            _credentialDetails = response.Result;
         }
         else
         {
-            errorMessage = response.Message ??
+            _errorMessage = response.Message ??
                 "An unknown error occurred while fetching public key credential details.";
         }
+    }
+
+    public void Dispose()
+    {
+        _cancellationTokenSource?.Cancel();
+        _cancellationTokenSource?.Dispose();
     }
 }
