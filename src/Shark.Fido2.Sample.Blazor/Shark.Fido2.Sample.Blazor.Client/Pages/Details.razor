@@ -122,15 +122,15 @@
 
     private async Task LoadCredentialDetails(Uri baseUri, string credentialId)
     {
-        var resultModel = await CredentialClientService.Get(baseUri, credentialId, CancellationToken.None);
+        var response = await CredentialClientService.Get(baseUri, credentialId, CancellationToken.None);
 
-        if (resultModel.IsSuccess && resultModel.Result is not null)
+        if (response.IsSuccess && response.Result is not null)
         {
-            credential = resultModel.Result;
+            credential = response.Result;
         }
         else
         {
-            errorMessage = resultModel.Message ??
+            errorMessage = response.Message ??
                 "An unknown error occurred while fetching public key credential details.";
         }
     }

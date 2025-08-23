@@ -16,7 +16,7 @@ public class CredentialClientService : ICredentialClientService
         _httpClient = httpClient;
     }
 
-    public async Task<ResultModel<CredentialDetailsViewModel>> Get(
+    public async Task<Response<CredentialDetailsViewModel>> Get(
         Uri baseUri,
         string credentialId,
         CancellationToken cancellationToken)
@@ -31,18 +31,18 @@ public class CredentialClientService : ICredentialClientService
             if (response.IsSuccessStatusCode)
             {
                 var result = await response.Content.ReadFromJsonAsync<CredentialDetailsViewModel>(cancellationToken);
-                return ResultModel<CredentialDetailsViewModel>.Create(result);
+                return Response<CredentialDetailsViewModel>.Create(result);
             }
             else
             {
                 var errorMessage = $"Failed to load public key credential details: {response.StatusCode}";
-                return ResultModel<CredentialDetailsViewModel>.CreateFailed(errorMessage);
+                return Response<CredentialDetailsViewModel>.CreateFailed(errorMessage);
             }
         }
         catch
         {
             var errorMessage = $"Error loading credential details";
-            return ResultModel<CredentialDetailsViewModel>.CreateFailed(errorMessage);
+            return Response<CredentialDetailsViewModel>.CreateFailed(errorMessage);
         }
     }
 }
