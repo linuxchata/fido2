@@ -36,6 +36,7 @@ public class AssertionController(
     [HttpPost("options")]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [SwaggerRequestExample(
         typeof(ServerPublicKeyCredentialGetOptionsRequest),
         typeof(ServerPublicKeyCredentialGetOptionsRequestExample))]
@@ -43,6 +44,11 @@ public class AssertionController(
         ServerPublicKeyCredentialGetOptionsRequest request,
         CancellationToken cancellationToken)
     {
+        if (request == null)
+        {
+            return BadRequest(ServerResponse.CreateFailed());
+        }
+
         var requestOptions = await _assertion.BeginAuthentication(request.Map(), cancellationToken);
 
         var response = requestOptions.Map();
@@ -73,6 +79,11 @@ public class AssertionController(
         }
 
         var requestOptionsString = HttpContext.Session.GetString("RequestOptions");
+
+        if (string.IsNullOrWhiteSpace(requestOptionsString))
+        {
+            return BadRequest(ServerResponse.CreateFailed());
+        }
 
         var requestOptions = JsonSerializer.Deserialize<PublicKeyCredentialRequestOptions>(requestOptionsString!);
 

@@ -69,6 +69,11 @@ public class AttestationController(IAttestation attestation) : ControllerBase
 
         var createOptionsString = HttpContext.Session.GetString("CreateOptions");
 
+        if (string.IsNullOrWhiteSpace(createOptionsString))
+        {
+            return BadRequest(ServerResponse.CreateFailed());
+        }
+
         var createOptions = JsonSerializer.Deserialize<PublicKeyCredentialCreationOptions>(createOptionsString!);
 
         var response = await _attestation.CompleteRegistration(request.Map(), createOptions!, cancellationToken);

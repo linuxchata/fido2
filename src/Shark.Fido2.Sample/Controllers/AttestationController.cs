@@ -32,6 +32,7 @@ public class AttestationController(IAttestation attestation, ILogger<Attestation
     [HttpPost("options")]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [SwaggerRequestExample(
         typeof(ServerPublicKeyCredentialCreationOptionsRequest),
         typeof(ServerPublicKeyCredentialCreationOptionsRequestExample))]
@@ -39,6 +40,11 @@ public class AttestationController(IAttestation attestation, ILogger<Attestation
         ServerPublicKeyCredentialCreationOptionsRequest request,
         CancellationToken cancellationToken)
     {
+        if (request == null)
+        {
+            return BadRequest(ServerResponse.CreateFailed());
+        }
+
         var createOptions = await _attestation.BeginRegistration(request.Map(), cancellationToken);
 
         var response = createOptions.Map();
@@ -69,6 +75,11 @@ public class AttestationController(IAttestation attestation, ILogger<Attestation
         }
 
         var createOptionsString = HttpContext.Session.GetString("CreateOptions");
+
+        if (string.IsNullOrWhiteSpace(createOptionsString))
+        {
+            return BadRequest(ServerResponse.CreateFailed());
+        }
 
         var createOptions = JsonSerializer.Deserialize<PublicKeyCredentialCreationOptions>(createOptionsString!);
 
