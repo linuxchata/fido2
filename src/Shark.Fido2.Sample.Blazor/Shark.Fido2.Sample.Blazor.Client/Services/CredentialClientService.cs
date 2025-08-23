@@ -41,7 +41,7 @@ public class CredentialClientService : ICredentialClientService
         }
         catch
         {
-            var errorMessage = $"Error loading credential details";
+            var errorMessage = $"Error loading public key credential details";
             return Response<CredentialDetailsViewModel>.CreateFailed(errorMessage);
         }
     }

@@ -1,11 +1,11 @@
-@namespace Shark.Fido2.Sample.Blazor.Client.Components.UI
+@namespace Shark.Fido2.Sample.Blazor.Client.Components.Shared
 
 <div class="button-row">
-    <button type="button" 
-            id="@Id" 
-            name="@Name" 
-            class="button @CssClass" 
-            @onclick="HandleClick" 
+    <button type="button"
+            id="@Id"
+            name="@Name"
+            class="button @CssClass"
+            @onclick="HandleClick"
             disabled="@(IsDisabled || IsLoading)">
         @if (Icon != null)
         {

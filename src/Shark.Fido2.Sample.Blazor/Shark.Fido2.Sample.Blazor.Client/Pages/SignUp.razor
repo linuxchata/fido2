@@ -26,23 +26,21 @@
                         <h3>Sign Up</h3>
                     </div>
                     <form id="signup-form">
-                        <TextInput
-                            Label="Username"
-                            Placeholder="Enter your username"
-                            Value="@_username"
-                            ValueChanged="@((value) => _username = value)"
-                            Id="signup-username"
-                            MaxLength="64"
-                            IsDisabled="@_isFormDisabled" />
+                        <TextInput Label="Username"
+                                   Placeholder="Enter your username"
+                                   Value="@_username"
+                                   ValueChanged="@((value) => _username = value)"
+                                   Id="signup-username"
+                                   MaxLength="64"
+                                   IsDisabled="@_isFormDisabled" />
 
-                        <TextInput
-                            Label="Display Name"
-                            Placeholder="Enter your display name"
-                            Value="@_displayName"
-                            ValueChanged="@((value) => _displayName = value)"
-                            Id="signup-display-name"
-                            MaxLength="64"
-                            IsDisabled="@_isFormDisabled" />
+                        <TextInput Label="Display Name"
+                                   Placeholder="Enter your display name"
+                                   Value="@_displayName"
+                                   ValueChanged="@((value) => _displayName = value)"
+                                   Id="signup-display-name"
+                                   MaxLength="64"
+                                   IsDisabled="@_isFormDisabled" />
 
                         <PrimaryButton Text="Sign Up with a Passkey" Id="signup-button" Name="signup" OnClick="Register" IsDisabled="@_isFormDisabled">
                             <Icon>
@@ -54,10 +52,9 @@
                             </Icon>
                         </PrimaryButton>
 
-                        <NavigationLink
-                            Text="Already have a passkey? Sign in here"
-                            NavigateTo="/signin"
-                            ForceLoad="true" />
+                        <NavigationLink Text="Already have a passkey? Sign in here"
+                                        NavigateTo="/signin"
+                                        ForceLoad="true" />
                     </form>
                 </div>
             </div>
