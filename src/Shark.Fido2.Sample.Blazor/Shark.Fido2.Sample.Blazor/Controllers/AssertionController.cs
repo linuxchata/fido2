@@ -28,10 +28,16 @@ public class AssertionController(IAssertion assertion) : ControllerBase
     [HttpPost("options")]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Options(
         ServerPublicKeyCredentialGetOptionsRequest request,
         CancellationToken cancellationToken)
     {
+        if (request == null)
+        {
+            return BadRequest(ServerResponse.CreateFailed());
+        }
+
         var requestOptions = await _assertion.BeginAuthentication(request.Map(), cancellationToken);
 
         var response = requestOptions.Map();

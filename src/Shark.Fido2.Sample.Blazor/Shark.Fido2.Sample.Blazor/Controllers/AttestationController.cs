@@ -28,10 +28,16 @@ public class AttestationController(IAttestation attestation) : ControllerBase
     [HttpPost("options")]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Options(
         ServerPublicKeyCredentialCreationOptionsRequest request,
         CancellationToken cancellationToken)
     {
+        if (request == null)
+        {
+            return BadRequest(ServerResponse.CreateFailed());
+        }
+
         var createOptions = await _attestation.BeginRegistration(request.Map(), cancellationToken);
 
         var response = createOptions.Map();

@@ -5,5 +5,8 @@ namespace Shark.Fido2.Sample.Blazor.Client.Abstractions.Services;
 
 public interface ICredentialClientService
 {
-    Task<ResultModel<CredentialDetailsViewModel>> Get(string credentialId, CancellationToken cancellationToken);
+    Task<ResultModel<CredentialDetailsViewModel>> Get(
+        Uri baseUri,
+        string credentialId,
+        CancellationToken cancellationToken);
 }

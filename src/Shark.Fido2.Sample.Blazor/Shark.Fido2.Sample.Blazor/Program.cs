@@ -1,12 +1,13 @@
 using Shark.Fido2.Core;
 using Shark.Fido2.InMemory;
 using Shark.Fido2.Sample.Blazor.Abstractions.Services;
+using Shark.Fido2.Sample.Blazor.Client.Abstractions.Services;
+using Shark.Fido2.Sample.Blazor.Client.Services;
 using Shark.Fido2.Sample.Blazor.Components;
 using Shark.Fido2.Sample.Blazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services
     .AddRazorComponents()
     .AddInteractiveWebAssemblyComponents();
@@ -23,9 +24,12 @@ builder.Services.AddFido2(builder.Configuration);
 builder.Services.AddFido2InMemoryStore();
 builder.Services.AddScoped<ICredentialService, CredentialService>();
 
+// Client's dependencies
+builder.Services.AddScoped<ICredentialClientService, CredentialClientService>();
+builder.Services.AddHttpClient();
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseWebAssemblyDebugging();
@@ -33,7 +37,6 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 

@@ -251,7 +251,7 @@ p {
     }
 
     .details-table td {
-        padding: var(--spacing-1);
+        padding: var(--spacing-2);
     }
 }
 
