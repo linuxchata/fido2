@@ -1,6 +1,8 @@
 using Shark.Fido2.Core;
 using Shark.Fido2.InMemory;
+using Shark.Fido2.Sample.Blazor.Abstractions.Services;
 using Shark.Fido2.Sample.Blazor.Components;
+using Shark.Fido2.Sample.Blazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +21,7 @@ builder.Services.AddSession(options =>
 
 builder.Services.AddFido2(builder.Configuration);
 builder.Services.AddFido2InMemoryStore();
+builder.Services.AddScoped<ICredentialService, CredentialService>();
 
 var app = builder.Build();
 

@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Shark.Fido2.Common\Shark.Fido2.Common.csproj" />
     <ProjectReference Include="..\..\Shark.Fido2.Core\Shark.Fido2.Core.csproj" />
     <ProjectReference Include="..\..\Shark.Fido2.Domain\Shark.Fido2.Domain.csproj" />
     <ProjectReference Include="..\..\Shark.Fido2.InMemory\Shark.Fido2.InMemory.csproj" />

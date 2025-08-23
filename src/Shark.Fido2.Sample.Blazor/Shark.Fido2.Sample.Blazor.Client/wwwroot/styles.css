@@ -54,7 +54,7 @@
     background: var(--container-bg);
     border: 1px solid var(--container-border);
     border-radius: var(--radius-md);
-    padding: var(--spacing-8);
+    padding: var(--spacing-6);
     box-shadow: var(--shadow-sm);
     width: 100%;
 }
@@ -253,4 +253,24 @@ p {
     .details-table td {
         padding: var(--spacing-1);
     }
+}
+
+/* Loading and Error States */
+.loading {
+    text-align: center;
+    padding: var(--spacing-8);
+    color: var(--text-secondary);
+}
+
+.error {
+    padding: var(--spacing-4);
+    background-color: #fee2e2;
+    border: 1px solid #fca5a5;
+    border-radius: var(--border-radius);
+    margin-bottom: var(--spacing-4);
+}
+
+.error p {
+    margin: 0;
+    color: #dc2626 !important;
 }
