@@ -1,0 +1,21 @@
+@namespace Shark.Fido2.Sample.Blazor.Client.Components.Shared
+
+<tr>
+    <td>@Label</td>
+    <td>
+        @if (!string.IsNullOrEmpty(CssClass))
+        {
+            <span class="@CssClass">@Value</span>
+        }
+        else
+        {
+            @Value
+        }
+    </td>
+</tr>
+
+@code {
+    [Parameter] public string Label { get; set; } = string.Empty;
+    [Parameter] public string Value { get; set; } = string.Empty;
+    [Parameter] public string CssClass { get; set; } = string.Empty;
+}

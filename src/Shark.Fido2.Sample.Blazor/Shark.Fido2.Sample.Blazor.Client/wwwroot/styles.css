@@ -193,7 +193,7 @@ p {
     }
 
         .details-table td:first-child {
-            font-weight: 700;
+            font-weight: 600;
             color: var(--text-color);
             background-color: var(--input-bg);
             width: 50%;
