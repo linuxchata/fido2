@@ -1,0 +1,30 @@
+/* CSS Variables */
+:root {
+    --text-color: #1f2937;
+    --font-size-2xl: 1.75rem;
+    --spacing-4: 1rem;
+    --spacing-5: 1.25rem;
+    --spacing-6: 1.5rem;
+    --spacing-8: 2rem;
+}
+
+.page-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-8) var(--spacing-4);
+}
+
+h1 {
+    font-size: var(--font-size-2xl);
+    font-weight: 500;
+    color: var(--text-color);
+    margin-top: 0;
+    margin-bottom: var(--spacing-6);
+}
+
+p {
+    color: var(--text-color);
+    margin-top: 0;
+    margin-bottom: var(--spacing-5);
+    line-height: 1.7;
+}

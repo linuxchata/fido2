@@ -97,15 +97,25 @@
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-    .form-control:focus {
-        outline: none;
-        border-color: var(--input-focus);
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-    }
+input:focus {
+    outline: none;
+    border-color: var(--input-focus);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
 
-    .form-control::placeholder {
-        color: var(--text-secondary);
-    }
+input::placeholder {
+    color: var(--text-secondary);
+}
+
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+    -webkit-text-fill-color: #000 !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+input:disabled {
+    opacity: .45 !important;
+}
 
 /* Button styling */
 .button-row {
