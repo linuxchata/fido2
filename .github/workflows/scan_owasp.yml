@@ -10,7 +10,7 @@ jobs:
       issues: write
     steps:
       - name: ZAP Scan
-        uses: zaproxy/action-full-scan@v0.12.0
+        uses: zaproxy/action-full-scan@75ee1686750ab1511a73b26b77a2aedd295053ed #v0.12.0
         with:
-          target: 'https://app-fido2-dev-01-hcguafdhd6ewfcgv.westeurope-01.azurewebsites.net/'
+          target: 'https://app-fido2-dev-04-dbggbwc5h7edfgcf.westeurope-01.azurewebsites.net/'
           allow_issue_writing: false
