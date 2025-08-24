@@ -23,6 +23,8 @@ public static class DependencyInjection
         services.AddDistributedMemoryCache();
         services.AddMemoryCache();
 
+        services.AddHttpClient();
+
         services.AddTransient<IHttpClientRepository, HttpClientRepository>();
         services.AddTransient<ICertificateValidator, CertificateValidator>();
         services.AddTransient<IMetadataService, MetadataService>();
