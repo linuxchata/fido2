@@ -13,7 +13,7 @@ public sealed class MetadataServiceConfiguration
     /// <summary>
     /// Gets or sets a location of GlobalSign Root R3 for Metadata Service BLOB.
     /// </summary>
-    public string RootCertificateLocationUrl { get; set; } = "http://secure.globalsign.com/cacert/root-r3.crt";
+    public string RootCertificateLocationUrl { get; set; } = "https://secure.globalsign.com/cacert/root-r3.crt";
 
     /// <summary>
     /// Gets or sets a maximum token size in bytes that will be processed. This configuration is related
