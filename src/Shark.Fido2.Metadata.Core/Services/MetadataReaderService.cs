@@ -178,17 +178,17 @@ internal sealed class MetadataReaderService : IMetadataReaderService
 
         var issuerSigningKeys = GetIssuerSigningKeys(certificates);
 
-        var validationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = false,
-            ValidateAudience = false,
-            ValidateLifetime = false,
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKeys = issuerSigningKeys,
-        };
-
         try
         {
+            var validationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ValidateLifetime = false,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKeys = issuerSigningKeys.Select(a => a.SecurityKey),
+            };
+
             var result = await handler.ValidateTokenAsync(metadataBlob, validationParameters);
             return result.IsValid;
         }
@@ -196,13 +196,17 @@ internal sealed class MetadataReaderService : IMetadataReaderService
         {
             return false;
         }
+        finally
+        {
+            issuerSigningKeys.ForEach(a => a.Disposable.Dispose());
+        }
     }
 
-    private static List<SecurityKey> GetIssuerSigningKeys(List<X509Certificate2> certificates)
+    private static List<(SecurityKey SecurityKey, IDisposable Disposable)> GetIssuerSigningKeys(
+        List<X509Certificate2> certificates)
     {
-        // X509SecurityKey has issues extracting public keys from ECDsa certificates, so the public keys are
-        // extracted manually
-        var issuerSigningKeys = new List<SecurityKey>();
+        // X509SecurityKey has issues extracting public keys from ECDsa certificates, so they are extracted manually
+        var issuerSigningKeys = new List<(SecurityKey, IDisposable)>();
         foreach (var certificate in certificates)
         {
             var ecdsaPublicKey = certificate.GetECDsaPublicKey();
@@ -210,11 +214,11 @@ internal sealed class MetadataReaderService : IMetadataReaderService
 
             if (ecdsaPublicKey != null)
             {
-                issuerSigningKeys.Add(new ECDsaSecurityKey(ecdsaPublicKey));
+                issuerSigningKeys.Add((new ECDsaSecurityKey(ecdsaPublicKey), ecdsaPublicKey));
             }
             else if (rsaPublicKey != null)
             {
-                issuerSigningKeys.Add(new RsaSecurityKey(rsaPublicKey));
+                issuerSigningKeys.Add((new RsaSecurityKey(rsaPublicKey), rsaPublicKey));
             }
             else
             {
