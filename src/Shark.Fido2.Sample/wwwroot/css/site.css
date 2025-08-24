@@ -151,12 +151,12 @@ input:-webkit-autofill {
         outline: none;
         box-shadow: none;
         border-color: var(--color-primary);
-}
+    }
 
     .form-select:disabled {
         opacity: var(--opacity-disabled) !important;
         background-color: var(--color-light);
-}
+    }
 
 .input-text {
     padding: var(--padding-input);
@@ -185,7 +185,8 @@ input:-webkit-autofill {
 
     .btn-primary:disabled {
         opacity: var(--opacity-disabled);
-}
+        cursor: wait;
+    }
 
 .btn-secondary {
     font-weight: var(--font-weight-medium);
@@ -206,6 +207,7 @@ input:-webkit-autofill {
         background-color: var(--color-secondary-hover);
         color: var(--color-secondary-text);
         opacity: var(--opacity-disabled);
+        cursor: wait;
     }
 
 .btn-github {
