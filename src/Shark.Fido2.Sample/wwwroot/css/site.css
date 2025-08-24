@@ -51,7 +51,6 @@
     --gap-main-controls-mobile: 10px;
     --opacity-disabled: .45;
     --box-shadow-focus: 0 0 0 0.1rem white, 0 0 0 0.25rem var(--color-focus);
-    --box-shadow-btn-hover: 0 2px 4px rgba(0, 0, 0, 0.2);
     --box-shadow-autofill: 0 0 0px 1000px white inset;
     --shadow-table: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     --transition-all: all 0.3s ease;
@@ -152,12 +151,12 @@ input:-webkit-autofill {
         outline: none;
         box-shadow: none;
         border-color: var(--color-primary);
-}
+    }
 
     .form-select:disabled {
         opacity: var(--opacity-disabled) !important;
         background-color: var(--color-light);
-}
+    }
 
 .input-text {
     padding: var(--padding-input);
@@ -180,14 +179,14 @@ input:-webkit-autofill {
     .btn-primary:hover,
     .btn-primary:focus {
         background-color: var(--color-primary-hover);
-        box-shadow: var(--box-shadow-btn-hover);
         outline: none !important;
         box-shadow: none !important;
     }
 
     .btn-primary:disabled {
         opacity: var(--opacity-disabled);
-}
+        cursor: wait;
+    }
 
 .btn-secondary {
     font-weight: var(--font-weight-medium);
@@ -200,7 +199,6 @@ input:-webkit-autofill {
     .btn-secondary:focus {
         background-color: var(--color-secondary-hover);
         color: var(--color-secondary-text);
-        box-shadow: var(--box-shadow-btn-hover);
         outline: none !important;
         box-shadow: none !important;
     }
@@ -208,9 +206,9 @@ input:-webkit-autofill {
     .btn-secondary:disabled {
         background-color: var(--color-secondary-hover);
         color: var(--color-secondary-text);
-        box-shadow: var(--box-shadow-btn-hover);
         opacity: var(--opacity-disabled);
-}
+        cursor: wait;
+    }
 
 .btn-github {
     color: var(--color-link);

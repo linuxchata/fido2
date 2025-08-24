@@ -152,7 +152,11 @@ input:disabled {
     }
 
     .button:disabled {
+        background-color: var(--primary-color);
+        transform: none;
+        box-shadow: none;
         opacity: .45;
+        cursor: wait;
     }
 
     .button svg {
