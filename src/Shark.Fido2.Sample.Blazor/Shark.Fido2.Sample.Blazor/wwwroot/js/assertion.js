@@ -2,7 +2,7 @@
 
 const authenticationTitle = 'Web Authentication';
 
-async function authentication(username, displayName) {
+async function authentication(username) {
     const optionsRequest = { username };
 
     await authenticationCustom(optionsRequest);
