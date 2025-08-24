@@ -206,7 +206,7 @@ internal sealed class MetadataReaderService : IMetadataReaderService
         List<X509Certificate2> certificates)
     {
         // X509SecurityKey has issues extracting public keys from ECDsa certificates, so they are extracted manually
-        var issuerSigningKeys = new List<(SecurityKey, IDisposable)>();
+        var issuerSigningKeys = new List<(SecurityKey, IDisposable)>(certificates.Count);
         foreach (var certificate in certificates)
         {
             var ecdsaPublicKey = certificate.GetECDsaPublicKey();
@@ -256,6 +256,18 @@ internal sealed class MetadataReaderService : IMetadataReaderService
             throw new InvalidDataException("JWT header 'x5c' attribute is not a list of objects");
         }
 
-        return x5cValue.Select(c => new X509Certificate2(Convert.FromBase64String(c.ToString()!))).ToList();
+        var certificates = new List<X509Certificate2>(x5cValue.Count);
+
+        foreach (var certificate in x5cValue)
+        {
+            var certificateString = certificate?.ToString();
+            if (!string.IsNullOrWhiteSpace(certificateString))
+            {
+                var x509Certificate = new X509Certificate2(Convert.FromBase64String(certificateString));
+                certificates.Add(x509Certificate);
+            }
+        }
+
+        return certificates;
     }
 }
