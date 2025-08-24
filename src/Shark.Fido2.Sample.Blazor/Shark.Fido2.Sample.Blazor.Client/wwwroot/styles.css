@@ -184,10 +184,7 @@ p {
     width: 100%;
     border-collapse: collapse;
     background: var(--container-bg);
-    border: 1px solid #dadce0;
-    border-radius: var(--radius-md);
     overflow: hidden;
-    box-shadow: var(--shadow-sm);
 }
 
     .details-table td {

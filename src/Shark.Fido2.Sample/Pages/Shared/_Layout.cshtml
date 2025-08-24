@@ -39,7 +39,7 @@
                     @if (User.Identity?.IsAuthenticated == true)
                     {
                         <div class="nav-item d-flex flex-column flex-md-row align-items-start align-items-md-center text-start text-md-end">
-                            <small class="text-muted me-md-3 mb-2 mb-md-0 d-none d-md-block">
+                            <small class="text-muted me-md-3 mb-2 mb-md-0 d-none d-lg-block">
                                 Welcome, <strong>@(User.Identity.Name ?? "User")</strong>!
                                 <br><span class="text-muted">Authenticated via WebAuthn</span>
                             </small>
