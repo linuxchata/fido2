@@ -6,6 +6,7 @@ User-agent: *
 # Disallow crawling of public pages
 Disallow: /
 Disallow: /Index
+Disallow: /DiscoverableCredentials
 Disallow: /Custom
 Disallow: /CredentialDetails
 
