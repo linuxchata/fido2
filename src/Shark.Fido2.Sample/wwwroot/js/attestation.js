@@ -17,6 +17,21 @@ async function registration(username, displayName) {
     await registrationCustom(optionsRequest);
 }
 
+async function registrationOfDiscoverableCredential(username, displayName) {
+    const optionsRequest = {
+        username: username,
+        displayName: displayName,
+        attestation: 'direct',
+        authenticatorSelection: {
+            residentKey: 'required',
+            userVerification: 'required',
+            requireResidentKey: true
+        }
+    };
+
+    await registrationCustom(optionsRequest);
+}
+
 async function registrationCustom(optionsRequest) {
     console.log("Start fetching attestation options");
 
@@ -147,4 +162,5 @@ async function fetchAttestationResult(credentials) {
 }
 
 window.registration = registration;
+window.registrationOfDiscoverableCredential = registrationOfDiscoverableCredential;
 window.registrationCustom = registrationCustom;

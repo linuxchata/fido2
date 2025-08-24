@@ -7,6 +7,7 @@ namespace Shark.Fido2.Sample.Controllers;
 /// Logout.
 /// </summary>
 [Route("[controller]")]
+[ApiExplorerSettings(IgnoreApi = true)]
 public class LogoutController(ILoginService loginService) : Controller
 {
     /// <summary>
