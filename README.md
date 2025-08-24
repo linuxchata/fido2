@@ -69,7 +69,7 @@ The server side can be customized using the following configuration options. You
 | Option | Default | Description |
 |-|-|-|
 | `MetadataBlobLocation` | `https://mds3.fidoalliance.org/` | Location of the centralized and trusted source of information about FIDO authenticators (Metadata Service BLOB). |
-| `RootCertificateLocationUrl` | `http://secure.globalsign.com/cacert/root-r3.crt` | Location of GlobalSign Root R3 certificate for Metadata Service BLOB. |
+| `RootCertificateLocationUrl` | `https://secure.globalsign.com/cacert/root-r3.crt` | Location of GlobalSign Root R3 certificate for Metadata Service BLOB. |
 | `MaximumTokenSizeInBytes` | `6291456` | Maximum token size in bytes that will be processed. This configuration is related to the Metadata Service BLOB size. |
 
 Example `appsettings.json` file: [appsettings.Production.json](https://github.com/linuxchata/fido2/blob/main/src/Shark.Fido2.Sample/appsettings.Production.json)
