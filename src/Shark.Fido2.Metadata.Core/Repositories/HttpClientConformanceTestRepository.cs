@@ -7,15 +7,14 @@ using Shark.Fido2.Metadata.Core.Abstractions.Repositories;
 namespace Shark.Fido2.Metadata.Core.Repositories;
 
 [ExcludeFromCodeCoverage]
-internal class HttpClientConformanceTestRepository : IHttpClientConformanceTestRepository
+internal class HttpClientConformanceTestRepository(
+    IHttpClientFactory httpClientFactory) : IHttpClientConformanceTestRepository
 {
     public async Task<List<string>> GetMetadataBlobEndpoints(string remoteUrl, CancellationToken cancellationToken)
     {
-        using var client = new HttpClient();
-
+        using var httpClient = httpClientFactory.CreateClient();
         var payload = new { endpoint = "https://localhost:8082/" };
-
-        using var response = await client.PostAsJsonAsync(remoteUrl, payload, cancellationToken);
+        using var response = await httpClient.PostAsJsonAsync(remoteUrl, payload, cancellationToken);
         var content = await response.Content.ReadAsStringAsync(cancellationToken);
 
         var apiResponse = JsonSerializer.Deserialize<ApiResponse>(content);
@@ -29,16 +28,16 @@ internal class HttpClientConformanceTestRepository : IHttpClientConformanceTestR
 
     public async Task<string> GetMetadataBlob(string endpoint, CancellationToken cancellationToken)
     {
-        using var client = new HttpClient();
-        using var stream = await client.GetStreamAsync(endpoint, cancellationToken);
+        using var httpClient = httpClientFactory.CreateClient();
+        using var stream = await httpClient.GetStreamAsync(endpoint, cancellationToken);
         using var reader = new StreamReader(stream);
         return await reader.ReadToEndAsync(cancellationToken);
     }
 
     public async Task<X509Certificate2> GetRootCertificate(string url, CancellationToken cancellationToken)
     {
-        using var client = new HttpClient();
-        var response = await client.GetByteArrayAsync(url, cancellationToken);
+        using var httpClient = httpClientFactory.CreateClient();
+        var response = await httpClient.GetByteArrayAsync(url, cancellationToken);
         if (response == null || response.Length == 0)
         {
             throw new InvalidOperationException($"Root certificate cannot be obtained from {url}");

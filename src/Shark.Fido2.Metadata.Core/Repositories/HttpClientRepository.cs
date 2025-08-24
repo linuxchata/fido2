@@ -7,29 +7,24 @@ using Shark.Fido2.Metadata.Core.Configurations;
 namespace Shark.Fido2.Metadata.Core.Repositories;
 
 [ExcludeFromCodeCoverage]
-internal sealed class HttpClientRepository : IHttpClientRepository
+internal sealed class HttpClientRepository(
+    IHttpClientFactory httpClientFactory,
+    IOptions<MetadataServiceConfiguration> options) : IHttpClientRepository
 {
-    private readonly MetadataServiceConfiguration _configuration;
-
-    public HttpClientRepository(IOptions<MetadataServiceConfiguration> options)
-    {
-        _configuration = options.Value;
-    }
-
     public async Task<string> GetMetadataBlob(CancellationToken cancellationToken)
     {
-        using var client = new HttpClient();
-        using var stream = await client.GetStreamAsync(_configuration.MetadataBlobLocation, cancellationToken);
+        using var httpClient = httpClientFactory.CreateClient();
+        using var stream = await httpClient.GetStreamAsync(options.Value.MetadataBlobLocation, cancellationToken);
         using var reader = new StreamReader(stream);
         return await reader.ReadToEndAsync(cancellationToken);
     }
 
     public async Task<X509Certificate2> GetRootCertificate(CancellationToken cancellationToken)
     {
-        var url = _configuration.RootCertificateLocationUrl;
+        var url = options.Value.RootCertificateLocationUrl;
 
-        using var client = new HttpClient();
-        var response = await client.GetByteArrayAsync(url, cancellationToken);
+        using var httpClient = httpClientFactory.CreateClient();
+        var response = await httpClient.GetByteArrayAsync(url, cancellationToken);
         if (response == null || response.Length == 0)
         {
             throw new InvalidOperationException($"Root certificate cannot be obtained from {url}");
@@ -40,8 +35,8 @@ internal sealed class HttpClientRepository : IHttpClientRepository
 
     public async Task<List<X509Certificate2>> GetCertificates(string url, CancellationToken cancellationToken)
     {
-        using var client = new HttpClient();
-        var response = await client.GetStringAsync(url, cancellationToken);
+        using var httpClient = httpClientFactory.CreateClient();
+        var response = await httpClient.GetStringAsync(url, cancellationToken);
         if (string.IsNullOrWhiteSpace(response))
         {
             throw new InvalidOperationException($"Certificates cannot be obtained from {url}");
