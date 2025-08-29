@@ -21,6 +21,8 @@ namespace Shark.Fido2.Sample.Controllers;
 [TypeFilter(typeof(RestApiExceptionFilter))]
 public class AttestationController(IAttestation attestation, ILogger<AttestationController> logger) : ControllerBase
 {
+    private const string SessionName = "WebAuthn.CreateOptions";
+
     private readonly IAttestation _attestation = attestation;
 
     /// <summary>
@@ -49,7 +51,7 @@ public class AttestationController(IAttestation attestation, ILogger<Attestation
 
         var response = createOptions.Map();
 
-        HttpContext.Session.SetString("CreateOptions", JsonSerializer.Serialize(createOptions));
+        HttpContext.Session.SetString(SessionName, JsonSerializer.Serialize(createOptions));
 
         return Ok(response);
     }
@@ -74,7 +76,7 @@ public class AttestationController(IAttestation attestation, ILogger<Attestation
             return BadRequest(ServerResponse.CreateFailed());
         }
 
-        var createOptionsString = HttpContext.Session.GetString("CreateOptions");
+        var createOptionsString = HttpContext.Session.GetString(SessionName);
 
         if (string.IsNullOrWhiteSpace(createOptionsString))
         {
@@ -87,6 +89,8 @@ public class AttestationController(IAttestation attestation, ILogger<Attestation
         logger.LogInformation("Attestation: {Request}", JsonSerializer.Serialize(request.Map()));
 
         var response = await _attestation.CompleteRegistration(request.Map(), createOptions!, cancellationToken);
+
+        HttpContext.Session.Remove(SessionName);
 
         if (response.IsValid)
         {
