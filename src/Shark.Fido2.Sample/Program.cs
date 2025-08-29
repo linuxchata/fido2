@@ -31,6 +31,9 @@ builder.Services.AddControllers();
 builder.Services.AddSession(options =>
 {
     options.Cookie.SameSite = SameSiteMode.Unspecified;
+    options.IdleTimeout = TimeSpan.FromMinutes(5);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
 });
 
 builder.Services

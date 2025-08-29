@@ -17,6 +17,8 @@ namespace Shark.Fido2.Sample.Blazor.Controllers;
 [ApiController]
 public class AssertionController(IAssertion assertion) : ControllerBase
 {
+    private const string SessionName = "WebAuthn.RequestOptions";
+
     private readonly IAssertion _assertion = assertion;
 
     /// <summary>
@@ -42,7 +44,7 @@ public class AssertionController(IAssertion assertion) : ControllerBase
 
         var response = requestOptions.Map();
 
-        HttpContext.Session.SetString("RequestOptions", JsonSerializer.Serialize(requestOptions));
+        HttpContext.Session.SetString(SessionName, JsonSerializer.Serialize(requestOptions));
 
         return Ok(response);
     }
@@ -62,12 +64,12 @@ public class AssertionController(IAssertion assertion) : ControllerBase
         ServerPublicKeyCredentialAssertion request,
         CancellationToken cancellationToken)
     {
-        if (request == null)
+        if (request == null || request.Response == null)
         {
             return BadRequest(ServerResponse.CreateFailed());
         }
 
-        var requestOptionsString = HttpContext.Session.GetString("RequestOptions");
+        var requestOptionsString = HttpContext.Session.GetString(SessionName);
 
         if (string.IsNullOrWhiteSpace(requestOptionsString))
         {
@@ -77,6 +79,8 @@ public class AssertionController(IAssertion assertion) : ControllerBase
         var requestOptions = JsonSerializer.Deserialize<PublicKeyCredentialRequestOptions>(requestOptionsString!);
 
         var response = await _assertion.CompleteAuthentication(request.Map(), requestOptions!, cancellationToken);
+
+        HttpContext.Session.Remove(SessionName);
 
         if (response.IsValid)
         {
