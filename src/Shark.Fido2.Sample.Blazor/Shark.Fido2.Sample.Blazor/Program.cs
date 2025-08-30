@@ -48,12 +48,12 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseAntiforgery();
 
+app.UseSession();
+
 app.MapRazorComponents<App>()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(Shark.Fido2.Sample.Blazor.Client._Imports).Assembly);
 
 app.MapControllers();
-
-app.UseSession();
 
 app.Run();
