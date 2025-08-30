@@ -69,10 +69,9 @@ internal class AttestationObjectValidator : IAttestationObjectValidator
 
         // Step 14
         // Verify that the User Present bit of the flags in authData is set.
-        if (creationOptions.AuthenticatorSelection.UserVerification == UserVerificationRequirement.Required &&
-            !authenticatorData.UserPresent)
+        if (!authenticatorData.UserPresent)
         {
-            return ValidatorInternalResult.Invalid("User Present bit is not set as user verification is required");
+            return ValidatorInternalResult.Invalid("User Present bit is not set");
         }
 
         // Step 15
@@ -117,9 +116,15 @@ internal class AttestationObjectValidator : IAttestationObjectValidator
         // Verify that attStmt is a correct attestation statement, conveying a valid attestation signature, by
         // using the attestation statement format fmt's verification procedure given attStmt, authData and hash.
         var result = _attestationStatementValidator.Validate(attestationObjectData, clientData);
-        if (!result.IsValid || result is not AttestationStatementInternalResult)
+        if (!result.IsValid)
         {
             return result;
+        }
+
+        if (result is not AttestationStatementInternalResult)
+        {
+            return ValidatorInternalResult.Invalid(
+                $"Attestation statement result is not of an expected type");
         }
 
         // Step 20

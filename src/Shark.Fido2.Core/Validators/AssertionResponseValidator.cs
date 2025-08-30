@@ -58,10 +58,9 @@ internal class AssertionResponseValidator : IAssertionObjectValidator
 
         // Step 16
         // Verify that the User Present bit of the flags in authData is set.
-        if (requestOptions.UserVerification == UserVerificationRequirement.Required &&
-            !authenticatorData.UserPresent)
+        if (!authenticatorData.UserPresent)
         {
-            return ValidatorInternalResult.Invalid("User Present bit is not set as user verification is required");
+            return ValidatorInternalResult.Invalid("User Present bit is not set");
         }
 
         // Step 17
