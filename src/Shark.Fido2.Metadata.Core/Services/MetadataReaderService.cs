@@ -158,12 +158,15 @@ internal sealed class MetadataReaderService : IMetadataReaderService
             MaximumTokenSizeInBytes = _configuration.MaximumTokenSizeInBytes,
         };
 
-        if (!handler.CanReadToken(metadataBlob))
+        try
         {
-            throw new InvalidOperationException("String is not a well formed Json Web Token (JWT)");
+            return handler.ReadJwtToken(metadataBlob);
         }
-
-        return handler.ReadJwtToken(metadataBlob);
+        catch (Exception ex)
+        {
+            throw new InvalidOperationException(
+                $"Failed to parse Json Web Token (JWT) from FIDO Metadata Service: {ex.Message}");
+        }
     }
 
     private async Task<bool> IsBlobValid(string metadataBlob, List<X509Certificate2> certificates)

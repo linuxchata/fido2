@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Shark.Fido2.Sample.Filters;
 
-public class RestApiExceptionFilter : IExceptionFilter
+public class RestApiExceptionFilter(ILogger<RestApiExceptionFilter> logger) : IExceptionFilter
 {
     public void OnException(ExceptionContext context)
     {
@@ -21,5 +21,9 @@ public class RestApiExceptionFilter : IExceptionFilter
         };
 
         context.ExceptionHandled = true;
+
+        logger.LogError(
+            "Unhandled exception occurred while processing request: {ExceptionMessage}",
+            context.Exception.Message);
     }
 }
