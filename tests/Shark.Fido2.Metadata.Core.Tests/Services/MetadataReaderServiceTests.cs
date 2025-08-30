@@ -96,13 +96,13 @@ internal class MetadataReaderServiceTests
     }
 
     [Test]
-    public void ValidateAndRead_WhenMetadataBlobIsInvalid_ThenThrowsArgumentException()
+    public void ValidateAndRead_WhenMetadataBlobIsInvalid_ThenThrowsInvalidOperationException()
     {
         // Arrrange
         var metadataBlob = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.invalid.signature";
 
         // Act & Assert
-        Assert.ThrowsAsync<ArgumentException>(() => _sut.ValidateAndRead(
+        Assert.ThrowsAsync<InvalidOperationException>(() => _sut.ValidateAndRead(
             metadataBlob,
             _rootCertificateMock.Object,
             _cancellationToken));
