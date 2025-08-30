@@ -38,7 +38,12 @@ internal class AttestationObjectValidator : IAttestationObjectValidator
     {
         if (attestationObjectData == null)
         {
-            return ValidatorInternalResult.Invalid("Attestation Object cannot be null");
+            return ValidatorInternalResult.Invalid("Attestation object cannot be null");
+        }
+
+        if (clientData == null)
+        {
+            return ValidatorInternalResult.Invalid("Client data cannot be null");
         }
 
         if (creationOptions == null)
@@ -49,7 +54,7 @@ internal class AttestationObjectValidator : IAttestationObjectValidator
         var authenticatorData = attestationObjectData.AuthenticatorData;
         if (authenticatorData == null)
         {
-            return ValidatorInternalResult.Invalid("Authenticator Data cannot be null");
+            return ValidatorInternalResult.Invalid("Authenticator data cannot be null");
         }
 
         // 7.1. Registering a New Credential (Steps 13 to 21)
