@@ -154,7 +154,7 @@ async function fetchAttestationResult(credentials) {
         }
         else {
             const responseBody = await response.json();
-            throw new Error(responseBody.errorMessage);
+            throw new Error(responseBody.errorMessage ?? responseBody.title);
         }
     } catch (error) {
         notify.error(`Registration has failed. ${error.message}`, registrationTitle);

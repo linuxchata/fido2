@@ -112,7 +112,7 @@ async function fetchAssertionResult(credentials) {
         }
         else {
             const responseBody = await response.json();
-            throw new Error(responseBody.errorMessage);
+            throw new Error(responseBody.errorMessage ?? responseBody.title);
         }
     } catch (error) {
         notify.error(`Sign-in has failed. ${error.message}`, authenticationTitle);
