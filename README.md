@@ -51,7 +51,8 @@ builder.Services.AddFido2InMemoryStore();
 ### Server-side Configuration
 The server side can be customized using the following configuration options. You can set these options in an `appsettings.json` file.
 
-#### Core Configuration
+**Core Configuration**
+
 | Option | Default | Description |
 |-|-|-|
 | `RelyingPartyId` |  | Valid domain string identifying the Relying Party on whose behalf a given registration or authentication ceremony is being performed. This is a critical parameter in the WebAuthn protocol. It defines the security scope within which credentials are valid. Therefore, careful selection is essential, as an incorrect or overly broad value can lead to unintended credential reuse or security vulnerabilities. |
@@ -65,7 +66,8 @@ The server side can be customized using the following configuration options. You
 | `EnableMetadataService` | `true` | Value indicating whether the Relying Party uses the FIDO Metadata Service to verify the attestation object. Metadata from the FIDO Metadata Service is stored in an in-memory cache and remains valid until the `nextUpdate` timestamp, which is received from the metadata BLOB and indicates the latest time a new metadata BLOB may be provided. |
 | `EnableStrictAuthenticatorVerification` | `false` | Value indicating whether the Relying Party requires strict verification of authenticators. If enabled, missing metadata for the authenticator would cause attestation to fail. This parameter is ignored if the FIDO Metadata Service is disabled. |
 
-#### FIDO Metadata Service Configuration
+**FIDO Metadata Service Configuration**
+
 | Option | Default | Description |
 |-|-|-|
 | `MetadataBlobLocation` | `https://mds3.fidoalliance.org/` | Location of the centralized and trusted source of information about FIDO authenticators (Metadata Service BLOB). |
@@ -137,7 +139,7 @@ This JavaScript code binds the browser's Web Authentication API to the server-si
 # Docker
 The sample relying party can be run using Docker (Linux container). Make sure [Docker](https://docs.docker.com/get-docker/) is installed and running on your machine.
 
-## Pull and Run the Image
+**Pull and Run the Image**
 
 ```bash
 docker pull linuxchata/shark-fido2-sample:latest
@@ -160,20 +162,21 @@ This project is licensed under the [BSD 3-Clause License](LICENSE).
 See [Contributing](https://github.com/linuxchata/fido2/blob/main/CONTRIBUTING.md) for information about contributing to the project.
 
 # Specification
-## Introduction
+
+**Introduction**
 - [An introduction to Web Authentication](https://webauthn.guide/)
 - [Web Authentication Credential and Login Demo](https://webauthn.me/)
 - [FIDO Alliance](https://fidoalliance.org/)
 
-## Web Authentication
+**Web Authentication**
 - [Web Authentication: An API for accessing Public Key Credentials Level 2](https://www.w3.org/TR/webauthn-2/)
 - [Server Requirements and Transport Binding Profile](https://fidoalliance.org/specs/fido-v2.0-rd-20180702/fido-server-v2.0-rd-20180702.html)
 - [Web Authentication: An API for accessing Public Key Credentials Level 3](https://www.w3.org/TR/webauthn-3/)
 - [PublicKeyCredential](https://developer.mozilla.org/en-US/docs/Web/API/PublicKeyCredential)
 
-## FIDO Metadata Service
+**FIDO Metadata Service**
 - [FIDO Metadata Service](https://fidoalliance.org/specs/mds/fido-metadata-service-v3.0-ps-20210518.html)
 - [FIDO Metadata Statement](https://fidoalliance.org/specs/mds/fido-metadata-statement-v3.0-ps-20210518.html)
 
-# Tools
+**Tools**
 - [FIDO Alliance - Certification Conformance Test Tools](https://github.com/fido-alliance/conformance-test-tools-resources/tree/main)
