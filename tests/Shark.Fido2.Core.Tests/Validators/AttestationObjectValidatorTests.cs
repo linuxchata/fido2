@@ -460,7 +460,7 @@ internal class AttestationObjectValidatorTests
     [TestCase(UserVerificationRequirement.Preferred)]
     [TestCase(UserVerificationRequirement.Discouraged)]
     public async Task Validate_WhenAttestationObjectDataIsValidAndUserVerificationIsNotRequired_ThenReturnsValidResult(
-        UserVerificationRequirement userVerificationRequirement)
+        UserVerificationRequirement userVerification)
     {
         // Arrange
         var attestationObjectData = new AttestationObjectData
@@ -477,7 +477,7 @@ internal class AttestationObjectValidatorTests
 
         var clientData = ClientDataBuilder.BuildCreate();
 
-        var creationOptions = BuildCreationOptions(CoseAlgorithm.Rs256, userVerificationRequirement);
+        var creationOptions = BuildCreationOptions(CoseAlgorithm.Rs256, userVerification);
 
         // Act
         var result = await _sut.Validate(attestationObjectData, clientData, creationOptions);

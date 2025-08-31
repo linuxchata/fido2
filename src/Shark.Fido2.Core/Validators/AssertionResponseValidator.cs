@@ -58,7 +58,7 @@ internal class AssertionResponseValidator : IAssertionObjectValidator
 
         // Step 15
         // Verify that the rpIdHash in authData is the SHA-256 hash of the RP ID expected by the Relying Party.
-        // With AppId set to true, expect that the rpIdHash MAY be the hash of the AppID instead of the RP ID
+        // With AppId set to true, expect that the rpIdHash MAY be the hash of the AppID instead of the RP ID.
         var rpId = extensionsClientOutputs.AppId == true ? requestOptions.Extensions!.AppId : requestOptions.RpId;
         var rpIdHash = HashProvider.GetSha256Hash(rpId ?? _configuration.RelyingPartyId);
         if (!BytesArrayComparer.CompareAsSpan(rpIdHash, authenticatorData.RpIdHash))
