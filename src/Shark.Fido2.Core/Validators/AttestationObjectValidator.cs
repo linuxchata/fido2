@@ -123,8 +123,7 @@ internal class AttestationObjectValidator : IAttestationObjectValidator
 
         if (result is not AttestationStatementInternalResult)
         {
-            return ValidatorInternalResult.Invalid(
-                $"Attestation statement result is not of an expected type");
+            return ValidatorInternalResult.Invalid($"Attestation statement result is not of an expected type");
         }
 
         // Step 20

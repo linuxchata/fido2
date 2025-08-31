@@ -228,6 +228,38 @@ internal class AttestationObjectValidatorTests
     }
 
     [Test]
+    public async Task Validate_WhenCredentialPublicKeyIsNull_ThenReturnsInvalidResult()
+    {
+        // Arrange
+        var attestationObjectData = new AttestationObjectData
+        {
+            AuthenticatorData = new AuthenticatorData
+            {
+                RpIdHash = _attestationObjectData.AuthenticatorData!.RpIdHash,
+                AttestedCredentialData = new AttestedCredentialData
+                {
+                    CredentialPublicKey = null,
+                },
+                UserPresent = true,
+                UserVerified = true,
+            },
+            AttestationStatementFormat = _attestationObjectData.AttestationStatementFormat,
+        };
+
+        var clientData = ClientDataBuilder.BuildCreate();
+
+        var creationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
+
+        // Act
+        var result = await _sut.Validate(attestationObjectData, clientData, creationOptions);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.IsValid, Is.False);
+        Assert.That(result.Message, Is.EqualTo("Credential public key algorithm mismatch"));
+    }
+
+    [Test]
     public async Task Validate_WhenAlgorithmMismatch_ThenReturnsInvalidResult()
     {
         // Arrange
