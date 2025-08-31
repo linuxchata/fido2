@@ -36,7 +36,17 @@ internal class AssertionResponseValidator : IAssertionObjectValidator
     {
         if (authenticatorData == null)
         {
-            return ValidatorInternalResult.Invalid("Authenticator Data cannot be null");
+            return ValidatorInternalResult.Invalid("Authenticator data cannot be null");
+        }
+
+        if (signature == null)
+        {
+            return ValidatorInternalResult.Invalid("Signature cannot be null");
+        }
+
+        if (extensionsClientOutputs == null)
+        {
+            return ValidatorInternalResult.Invalid("Extensions client outputs cannot be null");
         }
 
         if (requestOptions == null)
