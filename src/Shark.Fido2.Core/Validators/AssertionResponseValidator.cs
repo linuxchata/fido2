@@ -36,7 +36,17 @@ internal class AssertionResponseValidator : IAssertionObjectValidator
     {
         if (authenticatorData == null)
         {
-            return ValidatorInternalResult.Invalid("Authenticator Data cannot be null");
+            return ValidatorInternalResult.Invalid("Authenticator data cannot be null");
+        }
+
+        if (signature == null)
+        {
+            return ValidatorInternalResult.Invalid("Signature cannot be null");
+        }
+
+        if (extensionsClientOutputs == null)
+        {
+            return ValidatorInternalResult.Invalid("Extensions client outputs cannot be null");
         }
 
         if (requestOptions == null)
@@ -48,7 +58,7 @@ internal class AssertionResponseValidator : IAssertionObjectValidator
 
         // Step 15
         // Verify that the rpIdHash in authData is the SHA-256 hash of the RP ID expected by the Relying Party.
-        // With AppId set to true, expect that the rpIdHash MAY be the hash of the AppID instead of the RP ID
+        // With AppId set to true, expect that the rpIdHash MAY be the hash of the AppID instead of the RP ID.
         var rpId = extensionsClientOutputs.AppId == true ? requestOptions.Extensions!.AppId : requestOptions.RpId;
         var rpIdHash = HashProvider.GetSha256Hash(rpId ?? _configuration.RelyingPartyId);
         if (!BytesArrayComparer.CompareAsSpan(rpIdHash, authenticatorData.RpIdHash))
@@ -58,10 +68,9 @@ internal class AssertionResponseValidator : IAssertionObjectValidator
 
         // Step 16
         // Verify that the User Present bit of the flags in authData is set.
-        if (requestOptions.UserVerification == UserVerificationRequirement.Required &&
-            !authenticatorData.UserPresent)
+        if (!authenticatorData.UserPresent)
         {
-            return ValidatorInternalResult.Invalid("User Present bit is not set as user verification is required");
+            return ValidatorInternalResult.Invalid("User Present bit is not set");
         }
 
         // Step 17
