@@ -5,6 +5,7 @@ using Shark.Fido2.Sample.Abstractions.Services;
 using Shark.Fido2.Sample.Middlewares;
 using Shark.Fido2.Sample.Services;
 using Shark.Fido2.Sample.Swagger;
+using Shark.Fido2.SqlServer;
 using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -76,7 +77,7 @@ if (!builder.Environment.IsDevelopment())
 }
 
 builder.Services.AddFido2(builder.Configuration);
-builder.Services.AddFido2InMemoryStore();
+builder.Services.AddFido2SqlServer();
 
 builder.Services.AddTransient<ILoginService, LoginService>();
 builder.Services.AddTransient<ICredentialService, CredentialService>();

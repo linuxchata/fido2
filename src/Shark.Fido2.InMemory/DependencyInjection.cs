@@ -1,8 +1,10 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.DependencyInjection;
 using Shark.Fido2.Core.Abstractions.Repositories;
 
 namespace Shark.Fido2.InMemory;
 
+[ExcludeFromCodeCoverage]
 public static class DependencyInjection
 {
     public static void AddFido2InMemoryStore(this IServiceCollection services)

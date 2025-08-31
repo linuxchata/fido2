@@ -1,10 +1,12 @@
-﻿using Amazon.DynamoDBv2;
+﻿using System.Diagnostics.CodeAnalysis;
+using Amazon.DynamoDBv2;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Shark.Fido2.Core.Abstractions.Repositories;
 
 namespace Shark.Fido2.DynamoDB;
 
+[ExcludeFromCodeCoverage]
 public static class DependencyInjection
 {
     public static void AddFido2DynamoDB(

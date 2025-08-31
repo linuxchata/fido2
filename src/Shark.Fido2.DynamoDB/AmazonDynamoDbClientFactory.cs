@@ -1,9 +1,11 @@
-﻿using Amazon;
+﻿using System.Diagnostics.CodeAnalysis;
+using Amazon;
 using Amazon.DynamoDBv2;
 using Amazon.Runtime;
 
 namespace Shark.Fido2.DynamoDB;
 
+[ExcludeFromCodeCoverage]
 internal static class AmazonDynamoDbClientFactory
 {
     public static IAmazonDynamoDB GetClient(AmazonDynamoDbConfiguration configuration)
