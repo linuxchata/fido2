@@ -15,9 +15,13 @@ namespace Shark.Fido2.Core.Tests.Validators;
 [TestFixture]
 internal class AttestationObjectValidatorTests
 {
+    private const string Packed = AttestationStatementFormatIdentifier.Packed;
+
     private AttestationObjectData _attestationObjectData;
 
     private Mock<IAttestationStatementValidator> _attestationStatementValidatorMock;
+    private Mock<IAttestationTrustworthinessValidator> _attestationTrustworthinessValidatorMock;
+    private Mock<IAttestationTrustAnchorValidator> _attestationTrustAnchorValidatorMock;
 
     private AttestationObjectValidator _sut;
 
@@ -39,28 +43,28 @@ internal class AttestationObjectValidatorTests
                 UserPresent = true,
                 UserVerified = true,
             },
-            AttestationStatementFormat = "packed",
+            AttestationStatementFormat = Packed,
         };
 
         _attestationStatementValidatorMock = new Mock<IAttestationStatementValidator>();
         _attestationStatementValidatorMock
             .Setup(a => a.Validate(It.IsAny<AttestationObjectData>(), It.IsAny<ClientData>()))
-            .Returns(new AttestationStatementInternalResult("packed", AttestationType.Basic));
+            .Returns(new AttestationStatementInternalResult(Packed, AttestationType.Basic));
 
-        var attestationTrustworthinessValidatorMock = new Mock<IAttestationTrustworthinessValidator>();
-        attestationTrustworthinessValidatorMock
+        _attestationTrustworthinessValidatorMock = new Mock<IAttestationTrustworthinessValidator>();
+        _attestationTrustworthinessValidatorMock
             .Setup(a => a.Validate(It.IsAny<AuthenticatorData>(), It.IsAny<AttestationStatementInternalResult>()))
             .ReturnsAsync(ValidatorInternalResult.Valid());
 
-        var attestationTrustAnchorValidatorMock = new Mock<IAttestationTrustAnchorValidator>();
-        attestationTrustAnchorValidatorMock
+        _attestationTrustAnchorValidatorMock = new Mock<IAttestationTrustAnchorValidator>();
+        _attestationTrustAnchorValidatorMock
             .Setup(a => a.Validate(It.IsAny<AuthenticatorData>()))
             .ReturnsAsync(ValidatorInternalResult.Valid());
 
         _sut = new AttestationObjectValidator(
             _attestationStatementValidatorMock.Object,
-            attestationTrustworthinessValidatorMock.Object,
-            attestationTrustAnchorValidatorMock.Object,
+            _attestationTrustworthinessValidatorMock.Object,
+            _attestationTrustAnchorValidatorMock.Object,
             Options.Create(Fido2ConfigurationBuilder.Build()));
     }
 
@@ -324,9 +328,10 @@ internal class AttestationObjectValidatorTests
 
         var creationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
 
+        var errorMessage = "Attestation statement is invalid";
         _attestationStatementValidatorMock
             .Setup(a => a.Validate(It.IsAny<AttestationObjectData>(), It.IsAny<ClientData>()))
-            .Returns(ValidatorInternalResult.Invalid("Attestation statement is invalid"));
+            .Returns(ValidatorInternalResult.Invalid(errorMessage));
 
         // Act
         var result = await _sut.Validate(_attestationObjectData, clientData, creationOptions);
@@ -334,7 +339,7 @@ internal class AttestationObjectValidatorTests
         // Assert
         Assert.That(result, Is.Not.Null);
         Assert.That(result.IsValid, Is.False);
-        Assert.That(result.Message, Is.EqualTo("Attestation statement is invalid"));
+        Assert.That(result.Message, Is.EqualTo(errorMessage));
     }
 
     [Test]
@@ -356,6 +361,99 @@ internal class AttestationObjectValidatorTests
         Assert.That(result, Is.Not.Null);
         Assert.That(result.IsValid, Is.False);
         Assert.That(result.Message, Is.EqualTo("Attestation statement result is not of an expected type"));
+    }
+
+    [Test]
+    public async Task Validate_WhenTrustAnchorValidationFails_ThenReturnsInvalidResult()
+    {
+        // Arrange
+        var clientData = ClientDataBuilder.BuildCreate();
+
+        var creationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
+
+        var errorMessage = "Metadata for authenticator 9876e770-4250-4572-90a1-645d16f59463 is not available";
+        _attestationTrustAnchorValidatorMock
+            .Setup(a => a.Validate(It.IsAny<AuthenticatorData>()))
+            .ReturnsAsync(ValidatorInternalResult.Invalid(errorMessage));
+
+        // Act
+        var result = await _sut.Validate(_attestationObjectData, clientData, creationOptions);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.IsValid, Is.False);
+        Assert.That(result.Message, Is.EqualTo(errorMessage));
+    }
+
+    [Test]
+    public async Task Validate_WhenAttestationTrustworthinessValidationFails_ThenReturnsInvalidResult()
+    {
+        // Arrange
+        var clientData = ClientDataBuilder.BuildCreate();
+
+        var creationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
+
+        var errorMessage = "None attestation type is not allowed under current policy";
+        _attestationTrustworthinessValidatorMock
+            .Setup(a => a.Validate(It.IsAny<AuthenticatorData>(), It.IsAny<AttestationStatementInternalResult>()))
+            .ReturnsAsync(ValidatorInternalResult.Invalid(errorMessage));
+
+        // Act
+        var result = await _sut.Validate(_attestationObjectData, clientData, creationOptions);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.IsValid, Is.False);
+        Assert.That(result.Message, Is.EqualTo(errorMessage));
+    }
+
+    [Test]
+    public async Task Validate_WhenAttestationObjectDataIsValid_ThenReturnsValidResult()
+    {
+        // Arrange
+        var clientData = ClientDataBuilder.BuildCreate();
+
+        var creationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
+
+        // Act
+        var result = await _sut.Validate(_attestationObjectData, clientData, creationOptions);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.IsValid, Is.True);
+        Assert.That(result.Message, Is.Null);
+    }
+
+    [Test]
+    [TestCase(UserVerificationRequirement.Preferred)]
+    [TestCase(UserVerificationRequirement.Discouraged)]
+    public async Task Validate_WhenAttestationObjectDataIsValidAndUserVerificationIsNotRequired_ThenReturnsValidResult(
+        UserVerificationRequirement userVerificationRequirement)
+    {
+        // Arrange
+        var attestationObjectData = new AttestationObjectData
+        {
+            AuthenticatorData = new AuthenticatorData
+            {
+                RpIdHash = _attestationObjectData.AuthenticatorData!.RpIdHash,
+                AttestedCredentialData = _attestationObjectData.AuthenticatorData!.AttestedCredentialData,
+                UserPresent = true,
+                UserVerified = false,
+            },
+            AttestationStatementFormat = Packed,
+        };
+
+        var clientData = ClientDataBuilder.BuildCreate();
+
+        var creationOptions = BuildCreationOptions(CoseAlgorithm.Rs256, userVerificationRequirement);
+
+        // Act
+        var result = await _sut.Validate(attestationObjectData, clientData, creationOptions);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.IsValid, Is.True);
+        Assert.That(result.Message, Is.Null);
     }
 
     [Test]
@@ -414,13 +512,15 @@ internal class AttestationObjectValidatorTests
         return attestationObjectData;
     }
 
-    private PublicKeyCredentialCreationOptions BuildCreationOptions(CoseAlgorithm coseAlgorithm)
+    private PublicKeyCredentialCreationOptions BuildCreationOptions(
+        CoseAlgorithm coseAlgorithm,
+        UserVerificationRequirement userVerification = UserVerificationRequirement.Required)
     {
         var creationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
         creationOptions.PublicKeyCredentialParams = [new() { Algorithm = coseAlgorithm }];
         creationOptions.AuthenticatorSelection = new AuthenticatorSelectionCriteria
         {
-            UserVerification = UserVerificationRequirement.Required,
+            UserVerification = userVerification,
         };
 
         return creationOptions;
