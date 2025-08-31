@@ -1,9 +1,11 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Shark.Fido2.Core.Abstractions.Repositories;
 
 namespace Shark.Fido2.SqlServer;
 
+[ExcludeFromCodeCoverage]
 public static class DependencyInjection
 {
     public static void AddFido2SqlServer(
