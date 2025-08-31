@@ -57,6 +57,6 @@ internal sealed class RsaCryptographyValidator : IRsaCryptographyValidator
         using var rsa = attestationCertificate.GetRSAPublicKey() ??
             throw new ArgumentException("Certificate does not have a RSA public key");
 
-        return rsa!.VerifyData(data, signature, algorithm.HashAlgorithmName, algorithm.Padding!);
+        return rsa.VerifyData(data, signature, algorithm.HashAlgorithmName, algorithm.Padding!);
     }
 }
