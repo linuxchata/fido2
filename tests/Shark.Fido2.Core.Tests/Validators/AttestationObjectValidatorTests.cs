@@ -53,12 +53,15 @@ internal class AttestationObjectValidatorTests
 
         _attestationTrustworthinessValidatorMock = new Mock<IAttestationTrustworthinessValidator>();
         _attestationTrustworthinessValidatorMock
-            .Setup(a => a.Validate(It.IsAny<AuthenticatorData>(), It.IsAny<AttestationStatementInternalResult>()))
+            .Setup(a => a.Validate(
+                It.IsAny<AuthenticatorData>(),
+                It.IsAny<AttestationStatementInternalResult>(),
+                CancellationToken.None))
             .ReturnsAsync(ValidatorInternalResult.Valid());
 
         _attestationTrustAnchorValidatorMock = new Mock<IAttestationTrustAnchorValidator>();
         _attestationTrustAnchorValidatorMock
-            .Setup(a => a.Validate(It.IsAny<AuthenticatorData>()))
+            .Setup(a => a.Validate(It.IsAny<AuthenticatorData>(), CancellationToken.None))
             .ReturnsAsync(ValidatorInternalResult.Valid());
 
         _sut = new AttestationObjectValidator(
@@ -79,7 +82,7 @@ internal class AttestationObjectValidatorTests
         var creationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
 
         // Act
-        var result = await _sut.Validate(attestationObjectData!, clientData, creationOptions);
+        var result = await _sut.Validate(attestationObjectData!, clientData, creationOptions, CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -96,7 +99,7 @@ internal class AttestationObjectValidatorTests
         var creationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
 
         // Act
-        var result = await _sut.Validate(_attestationObjectData, clientData!, creationOptions);
+        var result = await _sut.Validate(_attestationObjectData, clientData!, creationOptions, CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -113,7 +116,7 @@ internal class AttestationObjectValidatorTests
         PublicKeyCredentialCreationOptions? creationOptions = null!;
 
         // Act
-        var result = await _sut.Validate(_attestationObjectData, clientData, creationOptions);
+        var result = await _sut.Validate(_attestationObjectData, clientData, creationOptions, CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -132,7 +135,7 @@ internal class AttestationObjectValidatorTests
         var creationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
 
         // Act
-        var result = await _sut.Validate(attestationObjectData, clientData, creationOptions);
+        var result = await _sut.Validate(attestationObjectData, clientData, creationOptions, CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -161,7 +164,7 @@ internal class AttestationObjectValidatorTests
         var creationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
 
         // Act
-        var result = await _sut.Validate(attestationObjectData, clientData, creationOptions);
+        var result = await _sut.Validate(attestationObjectData, clientData, creationOptions, CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -190,7 +193,7 @@ internal class AttestationObjectValidatorTests
         var creationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
 
         // Act
-        var result = await _sut.Validate(attestationObjectData!, clientData, creationOptions);
+        var result = await _sut.Validate(attestationObjectData!, clientData, creationOptions, CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -219,7 +222,7 @@ internal class AttestationObjectValidatorTests
         var creationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
 
         // Act
-        var result = await _sut.Validate(attestationObjectData, clientData, creationOptions);
+        var result = await _sut.Validate(attestationObjectData, clientData, creationOptions, CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -251,7 +254,7 @@ internal class AttestationObjectValidatorTests
         var creationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
 
         // Act
-        var result = await _sut.Validate(attestationObjectData, clientData, creationOptions);
+        var result = await _sut.Validate(attestationObjectData, clientData, creationOptions, CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -286,7 +289,7 @@ internal class AttestationObjectValidatorTests
         var creationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
 
         // Act
-        var result = await _sut.Validate(attestationObjectData, clientData, creationOptions);
+        var result = await _sut.Validate(attestationObjectData, clientData, creationOptions, CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -315,7 +318,7 @@ internal class AttestationObjectValidatorTests
         var creationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
 
         // Act
-        var result = await _sut.Validate(attestationObjectData, clientData, creationOptions);
+        var result = await _sut.Validate(attestationObjectData, clientData, creationOptions, CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -344,7 +347,7 @@ internal class AttestationObjectValidatorTests
         var creationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
 
         // Act
-        var result = await _sut.Validate(attestationObjectData, clientData, creationOptions);
+        var result = await _sut.Validate(attestationObjectData, clientData, creationOptions, CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -366,7 +369,7 @@ internal class AttestationObjectValidatorTests
             .Returns(ValidatorInternalResult.Invalid(errorMessage));
 
         // Act
-        var result = await _sut.Validate(_attestationObjectData, clientData, creationOptions);
+        var result = await _sut.Validate(_attestationObjectData, clientData, creationOptions, CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -387,7 +390,7 @@ internal class AttestationObjectValidatorTests
             .Returns(ValidatorInternalResult.Valid());
 
         // Act
-        var result = await _sut.Validate(_attestationObjectData, clientData, creationOptions);
+        var result = await _sut.Validate(_attestationObjectData, clientData, creationOptions, CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -405,11 +408,11 @@ internal class AttestationObjectValidatorTests
 
         var errorMessage = "Metadata for authenticator 9876e770-4250-4572-90a1-645d16f59463 is not available";
         _attestationTrustAnchorValidatorMock
-            .Setup(a => a.Validate(It.IsAny<AuthenticatorData>()))
+            .Setup(a => a.Validate(It.IsAny<AuthenticatorData>(), CancellationToken.None))
             .ReturnsAsync(ValidatorInternalResult.Invalid(errorMessage));
 
         // Act
-        var result = await _sut.Validate(_attestationObjectData, clientData, creationOptions);
+        var result = await _sut.Validate(_attestationObjectData, clientData, creationOptions, CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -427,11 +430,14 @@ internal class AttestationObjectValidatorTests
 
         var errorMessage = "None attestation type is not allowed under current policy";
         _attestationTrustworthinessValidatorMock
-            .Setup(a => a.Validate(It.IsAny<AuthenticatorData>(), It.IsAny<AttestationStatementInternalResult>()))
+            .Setup(a => a.Validate(
+                It.IsAny<AuthenticatorData>(),
+                It.IsAny<AttestationStatementInternalResult>(),
+                CancellationToken.None))
             .ReturnsAsync(ValidatorInternalResult.Invalid(errorMessage));
 
         // Act
-        var result = await _sut.Validate(_attestationObjectData, clientData, creationOptions);
+        var result = await _sut.Validate(_attestationObjectData, clientData, creationOptions, CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -448,7 +454,7 @@ internal class AttestationObjectValidatorTests
         var creationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
 
         // Act
-        var result = await _sut.Validate(_attestationObjectData, clientData, creationOptions);
+        var result = await _sut.Validate(_attestationObjectData, clientData, creationOptions, CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -480,7 +486,7 @@ internal class AttestationObjectValidatorTests
         var creationOptions = BuildCreationOptions(CoseAlgorithm.Rs256, userVerification);
 
         // Act
-        var result = await _sut.Validate(attestationObjectData, clientData, creationOptions);
+        var result = await _sut.Validate(attestationObjectData, clientData, creationOptions, CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -501,7 +507,11 @@ internal class AttestationObjectValidatorTests
         var creationOptions = BuildCreationOptions(CoseAlgorithm.Es256);
 
         // Act
-        var result = await _sut.Validate(attestationObjectData, ClientDataBuilder.BuildCreate(), creationOptions);
+        var result = await _sut.Validate(
+            attestationObjectData,
+            ClientDataBuilder.BuildCreate(),
+            creationOptions,
+            CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -522,7 +532,11 @@ internal class AttestationObjectValidatorTests
         var creationOptions = BuildCreationOptions(CoseAlgorithm.Rs256);
 
         // Act
-        var result = await _sut.Validate(attestationObjectData, ClientDataBuilder.BuildCreate(), creationOptions);
+        var result = await _sut.Validate(
+            attestationObjectData,
+            ClientDataBuilder.BuildCreate(),
+            creationOptions,
+            CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);

@@ -42,7 +42,7 @@ public sealed class Assertion : IAssertion
 
     public async Task<PublicKeyCredentialRequestOptions> BeginAuthentication(
         PublicKeyCredentialRequestOptionsRequest request,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken)
     {
         _assertionParametersValidator.Validate(request);
 
@@ -89,7 +89,7 @@ public sealed class Assertion : IAssertion
     public async Task<AssertionCompleteResult> CompleteAuthentication(
         PublicKeyCredentialAssertion publicKeyCredentialAssertion,
         PublicKeyCredentialRequestOptions requestOptions,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken)
     {
         var validationResult = _assertionParametersValidator.Validate(
             publicKeyCredentialAssertion,

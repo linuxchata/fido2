@@ -31,7 +31,8 @@ internal class AppleAnonymousAttestationStatementStrategyTests
             .Setup(a => a.Validate(
                 It.IsAny<AttestationObjectData>(),
                 It.IsAny<ClientData>(),
-                It.IsAny<PublicKeyCredentialCreationOptions>()))
+                It.IsAny<PublicKeyCredentialCreationOptions>(),
+                CancellationToken.None))
             .ReturnsAsync(ValidatorInternalResult.Valid());
 
         _provider = new AuthenticatorDataParserService();
@@ -70,7 +71,7 @@ internal class AppleAnonymousAttestationStatementStrategyTests
         var clientData = ClientDataBuilder.Build(attestationResponseData!.ClientDataJson);
 
         var internalResult = await _attestationObjectHandler.Handle(
-            attestationResponseData!.AttestationObject, clientData, _creationOptions);
+            attestationResponseData!.AttestationObject, clientData, _creationOptions, CancellationToken.None);
 
         // Act
         var validatorInternalResult = _sut.Validate(internalResult.Value!, clientData);

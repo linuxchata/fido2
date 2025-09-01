@@ -13,7 +13,7 @@ public interface ICredentialRepository
     /// <param name="credentialId">The identifier of the credential.</param>
     /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>The credential if found; otherwise, null.</returns>
-    Task<Credential?> Get(byte[]? credentialId, CancellationToken cancellationToken = default);
+    Task<Credential?> Get(byte[]? credentialId, CancellationToken cancellationToken);
 
     /// <summary>
     /// Gets a list of credentials associated with a username.
@@ -21,7 +21,7 @@ public interface ICredentialRepository
     /// <param name="userName">The username associated with the credentials.</param>
     /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>A list of credential descriptors (a lightweight descriptor of a credential).</returns>
-    Task<List<CredentialDescriptor>> Get(string userName, CancellationToken cancellationToken = default);
+    Task<List<CredentialDescriptor>> Get(string userName, CancellationToken cancellationToken);
 
     /// <summary>
     /// Checks whether a credential exists by credential identifier.
@@ -29,7 +29,7 @@ public interface ICredentialRepository
     /// <param name="credentialId">The identifier of the credential.</param>
     /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>True if a credential exists; otherwise, false.</returns>
-    Task<bool> Exists(byte[]? credentialId, CancellationToken cancellationToken = default);
+    Task<bool> Exists(byte[]? credentialId, CancellationToken cancellationToken);
 
     /// <summary>
     /// Adds a new credential.
@@ -37,7 +37,7 @@ public interface ICredentialRepository
     /// <param name="credential">The credential.</param>
     /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    Task Add(Credential credential, CancellationToken cancellationToken = default);
+    Task Add(Credential credential, CancellationToken cancellationToken);
 
     /// <summary>
     /// Updates the signature counter of an existing credential.
@@ -46,7 +46,7 @@ public interface ICredentialRepository
     /// <param name="signCount">The new signature counter value.</param>
     /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    Task UpdateSignCount(byte[] credentialId, uint signCount, CancellationToken cancellationToken = default);
+    Task UpdateSignCount(byte[] credentialId, uint signCount, CancellationToken cancellationToken);
 
     /// <summary>
     /// Updates the last used timestamp of an existing credential.
@@ -54,5 +54,5 @@ public interface ICredentialRepository
     /// <param name="credentialId">The identifier of the credential.</param>
     /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    Task UpdateLastUsedAt(byte[] credentialId, CancellationToken cancellationToken = default);
+    Task UpdateLastUsedAt(byte[] credentialId, CancellationToken cancellationToken);
 }

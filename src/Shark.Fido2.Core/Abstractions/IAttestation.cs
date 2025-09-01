@@ -16,7 +16,7 @@ public interface IAttestation
     /// <returns>Credential creation options.</returns>
     Task<PublicKeyCredentialCreationOptions> BeginRegistration(
         PublicKeyCredentialCreationOptionsRequest request,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken);
 
     /// <summary>
     /// Verifies an attestation from a client and completes the registration process.
@@ -28,5 +28,5 @@ public interface IAttestation
     Task<AttestationCompleteResult> CompleteRegistration(
         PublicKeyCredentialAttestation publicKeyCredentialAttestation,
         PublicKeyCredentialCreationOptions creationOptions,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken);
 }

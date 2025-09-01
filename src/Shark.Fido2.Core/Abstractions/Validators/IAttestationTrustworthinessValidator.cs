@@ -13,8 +13,10 @@ public interface IAttestationTrustworthinessValidator
     /// </summary>
     /// <param name="authenticatorData">The authenticator data.</param>
     /// <param name="attestationStatementResult">The result from attestation statement validation.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>A validation result indicating success or failure with error details.</returns>
     Task<ValidatorInternalResult> Validate(
         AuthenticatorData authenticatorData,
-        AttestationStatementInternalResult attestationStatementResult);
+        AttestationStatementInternalResult attestationStatementResult,
+        CancellationToken cancellationToken);
 }

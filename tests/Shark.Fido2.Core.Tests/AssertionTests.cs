@@ -23,6 +23,8 @@ internal class AssertionTests
     private const string CredentialIdBase64 = "AQIDBA=="; // Base64 for [1,2,3,4]
     private const string CredentialRawId = "AQIDBA==";
 
+    private readonly byte[] _credentialId = [1, 2, 3, 4];
+
     private Mock<IAssertionParametersValidator> _assertionParametersValidatorMock = null!;
     private Mock<IClientDataHandler> _clientDataHandlerMock = null!;
     private Mock<IAssertionObjectHandler> _assertionObjectHandlerMock = null!;
@@ -30,7 +32,6 @@ internal class AssertionTests
     private Mock<IChallengeGenerator> _challengeGeneratorMock = null!;
     private Mock<ICredentialRepository> _credentialRepositoryMock = null!;
 
-    private byte[] _credentialId = [1, 2, 3, 4];
     private byte[] _userHandle;
     private PublicKeyCredentialAssertion _publicKeyCredentialAssertion = null!;
     private PublicKeyCredentialRequestOptions _publicKeyCredentialRequestOptions = null!;
@@ -138,7 +139,9 @@ internal class AssertionTests
 
         // Act & Assert
         Assert.ThrowsAsync<ArgumentNullException>(
-            () => _sut.BeginAuthentication(It.IsAny<PublicKeyCredentialRequestOptionsRequest>()));
+            () => _sut.BeginAuthentication(
+                It.IsAny<PublicKeyCredentialRequestOptionsRequest>(),
+                CancellationToken.None));
     }
 
     [Test]
@@ -155,7 +158,7 @@ internal class AssertionTests
         };
 
         // Act
-        var result = await _sut.BeginAuthentication(request);
+        var result = await _sut.BeginAuthentication(request, CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -189,7 +192,7 @@ internal class AssertionTests
         _credentialRepositoryMock.Setup(a => a.Get(UserName, CancellationToken.None)).ReturnsAsync(credentials);
 
         // Act
-        var result = await _sut.BeginAuthentication(request);
+        var result = await _sut.BeginAuthentication(request, CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -215,7 +218,7 @@ internal class AssertionTests
         };
 
         // Act
-        var result = await _sut.BeginAuthentication(request);
+        var result = await _sut.BeginAuthentication(request, CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -238,7 +241,10 @@ internal class AssertionTests
 
         // Act & Assert
         Assert.ThrowsAsync<ArgumentNullException>(() =>
-            _sut.CompleteAuthentication(_publicKeyCredentialAssertion!, _publicKeyCredentialRequestOptions));
+            _sut.CompleteAuthentication(
+                _publicKeyCredentialAssertion,
+                _publicKeyCredentialRequestOptions,
+                CancellationToken.None));
     }
 
     [Test]
@@ -252,7 +258,10 @@ internal class AssertionTests
             .Returns(AssertionCompleteResult.CreateFailure("Error"));
 
         // Act
-        var result = await _sut.CompleteAuthentication(_publicKeyCredentialAssertion!, _publicKeyCredentialRequestOptions);
+        var result = await _sut.CompleteAuthentication(
+            _publicKeyCredentialAssertion,
+            _publicKeyCredentialRequestOptions,
+            CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -267,7 +276,10 @@ internal class AssertionTests
         _publicKeyCredentialAssertion.Response = null!;
 
         // Act
-        var result = await _sut.CompleteAuthentication(_publicKeyCredentialAssertion, _publicKeyCredentialRequestOptions);
+        var result = await _sut.CompleteAuthentication(
+            _publicKeyCredentialAssertion,
+            _publicKeyCredentialRequestOptions,
+            CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -293,7 +305,10 @@ internal class AssertionTests
         };
 
         // Act
-        var result = await _sut.CompleteAuthentication(_publicKeyCredentialAssertion, requestOptions);
+        var result = await _sut.CompleteAuthentication(
+            _publicKeyCredentialAssertion,
+            requestOptions,
+            CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -323,7 +338,10 @@ internal class AssertionTests
             .ReturnsAsync((Credential?)null);
 
         // Act
-        var result = await _sut.CompleteAuthentication(_publicKeyCredentialAssertion, requestOptions);
+        var result = await _sut.CompleteAuthentication(
+            _publicKeyCredentialAssertion,
+            requestOptions,
+            CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -353,7 +371,10 @@ internal class AssertionTests
             .Returns(ValidatorInternalResult.Invalid("User is not the owner of the credential"));
 
         // Act
-        var result = await _sut.CompleteAuthentication(_publicKeyCredentialAssertion, _publicKeyCredentialRequestOptions);
+        var result = await _sut.CompleteAuthentication(
+            _publicKeyCredentialAssertion,
+            _publicKeyCredentialRequestOptions,
+            CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -383,7 +404,10 @@ internal class AssertionTests
             .Returns(ValidatorInternalResult.Valid());
 
         // Act
-        var result = await _sut.CompleteAuthentication(_publicKeyCredentialAssertion, _publicKeyCredentialRequestOptions);
+        var result = await _sut.CompleteAuthentication(
+            _publicKeyCredentialAssertion,
+            _publicKeyCredentialRequestOptions,
+            CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -413,7 +437,10 @@ internal class AssertionTests
             .Returns(new InternalResult<ClientData>("Client data cannot be read"));
 
         // Act
-        var result = await _sut.CompleteAuthentication(_publicKeyCredentialAssertion, _publicKeyCredentialRequestOptions);
+        var result = await _sut.CompleteAuthentication(
+            _publicKeyCredentialAssertion,
+            _publicKeyCredentialRequestOptions,
+            CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -449,7 +476,10 @@ internal class AssertionTests
             .Returns(new InternalResult<AuthenticatorData>("Assertion object validation failed"));
 
         // Act
-        var result = await _sut.CompleteAuthentication(_publicKeyCredentialAssertion, _publicKeyCredentialRequestOptions);
+        var result = await _sut.CompleteAuthentication(
+            _publicKeyCredentialAssertion,
+            _publicKeyCredentialRequestOptions,
+            CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -476,7 +506,10 @@ internal class AssertionTests
             .ReturnsAsync(credential);
 
         // Act
-        var result = await _sut.CompleteAuthentication(_publicKeyCredentialAssertion, _publicKeyCredentialRequestOptions);
+        var result = await _sut.CompleteAuthentication(
+            _publicKeyCredentialAssertion,
+            _publicKeyCredentialRequestOptions,
+            CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -503,7 +536,10 @@ internal class AssertionTests
             .ReturnsAsync(credential);
 
         // Act
-        var result = await _sut.CompleteAuthentication(_publicKeyCredentialAssertion, _publicKeyCredentialRequestOptions);
+        var result = await _sut.CompleteAuthentication(
+            _publicKeyCredentialAssertion,
+            _publicKeyCredentialRequestOptions,
+            CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -546,7 +582,10 @@ internal class AssertionTests
             }));
 
         // Act
-        var result = await _sut.CompleteAuthentication(_publicKeyCredentialAssertion, _publicKeyCredentialRequestOptions);
+        var result = await _sut.CompleteAuthentication(
+            _publicKeyCredentialAssertion,
+            _publicKeyCredentialRequestOptions,
+            CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
