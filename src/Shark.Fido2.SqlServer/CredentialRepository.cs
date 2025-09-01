@@ -30,16 +30,19 @@ internal sealed class CredentialRepository : ICredentialRepository
             return null;
         }
 
-        const string sql = @"
+        const string query = @"
             SELECT CredentialId, UserHandle, UserName, UserDisplayName, CredentialPublicKeyJson, SignCount, Transports, CreatedAt, UpdatedAt
             FROM Credential
             WHERE CredentialId = @CredentialId";
 
         using var connection = SqlConnectionFactory.GetConnection(_connectionString);
 
-        var entity = await connection.QuerySingleOrDefaultAsync<CredentialEntity>(
-            sql,
-            new { CredentialId = credentialId });
+        var commandDefinition = new CommandDefinition(
+            query,
+            new { CredentialId = credentialId },
+            cancellationToken: cancellationToken);
+
+        var entity = await connection.QuerySingleOrDefaultAsync<CredentialEntity>(commandDefinition);
 
         return entity.ToDomain();
     }
@@ -51,14 +54,19 @@ internal sealed class CredentialRepository : ICredentialRepository
             return [];
         }
 
-        const string sql = @"
+        const string query = @"
             SELECT CredentialId, Transports
             FROM Credential
             WHERE UserName = @userName";
 
         using var connection = SqlConnectionFactory.GetConnection(_connectionString);
 
-        var entities = await connection.QueryAsync<CredentialDescriptorEntity>(sql, new { userName });
+        var commandDefinition = new CommandDefinition(
+            query,
+            new { userName },
+            cancellationToken: cancellationToken);
+
+        var entities = await connection.QueryAsync<CredentialDescriptorEntity>(commandDefinition);
 
         return entities.Select(e => e.ToLightweightDomain()!).ToList();
     }
@@ -70,14 +78,19 @@ internal sealed class CredentialRepository : ICredentialRepository
             return false;
         }
 
-        const string sql = @"
+        const string query = @"
             SELECT COUNT(1)
             FROM Credential
             WHERE CredentialId = @CredentialId";
 
         using var connection = SqlConnectionFactory.GetConnection(_connectionString);
 
-        var count = await connection.ExecuteScalarAsync<int>(sql, new { CredentialId = credentialId });
+        var commandDefinition = new CommandDefinition(
+            query,
+            new { CredentialId = credentialId },
+            cancellationToken: cancellationToken);
+
+        var count = await connection.ExecuteScalarAsync<int>(commandDefinition);
 
         return count > 0;
     }
@@ -90,7 +103,7 @@ internal sealed class CredentialRepository : ICredentialRepository
         ArgumentNullException.ThrowIfNull(credential.UserHandle);
         ArgumentNullException.ThrowIfNull(credential.CredentialPublicKey);
 
-        const string sql = @"
+        const string query = @"
             INSERT INTO Credential (CredentialId, UserHandle, UserName, UserDisplayName, CredentialPublicKeyJson, SignCount, Transports)
             VALUES (@CredentialId, @UserHandle, @UserName, @UserDisplayName, @CredentialPublicKeyJson, @SignCount, @Transports)";
 
@@ -98,8 +111,8 @@ internal sealed class CredentialRepository : ICredentialRepository
 
         using var connection = SqlConnectionFactory.GetConnection(_connectionString);
 
-        await connection.ExecuteAsync(
-            sql,
+        var commandDefinition = new CommandDefinition(
+            query,
             new
             {
                 entity.CredentialId,
@@ -109,45 +122,47 @@ internal sealed class CredentialRepository : ICredentialRepository
                 entity.CredentialPublicKeyJson,
                 SignCount = (long)entity.SignCount,
                 entity.Transports,
-            });
+            },
+            cancellationToken: cancellationToken);
+
+        await connection.ExecuteAsync(commandDefinition);
     }
 
     public async Task UpdateSignCount(byte[] credentialId, uint signCount, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(credentialId);
 
-        const string sql = @"
+        const string query = @"
             UPDATE Credential
             SET SignCount = @SignCount, UpdatedAt = GETUTCDATE(), LastUsedAt = GETUTCDATE()
             WHERE CredentialId = @CredentialId";
 
         using var connection = SqlConnectionFactory.GetConnection(_connectionString);
 
-        await connection.ExecuteAsync(
-            sql,
-            new
-            {
-                SignCount = (long)signCount,
-                CredentialId = credentialId,
-            });
+        var commandDefinition = new CommandDefinition(
+            query,
+            new { SignCount = (long)signCount, CredentialId = credentialId, },
+            cancellationToken: cancellationToken);
+
+        await connection.ExecuteAsync(commandDefinition);
     }
 
     public async Task UpdateLastUsedAt(byte[] credentialId, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(credentialId);
 
-        const string sql = @"
+        const string query = @"
             UPDATE Credential
             SET LastUsedAt = GETUTCDATE()
             WHERE CredentialId = @CredentialId";
 
         using var connection = SqlConnectionFactory.GetConnection(_connectionString);
 
-        await connection.ExecuteAsync(
-            sql,
-            new
-            {
-                CredentialId = credentialId,
-            });
+        var commandDefinition = new CommandDefinition(
+            query,
+            new { CredentialId = credentialId, },
+            cancellationToken: cancellationToken);
+
+        await connection.ExecuteAsync(commandDefinition);
     }
 }
