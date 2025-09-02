@@ -16,7 +16,7 @@ public interface IAssertion
     /// <returns>Credential request options.</returns>
     Task<PublicKeyCredentialRequestOptions> BeginAuthentication(
         PublicKeyCredentialRequestOptionsRequest request,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken);
 
     /// <summary>
     /// Verifies an assertion from a client and completes the authentication process.
@@ -28,5 +28,5 @@ public interface IAssertion
     Task<AssertionCompleteResult> CompleteAuthentication(
         PublicKeyCredentialAssertion publicKeyCredentialAssertion,
         PublicKeyCredentialRequestOptions requestOptions,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken);
 }

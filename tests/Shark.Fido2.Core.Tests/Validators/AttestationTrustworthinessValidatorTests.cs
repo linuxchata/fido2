@@ -27,7 +27,10 @@ internal class AttestationTrustworthinessValidatorTests
     {
         _attestationTrustAnchorValidatorMock = new Mock<IAttestationTrustAnchorValidator>();
         _attestationTrustAnchorValidatorMock
-            .Setup(a => a.ValidateBasicAttestation(It.IsAny<AuthenticatorData>(), It.IsAny<X509Certificate2[]>()))
+            .Setup(a => a.ValidateBasicAttestation(
+                It.IsAny<AuthenticatorData>(),
+                It.IsAny<X509Certificate2[]>(),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(ValidatorInternalResult.Valid());
 
         _authenticatorData = new AuthenticatorData
@@ -48,7 +51,7 @@ internal class AttestationTrustworthinessValidatorTests
     public async Task Validate_WhenAttestationStatementResultIsNull_ThenReturnsInvalid()
     {
         // Act
-        var result = await _sut.Validate(_authenticatorData, null!);
+        var result = await _sut.Validate(_authenticatorData, null!, CancellationToken.None);
 
         // Assert
         Assert.That(result.IsValid, Is.False);
@@ -66,7 +69,7 @@ internal class AttestationTrustworthinessValidatorTests
             AttestationType.None);
 
         // Act
-        var result = await _sut.Validate(_authenticatorData, attestationResult);
+        var result = await _sut.Validate(_authenticatorData, attestationResult, CancellationToken.None);
 
         // Assert
         Assert.That(result.IsValid, Is.EqualTo(allowNoneAttestation));
@@ -87,7 +90,7 @@ internal class AttestationTrustworthinessValidatorTests
             AttestationType.Self);
 
         // Act
-        var result = await _sut.Validate(_authenticatorData, attestationResult);
+        var result = await _sut.Validate(_authenticatorData, attestationResult, CancellationToken.None);
 
         // Assert
         Assert.That(result.IsValid, Is.EqualTo(allowSelfAttestation));
@@ -106,7 +109,7 @@ internal class AttestationTrustworthinessValidatorTests
             AttestationType.Basic);
 
         // Act
-        var result = await _sut.Validate(_authenticatorData, attestationResult);
+        var result = await _sut.Validate(_authenticatorData, attestationResult, CancellationToken.None);
 
         // Assert
         Assert.That(result.IsValid, Is.False);
@@ -123,7 +126,7 @@ internal class AttestationTrustworthinessValidatorTests
             null!);
 
         // Act
-        var result = await _sut.Validate(_authenticatorData, attestationResult);
+        var result = await _sut.Validate(_authenticatorData, attestationResult, CancellationToken.None);
 
         // Assert
         Assert.That(result.IsValid, Is.False);
@@ -140,7 +143,7 @@ internal class AttestationTrustworthinessValidatorTests
             []);
 
         // Act
-        var result = await _sut.Validate(_authenticatorData, attestationResult);
+        var result = await _sut.Validate(_authenticatorData, attestationResult, CancellationToken.None);
 
         // Assert
         Assert.That(result.IsValid, Is.False);
@@ -159,7 +162,7 @@ internal class AttestationTrustworthinessValidatorTests
             certificates);
 
         // Act
-        var result = await _sut.Validate(_authenticatorData, attestationResult);
+        var result = await _sut.Validate(_authenticatorData, attestationResult, CancellationToken.None);
 
         // Assert
         Assert.That(result.IsValid, Is.True);
@@ -173,7 +176,10 @@ internal class AttestationTrustworthinessValidatorTests
         var errorMessage = $"basic_surrogate (self) attestation type cannot have trust path";
 
         _attestationTrustAnchorValidatorMock
-            .Setup(a => a.ValidateBasicAttestation(It.IsAny<AuthenticatorData>(), It.IsAny<X509Certificate2[]>()))
+            .Setup(a => a.ValidateBasicAttestation(
+                It.IsAny<AuthenticatorData>(),
+                It.IsAny<X509Certificate2[]>(),
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(ValidatorInternalResult.Invalid(errorMessage));
 
         var certificates = CertificateDataReader.Read("Packed.pem");
@@ -184,7 +190,7 @@ internal class AttestationTrustworthinessValidatorTests
             certificates);
 
         // Act
-        var result = await _sut.Validate(_authenticatorData, attestationResult);
+        var result = await _sut.Validate(_authenticatorData, attestationResult, CancellationToken.None);
 
         // Assert
         Assert.That(result.IsValid, Is.False);
@@ -203,7 +209,7 @@ internal class AttestationTrustworthinessValidatorTests
             certificates);
 
         // Act
-        var result = await _sut.Validate(_authenticatorData, attestationResult);
+        var result = await _sut.Validate(_authenticatorData, attestationResult, CancellationToken.None);
 
         // Assert
         Assert.That(result.IsValid, Is.False);
@@ -222,7 +228,7 @@ internal class AttestationTrustworthinessValidatorTests
             certificates);
 
         // Act
-        var result = await _sut.Validate(_authenticatorData, attestationResult);
+        var result = await _sut.Validate(_authenticatorData, attestationResult, CancellationToken.None);
 
         // Assert
         Assert.That(result.IsValid, Is.True);
@@ -241,7 +247,7 @@ internal class AttestationTrustworthinessValidatorTests
             certificates);
 
         // Act
-        var result = await _sut.Validate(_authenticatorData, attestationResult);
+        var result = await _sut.Validate(_authenticatorData, attestationResult, CancellationToken.None);
 
         // Assert
         Assert.That(result.IsValid, Is.True);
@@ -260,7 +266,7 @@ internal class AttestationTrustworthinessValidatorTests
             certificates);
 
         // Act
-        var result = await _sut.Validate(_authenticatorData, attestationResult);
+        var result = await _sut.Validate(_authenticatorData, attestationResult, CancellationToken.None);
 
         // Assert
         Assert.That(result.IsValid, Is.True);
@@ -279,7 +285,7 @@ internal class AttestationTrustworthinessValidatorTests
             certificates);
 
         // Act
-        var result = await _sut.Validate(_authenticatorData, attestationResult);
+        var result = await _sut.Validate(_authenticatorData, attestationResult, CancellationToken.None);
 
         // Assert
         Assert.That(result.IsValid, Is.True);

@@ -59,7 +59,7 @@ internal class AttestationFidoMetadataServiceValidatorTests
         _configuration.EnableMetadataService = false;
 
         // Act
-        var result = await _sut.Validate(_authenticatorData);
+        var result = await _sut.Validate(_authenticatorData, CancellationToken.None);
 
         // Assert
         Assert.That(result.IsValid, Is.True);
@@ -85,7 +85,7 @@ internal class AttestationFidoMetadataServiceValidatorTests
             .ReturnsAsync(metadataItem);
 
         // Act
-        var result = await _sut.Validate(_authenticatorData);
+        var result = await _sut.Validate(_authenticatorData, CancellationToken.None);
 
         // Assert
         Assert.That(result.IsValid, Is.True);
@@ -112,7 +112,7 @@ internal class AttestationFidoMetadataServiceValidatorTests
             .ReturnsAsync(metadataItem);
 
         // Act
-        var result = await _sut.Validate(_authenticatorData);
+        var result = await _sut.Validate(_authenticatorData, CancellationToken.None);
 
         // Assert
         Assert.That(result.IsValid, Is.False);
@@ -143,7 +143,7 @@ internal class AttestationFidoMetadataServiceValidatorTests
             .ReturnsAsync(metadataItem);
 
         // Act
-        var result = await _sut.Validate(_authenticatorData);
+        var result = await _sut.Validate(_authenticatorData, CancellationToken.None);
 
         // Assert
         Assert.That(result.IsValid, Is.False);
@@ -161,7 +161,7 @@ internal class AttestationFidoMetadataServiceValidatorTests
             .ReturnsAsync((MetadataPayloadItem?)null);
 
         // Act
-        var result = await _sut.Validate(_authenticatorData);
+        var result = await _sut.Validate(_authenticatorData, CancellationToken.None);
 
         // Assert
         Assert.That(result.IsValid, Is.True);
@@ -179,7 +179,7 @@ internal class AttestationFidoMetadataServiceValidatorTests
             .ReturnsAsync((MetadataPayloadItem?)null);
 
         // Act
-        var result = await _sut.Validate(_authenticatorData);
+        var result = await _sut.Validate(_authenticatorData, CancellationToken.None);
 
         // Assert
         Assert.That(result.IsValid, Is.False);
@@ -195,7 +195,7 @@ internal class AttestationFidoMetadataServiceValidatorTests
         var trustPath = _certificates;
 
         // Act
-        var result = await _sut.ValidateBasicAttestation(_authenticatorData, trustPath);
+        var result = await _sut.ValidateBasicAttestation(_authenticatorData, trustPath, CancellationToken.None);
 
         // Assert
         Assert.That(result.IsValid, Is.True);
@@ -213,7 +213,7 @@ internal class AttestationFidoMetadataServiceValidatorTests
             .ReturnsAsync((MetadataPayloadItem?)null);
 
         // Act
-        var result = await _sut.ValidateBasicAttestation(_authenticatorData, trustPath);
+        var result = await _sut.ValidateBasicAttestation(_authenticatorData, trustPath, CancellationToken.None);
 
         // Assert
         Assert.That(result.IsValid, Is.True);
@@ -242,7 +242,7 @@ internal class AttestationFidoMetadataServiceValidatorTests
             .ReturnsAsync(metadataItem);
 
         // Act
-        var result = await _sut.ValidateBasicAttestation(_authenticatorData, trustPath);
+        var result = await _sut.ValidateBasicAttestation(_authenticatorData, trustPath, CancellationToken.None);
 
         // Assert
         Assert.That(result.IsValid, Is.False);
@@ -271,7 +271,7 @@ internal class AttestationFidoMetadataServiceValidatorTests
             .ReturnsAsync(metadataItem);
 
         // Act
-        var result = await _sut.ValidateBasicAttestation(_authenticatorData, trustPath);
+        var result = await _sut.ValidateBasicAttestation(_authenticatorData, trustPath, CancellationToken.None);
 
         // Assert
         Assert.That(result.IsValid, Is.True);
@@ -299,7 +299,7 @@ internal class AttestationFidoMetadataServiceValidatorTests
             .ReturnsAsync(metadataItem);
 
         // Act
-        var result = await _sut.ValidateBasicAttestation(_authenticatorData, trustPath);
+        var result = await _sut.ValidateBasicAttestation(_authenticatorData, trustPath, CancellationToken.None);
 
         // Assert
         Assert.That(result.IsValid, Is.True);
@@ -327,7 +327,7 @@ internal class AttestationFidoMetadataServiceValidatorTests
             .ReturnsAsync(metadataItem);
 
         // Act
-        var result = await _sut.ValidateBasicAttestation(_authenticatorData, trustPath);
+        var result = await _sut.ValidateBasicAttestation(_authenticatorData, trustPath, CancellationToken.None);
 
         // Assert
         Assert.That(result.IsValid, Is.True);
@@ -355,7 +355,7 @@ internal class AttestationFidoMetadataServiceValidatorTests
             .ReturnsAsync(metadataItem);
 
         // Act
-        var result = await _sut.ValidateBasicAttestation(_authenticatorData, trustPath);
+        var result = await _sut.ValidateBasicAttestation(_authenticatorData, trustPath, CancellationToken.None);
 
         // Assert
         Assert.That(result.IsValid, Is.True);

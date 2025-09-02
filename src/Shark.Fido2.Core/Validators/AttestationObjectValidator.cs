@@ -34,7 +34,8 @@ internal class AttestationObjectValidator : IAttestationObjectValidator
     public async Task<ValidatorInternalResult> Validate(
         AttestationObjectData? attestationObjectData,
         ClientData clientData,
-        PublicKeyCredentialCreationOptions creationOptions)
+        PublicKeyCredentialCreationOptions creationOptions,
+        CancellationToken cancellationToken)
     {
         if (attestationObjectData == null)
         {
@@ -132,7 +133,8 @@ internal class AttestationObjectValidator : IAttestationObjectValidator
         // For example, the FIDO Metadata Service [FIDOMetadataService] provides one way to obtain such information,
         // using the aaguid in the attestedCredentialData in authData.
         var trustAnchorValidationResult = await _attestationTrustAnchorValidator.Validate(
-            attestationObjectData.AuthenticatorData!);
+            attestationObjectData.AuthenticatorData!,
+            cancellationToken);
         if (!trustAnchorValidationResult.IsValid)
         {
             return trustAnchorValidationResult;
@@ -142,7 +144,8 @@ internal class AttestationObjectValidator : IAttestationObjectValidator
         // Assess the attestation trustworthiness using the outputs of the verification procedure in step 19
         var trustworthinessResult = await _attestationTrustworthinessValidator.Validate(
             attestationObjectData.AuthenticatorData!,
-            (AttestationStatementInternalResult)result);
+            (AttestationStatementInternalResult)result,
+            cancellationToken);
         if (!trustworthinessResult.IsValid)
         {
             return trustworthinessResult;

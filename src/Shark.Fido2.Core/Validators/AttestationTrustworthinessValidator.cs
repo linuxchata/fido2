@@ -26,7 +26,8 @@ internal class AttestationTrustworthinessValidator : IAttestationTrustworthiness
 
     public async Task<ValidatorInternalResult> Validate(
         AuthenticatorData authenticatorData,
-        AttestationStatementInternalResult attestationStatementResult)
+        AttestationStatementInternalResult attestationStatementResult,
+        CancellationToken cancellationToken)
     {
         if (attestationStatementResult == null)
         {
@@ -53,7 +54,8 @@ internal class AttestationTrustworthinessValidator : IAttestationTrustworthiness
         // contain a full trust path.
         var result = await _attestationTrustAnchorValidator.ValidateBasicAttestation(
             authenticatorData,
-            attestationStatementResult.TrustPath);
+            attestationStatementResult.TrustPath,
+            cancellationToken);
         if (!result.IsValid)
         {
             return result;

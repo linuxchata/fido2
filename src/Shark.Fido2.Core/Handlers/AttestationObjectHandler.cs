@@ -25,7 +25,8 @@ internal class AttestationObjectHandler : IAttestationObjectHandler
     public async Task<InternalResult<AttestationObjectData>> Handle(
         string attestationObject,
         ClientData clientData,
-        PublicKeyCredentialCreationOptions creationOptions)
+        PublicKeyCredentialCreationOptions creationOptions,
+        CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(attestationObject))
         {
@@ -39,7 +40,11 @@ internal class AttestationObjectHandler : IAttestationObjectHandler
 
         var attestationObjectData = GetAttestationObjectData(attestationObject);
 
-        var result = await _attestationObjectValidator.Validate(attestationObjectData, clientData, creationOptions);
+        var result = await _attestationObjectValidator.Validate(
+            attestationObjectData,
+            clientData,
+            creationOptions,
+            cancellationToken);
         if (!result.IsValid)
         {
             return new InternalResult<AttestationObjectData>(result.Message!);

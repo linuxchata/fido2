@@ -15,9 +15,11 @@ public interface IAttestationObjectValidator
     /// <param name="attestationObjectData">The attestation object data.</param>
     /// <param name="clientData">The client data.</param>
     /// <param name="creationOptions">The original creation options.</param>
+    /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>A validation result indicating success or failure with error details.</returns>
     Task<ValidatorInternalResult> Validate(
         AttestationObjectData? attestationObjectData,
         ClientData clientData,
-        PublicKeyCredentialCreationOptions creationOptions);
+        PublicKeyCredentialCreationOptions creationOptions,
+        CancellationToken cancellationToken);
 }

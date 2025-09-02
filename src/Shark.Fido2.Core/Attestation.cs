@@ -45,7 +45,7 @@ public sealed class Attestation : IAttestation
 
     public async Task<PublicKeyCredentialCreationOptions> BeginRegistration(
         PublicKeyCredentialCreationOptionsRequest request,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken)
     {
         _attestationParametersValidator.Validate(request);
 
@@ -105,7 +105,7 @@ public sealed class Attestation : IAttestation
     public async Task<AttestationCompleteResult> CompleteRegistration(
         PublicKeyCredentialAttestation publicKeyCredentialAttestation,
         PublicKeyCredentialCreationOptions creationOptions,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken)
     {
         var validationResult = _attestationParametersValidator.Validate(
             publicKeyCredentialAttestation,
@@ -138,7 +138,8 @@ public sealed class Attestation : IAttestation
         var attestationResult = await _attestationObjectHandler.Handle(
             response.AttestationObject,
             clientDataHandlerResult.Value!,
-            creationOptions);
+            creationOptions,
+            cancellationToken);
         if (attestationResult.HasError)
         {
             // Step 24

@@ -32,7 +32,8 @@ internal class TpmAttestationStatementStrategyTests
             .Setup(a => a.Validate(
                 It.IsAny<AttestationObjectData>(),
                 It.IsAny<ClientData>(),
-                It.IsAny<PublicKeyCredentialCreationOptions>()))
+                It.IsAny<PublicKeyCredentialCreationOptions>(),
+                It.IsAny<CancellationToken>()))
         .ReturnsAsync(ValidatorInternalResult.Valid());
 
         _authenticatorDataProvider = new AuthenticatorDataParserService();
@@ -79,7 +80,7 @@ internal class TpmAttestationStatementStrategyTests
         var clientData = ClientDataBuilder.Build(attestationResponseData!.ClientDataJson);
 
         var internalResult = await _attestationObjectHandler.Handle(
-            attestationResponseData.AttestationObject, clientData, _creationOptions);
+            attestationResponseData.AttestationObject, clientData, _creationOptions, CancellationToken.None);
 
         // Act
         var validatorInternalResult = _sut.Validate(internalResult.Value!, clientData);
@@ -107,7 +108,7 @@ internal class TpmAttestationStatementStrategyTests
         var clientData = ClientDataBuilder.Build(attestationResponseData!.ClientDataJson);
 
         var internalResult = await _attestationObjectHandler.Handle(
-            attestationResponseData.AttestationObject, clientData, _creationOptions);
+            attestationResponseData.AttestationObject, clientData, _creationOptions, CancellationToken.None);
 
         // Act
         var validatorInternalResult = _sut.Validate(internalResult.Value!, clientData);

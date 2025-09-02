@@ -15,9 +15,11 @@ public interface IAttestationObjectHandler
     /// <param name="attestationObject">The attestation object.</param>
     /// <param name="clientData">The parsed client data.</param>
     /// <param name="creationOptions">The original creation options.</param>
+    /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>A validation result indicating success or failure with error details.</returns>
     Task<InternalResult<AttestationObjectData>> Handle(
         string attestationObject,
         ClientData clientData,
-        PublicKeyCredentialCreationOptions creationOptions);
+        PublicKeyCredentialCreationOptions creationOptions,
+        CancellationToken cancellationToken);
 }

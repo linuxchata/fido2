@@ -22,7 +22,9 @@ internal class AttestationFidoMetadataServiceValidator : IAttestationTrustAnchor
         _configuration = options.Value;
     }
 
-    public async Task<ValidatorInternalResult> Validate(AuthenticatorData authenticatorData)
+    public async Task<ValidatorInternalResult> Validate(
+        AuthenticatorData authenticatorData,
+        CancellationToken cancellationToken)
     {
         // Step 20
         // If validation is successful, obtain a list of acceptable trust anchors (i.e. attestation root certificates)
@@ -32,7 +34,7 @@ internal class AttestationFidoMetadataServiceValidator : IAttestationTrustAnchor
         if (_configuration.EnableMetadataService)
         {
             var aaGuid = authenticatorData.AttestedCredentialData.AaGuid;
-            var authenticatorMetadata = await _metadataService.Get(aaGuid);
+            var authenticatorMetadata = await _metadataService.Get(aaGuid, cancellationToken);
             if (authenticatorMetadata != null)
             {
                 if (authenticatorMetadata.HasIncreasedRisk())
@@ -52,14 +54,15 @@ internal class AttestationFidoMetadataServiceValidator : IAttestationTrustAnchor
 
     public async Task<ValidatorInternalResult> ValidateBasicAttestation(
         AuthenticatorData authenticatorData,
-        X509Certificate2[]? trustPath)
+        X509Certificate2[]? trustPath,
+        CancellationToken cancellationToken)
     {
         // If only basic surrogate attestation is supported by the authenticator, verify that attestation does not
         // contain a full trust path.
         if (_configuration.EnableMetadataService)
         {
             var aaGuid = authenticatorData.AttestedCredentialData.AaGuid;
-            var authenticatorMetadata = await _metadataService.Get(aaGuid);
+            var authenticatorMetadata = await _metadataService.Get(aaGuid, cancellationToken);
             if (authenticatorMetadata?.AttestationTypes?.Length == 1 &&
                 authenticatorMetadata.AttestationTypes[0] == AttestationType.BasicSurrogate &&
                 trustPath?.Length > 0)

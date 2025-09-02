@@ -13,16 +13,21 @@ public interface IAttestationTrustAnchorValidator
     /// Validates attestation againts acceptable trust anchors.
     /// </summary>
     /// <param name="authenticatorData">The authenticator data.</param>
+    /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>A validation result indicating success or failure with error details.</returns>
-    Task<ValidatorInternalResult> Validate(AuthenticatorData authenticatorData);
+    Task<ValidatorInternalResult> Validate(
+        AuthenticatorData authenticatorData,
+        CancellationToken cancellationToken);
 
     /// <summary>
     /// Validates basic attestation againts acceptable trust anchors.
     /// </summary>
     /// <param name="authenticatorData">The authenticator data.</param>
     /// <param name="trustPath">The trust path (the list of X509 certificates).</param>
+    /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>A validation result indicating success or failure with error details.</returns>
     Task<ValidatorInternalResult> ValidateBasicAttestation(
         AuthenticatorData authenticatorData,
-        X509Certificate2[]? trustPath);
+        X509Certificate2[]? trustPath,
+        CancellationToken cancellationToken);
 }
