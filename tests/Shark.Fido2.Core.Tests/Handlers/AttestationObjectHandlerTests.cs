@@ -27,7 +27,7 @@ internal class AttestationObjectHandlerTests
                 It.IsAny<AttestationObjectData?>(),
                 It.IsAny<ClientData>(),
                 It.IsAny<PublicKeyCredentialCreationOptions>(),
-                CancellationToken.None))
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(ValidatorInternalResult.Valid());
 
         _sut = new AttestationObjectHandler(
@@ -43,7 +43,8 @@ internal class AttestationObjectHandlerTests
         var creationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
 
         // Act
-        var result = await _sut.Handle(attestationObject, ClientDataBuilder.BuildCreate(), creationOptions, CancellationToken.None);
+        var result = await _sut.Handle(
+            attestationObject, ClientDataBuilder.BuildCreate(), creationOptions, CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -60,7 +61,8 @@ internal class AttestationObjectHandlerTests
         var creationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
 
         // Act
-        var result = await _sut.Handle(attestationObject, ClientDataBuilder.BuildCreate(), creationOptions, CancellationToken.None);
+        var result = await _sut.Handle(
+            attestationObject, ClientDataBuilder.BuildCreate(), creationOptions, CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -77,7 +79,8 @@ internal class AttestationObjectHandlerTests
         var creationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
 
         // Act
-        var result = await _sut.Handle(attestationObject, ClientDataBuilder.BuildCreate(), creationOptions, CancellationToken.None);
+        var result = await _sut.Handle(
+            attestationObject, ClientDataBuilder.BuildCreate(), creationOptions, CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -94,7 +97,10 @@ internal class AttestationObjectHandlerTests
         var creationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
 
         // Act & Assert
-        Assert.ThrowsAsync<ArgumentOutOfRangeException>(
-            () => _sut.Handle(attestationObject, ClientDataBuilder.BuildCreate(), creationOptions, CancellationToken.None));
+        Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => _sut.Handle(
+            attestationObject,
+            ClientDataBuilder.BuildCreate(),
+            creationOptions,
+            CancellationToken.None));
     }
 }

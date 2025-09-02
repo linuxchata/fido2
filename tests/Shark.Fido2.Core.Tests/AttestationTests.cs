@@ -58,7 +58,7 @@ internal class AttestationTests
                 It.IsAny<string>(),
                 It.IsAny<ClientData>(),
                 It.IsAny<PublicKeyCredentialCreationOptions>(),
-                CancellationToken.None))
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(new InternalResult<AttestationObjectData>(new AttestationObjectData
             {
                 AuthenticatorData = new AuthenticatorData
@@ -91,7 +91,7 @@ internal class AttestationTests
 
         _credentialRepositoryMock = new Mock<ICredentialRepository>();
         _credentialRepositoryMock
-            .Setup(a => a.Exists(It.IsAny<byte[]>(), CancellationToken.None))
+            .Setup(a => a.Exists(It.IsAny<byte[]>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(false);
 
         _fido2Configuration = new Fido2Configuration
@@ -208,7 +208,7 @@ internal class AttestationTests
         };
 
         _credentialRepositoryMock
-            .Setup(a => a.Get(UserName, CancellationToken.None))
+            .Setup(a => a.Get(UserName, It.IsAny<CancellationToken>()))
             .ReturnsAsync([credential]);
 
         var request = new PublicKeyCredentialCreationOptionsRequest
@@ -377,7 +377,7 @@ internal class AttestationTests
                 It.IsAny<string>(),
                 It.IsAny<ClientData>(),
                 It.IsAny<PublicKeyCredentialCreationOptions>(),
-                CancellationToken.None))
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(new InternalResult<AttestationObjectData>("Attestation object validation failed"));
 
         // Act
@@ -397,7 +397,7 @@ internal class AttestationTests
     {
         // Arrange
         _credentialRepositoryMock
-            .Setup(a => a.Exists(It.IsAny<byte[]>(), CancellationToken.None))
+            .Setup(a => a.Exists(It.IsAny<byte[]>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
 
         // Act
@@ -418,7 +418,7 @@ internal class AttestationTests
         // Arrange
         Credential? credential = null;
         _credentialRepositoryMock
-            .Setup(a => a.Add(It.IsAny<Credential>(), CancellationToken.None))
+            .Setup(a => a.Add(It.IsAny<Credential>(), It.IsAny<CancellationToken>()))
             .Callback<Credential, CancellationToken>((c, ct) => credential = c)
             .Returns(Task.CompletedTask);
 

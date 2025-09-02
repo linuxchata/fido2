@@ -33,8 +33,8 @@ internal class PackedAttestationStatementStrategyTests
                 It.IsAny<AttestationObjectData>(),
                 It.IsAny<ClientData>(),
                 It.IsAny<PublicKeyCredentialCreationOptions>(),
-                CancellationToken.None))
-        .ReturnsAsync(ValidatorInternalResult.Valid());
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(ValidatorInternalResult.Valid());
 
         _authenticatorDataProvider = new AuthenticatorDataParserService();
 

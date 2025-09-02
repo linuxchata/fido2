@@ -82,7 +82,7 @@ internal class AssertionTests
 
         _credentialRepositoryMock = new Mock<ICredentialRepository>();
         _credentialRepositoryMock
-            .Setup(a => a.Get(It.IsAny<byte[]>(), CancellationToken.None))
+            .Setup(a => a.Get(It.IsAny<byte[]>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((Credential?)null);
 
         _fido2Configuration = new Fido2Configuration
@@ -141,7 +141,7 @@ internal class AssertionTests
         Assert.ThrowsAsync<ArgumentNullException>(
             () => _sut.BeginAuthentication(
                 It.IsAny<PublicKeyCredentialRequestOptionsRequest>(),
-                CancellationToken.None));
+                It.IsAny<CancellationToken>()));
     }
 
     [Test]
@@ -189,7 +189,9 @@ internal class AssertionTests
             },
         };
 
-        _credentialRepositoryMock.Setup(a => a.Get(UserName, CancellationToken.None)).ReturnsAsync(credentials);
+        _credentialRepositoryMock
+            .Setup(a => a.Get(UserName, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(credentials);
 
         // Act
         var result = await _sut.BeginAuthentication(request, CancellationToken.None);
@@ -244,7 +246,7 @@ internal class AssertionTests
             _sut.CompleteAuthentication(
                 _publicKeyCredentialAssertion,
                 _publicKeyCredentialRequestOptions,
-                CancellationToken.None));
+                It.IsAny<CancellationToken>()));
     }
 
     [Test]
@@ -334,7 +336,7 @@ internal class AssertionTests
         };
 
         _credentialRepositoryMock
-            .Setup(a => a.Get(It.IsAny<byte[]>(), CancellationToken.None))
+            .Setup(a => a.Get(It.IsAny<byte[]>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((Credential?)null);
 
         // Act
@@ -363,7 +365,7 @@ internal class AssertionTests
         };
 
         _credentialRepositoryMock
-            .Setup(a => a.Get(It.IsAny<byte[]>(), CancellationToken.None))
+            .Setup(a => a.Get(It.IsAny<byte[]>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(credential);
 
         _userHandlerValidatorMock
@@ -396,7 +398,7 @@ internal class AssertionTests
         };
 
         _credentialRepositoryMock
-            .Setup(a => a.Get(It.IsAny<byte[]>(), CancellationToken.None))
+            .Setup(a => a.Get(It.IsAny<byte[]>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(credential);
 
         _userHandlerValidatorMock
@@ -429,7 +431,7 @@ internal class AssertionTests
         };
 
         _credentialRepositoryMock
-            .Setup(a => a.Get(It.IsAny<byte[]>(), CancellationToken.None))
+            .Setup(a => a.Get(It.IsAny<byte[]>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(credential);
 
         _clientDataHandlerMock
@@ -462,7 +464,7 @@ internal class AssertionTests
         };
 
         _credentialRepositoryMock
-            .Setup(a => a.Get(It.IsAny<byte[]>(), CancellationToken.None))
+            .Setup(a => a.Get(It.IsAny<byte[]>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(credential);
 
         _assertionObjectHandlerMock
@@ -502,7 +504,7 @@ internal class AssertionTests
         };
 
         _credentialRepositoryMock
-            .Setup(a => a.Get(It.IsAny<byte[]>(), CancellationToken.None))
+            .Setup(a => a.Get(It.IsAny<byte[]>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(credential);
 
         // Act
@@ -532,7 +534,7 @@ internal class AssertionTests
         };
 
         _credentialRepositoryMock
-            .Setup(a => a.Get(It.IsAny<byte[]>(), CancellationToken.None))
+            .Setup(a => a.Get(It.IsAny<byte[]>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(credential);
 
         // Act
@@ -546,7 +548,8 @@ internal class AssertionTests
         Assert.That(result.IsValid, Is.True);
         Assert.That(result.Message, Is.Null);
 
-        _credentialRepositoryMock.Verify(a => a.UpdateSignCount(credential.CredentialId, 2, CancellationToken.None), Times.Once);
+        _credentialRepositoryMock.Verify(
+            a => a.UpdateSignCount(credential.CredentialId, 2, It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Test]
@@ -564,7 +567,7 @@ internal class AssertionTests
         };
 
         _credentialRepositoryMock
-            .Setup(a => a.Get(It.IsAny<byte[]>(), CancellationToken.None))
+            .Setup(a => a.Get(It.IsAny<byte[]>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(credential);
 
         _assertionObjectHandlerMock
@@ -594,7 +597,7 @@ internal class AssertionTests
 
         // Verify that UpdateSignCount was not called
         _credentialRepositoryMock.Verify(
-            a => a.UpdateSignCount(It.IsAny<byte[]>(), It.IsAny<uint>(), CancellationToken.None), Times.Never);
+            a => a.UpdateSignCount(It.IsAny<byte[]>(), It.IsAny<uint>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
     #endregion

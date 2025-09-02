@@ -33,7 +33,7 @@ internal class TpmAttestationStatementStrategyTests
                 It.IsAny<AttestationObjectData>(),
                 It.IsAny<ClientData>(),
                 It.IsAny<PublicKeyCredentialCreationOptions>(),
-                CancellationToken.None))
+                It.IsAny<CancellationToken>()))
         .ReturnsAsync(ValidatorInternalResult.Valid());
 
         _authenticatorDataProvider = new AuthenticatorDataParserService();
