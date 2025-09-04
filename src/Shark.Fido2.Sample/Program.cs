@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Prometheus;
 using Shark.Fido2.Core;
 using Shark.Fido2.InMemory;
 using Shark.Fido2.Sample.Abstractions.Services;
@@ -83,6 +84,8 @@ builder.Services.AddTransient<ICredentialService, CredentialService>();
 
 var app = builder.Build();
 
+app.UseMetricServer();
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
@@ -111,6 +114,7 @@ app.UseStaticFiles();
 app.UseMiddleware<DisableTrackMiddleware>();
 
 app.UseRouting();
+app.UseHttpMetrics();
 
 app.UseAuthentication();
 app.UseAuthorization();
