@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Comparers;
@@ -18,17 +19,20 @@ internal class AttestationObjectValidator : IAttestationObjectValidator
     private readonly IAttestationTrustworthinessValidator _attestationTrustworthinessValidator;
     private readonly IAttestationTrustAnchorValidator _attestationTrustAnchorValidator;
     private readonly Fido2Configuration _configuration;
+    private readonly ILogger<AttestationObjectValidator> _logger;
 
     public AttestationObjectValidator(
         IAttestationStatementValidator attestationStatementValidator,
         IAttestationTrustworthinessValidator attestationTrustworthinessValidator,
         IAttestationTrustAnchorValidator attestationTrustAnchorValidator,
-        IOptions<Fido2Configuration> options)
+        IOptions<Fido2Configuration> options,
+        ILogger<AttestationObjectValidator> logger)
     {
         _attestationStatementValidator = attestationStatementValidator;
         _attestationTrustworthinessValidator = attestationTrustworthinessValidator;
         _attestationTrustAnchorValidator = attestationTrustAnchorValidator;
         _configuration = options.Value;
+        _logger = logger;
     }
 
     public async Task<ValidatorInternalResult> Validate(
@@ -68,12 +72,16 @@ internal class AttestationObjectValidator : IAttestationObjectValidator
             return ValidatorInternalResult.Invalid("RP ID hash mismatch");
         }
 
+        _logger.LogDebug("RP ID hash is verified");
+
         // Step 14
         // Verify that the User Present bit of the flags in authData is set.
         if (!authenticatorData.UserPresent)
         {
             return ValidatorInternalResult.Invalid("User Present bit is not set");
         }
+
+        _logger.LogDebug("User Present bit is verified");
 
         // Step 15
         // If user verification is required for this registration, verify that the User Verified bit of the flags
@@ -84,6 +92,10 @@ internal class AttestationObjectValidator : IAttestationObjectValidator
             return ValidatorInternalResult.Invalid("User Verified bit is not set as user verification is required");
         }
 
+        _logger.LogDebug(
+            "User Verified bit is verified. User verification option is {UserVerification}",
+            creationOptions.AuthenticatorSelection.UserVerification);
+
         // Step 16
         // Verify that the "alg" parameter in the credential public key in authData matches the alg attribute of
         // one of the items in options.pubKeyCredParams.
@@ -92,6 +104,8 @@ internal class AttestationObjectValidator : IAttestationObjectValidator
         {
             return ValidatorInternalResult.Invalid("Credential public key algorithm mismatch");
         }
+
+        _logger.LogDebug("Credential public key algorithm is verified. Algorithm is {Algorithm}", algorithm);
 
         // Step 17
         // Verify that the values of the client extension outputs in clientExtensionResults and the authenticator
@@ -113,6 +127,10 @@ internal class AttestationObjectValidator : IAttestationObjectValidator
                 $"Attestation statement format [{attestationStatementFormat}] is not supported");
         }
 
+        _logger.LogDebug(
+            "Attestation statement format {AttestationStatementFormat} is supported",
+            attestationStatementFormat);
+
         // Step 19
         // Verify that attStmt is a correct attestation statement, conveying a valid attestation signature, by
         // using the attestation statement format fmt's verification procedure given attStmt, authData and hash.
@@ -121,6 +139,8 @@ internal class AttestationObjectValidator : IAttestationObjectValidator
         {
             return result;
         }
+
+        _logger.LogDebug("Attestation statement is verified");
 
         if (result is not AttestationStatementInternalResult)
         {
@@ -140,6 +160,8 @@ internal class AttestationObjectValidator : IAttestationObjectValidator
             return trustAnchorValidationResult;
         }
 
+        _logger.LogDebug("Attestation trust anchor is verified");
+
         // Step 21
         // Assess the attestation trustworthiness using the outputs of the verification procedure in step 19
         var trustworthinessResult = await _attestationTrustworthinessValidator.Validate(
@@ -150,6 +172,8 @@ internal class AttestationObjectValidator : IAttestationObjectValidator
         {
             return trustworthinessResult;
         }
+
+        _logger.LogDebug("Attestation trustworthiness is verified");
 
         return ValidatorInternalResult.Valid();
     }

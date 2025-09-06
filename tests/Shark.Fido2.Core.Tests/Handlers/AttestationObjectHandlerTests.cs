@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using Microsoft.Extensions.Logging.Abstractions;
+using Moq;
 using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Handlers;
@@ -32,7 +33,8 @@ internal class AttestationObjectHandlerTests
 
         _sut = new AttestationObjectHandler(
             _authenticatorDataParserService,
-            _attestationObjectValidatorMock.Object);
+            _attestationObjectValidatorMock.Object,
+            NullLogger<AttestationObjectHandler>.Instance);
     }
 
     [Test]

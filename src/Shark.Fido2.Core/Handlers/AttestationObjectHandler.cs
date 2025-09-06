@@ -1,4 +1,5 @@
-﻿using Shark.Fido2.Core.Abstractions.Handlers;
+﻿using Microsoft.Extensions.Logging;
+using Shark.Fido2.Core.Abstractions.Handlers;
 using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Constants;
@@ -13,13 +14,16 @@ internal class AttestationObjectHandler : IAttestationObjectHandler
 {
     private readonly IAuthenticatorDataParserService _authenticatorDataParserService;
     private readonly IAttestationObjectValidator _attestationObjectValidator;
+    private readonly ILogger<AttestationObjectHandler> _logger;
 
     public AttestationObjectHandler(
         IAuthenticatorDataParserService authenticatorDataParserService,
-        IAttestationObjectValidator attestationObjectValidator)
+        IAttestationObjectValidator attestationObjectValidator,
+        ILogger<AttestationObjectHandler> logger)
     {
         _authenticatorDataParserService = authenticatorDataParserService;
         _attestationObjectValidator = attestationObjectValidator;
+        _logger = logger;
     }
 
     public async Task<InternalResult<AttestationObjectData>> Handle(
@@ -50,6 +54,10 @@ internal class AttestationObjectHandler : IAttestationObjectHandler
             return new InternalResult<AttestationObjectData>(result.Message!);
         }
 
+        _logger.LogDebug(
+            "Attestation object for {AttestationStatementFormat} attestation statement format is valid",
+            attestationObjectData.AttestationStatementFormat);
+
         return new InternalResult<AttestationObjectData>(attestationObjectData!);
     }
 
@@ -71,6 +79,10 @@ internal class AttestationObjectHandler : IAttestationObjectHandler
             AuthenticatorData = authenticatorData,
             AuthenticatorRawData = authenticatorDataArray!,
         };
+
+        _logger.LogDebug(
+            "Attestation object data is parsed. Attestation statement format is {AttestationStatementFormat}",
+            attestationObjectData.AttestationStatementFormat);
 
         return attestationObjectData;
     }
