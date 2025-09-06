@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Options;
 using Moq;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
@@ -68,7 +69,8 @@ internal class AttestationObjectValidatorTests
             _attestationStatementValidatorMock.Object,
             _attestationTrustworthinessValidatorMock.Object,
             _attestationTrustAnchorValidatorMock.Object,
-            Options.Create(Fido2ConfigurationBuilder.Build()));
+            Options.Create(Fido2ConfigurationBuilder.Build()),
+            NullLogger<AttestationObjectValidator>.Instance);
     }
 
     [Test]

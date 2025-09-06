@@ -1,4 +1,5 @@
 using System.Text;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Moq;
 using Shark.Fido2.Core.Abstractions;
@@ -124,7 +125,8 @@ internal class AssertionTests
             _userHandlerValidatorMock.Object,
             _challengeGeneratorMock.Object,
             _credentialRepositoryMock.Object,
-            Options.Create(_fido2Configuration));
+            Options.Create(_fido2Configuration),
+            NullLogger<Assertion>.Instance);
     }
 
     #region BeginAuthentication Tests
@@ -315,7 +317,7 @@ internal class AssertionTests
         // Assert
         Assert.That(result, Is.Not.Null);
         Assert.That(result.IsValid, Is.False);
-        Assert.That(result.Message, Is.EqualTo("Assertion response does not contain expected credential identifier"));
+        Assert.That(result.Message, Is.EqualTo("Assertion response does not contain expected credential"));
     }
 
     [Test]
@@ -516,7 +518,7 @@ internal class AssertionTests
         // Assert
         Assert.That(result, Is.Not.Null);
         Assert.That(result.IsValid, Is.False);
-        Assert.That(result.Message, Is.EqualTo("Signature counter of the authenticator is less or equal to stored signature count. The authenticator may be cloned"));
+        Assert.That(result.Message, Is.EqualTo("The authenticator's signature counter value is less than or equal to the previously stored count, indicating that the device may have been cloned or duplicated."));
     }
 
     [Test]

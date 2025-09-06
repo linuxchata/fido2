@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Shark.Fido2.Common.Extensions;
 using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Core.Abstractions.Handlers;
@@ -24,6 +25,7 @@ public sealed class Attestation : IAttestation
     private readonly IUserIdGenerator _userIdGenerator;
     private readonly ICredentialRepository _credentialRepository;
     private readonly Fido2Configuration _configuration;
+    private readonly ILogger<Attestation> _logger;
 
     public Attestation(
         IAttestationParametersValidator attestationParametersValidator,
@@ -32,7 +34,8 @@ public sealed class Attestation : IAttestation
         IChallengeGenerator challengeGenerator,
         IUserIdGenerator userIdGenerator,
         ICredentialRepository credentialRepository,
-        IOptions<Fido2Configuration> options)
+        IOptions<Fido2Configuration> options,
+        ILogger<Attestation> logger)
     {
         _attestationParametersValidator = attestationParametersValidator;
         _clientDataHandler = clientDataHandler;
@@ -41,6 +44,7 @@ public sealed class Attestation : IAttestation
         _userIdGenerator = userIdGenerator;
         _credentialRepository = credentialRepository;
         _configuration = options.Value;
+        _logger = logger;
     }
 
     public async Task<PublicKeyCredentialCreationOptions> BeginRegistration(
@@ -99,6 +103,8 @@ public sealed class Attestation : IAttestation
             },
         };
 
+        _logger.LogDebug("Creation options are successfully constructed");
+
         return credentialCreationOptions;
     }
 
@@ -131,6 +137,7 @@ public sealed class Attestation : IAttestation
         var clientDataHandlerResult = _clientDataHandler.HandleAttestation(response.ClientDataJson, challengeString);
         if (clientDataHandlerResult.HasError)
         {
+            _logger.LogWarning("Client data handler error: {Message}", clientDataHandlerResult.Message!);
             return AttestationCompleteResult.CreateFailure(clientDataHandlerResult.Message!);
         }
 
@@ -145,6 +152,7 @@ public sealed class Attestation : IAttestation
             // Step 24
             // If the attestation statement attStmt successfully verified but is not trustworthy per step 21 above,
             // the Relying Party SHOULD fail the registration ceremony.
+            _logger.LogWarning("Attestation object handler error: {Message}", attestationResult.Message!);
             return AttestationCompleteResult.CreateFailure(attestationResult.Message!);
         }
 
@@ -156,6 +164,7 @@ public sealed class Attestation : IAttestation
         var credentialId = attestedCredentialData!.CredentialId;
         if (await _credentialRepository.Exists(credentialId, cancellationToken))
         {
+            _logger.LogWarning("Credential '{CredentialId}' has already been registered", credentialId);
             return AttestationCompleteResult.CreateFailure("Credential has already been registered");
         }
 
@@ -182,6 +191,8 @@ public sealed class Attestation : IAttestation
         };
 
         await _credentialRepository.Add(credential, cancellationToken);
+
+        _logger.LogDebug("Attestation is successfully completed");
 
         return AttestationCompleteResult.Create();
     }
