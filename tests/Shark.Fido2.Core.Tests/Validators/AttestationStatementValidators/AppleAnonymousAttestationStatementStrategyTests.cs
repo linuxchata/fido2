@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Moq;
 using Shark.Fido2.Core.Abstractions.Validators;
@@ -40,7 +41,7 @@ internal class AppleAnonymousAttestationStatementStrategyTests
         _creationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
 
         _attestationObjectHandler = new AttestationObjectHandler(
-            _provider, _attestationObjectValidatorMock.Object);
+            _provider, _attestationObjectValidatorMock.Object, NullLogger<AttestationObjectHandler>.Instance);
 
         var attestationCertificateProviderService = new AttestationCertificateProviderService();
 

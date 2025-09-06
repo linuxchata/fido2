@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Text.Json;
+using Microsoft.Extensions.Logging;
 using Shark.Fido2.Common.Extensions;
 using Shark.Fido2.Core.Abstractions.Handlers;
 using Shark.Fido2.Core.Abstractions.Validators;
@@ -12,10 +13,12 @@ namespace Shark.Fido2.Core.Handlers;
 internal class ClientDataHandler : IClientDataHandler
 {
     private readonly IClientDataValidator _clientDataValidator;
+    private readonly ILogger<ClientDataHandler> _logger;
 
-    public ClientDataHandler(IClientDataValidator clientDataValidator)
+    public ClientDataHandler(IClientDataValidator clientDataValidator, ILogger<ClientDataHandler> logger)
     {
         _clientDataValidator = clientDataValidator;
+        _logger = logger;
     }
 
     public InternalResult<ClientData> HandleAttestation(string clientDataJson, string expectedChallenge)
@@ -32,6 +35,8 @@ internal class ClientDataHandler : IClientDataHandler
         {
             return new InternalResult<ClientData>(result.Message!);
         }
+
+        _logger.LogDebug("Client data for attestation is valid");
 
         return new InternalResult<ClientData>(clientData!);
     }
@@ -51,10 +56,12 @@ internal class ClientDataHandler : IClientDataHandler
             return new InternalResult<ClientData>(result.Message!);
         }
 
+        _logger.LogDebug("Client data for assertion is valid");
+
         return new InternalResult<ClientData>(clientData!);
     }
 
-    private static ClientData GetAttestationClientData(string clientDataJson)
+    private ClientData GetAttestationClientData(string clientDataJson)
     {
         // 7.1. Registering a New Credential (Steps 5 to 6 and 10)
 
@@ -73,10 +80,12 @@ internal class ClientDataHandler : IClientDataHandler
         // Let hash be the result of computing a hash over response.clientDataJSON using SHA-256.
         clientData.ClientDataHash = HashProvider.GetSha256Hash(clientDataJsonArray);
 
+        _logger.LogDebug("Client data for attestation is parsed");
+
         return clientData;
     }
 
-    private static ClientData GetAssertionClientData(string clientDataJson)
+    private ClientData GetAssertionClientData(string clientDataJson)
     {
         // 7.2. Verifying an Authentication Assertion (Steps 9, 10 and 19)
 
@@ -94,6 +103,8 @@ internal class ClientDataHandler : IClientDataHandler
         // Step 19
         // Let hash be the result of computing a hash over the cData using SHA-256.
         clientData.ClientDataHash = HashProvider.GetSha256Hash(clientDataJsonArray);
+
+        _logger.LogDebug("Client data for assertion is parsed");
 
         return clientData;
     }
