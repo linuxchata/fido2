@@ -112,8 +112,8 @@ internal sealed class TpmsAttestationParserService : ITpmsAttestationParserServi
         return BinaryPrimitives.ReadUInt32BigEndian(reader.ReadBytes(4));
     }
 
-    private static uint ReadUInt64(BinaryReader reader)
+    private static ulong ReadUInt64(BinaryReader reader)
     {
-        return BinaryPrimitives.ReadUInt32BigEndian(reader.ReadBytes(8));
+        return BinaryPrimitives.ReadUInt64BigEndian(reader.ReadBytes(8));
     }
 }
