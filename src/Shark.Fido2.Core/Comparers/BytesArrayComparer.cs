@@ -1,4 +1,6 @@
-﻿namespace Shark.Fido2.Core.Comparers;
+﻿using System.Security.Cryptography;
+
+namespace Shark.Fido2.Core.Comparers;
 
 public static class BytesArrayComparer
 {
@@ -14,34 +16,12 @@ public static class BytesArrayComparer
             return false;
         }
 
-        return Compare(expected, actual);
+        // Compare two byte arrays for equality without leaking timing information.
+        return CryptographicOperations.FixedTimeEquals(expected, actual);
     }
 
     public static bool CompareAsSpan(ReadOnlySpan<byte> expected, ReadOnlySpan<byte> actual)
     {
         return expected.SequenceEqual(actual);
-    }
-
-    private static bool Compare(byte[] expected, byte[] actual)
-    {
-        if (expected == actual)
-        {
-            return true;
-        }
-
-        if (expected.Length != actual.Length)
-        {
-            return false;
-        }
-
-        for (var i = 0; i < expected.Length; i++)
-        {
-            if (expected[i] != actual[i])
-            {
-                return false;
-            }
-        }
-
-        return true;
     }
 }
