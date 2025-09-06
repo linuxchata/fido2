@@ -69,7 +69,7 @@ internal class CredentialsIntegrationTests
         Assert.That(result.User.Id, Has.Length.EqualTo(8));
         Assert.That(result.User.Name, Is.EqualTo(request.UserName));
         Assert.That(result.User.DisplayName, Is.EqualTo(request.DisplayName));
-        Assert.That(result.Challenge, Has.Length.EqualTo(24));
+        Assert.That(result.Challenge, Has.Length.EqualTo(32));
         Assert.That(result.PublicKeyCredentialParams, Is.Not.Empty);
         Assert.That(result.PublicKeyCredentialParams, Has.Length.AtLeast(1));
         Assert.That(result.Timeout, Is.EqualTo(30000));
@@ -135,7 +135,7 @@ internal class CredentialsIntegrationTests
 
         // Assert
         Assert.That(result, Is.Not.Null);
-        Assert.That(result.Challenge, Has.Length.EqualTo(24));
+        Assert.That(result.Challenge, Has.Length.EqualTo(32));
         Assert.That(result.Timeout, Is.EqualTo(30000));
         Assert.That(result.RpId, Is.EqualTo("localhost"));
         Assert.That(result.AllowCredentials, Is.Empty);

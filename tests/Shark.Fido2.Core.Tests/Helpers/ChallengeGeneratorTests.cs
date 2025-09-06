@@ -6,7 +6,7 @@ namespace Shark.Fido2.Core.Tests.Helpers;
 internal class ChallengeGeneratorTests
 {
     [Test]
-    public void Get_ThenReturns24BytesChallenge()
+    public void Get_ThenReturns32BytesChallenge()
     {
         // Arrange
         var generator = new ChallengeGenerator();
@@ -15,7 +15,7 @@ internal class ChallengeGeneratorTests
         var challenge = generator.Get();
 
         // Assert
-        Assert.That(challenge.Length, Is.EqualTo(24));
+        Assert.That(challenge.Length, Is.EqualTo(32));
     }
 
     [Test]
