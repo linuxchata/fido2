@@ -28,6 +28,25 @@ internal class ClientDataHandlerTests
     }
 
     [Test]
+    [TestCase(null)]
+    [TestCase("")]
+    [TestCase("   ")]
+    public void HandleAttestation_WhenClientDataJsonIsNullOrEmpty_ThenReturnsInternalResult(string? clientDataJson)
+    {
+        // Arrange
+        var expectedChallenge = "t2pJGIQ7Y4DXF2b98tnBjg";
+
+        // Act
+        var result = _sut.HandleAttestation(clientDataJson!, $"{expectedChallenge}==");
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.HasError, Is.True);
+        Assert.That(result.Message, Is.EqualTo("Client data JSON cannot be null"));
+        Assert.That(result.Value, Is.Null);
+    }
+
+    [Test]
     public void HandleAttestation_WhenClientDataJsonValid_ThenReturnsInternalResult()
     {
         // Arrange
@@ -112,6 +131,25 @@ internal class ClientDataHandlerTests
                     c.CrossOrigin == false),
                 It.IsAny<string>()),
             Times.Once);
+    }
+
+    [Test]
+    [TestCase(null)]
+    [TestCase("")]
+    [TestCase("   ")]
+    public void HandleAssertion_WhenClientDataJsonIsNullOrEmpty_ThenReturnsInternalResult(string? clientDataJson)
+    {
+        // Arrange
+        var expectedChallenge = "t2pJGIQ7Y4DXF2b98tnBjg";
+
+        // Act
+        var result = _sut.HandleAssertion(clientDataJson!, $"{expectedChallenge}==");
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.HasError, Is.True);
+        Assert.That(result.Message, Is.EqualTo("Client data JSON cannot be null"));
+        Assert.That(result.Value, Is.Null);
     }
 
     [Test]
