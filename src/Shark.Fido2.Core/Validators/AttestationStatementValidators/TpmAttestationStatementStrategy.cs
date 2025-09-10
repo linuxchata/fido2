@@ -164,13 +164,13 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
         // Verify the sig is a valid signature over certInfo using the attestation public key in aikCert with
         // the algorithm specified in alg.
         var certificates = _attestationCertificateProviderService.GetCertificates(attestationStatementDict);
-        var attestationIdentityKeyCertificate = _attestationCertificateProviderService.GetAttestationCertificate(certificates);
+        var attestationCertificate = _attestationCertificateProviderService.GetAttestationCertificate(certificates);
         var result = _signatureValidator.ValidateTpm(
             (byte[])certInfo,
             attestationStatementDict,
             keyType,
             (int)algorithm,
-            attestationIdentityKeyCertificate);
+            attestationCertificate);
         if (!result.IsValid)
         {
             return result;
@@ -179,7 +179,7 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
         // Verify that aikCert meets the requirements in § 8.3.1 TPM Attestation Statement Certificate Requirements.
         // If aikCert contains an extension with OID 1.3.6.1.4.1.45724.1.1.4 (id-fido-gen-ce-aaguid) verify that
         // the value of this extension matches the aaguid in authenticatorData.
-        result = _attestationCertificateValidator.ValidateTpm(attestationIdentityKeyCertificate, attestationObjectData);
+        result = _attestationCertificateValidator.ValidateTpm(attestationCertificate, attestationObjectData);
         if (!result.IsValid)
         {
             return result;
