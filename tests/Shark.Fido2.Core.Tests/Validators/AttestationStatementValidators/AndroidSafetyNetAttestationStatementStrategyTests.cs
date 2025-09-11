@@ -79,7 +79,7 @@ internal class AndroidSafetyNetAttestationStatementStrategyTests
         // Assert
         Assert.That(validatorInternalResult, Is.Not.Null);
         Assert.That(validatorInternalResult.IsValid, Is.False);
-        Assert.That(validatorInternalResult.Message, Is.EqualTo("Android SafetyNet attestation statement certificates are invalid"));
+        Assert.That(validatorInternalResult.Message, Is.EqualTo("Android SafetyNet attestation statement JWS response signature is not valid"));
     }
 
     [Test]

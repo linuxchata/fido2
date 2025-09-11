@@ -111,13 +111,6 @@ internal class AndroidSafetyNetAttestationStatementStrategy : IAttestationStatem
 
         var certificates = _attestationCertificateProviderService.GetCertificates(jwsResponse.Certificates!);
 
-        // Validate the SSL certificate chain
-        result = _attestationCertificateValidator.ValidateChainOfTrustWithSystemCa(certificates);
-        if (!result.IsValid)
-        {
-            return result;
-        }
-
         // Use SSL hostname matching to verify that the leaf certificate was issued to the hostname attest.android.com
         var attestationCertificate = _attestationCertificateProviderService.GetAttestationCertificate(certificates);
         result = _attestationCertificateValidator.ValidateAndroidSafetyNet(attestationCertificate);

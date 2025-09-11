@@ -47,13 +47,6 @@ public interface IAttestationCertificateValidator
     ValidatorInternalResult ValidateAndroidSafetyNet(X509Certificate2 attestationCertificate);
 
     /// <summary>
-    /// Validates a certificate chain using the system's certificate authority store.
-    /// </summary>
-    /// <param name="certificates">The list of certificates forming the chain.</param>
-    /// <returns>A validation result indicating success or failure with error details.</returns>
-    ValidatorInternalResult ValidateChainOfTrustWithSystemCa(List<X509Certificate2> certificates);
-
-    /// <summary>
     /// Validates a certificate for FIDO U2F attestation format.
     /// </summary>
     /// <param name="attestationCertificate">The X.509 certificate.</param>
