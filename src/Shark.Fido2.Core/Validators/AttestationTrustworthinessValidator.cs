@@ -109,14 +109,24 @@ internal class AttestationTrustworthinessValidator : IAttestationTrustworthiness
 
     private static X509VerificationFlags GetVerificationFlags(string attestationFormat)
     {
-        // Some Android devices may generate an attestation certificate with a default date of January 1, 1970.
-        // See https://source.android.com/docs/security/features/keystore/attestation#tbscertificate-sequence.
         if (string.Equals(
             attestationFormat,
             AttestationStatementFormatIdentifier.AndroidKey,
             StringComparison.OrdinalIgnoreCase))
         {
+            // Some Android devices may generate an attestation certificate with a default date of January 1, 1970.
+            // See https://source.android.com/docs/security/features/keystore/attestation#tbscertificate-sequence.
             return X509VerificationFlags.IgnoreNotTimeValid | X509VerificationFlags.AllowUnknownCertificateAuthority;
+        }
+        else if (string.Equals(
+            attestationFormat,
+            AttestationStatementFormatIdentifier.AndroidSafetyNet,
+            StringComparison.OrdinalIgnoreCase))
+        {
+            // The certificate used by Android SafetyNet attestation, namely 'GlobalSign Root CA - R2', expired on
+            // Dec 15, 2021, at 08:00:00, so allowing an unknown certificate authority for backward compatibility.
+            // See https://crt.sh/?id=14.
+            return X509VerificationFlags.AllowUnknownCertificateAuthority;
         }
         else if (string.Equals(
             attestationFormat,

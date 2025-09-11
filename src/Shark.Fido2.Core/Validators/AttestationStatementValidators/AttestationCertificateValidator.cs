@@ -305,39 +305,6 @@ internal class AttestationCertificateValidator : IAttestationCertificateValidato
         return ValidatorInternalResult.Valid();
     }
 
-    public ValidatorInternalResult ValidateChainOfTrustWithSystemCa(List<X509Certificate2> certificates)
-    {
-        ArgumentNullException.ThrowIfNull(certificates);
-
-        const string Prefix = "Android SafetyNet attestation statement";
-
-        if (certificates.Count == 1)
-        {
-            return ValidatorInternalResult.Invalid($"{Prefix} self-signed certificate is not supported");
-        }
-
-        using var chain = new X509Chain();
-        chain.ChainPolicy.RevocationMode = X509RevocationMode.NoCheck;
-        chain.ChainPolicy.VerificationFlags = X509VerificationFlags.NoFlag;
-        chain.ChainPolicy.VerificationTime = _timeProvider.GetLocalNow().DateTime;
-
-        var leafCertificate = certificates[0];
-        var intermediateCertificates = certificates.Skip(1).Take(certificates.Count - 2);
-
-        foreach (var intermediateCertificate in intermediateCertificates)
-        {
-            chain.ChainPolicy.ExtraStore.Add(intermediateCertificate);
-        }
-
-        var isValid = chain.Build(leafCertificate);
-        if (!isValid)
-        {
-            return ValidatorInternalResult.Invalid($"{Prefix} certificates are invalid");
-        }
-
-        return ValidatorInternalResult.Valid();
-    }
-
     public ValidatorInternalResult ValidateFidoU2F(X509Certificate2 attestationCertificate)
     {
         ArgumentNullException.ThrowIfNull(attestationCertificate);
