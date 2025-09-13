@@ -1,4 +1,5 @@
-﻿using Shark.Fido2.Core.Abstractions.Services;
+﻿using Microsoft.Extensions.Logging;
+using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Helpers;
@@ -19,17 +20,20 @@ internal class AndroidKeyAttestationStatementStrategy : IAttestationStatementStr
     private readonly IAttestationCertificateProviderService _attestationCertificateProviderService;
     private readonly IAttestationCertificateValidator _attestationCertificateValidator;
     private readonly ICertificatePublicKeyValidator _certificatePublicKeyValidator;
+    private readonly ILogger<AndroidKeyAttestationStatementStrategy> _logger;
 
     public AndroidKeyAttestationStatementStrategy(
         ISignatureAttestationStatementValidator signatureAttestationStatementValidator,
         IAttestationCertificateProviderService attestationCertificateProviderService,
         IAttestationCertificateValidator attestationCertificateValidator,
-        ICertificatePublicKeyValidator certificatePublicKeyValidator)
+        ICertificatePublicKeyValidator certificatePublicKeyValidator,
+        ILogger<AndroidKeyAttestationStatementStrategy> logger)
     {
         _signatureValidator = signatureAttestationStatementValidator;
         _attestationCertificateProviderService = attestationCertificateProviderService;
         _attestationCertificateValidator = attestationCertificateValidator;
         _certificatePublicKeyValidator = certificatePublicKeyValidator;
+        _logger = logger;
     }
 
     /// <summary>
@@ -73,6 +77,8 @@ internal class AndroidKeyAttestationStatementStrategy : IAttestationStatementStr
             return result;
         }
 
+        _logger.LogDebug("Signature is verified");
+
         // Verify that the public key in the first certificate in x5c matches the credentialPublicKey in the
         // attestedCredentialData in authenticatorData.
         result = _certificatePublicKeyValidator.Validate(attestationCertificate, credentialPublicKey!);
@@ -80,6 +86,8 @@ internal class AndroidKeyAttestationStatementStrategy : IAttestationStatementStr
         {
             return result;
         }
+
+        _logger.LogDebug("Certificate public key matches credential public key");
 
         // Verify that the attestationChallenge field in the attestation certificate extension data is identical
         // to clientDataHash.
@@ -89,6 +97,9 @@ internal class AndroidKeyAttestationStatementStrategy : IAttestationStatementStr
         {
             return result;
         }
+
+        _logger.LogDebug("Attestation certificate is valid");
+        _logger.LogDebug("Android Key attestation statement is valid");
 
         // If successful, return implementation-specific values representing attestation type Basic and attestation
         // trust path x5c.

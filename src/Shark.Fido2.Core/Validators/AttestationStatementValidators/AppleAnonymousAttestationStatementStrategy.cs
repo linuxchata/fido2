@@ -1,4 +1,5 @@
 using System.Security.Cryptography;
+using Microsoft.Extensions.Logging;
 using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Constants;
@@ -22,17 +23,20 @@ internal class AppleAnonymousAttestationStatementStrategy : IAttestationStatemen
     private readonly IAttestationCertificateValidator _attestationCertificateValidator;
     private readonly ICertificatePublicKeyValidator _certificatePublicKeyValidator;
     private readonly ICertificateReaderService _certificateReaderService;
+    private readonly ILogger<AppleAnonymousAttestationStatementStrategy> _logger;
 
     public AppleAnonymousAttestationStatementStrategy(
         IAttestationCertificateProviderService attestationCertificateProviderService,
         IAttestationCertificateValidator attestationCertificateValidator,
         ICertificatePublicKeyValidator certificatePublicKeyValidator,
-        ICertificateReaderService certificateReaderService)
+        ICertificateReaderService certificateReaderService,
+        ILogger<AppleAnonymousAttestationStatementStrategy> logger)
     {
         _attestationCertificateProviderService = attestationCertificateProviderService;
         _attestationCertificateValidator = attestationCertificateValidator;
         _certificatePublicKeyValidator = certificatePublicKeyValidator;
         _certificateReaderService = certificateReaderService;
+        _logger = logger;
     }
 
     /// <summary>
@@ -74,6 +78,8 @@ internal class AppleAnonymousAttestationStatementStrategy : IAttestationStatemen
             return result;
         }
 
+        _logger.LogDebug("Attestation certificate is valid");
+
         // Verify that the credential public key equals the Subject Public Key of credCert.
         var credentialPublicKey = attestationObjectData.AuthenticatorData!.AttestedCredentialData.CredentialPublicKey;
         result = _certificatePublicKeyValidator.Validate(attestationCertificate, credentialPublicKey!);
@@ -82,8 +88,12 @@ internal class AppleAnonymousAttestationStatementStrategy : IAttestationStatemen
             return result;
         }
 
+        _logger.LogDebug("Certificate public key matches credential public key");
+
         // Add root CA certificate to the trust path.
         var appleWebAuthnRootCaCertificate = _certificateReaderService.Read(AppleWebAuthnRootCa);
+
+        _logger.LogDebug("Apple Anonymous attestation statement is valid");
 
         // If successful, return implementation-specific values representing attestation type Anonymization CA
         // and attestation trust path x5c.
