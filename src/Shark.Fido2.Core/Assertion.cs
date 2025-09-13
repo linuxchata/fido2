@@ -196,6 +196,7 @@ public sealed class Assertion : IAssertion
             {
                 // Update storedSignCount to be the value of authData.signCount.
                 await _credentialRepository.UpdateSignCount(credentialId, signCount, cancellationToken);
+
                 _logger.LogDebug("Signature counter for credential '{CredentialId}' is updated", credentialId.ToBase64Url());
             }
             else
@@ -214,6 +215,7 @@ public sealed class Assertion : IAssertion
         else
         {
             await _credentialRepository.UpdateLastUsedAt(credentialId, cancellationToken);
+
             _logger.LogDebug(
                 "Last used timestamp for credential '{CredentialId}' is updated",
                 credentialId.ToBase64Url());

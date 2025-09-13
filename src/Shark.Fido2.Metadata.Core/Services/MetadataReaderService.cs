@@ -216,6 +216,7 @@ internal sealed class MetadataReaderService : IMetadataReaderService
         finally
         {
             issuerSigningKeys.ForEach(a => a.Disposable.Dispose());
+            certificates.ForEach(c => c.Dispose());
         }
     }
 

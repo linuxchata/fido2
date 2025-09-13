@@ -5,6 +5,7 @@ using Shark.Fido2.Core.Comparers;
 using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Helpers;
 using Shark.Fido2.Core.Mappers;
+using Shark.Fido2.Core.Models;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain;
 using Shark.Fido2.Domain.Enums;
@@ -180,6 +181,9 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
         // Verify the sig is a valid signature over certInfo using the attestation public key in aikCert with
         // the algorithm specified in alg.
         var certificates = _attestationCertificateProviderService.GetCertificates(attestationStatementDict);
+
+        using var certificateScope = new CertificateScope(certificates);
+
         var attestationCertificate = _attestationCertificateProviderService.GetAttestationCertificate(certificates);
         var result = _signatureValidator.ValidateTpm(
             (byte[])certInfo,
@@ -204,6 +208,9 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
         }
 
         _logger.LogDebug("Attestation certificate is valid");
+
+        certificateScope.Release();
+
         _logger.LogDebug("TPM attestation statement is valid");
 
         // If successful, return implementation-specific values representing attestation type AttCA and attestation

@@ -4,6 +4,7 @@ using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Helpers;
+using Shark.Fido2.Core.Models;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain;
 using Shark.Fido2.Domain.Enums;
@@ -61,6 +62,9 @@ internal class FidoU2FAttestationStatementStrategy : IAttestationStatementStrate
         // the public key conveyed by attCert. If certificate public key is not an Elliptic Curve (EC) public key
         // over the P-256 curve, terminate this algorithm and return an appropriate error.
         var certificates = _attestationCertificateProviderService.GetCertificates(attestationStatementDict);
+
+        using var certificateScope = new CertificateScope(certificates);
+
         if (certificates.Count != 1)
         {
             return ValidatorInternalResult.Invalid("FIDO U2F attestation statement must have exactly one certificate");
@@ -122,12 +126,15 @@ internal class FidoU2FAttestationStatementStrategy : IAttestationStatementStrate
         }
 
         _logger.LogDebug("AAGUID is valid");
-        _logger.LogDebug("FIDO U2F attestation statement is valid");
 
         // Optionally, inspect x5c and consult externally provided knowledge to determine whether attStmt conveys a
         // Basic or AttCA attestation.
         var attestationType = IsRootCertificate(attestationCertificate) ?
             AttestationType.Basic : AttestationType.AttCA;
+
+        certificateScope.Release();
+
+        _logger.LogDebug("FIDO U2F attestation statement is valid");
 
         // If successful, return implementation-specific values representing attestation type Basic, AttCA or
         // uncertainty, and attestation trust path x5c.

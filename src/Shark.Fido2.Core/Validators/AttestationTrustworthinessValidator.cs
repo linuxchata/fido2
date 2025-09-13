@@ -86,7 +86,7 @@ internal class AttestationTrustworthinessValidator : IAttestationTrustworthiness
 
         result = ValidateTrustPath(attestationStatementResult);
 
-        _logger.LogDebug("Attestation trust path is valid");
+        attestationStatementResult.TrustPath?.ToList().ForEach(c => c.Dispose());
 
         return result;
     }
@@ -121,6 +121,8 @@ internal class AttestationTrustworthinessValidator : IAttestationTrustworthiness
             var statuses = chain.ChainStatus.Select(a => a.StatusInformation);
             return ValidatorInternalResult.Invalid(string.Join(' ', statuses.ToList()));
         }
+
+        _logger.LogDebug("Attestation trust path is valid");
 
         return ValidatorInternalResult.Valid();
     }
