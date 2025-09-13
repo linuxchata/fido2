@@ -17,15 +17,12 @@ public class CustomConsoleFormatter : ConsoleFormatter
         IExternalScopeProvider? scopeProvider,
         TextWriter textWriter)
     {
-        // Time and log level
-        var timestamp = DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss");
-        textWriter.Write($"{timestamp} {logEntry.LogLevel}");
+        var timestamp = DateTime.UtcNow.ToString("dd-MM-yyyy HH:mm:ss");
+        textWriter.Write($"{timestamp} {logEntry.LogLevel} ");
 
-        // Scope information (e.g., TraceId)
         WriteScopeInformation(scopeProvider, textWriter);
 
-        // Category and message
-        var className = logEntry.Category?.Split('.').Last() ?? logEntry.Category;
+        var className = logEntry.Category?[(logEntry.Category.LastIndexOf('.') + 1)..] ?? logEntry.Category;
         var message = logEntry.Formatter?.Invoke(logEntry.State, logEntry.Exception);
         textWriter.Write($"[{className}] {message}");
 
@@ -43,7 +40,8 @@ public class CustomConsoleFormatter : ConsoleFormatter
                     {
                         if (kv.Key == "TraceId")
                         {
-                            state.Write($" {scope} ");
+                            state.Write(scope);
+                            state.Write(' ');
                         }
                     }
                 }
