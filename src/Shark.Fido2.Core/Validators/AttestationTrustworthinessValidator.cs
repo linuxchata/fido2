@@ -44,12 +44,11 @@ internal class AttestationTrustworthinessValidator : IAttestationTrustworthiness
             if (_configuration.AllowNoneAttestation)
             {
                 _logger.LogDebug("None attestation type is allowed under current policy");
-                ValidatorInternalResult.Valid();
             }
-            else
-            {
-                ValidatorInternalResult.Invalid("None attestation type is not allowed under current policy");
-            }
+
+            return _configuration.AllowNoneAttestation
+                ? ValidatorInternalResult.Valid()
+                : ValidatorInternalResult.Invalid("None attestation type is not allowed under current policy");
         }
 
         // If self attestation was used, verify that Self attestation is allowed under Relying Party policy.
@@ -58,12 +57,11 @@ internal class AttestationTrustworthinessValidator : IAttestationTrustworthiness
             if (_configuration.AllowSelfAttestation)
             {
                 _logger.LogDebug("Self attestation type is allowed under current policy");
-                ValidatorInternalResult.Valid();
             }
-            else
-            {
-                ValidatorInternalResult.Invalid("Self attestation type is not allowed under current policy");
-            }
+
+            return _configuration.AllowSelfAttestation
+                ? ValidatorInternalResult.Valid()
+                : ValidatorInternalResult.Invalid("Self attestation type is not allowed under current policy");
         }
 
         // If only basic surrogate attestation is supported by the authenticator, verify that attestation does not
