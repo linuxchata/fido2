@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Time.Testing;
 using Moq;
 using Shark.Fido2.Core.Abstractions.Validators;
@@ -39,7 +40,7 @@ internal class AndroidSafetyNetAttestationStatementStrategyTests
         _creationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
 
         _attestationObjectHandler = new AttestationObjectHandler(
-            _provider, _attestationObjectValidatorMock.Object);
+            _provider, _attestationObjectValidatorMock.Object, NullLogger<AttestationObjectHandler>.Instance);
 
         var jwsResponseParserService = new AndroidSafetyNetJwsResponseParserService();
 
@@ -59,7 +60,8 @@ internal class AndroidSafetyNetAttestationStatementStrategyTests
             jwsResponseParserService,
             jwsResponseValidator,
             attestationCertificateProviderService,
-            attestationCertificateValidator);
+            attestationCertificateValidator,
+            NullLogger<AndroidSafetyNetAttestationStatementStrategy>.Instance);
     }
 
     [Test]

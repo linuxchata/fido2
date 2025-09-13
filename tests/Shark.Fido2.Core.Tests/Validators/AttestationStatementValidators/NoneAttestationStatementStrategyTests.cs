@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using Microsoft.Extensions.Logging.Abstractions;
+using Moq;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Handlers;
@@ -39,7 +40,7 @@ internal class NoneAttestationStatementStrategyTests
         _creationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
 
         _attestationObjectHandler = new AttestationObjectHandler(
-            _provider, _attestationObjectValidatorMock.Object);
+            _provider, _attestationObjectValidatorMock.Object, NullLogger<AttestationObjectHandler>.Instance);
 
         _sut = new NoneAttestationStatementStrategy();
     }

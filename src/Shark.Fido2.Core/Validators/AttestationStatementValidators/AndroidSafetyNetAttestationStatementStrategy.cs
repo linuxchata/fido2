@@ -1,4 +1,5 @@
 ﻿using System.Security.Cryptography;
+using Microsoft.Extensions.Logging;
 using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Comparers;
@@ -21,17 +22,20 @@ internal class AndroidSafetyNetAttestationStatementStrategy : IAttestationStatem
     private readonly IAndroidSafetyNetJwsResponseValidator _jwsResponseValidator;
     private readonly IAttestationCertificateProviderService _attestationCertificateProviderService;
     private readonly IAttestationCertificateValidator _attestationCertificateValidator;
+    private readonly ILogger<AndroidSafetyNetAttestationStatementStrategy> _logger;
 
     public AndroidSafetyNetAttestationStatementStrategy(
         IAndroidSafetyNetJwsResponseParserService androidSafetyNetJwsResponseParserService,
         IAndroidSafetyNetJwsResponseValidator androidSafetyNetJwsResponseValidator,
         IAttestationCertificateProviderService attestationCertificateProviderService,
-        IAttestationCertificateValidator attestationCertificateValidator)
+        IAttestationCertificateValidator attestationCertificateValidator,
+        ILogger<AndroidSafetyNetAttestationStatementStrategy> logger)
     {
         _jwsResponseParserService = androidSafetyNetJwsResponseParserService;
         _jwsResponseValidator = androidSafetyNetJwsResponseValidator;
         _attestationCertificateProviderService = attestationCertificateProviderService;
         _attestationCertificateValidator = attestationCertificateValidator;
+        _logger = logger;
     }
 
     /// <summary>
@@ -79,6 +83,8 @@ internal class AndroidSafetyNetAttestationStatementStrategy : IAttestationStatem
                 "Android SafetyNet attestation statement JWS response could not be parsed");
         }
 
+        _logger.LogDebug("JWS response is parsed");
+
         // Verify that the nonce attribute in the payload of response is identical to the Base64 encoding of the
         // SHA-256 hash of the concatenation of authenticatorData and clientDataHash.
         if (jwsResponse.Nonce == null)
@@ -100,6 +106,8 @@ internal class AndroidSafetyNetAttestationStatementStrategy : IAttestationStatem
                 "Android SafetyNet attestation statement response's nonce is not identical to the concatenation of authenticatorData and clientDataHash");
         }
 
+        _logger.LogDebug("JWS response nonce is verified");
+
         // Verify that the SafetyNet response actually came from the SafetyNet service by following the steps in the
         // SafetyNet online documentation.
         // https://web.archive.org/web/20180710064905/https://developer.android.com/training/safetynet/attestation#verify-compat-check
@@ -108,6 +116,8 @@ internal class AndroidSafetyNetAttestationStatementStrategy : IAttestationStatem
         {
             return result;
         }
+
+        _logger.LogDebug("JWS response is pre-validated");
 
         var certificates = _attestationCertificateProviderService.GetCertificates(jwsResponse.Certificates!);
 
@@ -119,6 +129,8 @@ internal class AndroidSafetyNetAttestationStatementStrategy : IAttestationStatem
             return result;
         }
 
+        _logger.LogDebug("Attestation certificate is valid");
+
         // Use the certificate to verify the signature of the JWS message.
         // Check the data of the JWS message to make sure it matches the data within your original request.
         result = _jwsResponseValidator.Validate(jwsResponse, attestationCertificate);
@@ -126,6 +138,9 @@ internal class AndroidSafetyNetAttestationStatementStrategy : IAttestationStatem
         {
             return result;
         }
+
+        _logger.LogDebug("JWS response is valid");
+        _logger.LogDebug("Android SafetyNet attestation statement is valid");
 
         // If successful, return implementation-specific values representing attestation type Basic and attestation
         // trust path x5c.

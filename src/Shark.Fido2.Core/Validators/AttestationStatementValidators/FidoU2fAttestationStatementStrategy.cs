@@ -1,4 +1,5 @@
 using System.Security.Cryptography.X509Certificates;
+using Microsoft.Extensions.Logging;
 using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Constants;
@@ -21,15 +22,18 @@ internal class FidoU2FAttestationStatementStrategy : IAttestationStatementStrate
     private readonly IAttestationCertificateProviderService _attestationCertificateProviderService;
     private readonly IAttestationCertificateValidator _attestationCertificateValidator;
     private readonly ISignatureAttestationStatementValidator _signatureValidator;
+    private readonly ILogger<FidoU2FAttestationStatementStrategy> _logger;
 
     public FidoU2FAttestationStatementStrategy(
         IAttestationCertificateProviderService attestationCertificateProviderService,
         IAttestationCertificateValidator attestationCertificateValidator,
-        ISignatureAttestationStatementValidator signatureAttestationStatementValidator)
+        ISignatureAttestationStatementValidator signatureAttestationStatementValidator,
+        ILogger<FidoU2FAttestationStatementStrategy> logger)
     {
         _attestationCertificateProviderService = attestationCertificateProviderService;
         _attestationCertificateValidator = attestationCertificateValidator;
         _signatureValidator = signatureAttestationStatementValidator;
+        _logger = logger;
     }
 
     /// <summary>
@@ -69,6 +73,8 @@ internal class FidoU2FAttestationStatementStrategy : IAttestationStatementStrate
             return result;
         }
 
+        _logger.LogDebug("Attestation certificate is valid");
+
         var credentialPublicKey = attestationObjectData.AuthenticatorData!.AttestedCredentialData.CredentialPublicKey;
 
         // Let x be the value corresponding to the "-2" key (representing x coordinate) in credentialPublicKey, and
@@ -80,6 +86,8 @@ internal class FidoU2FAttestationStatementStrategy : IAttestationStatementStrate
                 "FIDO U2F attestation statement credential public key X coordinate is missing or has a wrong size");
         }
 
+        _logger.LogDebug("Credential public key X coordinate is valid");
+
         // Let y be the value corresponding to the "-3" key (representing y coordinate) in credentialPublicKey, and
         // confirm its size to be of 32 bytes. If size differs or "-3" key is not found, terminate this algorithm and
         // return an appropriate error.
@@ -88,6 +96,8 @@ internal class FidoU2FAttestationStatementStrategy : IAttestationStatementStrate
             return ValidatorInternalResult.Invalid(
                 "FIDO U2F attestation statement credential public key Y coordinate is missing or has a wrong size");
         }
+
+        _logger.LogDebug("Credential public key Y coordinate is valid");
 
         // Let publicKeyU2F be the concatenation 0x04 || x || y.
         var publicKeyU2f = GetPublicKeyU2f(credentialPublicKey);
@@ -103,11 +113,16 @@ internal class FidoU2FAttestationStatementStrategy : IAttestationStatementStrate
             return result;
         }
 
+        _logger.LogDebug("Signature is verified");
+
         // (Conformance Tools requirement)
         if (attestationObjectData.AuthenticatorData.AttestedCredentialData.AaGuid != Guid.Empty)
         {
             return ValidatorInternalResult.Invalid("FIDO U2F attestation statement has not empty AAGUID");
         }
+
+        _logger.LogDebug("AAGUID is valid");
+        _logger.LogDebug("FIDO U2F attestation statement is valid");
 
         // Optionally, inspect x5c and consult externally provided knowledge to determine whether attStmt conveys a
         // Basic or AttCA attestation.

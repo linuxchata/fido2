@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Constants;
@@ -24,7 +25,7 @@ internal class ClientDataHandlerTests
             .Setup(a => a.ValidateForAssertion(It.IsAny<ClientData>(), It.IsAny<string>()))
             .Returns(ValidatorInternalResult.Valid());
 
-        _sut = new ClientDataHandler(_clientDataValidatorMock.Object);
+        _sut = new ClientDataHandler(_clientDataValidatorMock.Object, NullLogger<ClientDataHandler>.Instance);
     }
 
     [Test]
