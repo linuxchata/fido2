@@ -71,7 +71,6 @@ internal class AppleAnonymousAttestationStatementStrategy : IAttestationStatemen
         // Verify that nonce equals the value of the extension with OID 1.2.840.113635.100.8.2 in credCert.
         var certificates = _attestationCertificateProviderService.GetCertificates(attestationStatementDict);
         var attestationCertificate = _attestationCertificateProviderService.GetAttestationCertificate(certificates);
-
         var result = _attestationCertificateValidator.ValidateAppleAnonymous(attestationCertificate, nonce);
         if (!result.IsValid)
         {
