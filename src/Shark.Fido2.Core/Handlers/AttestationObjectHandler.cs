@@ -55,7 +55,7 @@ internal class AttestationObjectHandler : IAttestationObjectHandler
         }
 
         _logger.LogDebug(
-            "Attestation object for {AttestationStatementFormat} attestation statement format is valid",
+            "Attestation object for '{AttestationStatementFormat}' attestation statement format is valid",
             attestationObjectData.AttestationStatementFormat);
 
         return new InternalResult<AttestationObjectData>(attestationObjectData!);
@@ -81,7 +81,7 @@ internal class AttestationObjectHandler : IAttestationObjectHandler
         };
 
         _logger.LogDebug(
-            "Attestation object data is parsed. Attestation statement format is {AttestationStatementFormat}",
+            "Attestation object data is parsed. Attestation statement format is '{AttestationStatementFormat}'",
             attestationObjectData.AttestationStatementFormat);
 
         return attestationObjectData;

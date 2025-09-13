@@ -128,7 +128,7 @@ internal class AttestationObjectValidator : IAttestationObjectValidator
         }
 
         _logger.LogDebug(
-            "Attestation statement format {AttestationStatementFormat} is supported",
+            "Attestation statement format '{AttestationStatementFormat}' is supported",
             attestationStatementFormat);
 
         // Step 19
