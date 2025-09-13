@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Shark.Fido2.Common.Extensions;
 using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Core.Abstractions.Handlers;
@@ -21,6 +22,7 @@ public sealed class Assertion : IAssertion
     private readonly IChallengeGenerator _challengeGenerator;
     private readonly ICredentialRepository _credentialRepository;
     private readonly Fido2Configuration _configuration;
+    private readonly ILogger<Assertion> _logger;
 
     public Assertion(
         IAssertionParametersValidator assertionParametersValidator,
@@ -29,7 +31,8 @@ public sealed class Assertion : IAssertion
         IUserHandlerValidator userHandlerValidator,
         IChallengeGenerator challengeGenerator,
         ICredentialRepository credentialRepository,
-        IOptions<Fido2Configuration> options)
+        IOptions<Fido2Configuration> options,
+        ILogger<Assertion> logger)
     {
         _assertionParametersValidator = assertionParametersValidator;
         _clientDataHandler = clientDataHandler;
@@ -38,6 +41,7 @@ public sealed class Assertion : IAssertion
         _challengeGenerator = challengeGenerator;
         _credentialRepository = credentialRepository;
         _configuration = options.Value;
+        _logger = logger;
     }
 
     public async Task<PublicKeyCredentialRequestOptions> BeginAuthentication(
@@ -83,6 +87,8 @@ public sealed class Assertion : IAssertion
             },
         };
 
+        _logger.LogDebug("Request options are successfully constructed");
+
         return publicKeyCredentialRequestOptions;
     }
 
@@ -114,19 +120,19 @@ public sealed class Assertion : IAssertion
         // If options.allowCredentials is not empty, verify that credential.id identifies one of the public key
         // credentials listed in options.allowCredentials.
         var credentialId = publicKeyCredentialAssertion.RawId.FromBase64Url();
-        if (requestOptions.AllowCredentials != null &&
-            requestOptions.AllowCredentials.Length != 0 &&
-            !Array.Exists(
-                requestOptions.AllowCredentials,
-                c => BytesArrayComparer.CompareNullable(c.Id, credentialId)))
+        if (IsCredentialNotAllowed(requestOptions, credentialId))
         {
+            _logger.LogWarning(
+                "Assertion response does not contain expected credential '{CredentialId}'",
+                credentialId);
             return AssertionCompleteResult.CreateFailure(
-                "Assertion response does not contain expected credential identifier");
+                "Assertion response does not contain expected credential");
         }
 
         var credential = await _credentialRepository.Get(credentialId, cancellationToken);
         if (credential == null)
         {
+            _logger.LogWarning("Registered credential '{CredentialId}' is not found", credentialId);
             return AssertionCompleteResult.CreateFailure("Registered credential is not found");
         }
 
@@ -136,6 +142,7 @@ public sealed class Assertion : IAssertion
         var result = _userHandlerValidator.Validate(credential, publicKeyCredentialAssertion, requestOptions);
         if (!result.IsValid)
         {
+            _logger.LogWarning("User handler validator error: {Message}", result.Message!);
             return AssertionCompleteResult.CreateFailure(result.Message!);
         }
 
@@ -144,6 +151,7 @@ public sealed class Assertion : IAssertion
         // look up the corresponding credential public key and let credentialPublicKey be that credential public key.
         if (credential.CredentialPublicKey == null)
         {
+            _logger.LogWarning("Registered credential's public key is not found");
             return AssertionCompleteResult.CreateFailure("Registered credential's public key is not found");
         }
 
@@ -156,6 +164,7 @@ public sealed class Assertion : IAssertion
         var clientDataHandlerResult = _clientDataHandler.HandleAssertion(response.ClientDataJson, challengeString);
         if (clientDataHandlerResult.HasError)
         {
+            _logger.LogWarning("Client data handler error: {Message}", clientDataHandlerResult.Message!);
             return AssertionCompleteResult.CreateFailure(clientDataHandlerResult.Message!);
         }
 
@@ -172,22 +181,22 @@ public sealed class Assertion : IAssertion
             // Step 22
             // If all the above steps are successful, continue with the authentication ceremony as appropriate.
             // Otherwise, fail the authentication ceremony.
+            _logger.LogWarning("Assertion object handler error: {Message}", assertionResult.Message!);
             return AssertionCompleteResult.CreateFailure(assertionResult.Message!);
         }
 
         // Step 21
         // Let storedSignCount be the stored signature counter value associated with credential.id.
         // If authData.signCount is nonzero or storedSignCount is nonzero, then run the following sub-step:
-        if (assertionResult.Value!.SignCount != 0 || credential.SignCount != 0)
+        var signCount = assertionResult.Value!.SignCount;
+        if (signCount != 0 || credential.SignCount != 0)
         {
             // If authData.signCount is greater than storedSignCount:
-            if (assertionResult.Value!.SignCount > credential.SignCount)
+            if (signCount > credential.SignCount)
             {
                 // Update storedSignCount to be the value of authData.signCount.
-                await _credentialRepository.UpdateSignCount(
-                    credential.CredentialId,
-                    assertionResult.Value!.SignCount,
-                    cancellationToken);
+                await _credentialRepository.UpdateSignCount(credentialId, signCount, cancellationToken);
+                _logger.LogDebug("Signature counter for credential '{CredentialId}' is updated", credentialId.ToBase64Url());
             }
             else
             {
@@ -196,16 +205,31 @@ public sealed class Assertion : IAssertion
                 // private key may exist and are being used in parallel. Relying Parties should incorporate this
                 // information into their risk scoring. Whether the Relying Party updates storedSignCount in this case,
                 // or not, or fails the authentication ceremony or not, is Relying Party-specific.
-                return AssertionCompleteResult.CreateFailure(
-                    "Signature counter of the authenticator is less or equal to stored signature count. " +
-                    "The authenticator may be cloned");
+                var errorMessage = "The authenticator's signature counter value is less than or equal to the " +
+                    "previously stored count, indicating that the device may have been cloned or duplicated.";
+                _logger.LogWarning("{ErrorMessage}", errorMessage);
+                return AssertionCompleteResult.CreateFailure(errorMessage);
             }
         }
         else
         {
-            await _credentialRepository.UpdateLastUsedAt(credential.CredentialId, cancellationToken);
+            await _credentialRepository.UpdateLastUsedAt(credentialId, cancellationToken);
+            _logger.LogDebug(
+                "Last used timestamp for credential '{CredentialId}' is updated",
+                credentialId.ToBase64Url());
         }
 
+        _logger.LogDebug("Assertion is successfully completed");
+
         return AssertionCompleteResult.Create();
+    }
+
+    private static bool IsCredentialNotAllowed(PublicKeyCredentialRequestOptions requestOptions, byte[] credentialId)
+    {
+        return requestOptions.AllowCredentials != null &&
+            requestOptions.AllowCredentials.Length != 0 &&
+            !Array.Exists(
+                requestOptions.AllowCredentials,
+                c => BytesArrayComparer.CompareNullable(c.Id, credentialId));
     }
 }

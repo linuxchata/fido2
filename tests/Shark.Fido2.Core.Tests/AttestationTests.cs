@@ -1,4 +1,5 @@
 using System.Text;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Moq;
 using Shark.Fido2.Common.Extensions;
@@ -134,7 +135,8 @@ internal class AttestationTests
             _challengeGeneratorMock.Object,
             _userIdGeneratorMock.Object,
             _credentialRepositoryMock.Object,
-            Options.Create(_fido2Configuration));
+            Options.Create(_fido2Configuration),
+            NullLogger<Attestation>.Instance);
     }
 
     #region BeginRegistration Tests

@@ -2,6 +2,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Shark.Fido2.Metadata.Core.Abstractions;
@@ -20,15 +21,18 @@ internal sealed class MetadataReaderService : IMetadataReaderService
     private readonly IHttpClientRepository _httpClientRepository;
     private readonly ICertificateValidator _certificateValidator;
     private readonly MetadataServiceConfiguration _configuration;
+    private readonly ILogger<MetadataReaderService> _logger;
 
     public MetadataReaderService(
         IHttpClientRepository httpClientRepository,
         ICertificateValidator certificateValidator,
-        IOptions<MetadataServiceConfiguration> options)
+        IOptions<MetadataServiceConfiguration> options,
+        ILogger<MetadataReaderService> logger)
     {
         _httpClientRepository = httpClientRepository;
         _certificateValidator = certificateValidator;
         _configuration = options.Value;
+        _logger = logger;
     }
 
     public async Task<MetadataBlobPayload> ValidateAndRead(
@@ -40,6 +44,8 @@ internal sealed class MetadataReaderService : IMetadataReaderService
         ArgumentNullException.ThrowIfNull(rootCertificate);
 
         var metadataBlobToken = ReadBlob(metadataBlob);
+
+        _logger.LogDebug("Metadata BLOB is read");
 
         // Step 4
         // If the x5u attribute is present in the JWT Header, then:
@@ -92,6 +98,8 @@ internal sealed class MetadataReaderService : IMetadataReaderService
             }
         }
 
+        _logger.LogDebug("Metadata BLOB signing certificate chain is valid");
+
         // Step 6
         // Verify the signature of the Metadata BLOB object using the BLOB signing certificate chain (as determined
         // by the steps above). The FIDO Server SHOULD ignore the file if the signature is invalid.
@@ -99,6 +107,8 @@ internal sealed class MetadataReaderService : IMetadataReaderService
         {
             throw new InvalidDataException("Signature of the Metadata BLOB object is invalid");
         }
+
+        _logger.LogDebug("Metadata BLOB signature is valid");
 
         // Step 6
         // It SHOULD also ignore the file if its number (no) is less or equal to the number of the last Metadata BLOB
@@ -126,6 +136,8 @@ internal sealed class MetadataReaderService : IMetadataReaderService
             throw new InvalidDataException("Metadata token payload 'nextUpdate' property is not date");
         }
 
+        _logger.LogDebug("Metadata BLOB payload 'no' and 'nextUpdate' properties are valid");
+
         // Step 7
         // Write the verified object to a local cache as required.
         var payload = new List<MetadataBlobPayloadEntry>(metadataBlobToken.Claims.Count());
@@ -147,6 +159,8 @@ internal sealed class MetadataReaderService : IMetadataReaderService
             Number = (int)number,
             NextUpdate = nextUpdate.ToUniversalTime(),
         };
+
+        _logger.LogDebug("Metadata BLOB payload is read");
 
         return metadataBlobPayload;
     }

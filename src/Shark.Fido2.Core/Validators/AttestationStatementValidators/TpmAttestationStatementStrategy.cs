@@ -1,4 +1,5 @@
-﻿using Shark.Fido2.Core.Abstractions.Services;
+﻿using Microsoft.Extensions.Logging;
+using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Comparers;
 using Shark.Fido2.Core.Constants;
@@ -23,19 +24,22 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
     private readonly IAttestationCertificateProviderService _attestationCertificateProviderService;
     private readonly ISignatureAttestationStatementValidator _signatureValidator;
     private readonly IAttestationCertificateValidator _attestationCertificateValidator;
+    private readonly ILogger<TpmAttestationStatementStrategy> _logger;
 
     public TpmAttestationStatementStrategy(
         ITpmtPublicAreaParserService tpmtPublicAreaParserService,
         ITpmsAttestationParserService tpmsAttestationParserService,
         IAttestationCertificateProviderService certificateAttestationStatementProvider,
         ISignatureAttestationStatementValidator signatureAttestationStatementValidator,
-        IAttestationCertificateValidator certificateAttestationStatementValidator)
+        IAttestationCertificateValidator certificateAttestationStatementValidator,
+        ILogger<TpmAttestationStatementStrategy> logger)
     {
         _tpmtPublicAreaParserService = tpmtPublicAreaParserService;
         _tpmsAttestationParserService = tpmsAttestationParserService;
         _attestationCertificateProviderService = certificateAttestationStatementProvider;
         _signatureValidator = signatureAttestationStatementValidator;
         _attestationCertificateValidator = certificateAttestationStatementValidator;
+        _logger = logger;
     }
 
     /// <summary>
@@ -113,11 +117,15 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
             return ValidatorInternalResult.Invalid("TPM attestation statement magic is invalid");
         }
 
+        _logger.LogDebug("Magic is valid");
+
         // Verify that type is set to TPM_ST_ATTEST_CERTIFY.
         if (tpmsAttestation.Type != TpmConstants.TpmStAttestCertify)
         {
             return ValidatorInternalResult.Invalid("TPM attestation statement type is invalid");
         }
+
+        _logger.LogDebug("Type is valid");
 
         // Verify that extraData is set to the hash of attToBeSigned using the hash algorithm employed in "alg".
         if (!attestationStatementDict.TryGetValue(AttestationStatement.Algorithm, out var algorithm) ||
@@ -131,6 +139,8 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
             return ValidatorInternalResult.Invalid("TPM attestation statement algorithm is not supported");
         }
 
+        _logger.LogDebug("Algorithm {Algorithm} is not supported", algorithm);
+
         // Concatenate authenticatorData and clientDataHash to form attToBeSigned.
         var attToBeSigned = BytesArrayHelper.Concatenate(
             attestationObjectData.AuthenticatorRawData,
@@ -139,8 +149,10 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
         var attToBeSignedHash = HashProvider.GetHash(attToBeSigned, hashAlgorithmName);
         if (!BytesArrayComparer.CompareNullable(attToBeSignedHash, tpmsAttestation.ExtraData))
         {
-            return ValidatorInternalResult.Invalid("TPM attestation statement extraData hash mismatch");
+            return ValidatorInternalResult.Invalid("TPM attestation statement extra data hash mismatch");
         }
+
+        _logger.LogDebug("Extra data is valid");
 
         // Verify that attested contains a TPMS_CERTIFY_INFO structure as specified in [TPMv2-Part2]
         // section 10.12.3, whose name field contains a valid Name for pubArea, as computed using the algorithm
@@ -148,14 +160,18 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
         var pubAreaHash = HashProvider.GetHash((byte[])pubArea, TmpHashAlgorithmMapper.Get(tpmtPublic.NameAlg));
         if (!BytesArrayComparer.CompareNullable(pubAreaHash, tpmsAttestation.Attested.Name))
         {
-            return ValidatorInternalResult.Invalid("TPM attestation statement pubArea hash mismatch");
+            return ValidatorInternalResult.Invalid("TPM attestation statement pub area hash mismatch");
         }
+
+        _logger.LogDebug("Pub area is valid");
 
         // Verify that x5c is present.
         if (!_attestationCertificateProviderService.AreCertificatesPresent(attestationStatementDict))
         {
             return ValidatorInternalResult.Invalid("TPM attestation statement certificates are not found");
         }
+
+        _logger.LogDebug("Attestation certificate is present");
 
         // Note that the remaining fields in the "Standard Attestation Structure" [TPMv2-Part1] section 31.2,
         // i.e., qualifiedSigner, clockInfo and firmwareVersion are ignored. These fields MAY be used as an
@@ -176,6 +192,8 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
             return result;
         }
 
+        _logger.LogDebug("Signature is valid");
+
         // Verify that aikCert meets the requirements in § 8.3.1 TPM Attestation Statement Certificate Requirements.
         // If aikCert contains an extension with OID 1.3.6.1.4.1.45724.1.1.4 (id-fido-gen-ce-aaguid) verify that
         // the value of this extension matches the aaguid in authenticatorData.
@@ -184,6 +202,9 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
         {
             return result;
         }
+
+        _logger.LogDebug("Attestation certificate is valid");
+        _logger.LogDebug("TPM attestation statement is valid");
 
         // If successful, return implementation-specific values representing attestation type AttCA and attestation
         // trust path x5c.

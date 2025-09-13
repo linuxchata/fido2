@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Shark.Fido2.Common.Extensions;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
@@ -16,13 +17,16 @@ internal class AssertionResponseValidator : IAssertionObjectValidator
 {
     private readonly ISignatureAttestationStatementValidator _signatureAttestationStatementValidator;
     private readonly Fido2Configuration _configuration;
+    private readonly ILogger<AssertionResponseValidator> _logger;
 
     public AssertionResponseValidator(
         ISignatureAttestationStatementValidator signatureAttestationStatementValidator,
-        IOptions<Fido2Configuration> options)
+        IOptions<Fido2Configuration> options,
+        ILogger<AssertionResponseValidator> logger)
     {
         _signatureAttestationStatementValidator = signatureAttestationStatementValidator;
         _configuration = options.Value;
+        _logger = logger;
     }
 
     public ValidatorInternalResult Validate(
@@ -66,12 +70,16 @@ internal class AssertionResponseValidator : IAssertionObjectValidator
             return ValidatorInternalResult.Invalid("RP ID hash mismatch");
         }
 
+        _logger.LogDebug("RP ID hash is verified");
+
         // Step 16
         // Verify that the User Present bit of the flags in authData is set.
         if (!authenticatorData.UserPresent)
         {
             return ValidatorInternalResult.Invalid("User Present bit is not set");
         }
+
+        _logger.LogDebug("User Present bit is verified");
 
         // Step 17
         // If user verification is required for this assertion, verify that the User Verified bit of the flags
@@ -81,6 +89,10 @@ internal class AssertionResponseValidator : IAssertionObjectValidator
         {
             return ValidatorInternalResult.Invalid("User Verified bit is not set as user verification is required");
         }
+
+        _logger.LogDebug(
+            "User Verified bit is verified. User verification option is {UserVerification}",
+            requestOptions.UserVerification);
 
         // Step 18
         // Verify that the values of the client extension outputs in clientExtensionResults and the authenticator
@@ -100,6 +112,8 @@ internal class AssertionResponseValidator : IAssertionObjectValidator
         {
             return result;
         }
+
+        _logger.LogDebug("Assertion response is valid");
 
         return ValidatorInternalResult.Valid();
     }

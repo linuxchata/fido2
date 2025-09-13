@@ -1,4 +1,5 @@
 using System.Security.Cryptography.X509Certificates;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Moq;
 using Shark.Fido2.Metadata.Core.Abstractions;
@@ -43,7 +44,8 @@ internal class MetadataReaderServiceTests
         _sut = new MetadataReaderService(
             _httpClientRepositoryMock.Object,
             _certificateValidatorMock.Object,
-            _optionsMock.Object);
+            _optionsMock.Object,
+            NullLogger<MetadataReaderService>.Instance);
     }
 
     [Test]

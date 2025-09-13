@@ -1,4 +1,5 @@
-﻿using Shark.Fido2.Common.Extensions;
+﻿using Microsoft.Extensions.Logging;
+using Shark.Fido2.Common.Extensions;
 using Shark.Fido2.Core.Abstractions.Handlers;
 using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Abstractions.Validators;
@@ -12,13 +13,16 @@ internal class AssertionObjectHandler : IAssertionObjectHandler
 {
     private readonly IAuthenticatorDataParserService _authenticatorDataParserService;
     private readonly IAssertionObjectValidator _assertionObjectValidator;
+    private readonly ILogger<AssertionObjectHandler> _logger;
 
     public AssertionObjectHandler(
         IAuthenticatorDataParserService authenticatorDataParserService,
-        IAssertionObjectValidator assertionResponseValidator)
+        IAssertionObjectValidator assertionResponseValidator,
+        ILogger<AssertionObjectHandler> logger)
     {
         _authenticatorDataParserService = authenticatorDataParserService;
         _assertionObjectValidator = assertionResponseValidator;
+        _logger = logger;
     }
 
     public InternalResult<AuthenticatorData> Handle(
@@ -42,6 +46,8 @@ internal class AssertionObjectHandler : IAssertionObjectHandler
         var authenticatorRawData = authenticatorDataString.FromBase64Url();
         var authenticatorData = _authenticatorDataParserService.Parse(authenticatorRawData);
 
+        _logger.LogDebug("Assertion authenticator data is parsed");
+
         var result = _assertionObjectValidator.Validate(
             authenticatorData,
             authenticatorRawData,
@@ -54,6 +60,8 @@ internal class AssertionObjectHandler : IAssertionObjectHandler
         {
             return new InternalResult<AuthenticatorData>(result.Message!);
         }
+
+        _logger.LogDebug("Assertion authenticator data is valid");
 
         return new InternalResult<AuthenticatorData>(authenticatorData!);
     }

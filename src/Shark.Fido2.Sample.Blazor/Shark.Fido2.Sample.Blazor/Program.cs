@@ -1,12 +1,20 @@
+using Microsoft.Extensions.Logging.Console;
 using Shark.Fido2.Core;
 using Shark.Fido2.InMemory;
 using Shark.Fido2.Sample.Blazor.Abstractions.Services;
 using Shark.Fido2.Sample.Blazor.Client.Abstractions.Services;
 using Shark.Fido2.Sample.Blazor.Client.Services;
 using Shark.Fido2.Sample.Blazor.Components;
+using Shark.Fido2.Sample.Blazor.Formatters;
 using Shark.Fido2.Sample.Blazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Logging.AddConsole(options =>
+{
+    options.FormatterName = CustomConsoleFormatter.FormatterName;
+});
+builder.Logging.AddConsoleFormatter<CustomConsoleFormatter, ConsoleFormatterOptions>(_ => { });
 
 builder.Services
     .AddRazorComponents()

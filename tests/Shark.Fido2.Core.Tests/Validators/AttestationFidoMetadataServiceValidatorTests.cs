@@ -1,4 +1,5 @@
 using System.Security.Cryptography.X509Certificates;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Moq;
 using Shark.Fido2.Core.Configurations;
@@ -49,7 +50,10 @@ internal class AttestationFidoMetadataServiceValidatorTests
         _configuration.EnableMetadataService = true;
         var options = Options.Create(_configuration);
 
-        _sut = new AttestationFidoMetadataServiceValidator(_metadataServiceMock.Object, options);
+        _sut = new AttestationFidoMetadataServiceValidator(
+            _metadataServiceMock.Object,
+            options,
+            NullLogger<AttestationFidoMetadataServiceValidator>.Instance);
     }
 
     [Test]
