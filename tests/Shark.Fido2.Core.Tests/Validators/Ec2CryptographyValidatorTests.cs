@@ -13,7 +13,6 @@ internal class Ec2CryptographyValidatorTests
     private readonly byte[] _data = Encoding.UTF8.GetBytes("test data");
     private readonly byte[] _invalidSignature = [0x01, 0x02, 0x03];
 
-    private ECDsa _ecdsa;
     private byte[] _signature;
     private X509Certificate2 _certificate;
     private CredentialPublicKey _credentialPublicKey;
@@ -23,8 +22,8 @@ internal class Ec2CryptographyValidatorTests
     [SetUp]
     public void Setup()
     {
-        _ecdsa = ECDsa.Create(ECCurve.NamedCurves.nistP256);
-        var parameters = _ecdsa.ExportParameters(false);
+        using var ecdsa = ECDsa.Create(ECCurve.NamedCurves.nistP256);
+        var parameters = ecdsa.ExportParameters(false);
         _credentialPublicKey = new CredentialPublicKey
         {
             KeyType = (int)KeyType.Ec2,
@@ -33,10 +32,10 @@ internal class Ec2CryptographyValidatorTests
             YCoordinate = parameters.Q.Y!,
         };
 
-        _signature = _ecdsa.SignData(_data, HashAlgorithmName.SHA256, DSASignatureFormat.Rfc3279DerSequence);
+        _signature = ecdsa.SignData(_data, HashAlgorithmName.SHA256, DSASignatureFormat.Rfc3279DerSequence);
 
-        var certRequest = new CertificateRequest("CN=Test", _ecdsa, HashAlgorithmName.SHA256);
-        _certificate = certRequest.CreateSelfSigned(DateTimeOffset.UtcNow, DateTimeOffset.UtcNow.AddDays(1));
+        var certificateRequest = new CertificateRequest("CN=Test", ecdsa, HashAlgorithmName.SHA256);
+        _certificate = certificateRequest.CreateSelfSigned(DateTimeOffset.UtcNow, DateTimeOffset.UtcNow.AddDays(1));
 
         _sut = new Ec2CryptographyValidator();
     }
@@ -44,7 +43,6 @@ internal class Ec2CryptographyValidatorTests
     [TearDown]
     public void TearDown()
     {
-        _ecdsa.Dispose();
         _certificate.Dispose();
     }
 

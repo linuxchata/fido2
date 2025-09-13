@@ -13,7 +13,6 @@ internal class RsaCryptographyValidatorTests
     private readonly byte[] _data = Encoding.UTF8.GetBytes("test data");
     private readonly byte[] _invalidSignature = [0x01, 0x02, 0x03];
 
-    private RSA _rsa;
     private byte[] _signature;
     private X509Certificate2 _certificate;
     private CredentialPublicKey _credentialPublicKey;
@@ -23,8 +22,8 @@ internal class RsaCryptographyValidatorTests
     [SetUp]
     public void Setup()
     {
-        _rsa = RSA.Create(2048);
-        var parameters = _rsa.ExportParameters(false);
+        using var rsa = RSA.Create(2048);
+        var parameters = rsa.ExportParameters(false);
         _credentialPublicKey = new CredentialPublicKey
         {
             KeyType = (int)KeyType.Rsa,
@@ -33,10 +32,10 @@ internal class RsaCryptographyValidatorTests
             Exponent = parameters.Exponent!,
         };
 
-        _signature = _rsa.SignData(_data, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+        _signature = rsa.SignData(_data, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
 
-        var certRequest = new CertificateRequest("CN=Test", _rsa, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
-        _certificate = certRequest.CreateSelfSigned(DateTimeOffset.UtcNow, DateTimeOffset.UtcNow.AddDays(1));
+        var certificateRequest = new CertificateRequest("CN=Test", rsa, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
+        _certificate = certificateRequest.CreateSelfSigned(DateTimeOffset.UtcNow, DateTimeOffset.UtcNow.AddDays(1));
 
         _sut = new RsaCryptographyValidator();
     }
@@ -44,7 +43,6 @@ internal class RsaCryptographyValidatorTests
     [TearDown]
     public void TearDown()
     {
-        _rsa.Dispose();
         _certificate.Dispose();
     }
 
