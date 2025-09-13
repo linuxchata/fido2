@@ -1,9 +1,11 @@
 using System.Security.Cryptography.X509Certificates;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using Moq;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Configurations;
 using Shark.Fido2.Core.Constants;
+using Shark.Fido2.Core.Handlers;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Core.Validators;
 using Shark.Fido2.Domain;
@@ -44,7 +46,8 @@ internal class AttestationTrustworthinessValidatorTests
         _sut = new AttestationTrustworthinessValidator(
             _attestationTrustAnchorValidatorMock.Object,
             TimeProvider.System,
-            options);
+            options,
+            NullLogger<AttestationTrustworthinessValidator>.Instance);
     }
 
     [Test]

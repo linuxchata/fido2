@@ -1,4 +1,5 @@
 using System.Security.Cryptography.X509Certificates;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Configurations;
@@ -13,15 +14,18 @@ internal class AttestationTrustworthinessValidator : IAttestationTrustworthiness
     private readonly IAttestationTrustAnchorValidator _attestationTrustAnchorValidator;
     private readonly TimeProvider _timeProvider;
     private readonly Fido2Configuration _configuration;
+    private readonly ILogger<AttestationTrustworthinessValidator> _logger;
 
     public AttestationTrustworthinessValidator(
         IAttestationTrustAnchorValidator attestationTrustAnchorValidator,
         TimeProvider timeProvider,
-        IOptions<Fido2Configuration> options)
+        IOptions<Fido2Configuration> options,
+        ILogger<AttestationTrustworthinessValidator> logger)
     {
         _attestationTrustAnchorValidator = attestationTrustAnchorValidator;
         _timeProvider = timeProvider;
         _configuration = options.Value;
+        _logger = logger;
     }
 
     public async Task<ValidatorInternalResult> Validate(
@@ -34,20 +38,32 @@ internal class AttestationTrustworthinessValidator : IAttestationTrustworthiness
             return ValidatorInternalResult.Invalid("Attestation statement result cannot be null");
         }
 
-        // If no attestation was provided, verify that None attestation is acceptable under Relying Party policy.
+        // If no attestation was provided, verify that None attestation is allowed under Relying Party policy.
         if (attestationStatementResult.AttestationType == Domain.Enums.AttestationType.None)
         {
-            return _configuration.AllowNoneAttestation
-                ? ValidatorInternalResult.Valid()
-                : ValidatorInternalResult.Invalid("None attestation type is not allowed under current policy");
+            if (_configuration.AllowNoneAttestation)
+            {
+                _logger.LogDebug("None attestation type is allowed under current policy");
+                ValidatorInternalResult.Valid();
+            }
+            else
+            {
+                ValidatorInternalResult.Invalid("None attestation type is not allowed under current policy");
+            }
         }
 
-        // If self attestation was used, verify that Self attestation is acceptable under Relying Party policy.
+        // If self attestation was used, verify that Self attestation is allowed under Relying Party policy.
         if (attestationStatementResult.AttestationType == Domain.Enums.AttestationType.Self)
         {
-            return _configuration.AllowSelfAttestation
-                ? ValidatorInternalResult.Valid()
-                : ValidatorInternalResult.Invalid("Self attestation type is not allowed under current policy");
+            if (_configuration.AllowSelfAttestation)
+            {
+                _logger.LogDebug("Self attestation type is allowed under current policy");
+                ValidatorInternalResult.Valid();
+            }
+            else
+            {
+                ValidatorInternalResult.Invalid("Self attestation type is not allowed under current policy");
+            }
         }
 
         // If only basic surrogate attestation is supported by the authenticator, verify that attestation does not
@@ -70,7 +86,11 @@ internal class AttestationTrustworthinessValidator : IAttestationTrustworthiness
                 $"Trust path is required for {attestationStatementResult.AttestationType} attestation type");
         }
 
-        return ValidateTrustPath(attestationStatementResult);
+        result = ValidateTrustPath(attestationStatementResult);
+
+        _logger.LogDebug("Attestation trust path is valid");
+
+        return result;
     }
 
     private ValidatorInternalResult ValidateTrustPath(AttestationStatementInternalResult attestationStatementResult)
