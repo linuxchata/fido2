@@ -18,7 +18,8 @@ public class CustomConsoleFormatter : ConsoleFormatter
         TextWriter textWriter)
     {
         var timestamp = DateTime.Now.ToString("dd-MM-yyyy HH:mm:ss");
+        var className = logEntry.Category?.Split('.').Last() ?? logEntry.Category;
         var message = logEntry.Formatter?.Invoke(logEntry.State, logEntry.Exception);
-        textWriter.WriteLine($"{timestamp} {logEntry.LogLevel} [{logEntry.Category}] {message}");
+        textWriter.WriteLine($"{timestamp} {logEntry.LogLevel} [{className}] {message}");
     }
 }

@@ -21,7 +21,11 @@ builder.Logging.AddConsole(options =>
 {
     options.FormatterName = CustomConsoleFormatter.FormatterName;
 });
-builder.Logging.AddConsoleFormatter<CustomConsoleFormatter, ConsoleFormatterOptions>(_ => { });
+builder.Logging.Configure(options =>
+{
+    options.ActivityTrackingOptions = ActivityTrackingOptions.TraceId;
+});
+builder.Logging.AddConsoleFormatter<CustomConsoleFormatter, ConsoleFormatterOptions>();
 
 builder.Services.AddRazorPages();
 builder.Services.AddControllers();
