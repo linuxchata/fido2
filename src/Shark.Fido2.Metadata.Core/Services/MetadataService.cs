@@ -20,7 +20,7 @@ internal sealed class MetadataService : IMetadataService
         // Step 1
         // Download and cache the root signing trust anchor from the respective MDS root location e.g.
         // More information can be found at https://fidoalliance.org/metadata/
-        var rootCertificate = await _httpClientRepository.GetRootCertificate(cancellationToken);
+        using var rootCertificate = await _httpClientRepository.GetRootCertificate(cancellationToken);
 
         // Step 3
         // The FIDO Server MUST be able to download the latest metadata BLOB object from the well-known URL when
