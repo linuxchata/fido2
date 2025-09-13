@@ -60,7 +60,8 @@ internal class AndroidSafetyNetAttestationStatementStrategyTests
             jwsResponseParserService,
             jwsResponseValidator,
             attestationCertificateProviderService,
-            attestationCertificateValidator);
+            attestationCertificateValidator,
+            NullLogger<AndroidSafetyNetAttestationStatementStrategy>.Instance);
     }
 
     [Test]

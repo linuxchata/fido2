@@ -69,7 +69,8 @@ internal class TpmAttestationStatementStrategyTests
             tpmsAttestationParserService,
             attestationCertificateProviderService,
             signatureAttestationStatementValidator,
-            attestationCertificateValidator);
+            attestationCertificateValidator,
+            NullLogger<TpmAttestationStatementStrategy>.Instance);
     }
 
     [Test]

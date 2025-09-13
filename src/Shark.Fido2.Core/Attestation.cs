@@ -164,7 +164,7 @@ public sealed class Attestation : IAttestation
         var credentialId = attestedCredentialData!.CredentialId;
         if (await _credentialRepository.Exists(credentialId, cancellationToken))
         {
-            _logger.LogWarning("Credential '{CredentialId}' has already been registered", credentialId);
+            _logger.LogWarning("Credential '{CredentialId}' has already been registered", credentialId!.ToBase64Url());
             return AttestationCompleteResult.CreateFailure("Credential has already been registered");
         }
 

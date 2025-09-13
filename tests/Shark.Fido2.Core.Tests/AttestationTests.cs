@@ -8,7 +8,6 @@ using Shark.Fido2.Core.Abstractions.Handlers;
 using Shark.Fido2.Core.Abstractions.Repositories;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Configurations;
-using Shark.Fido2.Core.Handlers;
 using Shark.Fido2.Core.Results.Attestation;
 using Shark.Fido2.Domain;
 using Shark.Fido2.Domain.Constants;

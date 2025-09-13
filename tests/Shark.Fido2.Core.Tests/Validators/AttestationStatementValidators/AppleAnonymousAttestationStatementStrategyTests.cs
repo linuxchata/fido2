@@ -60,7 +60,8 @@ internal class AppleAnonymousAttestationStatementStrategyTests
             attestationCertificateProviderService,
             attestationCertificateValidator,
             certificatePublicKeyValidator,
-            certificateReaderService);
+            certificateReaderService,
+            NullLogger<AppleAnonymousAttestationStatementStrategy>.Instance);
     }
 
     [Test]

@@ -63,7 +63,8 @@ internal class PackedAttestationStatementStrategyTests
         _sut = new PackedAttestationStatementStrategy(
             signatureAttestationStatementValidator,
             attestationCertificateProviderService,
-            attestationCertificateValidator);
+            attestationCertificateValidator,
+            NullLogger<PackedAttestationStatementStrategy>.Instance);
     }
 
     [Test]

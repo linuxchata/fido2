@@ -61,7 +61,8 @@ internal class FidoU2FAttestationStatementStrategyTests
         _sut = new FidoU2FAttestationStatementStrategy(
             attestationCertificateProviderService,
             attestationCertificateValidator,
-            signatureAttestationStatementValidator);
+            signatureAttestationStatementValidator,
+            NullLogger<FidoU2FAttestationStatementStrategy>.Instance);
     }
 
     [Test]

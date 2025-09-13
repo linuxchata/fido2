@@ -64,7 +64,8 @@ internal class AndroidKeyAttestationStatementStrategyTests
             signatureAttestationStatementValidator,
             attestationCertificateProviderService,
             attestationCertificateValidator,
-            certificatePublicKeyValidator);
+            certificatePublicKeyValidator,
+            NullLogger<AndroidKeyAttestationStatementStrategy>.Instance);
     }
 
     [Test]

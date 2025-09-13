@@ -214,7 +214,9 @@ public sealed class Assertion : IAssertion
         else
         {
             await _credentialRepository.UpdateLastUsedAt(credentialId, cancellationToken);
-            _logger.LogDebug("Last used timestamp for credential '{CredentialId}' is updated", credentialId);
+            _logger.LogDebug(
+                "Last used timestamp for credential '{CredentialId}' is updated",
+                credentialId.ToBase64Url());
         }
 
         _logger.LogDebug("Assertion is successfully completed");
