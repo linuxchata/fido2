@@ -4,6 +4,7 @@ using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Helpers;
+using Shark.Fido2.Core.Models;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain;
 using Shark.Fido2.Domain.Enums;
@@ -83,6 +84,9 @@ internal class PackedAttestationStatementStrategy : IAttestationStatementStrateg
             // Verify that sig is a valid signature over the concatenation of authenticatorData and clientDataHash
             // using the attestation public key in attestnCert with the algorithm specified in alg.
             var certificates = _attestationCertificateProviderService.GetCertificates(attestationStatementDict);
+
+            using var certificateScope = new CertificateScope(certificates);
+
             var attestationCertificate = _attestationCertificateProviderService.GetAttestationCertificate(certificates);
             var result = _signatureValidator.Validate(
                 concatenatedData,
@@ -119,6 +123,9 @@ internal class PackedAttestationStatementStrategy : IAttestationStatementStrateg
             }
 
             _logger.LogDebug("Trust path is valid");
+
+            certificateScope.Release();
+
             _logger.LogDebug("Packed attestation statement is valid");
 
             // If successful, return implementation-specific values representing attestation type Basic, AttCA or
@@ -142,6 +149,7 @@ internal class PackedAttestationStatementStrategy : IAttestationStatementStrateg
             }
 
             _logger.LogDebug("Signature is valid");
+
             _logger.LogDebug("Packed attestation statement is valid");
 
             // If successful, return implementation-specific values representing attestation type Self and an empty

@@ -5,6 +5,7 @@ using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Comparers;
 using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Helpers;
+using Shark.Fido2.Core.Models;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain;
 using Shark.Fido2.Domain.Enums;
@@ -121,6 +122,8 @@ internal class AndroidSafetyNetAttestationStatementStrategy : IAttestationStatem
 
         var certificates = _attestationCertificateProviderService.GetCertificates(jwsResponse.Certificates!);
 
+        using var certificateScope = new CertificateScope(certificates);
+
         // Use SSL hostname matching to verify that the leaf certificate was issued to the hostname attest.android.com
         var attestationCertificate = _attestationCertificateProviderService.GetAttestationCertificate(certificates);
         result = _attestationCertificateValidator.ValidateAndroidSafetyNet(attestationCertificate);
@@ -140,6 +143,9 @@ internal class AndroidSafetyNetAttestationStatementStrategy : IAttestationStatem
         }
 
         _logger.LogDebug("JWS response is valid");
+
+        certificateScope.Release();
+
         _logger.LogDebug("Android SafetyNet attestation statement is valid");
 
         // If successful, return implementation-specific values representing attestation type Basic and attestation

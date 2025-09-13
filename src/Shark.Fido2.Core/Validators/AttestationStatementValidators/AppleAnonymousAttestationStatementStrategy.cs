@@ -4,6 +4,7 @@ using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Helpers;
+using Shark.Fido2.Core.Models;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain;
 using Shark.Fido2.Domain.Enums;
@@ -70,6 +71,9 @@ internal class AppleAnonymousAttestationStatementStrategy : IAttestationStatemen
 
         // Verify that nonce equals the value of the extension with OID 1.2.840.113635.100.8.2 in credCert.
         var certificates = _attestationCertificateProviderService.GetCertificates(attestationStatementDict);
+
+        using var certificateScope = new CertificateScope(certificates);
+
         var attestationCertificate = _attestationCertificateProviderService.GetAttestationCertificate(certificates);
         var result = _attestationCertificateValidator.ValidateAppleAnonymous(attestationCertificate, nonce);
         if (!result.IsValid)
@@ -91,6 +95,8 @@ internal class AppleAnonymousAttestationStatementStrategy : IAttestationStatemen
 
         // Add root CA certificate to the trust path.
         var appleWebAuthnRootCaCertificate = _certificateReaderService.Read(AppleWebAuthnRootCa);
+
+        certificateScope.Release();
 
         _logger.LogDebug("Apple Anonymous attestation statement is valid");
 
