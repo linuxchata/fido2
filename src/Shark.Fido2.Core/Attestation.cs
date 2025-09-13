@@ -192,6 +192,7 @@ public sealed class Attestation : IAttestation
 
         await _credentialRepository.Add(credential, cancellationToken);
 
+        _logger.LogDebug("Credential '{CredentialId}' is created", credentialId!.ToBase64Url());
         _logger.LogDebug("Attestation is successfully completed");
 
         return AttestationCompleteResult.Create();

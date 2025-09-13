@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.Extensions.Logging.Console;
 using Prometheus;
 using Shark.Fido2.Core;
 using Shark.Fido2.InMemory;
 using Shark.Fido2.Sample.Abstractions.Services;
+using Shark.Fido2.Sample.Formatters;
 using Shark.Fido2.Sample.Middlewares;
 using Shark.Fido2.Sample.Services;
 using Shark.Fido2.Sample.Swagger;
@@ -15,16 +17,11 @@ builder.WebHost.ConfigureKestrel(options =>
     options.AddServerHeader = false;
 });
 
-builder.Logging.AddSimpleConsole(options =>
+builder.Logging.AddConsole(options =>
 {
-    options.IncludeScopes = false;
-    options.TimestampFormat = "dd-MM-yyyy HH:mm:ss ";
-    options.SingleLine = true;
+    options.FormatterName = CustomConsoleFormatter.FormatterName;
 });
-builder.Logging.Configure(options =>
-{
-    options.ActivityTrackingOptions = ActivityTrackingOptions.None;
-});
+builder.Logging.AddConsoleFormatter<CustomConsoleFormatter, ConsoleFormatterOptions>(_ => { });
 
 builder.Services.AddRazorPages();
 builder.Services.AddControllers();
