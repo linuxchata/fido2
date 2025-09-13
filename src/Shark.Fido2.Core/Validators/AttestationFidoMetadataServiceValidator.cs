@@ -1,8 +1,11 @@
-﻿using System.Security.Cryptography.X509Certificates;
+﻿using System;
+using System.Security.Cryptography.X509Certificates;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Configurations;
 using Shark.Fido2.Core.Results;
+using Shark.Fido2.Core.Validators.AttestationStatementValidators;
 using Shark.Fido2.Domain;
 using Shark.Fido2.Metadata.Core.Abstractions;
 using Shark.Fido2.Metadata.Core.Domain.Constants;
@@ -13,13 +16,16 @@ internal class AttestationFidoMetadataServiceValidator : IAttestationTrustAnchor
 {
     private readonly IMetadataCachedService _metadataService;
     private readonly Fido2Configuration _configuration;
+    private readonly ILogger<AttestationFidoMetadataServiceValidator> _logger;
 
     public AttestationFidoMetadataServiceValidator(
         IMetadataCachedService metadataService,
-        IOptions<Fido2Configuration> options)
+        IOptions<Fido2Configuration> options,
+        ILogger<AttestationFidoMetadataServiceValidator> logger)
     {
         _metadataService = metadataService;
         _configuration = options.Value;
+        _logger = logger;
     }
 
     public async Task<ValidatorInternalResult> Validate(
@@ -42,6 +48,8 @@ internal class AttestationFidoMetadataServiceValidator : IAttestationTrustAnchor
                     return ValidatorInternalResult.Invalid(
                         $"Authenticator {aaGuid} has {authenticatorMetadata.GetLastStatus()} status (increased risk)");
                 }
+
+                _logger.LogDebug("Authenticator {AaGuid} metadata is valid", aaGuid);
             }
             else if (_configuration.EnableStrictAuthenticatorVerification)
             {

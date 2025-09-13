@@ -140,7 +140,7 @@ internal class AttestationObjectValidator : IAttestationObjectValidator
             return result;
         }
 
-        _logger.LogDebug("Attestation statement is verified");
+        _logger.LogDebug("Attestation statement is valid");
 
         if (result is not AttestationStatementInternalResult)
         {

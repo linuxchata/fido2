@@ -77,7 +77,7 @@ internal class AndroidKeyAttestationStatementStrategy : IAttestationStatementStr
             return result;
         }
 
-        _logger.LogDebug("Signature is verified");
+        _logger.LogDebug("Signature is valid");
 
         // Verify that the public key in the first certificate in x5c matches the credentialPublicKey in the
         // attestedCredentialData in authenticatorData.

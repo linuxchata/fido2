@@ -192,7 +192,7 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
             return result;
         }
 
-        _logger.LogDebug("Signature is verified");
+        _logger.LogDebug("Signature is valid");
 
         // Verify that aikCert meets the requirements in § 8.3.1 TPM Attestation Statement Certificate Requirements.
         // If aikCert contains an extension with OID 1.3.6.1.4.1.45724.1.1.4 (id-fido-gen-ce-aaguid) verify that

@@ -94,7 +94,7 @@ internal class PackedAttestationStatementStrategy : IAttestationStatementStrateg
                 return result;
             }
 
-            _logger.LogDebug("Signature is verified");
+            _logger.LogDebug("Signature is valid");
 
             // Verify that attestnCert meets the requirements in 8.2.1 Packed Attestation Statement Certificate Requirements.
             // If attestnCert contains an extension with OID 1.3.6.1.4.1.45724.1.1.4 (id-fido-gen-ce-aaguid)
@@ -141,7 +141,7 @@ internal class PackedAttestationStatementStrategy : IAttestationStatementStrateg
                 return result;
             }
 
-            _logger.LogDebug("Signature is verified");
+            _logger.LogDebug("Signature is valid");
             _logger.LogDebug("Packed attestation statement is valid");
 
             // If successful, return implementation-specific values representing attestation type Self and an empty

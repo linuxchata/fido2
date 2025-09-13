@@ -113,7 +113,7 @@ internal class AssertionResponseValidator : IAssertionObjectValidator
             return result;
         }
 
-        _logger.LogDebug("Assertion response is verified");
+        _logger.LogDebug("Assertion response is valid");
 
         return ValidatorInternalResult.Valid();
     }

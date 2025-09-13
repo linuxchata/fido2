@@ -113,7 +113,7 @@ internal class FidoU2FAttestationStatementStrategy : IAttestationStatementStrate
             return result;
         }
 
-        _logger.LogDebug("Signature is verified");
+        _logger.LogDebug("Signature is valid");
 
         // (Conformance Tools requirement)
         if (attestationObjectData.AuthenticatorData.AttestedCredentialData.AaGuid != Guid.Empty)
