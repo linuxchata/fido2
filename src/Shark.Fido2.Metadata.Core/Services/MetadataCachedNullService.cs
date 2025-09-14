@@ -5,7 +5,7 @@ namespace Shark.Fido2.Metadata.Core.Services;
 
 internal sealed class MetadataCachedNullService : IMetadataCachedService
 {
-    public Task<MetadataPayloadItem?> Get(Guid aaguid, CancellationToken cancellationToken = default)
+    public Task<MetadataPayloadItem?> Get(Guid aaguid, CancellationToken cancellationToken)
     {
         return Task.FromResult((MetadataPayloadItem?)null);
     }
