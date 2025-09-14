@@ -27,7 +27,7 @@ internal sealed class CredentialRepository : ICredentialRepository
         _timeProvider = timeProvider;
     }
 
-    public async Task<Credential?> Get(byte[]? credentialId, CancellationToken cancellationToken = default)
+    public async Task<Credential?> Get(byte[]? credentialId, CancellationToken cancellationToken)
     {
         if (credentialId == null || credentialId.Length == 0)
         {
@@ -58,7 +58,7 @@ internal sealed class CredentialRepository : ICredentialRepository
         return null;
     }
 
-    public async Task<List<CredentialDescriptor>> Get(string userName, CancellationToken cancellationToken = default)
+    public async Task<List<CredentialDescriptor>> Get(string userName, CancellationToken cancellationToken)
     {
         if (string.IsNullOrEmpty(userName))
         {
@@ -91,7 +91,7 @@ internal sealed class CredentialRepository : ICredentialRepository
         return [];
     }
 
-    public async Task<bool> Exists(byte[]? credentialId, CancellationToken cancellationToken = default)
+    public async Task<bool> Exists(byte[]? credentialId, CancellationToken cancellationToken)
     {
         if (credentialId == null || credentialId.Length == 0)
         {
@@ -116,7 +116,7 @@ internal sealed class CredentialRepository : ICredentialRepository
         return response.Item != null && response.Item.Count > 0;
     }
 
-    public async Task Add(Credential credential, CancellationToken cancellationToken = default)
+    public async Task Add(Credential credential, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(credential);
         ArgumentNullException.ThrowIfNull(credential.CredentialId);
@@ -139,7 +139,7 @@ internal sealed class CredentialRepository : ICredentialRepository
         ValidateResponse(response);
     }
 
-    public async Task UpdateSignCount(byte[] credentialId, uint signCount, CancellationToken cancellationToken = default)
+    public async Task UpdateSignCount(byte[] credentialId, uint signCount, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(credentialId);
 
@@ -166,7 +166,7 @@ internal sealed class CredentialRepository : ICredentialRepository
         ValidateResponse(response);
     }
 
-    public async Task UpdateLastUsedAt(byte[] credentialId, CancellationToken cancellationToken = default)
+    public async Task UpdateLastUsedAt(byte[] credentialId, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(credentialId);
 

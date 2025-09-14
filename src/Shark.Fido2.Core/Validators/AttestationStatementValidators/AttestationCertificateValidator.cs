@@ -37,20 +37,17 @@ internal class AttestationCertificateValidator : IAttestationCertificateValidato
     private readonly ISubjectAlternativeNameParserService _subjectAlternativeNameParserService;
     private readonly IAndroidKeyAttestationExtensionParserService _androidKeyAttestationExtensionParserService;
     private readonly IAppleAnonymousExtensionParserService _appleAnonymousExtensionParserService;
-    private readonly TimeProvider _timeProvider;
     private readonly Fido2Configuration _configuration;
 
     public AttestationCertificateValidator(
         ISubjectAlternativeNameParserService subjectAlternativeNameParserService,
         IAndroidKeyAttestationExtensionParserService androidKeyAttestationExtensionParserService,
         IAppleAnonymousExtensionParserService appleAnonymousExtensionParserService,
-        TimeProvider timeProvider,
         IOptions<Fido2Configuration> options)
     {
         _subjectAlternativeNameParserService = subjectAlternativeNameParserService;
         _androidKeyAttestationExtensionParserService = androidKeyAttestationExtensionParserService;
         _appleAnonymousExtensionParserService = appleAnonymousExtensionParserService;
-        _timeProvider = timeProvider;
         _configuration = options.Value;
     }
 

@@ -1,6 +1,5 @@
 ﻿using System.Security.Cryptography.X509Certificates;
 using Microsoft.Extensions.Options;
-using Microsoft.Extensions.Time.Testing;
 using Moq;
 using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Configurations;
@@ -79,14 +78,12 @@ internal class AttestationCertificateValidatorTests
 
         _appleAnonymousExtensionParserServiceMock = new Mock<IAppleAnonymousExtensionParserService>();
 
-        var fakeTimeProvider = new FakeTimeProvider();
         _fido2Configuration = Fido2ConfigurationBuilder.Build();
 
         _sut = new AttestationCertificateValidator(
             _subjectAlternativeNameParserServiceMock.Object,
             _androidKeyAttestationExtensionParserService.Object,
             _appleAnonymousExtensionParserServiceMock.Object,
-            fakeTimeProvider,
             Options.Create(_fido2Configuration));
     }
 

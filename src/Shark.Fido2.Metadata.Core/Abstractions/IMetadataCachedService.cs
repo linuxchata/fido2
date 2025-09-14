@@ -13,5 +13,5 @@ public interface IMetadataCachedService
     /// <param name="aaguid">The AAGUID of the authenticator.</param>
     /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>The cached metadata payload item or null if not found.</returns>
-    Task<MetadataPayloadItem?> Get(Guid aaguid, CancellationToken cancellationToken = default);
+    Task<MetadataPayloadItem?> Get(Guid aaguid, CancellationToken cancellationToken);
 }

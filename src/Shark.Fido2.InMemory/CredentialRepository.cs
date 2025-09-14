@@ -40,7 +40,7 @@ internal sealed class CredentialRepository : ICredentialRepository
         _timeProvider = timeProvider;
     }
 
-    public async Task<Credential?> Get(byte[]? credentialId, CancellationToken cancellationToken = default)
+    public async Task<Credential?> Get(byte[]? credentialId, CancellationToken cancellationToken)
     {
         if (credentialId == null || credentialId.Length == 0)
         {
@@ -57,7 +57,7 @@ internal sealed class CredentialRepository : ICredentialRepository
         return entity.ToDomain();
     }
 
-    public async Task<List<CredentialDescriptor>> Get(string userName, CancellationToken cancellationToken = default)
+    public async Task<List<CredentialDescriptor>> Get(string userName, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(userName))
         {
@@ -97,7 +97,7 @@ internal sealed class CredentialRepository : ICredentialRepository
         return entities.Select(e => e.ToLightweightDomain()!).ToList();
     }
 
-    public async Task<bool> Exists(byte[]? credentialId, CancellationToken cancellationToken = default)
+    public async Task<bool> Exists(byte[]? credentialId, CancellationToken cancellationToken)
     {
         if (credentialId == null || credentialId.Length == 0)
         {
@@ -108,7 +108,7 @@ internal sealed class CredentialRepository : ICredentialRepository
         return serializedCredential != null;
     }
 
-    public async Task Add(Credential credential, CancellationToken cancellationToken = default)
+    public async Task Add(Credential credential, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(credential);
         ArgumentNullException.ThrowIfNull(credential.CredentialId);
@@ -134,7 +134,7 @@ internal sealed class CredentialRepository : ICredentialRepository
         }
     }
 
-    public async Task UpdateSignCount(byte[] credentialId, uint signCount, CancellationToken cancellationToken = default)
+    public async Task UpdateSignCount(byte[] credentialId, uint signCount, CancellationToken cancellationToken)
     {
         await UpdateCredential(
             credentialId,
@@ -148,7 +148,7 @@ internal sealed class CredentialRepository : ICredentialRepository
             cancellationToken);
     }
 
-    public async Task UpdateLastUsedAt(byte[] credentialId, CancellationToken cancellationToken = default)
+    public async Task UpdateLastUsedAt(byte[] credentialId, CancellationToken cancellationToken)
     {
         await UpdateCredential(
             credentialId,

@@ -33,7 +33,7 @@ internal sealed class MetadataCachedService : IMetadataCachedService
         _timeProvider = timeProvider;
     }
 
-    public async Task<MetadataPayloadItem?> Get(Guid aaguid, CancellationToken cancellationToken = default)
+    public async Task<MetadataPayloadItem?> Get(Guid aaguid, CancellationToken cancellationToken)
     {
         // Check memory cache
         var memoryCacheKey = $"{KeyPrefix}_{aaguid}";

@@ -38,7 +38,7 @@ internal sealed class MetadataCachedTestService : IMetadataCachedService
         _configuration = options.Value;
     }
 
-    public async Task<MetadataPayloadItem?> Get(Guid aaguid, CancellationToken cancellationToken = default)
+    public async Task<MetadataPayloadItem?> Get(Guid aaguid, CancellationToken cancellationToken)
     {
         await _semaphore.WaitAsync(cancellationToken);
 
