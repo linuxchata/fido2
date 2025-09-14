@@ -16,11 +16,30 @@ dotnet_diagnostic.CA2217.severity = warning
 
 dotnet_diagnostic.TS6387.severity = none
 
+dotnet_diagnostic.IDE0066.severity = none
 dotnet_diagnostic.IDE1006.severity = none
 dotnet_diagnostic.IDE0290.severity = none
 
-dotnet_diagnostic.SA1201.severity = none
+dotnet_diagnostic.SA0001.severity = none
+dotnet_diagnostic.SA1000.severity = none
+dotnet_diagnostic.SA1009.severity = none
+dotnet_diagnostic.SA1010.severity = none
+dotnet_diagnostic.SA1011.severity = none
+dotnet_diagnostic.SA1101.severity = none
 dotnet_diagnostic.SA1124.severity = none
+dotnet_diagnostic.SA1200.severity = none
+dotnet_diagnostic.SA1201.severity = none
+dotnet_diagnostic.SA1204.severity = none
+dotnet_diagnostic.SA1206.severity = none
+dotnet_diagnostic.SA1300.severity = none
+dotnet_diagnostic.SA1309.severity = none
+dotnet_diagnostic.SA1313.severity = none
+dotnet_diagnostic.SA1516.severity = none
+dotnet_diagnostic.SA1600.severity = none
+dotnet_diagnostic.SA1602.severity = none
+dotnet_diagnostic.SA1633.severity = none
+
+dotnet_diagnostic.S6664.severity = none
 
 dotnet_diagnostic.NUnit2045.severity = none
 dotnet_diagnostic.NUnit2046.severity = none
@@ -101,20 +120,3 @@ csharp_style_expression_bodied_indexers = true:silent
 csharp_style_expression_bodied_accessors = true:silent
 csharp_style_expression_bodied_lambdas = true:silent
 csharp_style_expression_bodied_local_functions = false:silent
-dotnet_diagnostic.SA1200.severity = none
-dotnet_diagnostic.SA1000.severity = none
-dotnet_diagnostic.SA1633.severity = none
-dotnet_diagnostic.SA1101.severity = none
-dotnet_diagnostic.SA1600.severity = none
-dotnet_diagnostic.SA1009.severity = none
-dotnet_diagnostic.SA1300.severity = none
-dotnet_diagnostic.SA1309.severity = none
-dotnet_diagnostic.SA1010.severity = none
-dotnet_diagnostic.SA1313.severity = none
-dotnet_diagnostic.SA0001.severity = none
-dotnet_diagnostic.SA1206.severity = none
-dotnet_diagnostic.SA1516.severity = none
-dotnet_diagnostic.IDE0066.severity = none
-dotnet_diagnostic.SA1204.severity = none
-dotnet_diagnostic.SA1011.severity = none
-dotnet_diagnostic.SA1602.severity = none

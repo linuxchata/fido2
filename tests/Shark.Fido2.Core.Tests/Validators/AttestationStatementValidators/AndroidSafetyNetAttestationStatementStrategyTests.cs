@@ -53,7 +53,6 @@ internal class AndroidSafetyNetAttestationStatementStrategyTests
             new SubjectAlternativeNameParserService(),
             new AndroidKeyAttestationExtensionParserService(),
             new AppleAnonymousExtensionParserService(),
-            TimeProvider.System,
             Options.Create(Fido2ConfigurationBuilder.Build()));
 
         _sut = new AndroidSafetyNetAttestationStatementStrategy(
