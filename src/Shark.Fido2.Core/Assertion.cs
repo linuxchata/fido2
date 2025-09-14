@@ -124,7 +124,7 @@ public sealed class Assertion : IAssertion
         {
             _logger.LogWarning(
                 "Assertion response does not contain expected credential '{CredentialId}'",
-                credentialId);
+                credentialId.ToBase64Url());
             return AssertionCompleteResult.CreateFailure(
                 "Assertion response does not contain expected credential");
         }
@@ -132,7 +132,7 @@ public sealed class Assertion : IAssertion
         var credential = await _credentialRepository.Get(credentialId, cancellationToken);
         if (credential == null)
         {
-            _logger.LogWarning("Registered credential '{CredentialId}' is not found", credentialId);
+            _logger.LogWarning("Registered credential '{CredentialId}' is not found", credentialId.ToBase64Url());
             return AssertionCompleteResult.CreateFailure("Registered credential is not found");
         }
 
@@ -197,7 +197,9 @@ public sealed class Assertion : IAssertion
                 // Update storedSignCount to be the value of authData.signCount.
                 await _credentialRepository.UpdateSignCount(credentialId, signCount, cancellationToken);
 
-                _logger.LogDebug("Signature counter for credential '{CredentialId}' is updated", credentialId.ToBase64Url());
+                _logger.LogDebug(
+                    "Signature counter for credential '{CredentialId}' is updated",
+                    credentialId.ToBase64Url());
             }
             else
             {
