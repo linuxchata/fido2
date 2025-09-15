@@ -10,15 +10,15 @@ using Shark.Fido2.InMemory;
 namespace Shark.Fido2.Core.Integration.Tests;
 
 /// <summary>
-/// Source: Windows 10 Windows Hello authenticator.
+/// Source: Windows 11 Windows Hello authenticator.
 /// </summary>
 [TestFixture]
-internal class PackedAttestationIntegrationTests
+internal class TpmAttestationIntegrationTests
 {
-    private const string PackedAttestation = "PackedAttestation.json";
-    private const string PackedCreationOptions = "PackedCreationOptions.json";
-    private const string PackedAssertion = "PackedAssertion.json";
-    private const string PackedRequestOptions = "PackedRequestOptions.json";
+    private const string TpmAttestation = "TpmAttestation.json";
+    private const string TpmCreationOptions = "TpmCreationOptions.json";
+    private const string TpmAssertion = "TpmAssertion.json";
+    private const string TpmRequestOptions = "TpmRequestOptions.json";
 
     private ServiceProvider _serviceProvider = null!;
 
@@ -44,7 +44,7 @@ internal class PackedAttestationIntegrationTests
     }
 
     [Test]
-    public async Task BeginRegistration_WhenPackedAttestation_ThenReturnsSuccess()
+    public async Task BeginRegistration_WhenTpmAttestation_ThenReturnsSuccess()
     {
         // Arrange
         var attestation = _serviceProvider.GetRequiredService<IAttestation>();
@@ -85,13 +85,13 @@ internal class PackedAttestationIntegrationTests
     }
 
     [Test]
-    public async Task CompleteRegistration_WhenPackedAttestation_ThenReturnsSuccess()
+    public async Task CompleteRegistration_WhenTpmAttestation_ThenReturnsSuccess()
     {
         // Arrange
         var attestation = _serviceProvider.GetRequiredService<IAttestation>();
 
-        var attestationData = DataReader.ReadAttestationData(PackedAttestation);
-        var creationOptions = DataReader.ReadCreationOptions(PackedCreationOptions);
+        var attestationData = DataReader.ReadAttestationData(TpmAttestation);
+        var creationOptions = DataReader.ReadCreationOptions(TpmCreationOptions);
 
         // Act
         var result = await attestation.CompleteRegistration(attestationData, creationOptions, CancellationToken.None);
@@ -103,13 +103,13 @@ internal class PackedAttestationIntegrationTests
     }
 
     [Test]
-    public async Task CompleteRegistration_WhenPackedAttestationUsedTwice_ThenReturnsFailure()
+    public async Task CompleteRegistration_WhenTpmAttestationUsedTwice_ThenReturnsFailure()
     {
         // Arrange
         var attestation = _serviceProvider.GetRequiredService<IAttestation>();
 
-        var attestationData = DataReader.ReadAttestationData(PackedAttestation);
-        var creationOptions = DataReader.ReadCreationOptions(PackedCreationOptions);
+        var attestationData = DataReader.ReadAttestationData(TpmAttestation);
+        var creationOptions = DataReader.ReadCreationOptions(TpmCreationOptions);
 
         await attestation.CompleteRegistration(attestationData, creationOptions, CancellationToken.None);
 
@@ -123,7 +123,7 @@ internal class PackedAttestationIntegrationTests
     }
 
     [Test]
-    public async Task BeginAuthentication_WhenPackedAssertion_ThenReturnsSuccess()
+    public async Task BeginAuthentication_WhenTpmAssertion_ThenReturnsSuccess()
     {
         // Arrange
         var assertion = _serviceProvider.GetRequiredService<IAssertion>();
@@ -154,18 +154,18 @@ internal class PackedAttestationIntegrationTests
     }
 
     [Test]
-    public async Task CompleteAuthentication_WhenPackedAssertion_ThenReturnsSuccess()
+    public async Task CompleteAuthentication_WhenTpmAssertion_ThenReturnsSuccess()
     {
         // Arrange
         var assertion = _serviceProvider.GetRequiredService<IAssertion>();
         var attestation = _serviceProvider.GetRequiredService<IAttestation>();
 
-        var attestationData = DataReader.ReadAttestationData(PackedAttestation);
-        var creationOptions = DataReader.ReadCreationOptions(PackedCreationOptions);
+        var attestationData = DataReader.ReadAttestationData(TpmAttestation);
+        var creationOptions = DataReader.ReadCreationOptions(TpmCreationOptions);
         await attestation.CompleteRegistration(attestationData, creationOptions, CancellationToken.None);
 
-        var assertionData = DataReader.ReadAssertionData(PackedAssertion);
-        var requestOptions = DataReader.ReadRequestOptions(PackedRequestOptions);
+        var assertionData = DataReader.ReadAssertionData(TpmAssertion);
+        var requestOptions = DataReader.ReadRequestOptions(TpmRequestOptions);
 
         // Act
         var result = await assertion.CompleteAuthentication(assertionData, requestOptions, CancellationToken.None);
@@ -177,18 +177,18 @@ internal class PackedAttestationIntegrationTests
     }
 
     [Test]
-    public async Task CompleteAuthentication_WhenPackedAssertionUsedTwice_ThenReturnsFailure()
+    public async Task CompleteAuthentication_WhenTpmAssertionUsedTwice_ThenReturnsFailure()
     {
         // Arrange
         var assertion = _serviceProvider.GetRequiredService<IAssertion>();
         var attestation = _serviceProvider.GetRequiredService<IAttestation>();
 
-        var attestationData = DataReader.ReadAttestationData(PackedAttestation);
-        var creationOptions = DataReader.ReadCreationOptions(PackedCreationOptions);
+        var attestationData = DataReader.ReadAttestationData(TpmAttestation);
+        var creationOptions = DataReader.ReadCreationOptions(TpmCreationOptions);
         await attestation.CompleteRegistration(attestationData, creationOptions, CancellationToken.None);
 
-        var assertionData = DataReader.ReadAssertionData(PackedAssertion);
-        var requestOptions = DataReader.ReadRequestOptions(PackedRequestOptions);
+        var assertionData = DataReader.ReadAssertionData(TpmAssertion);
+        var requestOptions = DataReader.ReadRequestOptions(TpmRequestOptions);
 
         await assertion.CompleteAuthentication(assertionData, requestOptions, CancellationToken.None);
 
