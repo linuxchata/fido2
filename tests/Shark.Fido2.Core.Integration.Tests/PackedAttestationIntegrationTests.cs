@@ -9,13 +9,16 @@ using Shark.Fido2.InMemory;
 
 namespace Shark.Fido2.Core.Integration.Tests;
 
+/// <summary>
+/// Source: Windows 10 Windows Hello authenticator.
+/// </summary>
 [TestFixture]
-internal class CredentialsIntegrationTests
+internal class PackedAttestationIntegrationTests
 {
-    private const string PackedWindowsHelloAttestation = "PackedWindowsHelloAttestation.json";
-    private const string PackedWindowsHelloCreationOptions = "PackedWindowsHelloCreationOptions.json";
-    private const string PackedWindowsHelloAssertion = "PackedWindowsHelloAssertion.json";
-    private const string PackedWindowsHelloRequestOptions = "PackedWindowsHelloRequestOptions.json";
+    private const string PackedAttestation = "PackedAttestation.json";
+    private const string PackedCreationOptions = "PackedCreationOptions.json";
+    private const string PackedAssertion = "PackedAssertion.json";
+    private const string PackedRequestOptions = "PackedRequestOptions.json";
 
     private ServiceProvider _serviceProvider = null!;
 
@@ -41,7 +44,7 @@ internal class CredentialsIntegrationTests
     }
 
     [Test]
-    public async Task BeginRegistration_WhenPackedWindowsHelloAttestation_ThenReturnsSuccess()
+    public async Task BeginRegistration_WhenPackeAttestation_ThenReturnsSuccess()
     {
         // Arrange
         var attestation = _serviceProvider.GetRequiredService<IAttestation>();
@@ -82,13 +85,13 @@ internal class CredentialsIntegrationTests
     }
 
     [Test]
-    public async Task CompleteRegistration_WhenPackedWindowsHelloAttestation_ThenReturnsSuccess()
+    public async Task CompleteRegistration_WhenPackedAttestation_ThenReturnsSuccess()
     {
         // Arrange
         var attestation = _serviceProvider.GetRequiredService<IAttestation>();
 
-        var attestationData = DataReader.ReadAttestationData(PackedWindowsHelloAttestation);
-        var creationOptions = DataReader.ReadCreationOptions(PackedWindowsHelloCreationOptions);
+        var attestationData = DataReader.ReadAttestationData(PackedAttestation);
+        var creationOptions = DataReader.ReadCreationOptions(PackedCreationOptions);
 
         // Act
         var result = await attestation.CompleteRegistration(attestationData, creationOptions, CancellationToken.None);
@@ -100,13 +103,13 @@ internal class CredentialsIntegrationTests
     }
 
     [Test]
-    public async Task CompleteRegistration_WhenPackedWindowsHelloAttestationUsedTwice_ThenReturnsFailure()
+    public async Task CompleteRegistration_WhenPackedAttestationUsedTwice_ThenReturnsFailure()
     {
         // Arrange
         var attestation = _serviceProvider.GetRequiredService<IAttestation>();
 
-        var attestationData = DataReader.ReadAttestationData(PackedWindowsHelloAttestation);
-        var creationOptions = DataReader.ReadCreationOptions(PackedWindowsHelloCreationOptions);
+        var attestationData = DataReader.ReadAttestationData(PackedAttestation);
+        var creationOptions = DataReader.ReadCreationOptions(PackedCreationOptions);
 
         await attestation.CompleteRegistration(attestationData, creationOptions, CancellationToken.None);
 
@@ -120,7 +123,7 @@ internal class CredentialsIntegrationTests
     }
 
     [Test]
-    public async Task BeginAuthentication_WhenPackedWindowsHelloAssertion_ThenReturnsSuccess()
+    public async Task BeginAuthentication_WhenPackedAssertion_ThenReturnsSuccess()
     {
         // Arrange
         var assertion = _serviceProvider.GetRequiredService<IAssertion>();
@@ -151,18 +154,18 @@ internal class CredentialsIntegrationTests
     }
 
     [Test]
-    public async Task CompleteAuthentication_WhenPackedWindowsHelloAssertion_ThenReturnsSuccess()
+    public async Task CompleteAuthentication_WhenPackedAssertion_ThenReturnsSuccess()
     {
         // Arrange
         var assertion = _serviceProvider.GetRequiredService<IAssertion>();
         var attestation = _serviceProvider.GetRequiredService<IAttestation>();
 
-        var attestationData = DataReader.ReadAttestationData(PackedWindowsHelloAttestation);
-        var creationOptions = DataReader.ReadCreationOptions(PackedWindowsHelloCreationOptions);
+        var attestationData = DataReader.ReadAttestationData(PackedAttestation);
+        var creationOptions = DataReader.ReadCreationOptions(PackedCreationOptions);
         await attestation.CompleteRegistration(attestationData, creationOptions, CancellationToken.None);
 
-        var assertionData = DataReader.ReadAssertionData(PackedWindowsHelloAssertion);
-        var requestOptions = DataReader.ReadRequestOptions(PackedWindowsHelloRequestOptions);
+        var assertionData = DataReader.ReadAssertionData(PackedAssertion);
+        var requestOptions = DataReader.ReadRequestOptions(PackedRequestOptions);
 
         // Act
         var result = await assertion.CompleteAuthentication(assertionData, requestOptions, CancellationToken.None);
@@ -174,18 +177,18 @@ internal class CredentialsIntegrationTests
     }
 
     [Test]
-    public async Task CompleteAuthentication_WhenPackedWindowsHelloAssertionUsedTwice_ThenReturnsFailure()
+    public async Task CompleteAuthentication_WhenPackedAssertionUsedTwice_ThenReturnsFailure()
     {
         // Arrange
         var assertion = _serviceProvider.GetRequiredService<IAssertion>();
         var attestation = _serviceProvider.GetRequiredService<IAttestation>();
 
-        var attestationData = DataReader.ReadAttestationData(PackedWindowsHelloAttestation);
-        var creationOptions = DataReader.ReadCreationOptions(PackedWindowsHelloCreationOptions);
+        var attestationData = DataReader.ReadAttestationData(PackedAttestation);
+        var creationOptions = DataReader.ReadCreationOptions(PackedCreationOptions);
         await attestation.CompleteRegistration(attestationData, creationOptions, CancellationToken.None);
 
-        var assertionData = DataReader.ReadAssertionData(PackedWindowsHelloAssertion);
-        var requestOptions = DataReader.ReadRequestOptions(PackedWindowsHelloRequestOptions);
+        var assertionData = DataReader.ReadAssertionData(PackedAssertion);
+        var requestOptions = DataReader.ReadRequestOptions(PackedRequestOptions);
 
         await assertion.CompleteAuthentication(assertionData, requestOptions, CancellationToken.None);
 

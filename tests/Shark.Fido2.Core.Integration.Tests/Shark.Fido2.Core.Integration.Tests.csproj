@@ -11,16 +11,16 @@
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-    <Content Include="Data\PackedWindowsHelloAssertion.json">
+    <Content Include="Data\PackedAssertion.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\PackedWindowsHelloRequestOptions.json">
+    <Content Include="Data\PackedRequestOptions.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\PackedWindowsHelloCreationOptions.json">
+    <Content Include="Data\PackedCreationOptions.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\PackedWindowsHelloAttestation.json">
+    <Content Include="Data\PackedAttestation.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
