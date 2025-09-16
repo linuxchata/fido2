@@ -55,7 +55,7 @@ public class AssertionController(
 
         var response = requestOptions.Map();
 
-        HttpContext.Session.SetString(SessionName, d);
+        HttpContext.Session.SetString(SessionName, JsonSerializer.Serialize(requestOptions));
 
         return Ok(response);
     }
