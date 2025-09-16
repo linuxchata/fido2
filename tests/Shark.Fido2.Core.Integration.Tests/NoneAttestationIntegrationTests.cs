@@ -10,7 +10,7 @@ using Shark.Fido2.InMemory;
 namespace Shark.Fido2.Core.Integration.Tests;
 
 /// <summary>
-/// Source: iPhone 14 and iOS 26.0 authenticator.
+/// Source: iOS 26.0 iPhone 14 authenticator.
 /// </summary>
 [TestFixture]
 internal class NoneAttestationIntegrationTests
