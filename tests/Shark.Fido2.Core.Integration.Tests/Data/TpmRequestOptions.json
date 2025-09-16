@@ -1,0 +1,21 @@
+{
+  "Challenge": "A72Q0KxfvO+Q30i7hKyQ4e4p6Z51vJ49+4GlVmOov3Y=",
+  "Timeout": 30000,
+  "RpId": "localhost",
+  "AllowCredentials": [
+    {
+      "Type": "public-key",
+      "Id": "ntpQg+Y3sdK483XyNmcC5UuXdhvUimnVbnSnrxmpMPA=",
+      "Transports": [ 4 ]
+    }
+  ],
+  "Username": "John",
+  "UserVerification": 2,
+  "Extensions": {
+    "AppId": null,
+    "AppIdExclude": null,
+    "UserVerificationMethod": false,
+    "CredentialProperties": null,
+    "LargeBlob": null
+  }
+}

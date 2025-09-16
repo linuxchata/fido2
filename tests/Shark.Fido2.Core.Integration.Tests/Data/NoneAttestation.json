@@ -1,0 +1,17 @@
+{
+  "Id": "XM4EtV9HXtAXAK59uv68RrZVV6c",
+  "RawId": "XM4EtV9HXtAXAK59uv68RrZVV6c",
+  "Response": {
+    "ClientDataJson": "eyJ0eXBlIjoid2ViYXV0aG4uY3JlYXRlIiwiY2hhbGxlbmdlIjoibDlmOE9YY2ZsRUVWelhxX2pFYTh2UW13MXNKQnFRMF9WRFQ2SlUxRHUzayIsIm9yaWdpbiI6Imh0dHBzOi8vbG9jYWxob3N0OjgwODIiLCJjcm9zc09yaWdpbiI6ZmFsc2V9",
+    "AttestationObject": "o2NmbXRkbm9uZWdhdHRTdG10oGhhdXRoRGF0YViYSZYN5YgOjGh0NBcPZHZgW4_krrmihjLHmVzzuoMdl2NdAAAAAPv8MAcVTk7MjAtuAgVX170AFFzOBLVfR17QFwCufbr-vEa2VVenpQECAyYgASFYIBMTHDLZMDldBpJa3QtaVZQ7yjvLZBbldfQZ0kMN3mQfIlggu-tz3gIbgwPq0Fzr6kr8iPQoFqSCfl_RLzDxJ9tdfx0",
+    "Transports": [ 3, 4 ]
+  },
+  "Type": "public-key",
+  "Extensions": {
+    "AppId": null,
+    "AppIdExclude": null,
+    "UserVerificationMethod": null,
+    "CredentialProperties": { "RequireResidentKey": null },
+    "LargeBlob": null
+  }
+}

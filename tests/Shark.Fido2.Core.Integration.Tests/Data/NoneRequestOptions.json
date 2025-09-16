@@ -1,0 +1,21 @@
+{
+  "Challenge": "wHrUaNaPGeRYEoCW0a1OF3+uH1FS/PbdCje6AlO8yFQ=",
+  "Timeout": 30000,
+  "RpId": "localhost",
+  "AllowCredentials": [
+    {
+      "Type": "public-key",
+      "Id": "XM4EtV9HXtAXAK59uv68RrZVV6c=",
+      "Transports": [ 3, 4 ]
+    }
+  ],
+  "Username": "John",
+  "UserVerification": 2,
+  "Extensions": {
+    "AppId": null,
+    "AppIdExclude": null,
+    "UserVerificationMethod": false,
+    "CredentialProperties": null,
+    "LargeBlob": null
+  }
+}
