@@ -51,8 +51,6 @@ public class AttestationController(IAttestation attestation, ILogger<Attestation
 
         var response = createOptions.Map();
 
-        var d = JsonSerializer.Serialize(createOptions);
-
         HttpContext.Session.SetString(SessionName, JsonSerializer.Serialize(createOptions));
 
         return Ok(response);
@@ -86,8 +84,6 @@ public class AttestationController(IAttestation attestation, ILogger<Attestation
         }
 
         var createOptions = JsonSerializer.Deserialize<PublicKeyCredentialCreationOptions>(createOptionsString!);
-
-        var d = JsonSerializer.Serialize(request.Map());
 
         logger.LogInformation("Attestation create options: {CreateOptions}", createOptionsString);
         logger.LogInformation("Attestation: {Request}", JsonSerializer.Serialize(request.Map()));
