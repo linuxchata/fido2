@@ -1,0 +1,18 @@
+{
+  "Id": "XM4EtV9HXtAXAK59uv68RrZVV6c",
+  "RawId": "XM4EtV9HXtAXAK59uv68RrZVV6c",
+  "Response": {
+    "ClientDataJson": "eyJ0eXBlIjoid2ViYXV0aG4uZ2V0IiwiY2hhbGxlbmdlIjoid0hyVWFOYVBHZVJZRW9DVzBhMU9GMy11SDFGU19QYmRDamU2QWxPOHlGUSIsIm9yaWdpbiI6Imh0dHBzOi8vbG9jYWxob3N0OjgwODIiLCJjcm9zc09yaWdpbiI6ZmFsc2V9",
+    "AuthenticatorData": "SZYN5YgOjGh0NBcPZHZgW4_krrmihjLHmVzzuoMdl2MdAAAAAA",
+    "Signature": "MEQCICvL70f8cjiJrOcfye7sBIj9LGTxOrEJafQXUwLH8odIAiBV_Nj5j5FYZY__8H7Zg3Iaa9-4cZJpelRr_PGCB9cSBA",
+    "UserHandle": "Sm9obg"
+  },
+  "Type": "public-key",
+  "Extensions": {
+    "AppId": null,
+    "AppIdExclude": null,
+    "UserVerificationMethod": null,
+    "CredentialProperties": null,
+    "LargeBlob": null
+  }
+}

@@ -55,7 +55,9 @@ public class AssertionController(
 
         var response = requestOptions.Map();
 
-        HttpContext.Session.SetString(SessionName, JsonSerializer.Serialize(requestOptions));
+        var d = JsonSerializer.Serialize(requestOptions);
+
+        HttpContext.Session.SetString(SessionName, d);
 
         return Ok(response);
     }
@@ -88,6 +90,8 @@ public class AssertionController(
         }
 
         var requestOptions = JsonSerializer.Deserialize<PublicKeyCredentialRequestOptions>(requestOptionsString!);
+
+        var d = JsonSerializer.Serialize(request.Map());
 
         logger.LogInformation("Assertion create options: {RequestOptionsString}", requestOptionsString);
         logger.LogInformation("Assertion: {Request}", JsonSerializer.Serialize(request.Map()));
