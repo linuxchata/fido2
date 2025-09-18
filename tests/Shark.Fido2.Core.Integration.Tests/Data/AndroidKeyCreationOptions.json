@@ -1,0 +1,78 @@
+{
+  "RelyingParty": {
+    "Id": "localhost",
+    "Name": "Shark Corporation"
+  },
+  "User": {
+    "Id": "Sm9obg==",
+    "Name": "John",
+    "DisplayName": "John Doe"
+  },
+  "Challenge": "nqDgRLFkasURbqYCE9CxMgLtY9mrtpU8avM2FX1orDM=",
+  "PublicKeyCredentialParams": [
+    {
+      "Type": "public-key",
+      "Algorithm": -7
+    },
+    {
+      "Type": "public-key",
+      "Algorithm": -8
+    },
+    {
+      "Type": "public-key",
+      "Algorithm": -35
+    },
+    {
+      "Type": "public-key",
+      "Algorithm": -36
+    },
+    {
+      "Type": "public-key",
+      "Algorithm": -37
+    },
+    {
+      "Type": "public-key",
+      "Algorithm": -38
+    },
+    {
+      "Type": "public-key",
+      "Algorithm": -39
+    },
+    {
+      "Type": "public-key",
+      "Algorithm": -47
+    },
+    {
+      "Type": "public-key",
+      "Algorithm": -257
+    },
+    {
+      "Type": "public-key",
+      "Algorithm": -258
+    },
+    {
+      "Type": "public-key",
+      "Algorithm": -259
+    },
+    {
+      "Type": "public-key",
+      "Algorithm": -65535
+    }
+  ],
+  "Timeout": 30000,
+  "ExcludeCredentials": [],
+  "AuthenticatorSelection": {
+    "AuthenticatorAttachment": null,
+    "ResidentKey": 1,
+    "RequireResidentKey": false,
+    "UserVerification": 2
+  },
+  "Attestation": "direct",
+  "Extensions": {
+    "AppId": null,
+    "AppIdExclude": null,
+    "UserVerificationMethod": false,
+    "CredentialProperties": false,
+    "LargeBlob": null
+  }
+}
