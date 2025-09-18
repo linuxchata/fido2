@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Shark.Fido2.Core.Abstractions;
@@ -17,6 +18,7 @@ using Shark.Fido2.Metadata.Core;
 
 namespace Shark.Fido2.Core;
 
+[ExcludeFromCodeCoverage]
 public static class DependencyInjection
 {
     public static void AddFido2(this IServiceCollection services, IConfiguration configuration)
