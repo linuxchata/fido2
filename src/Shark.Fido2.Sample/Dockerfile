@@ -16,13 +16,13 @@ COPY ["src/Shark.Fido2.InMemory/Shark.Fido2.InMemory.csproj", "Shark.Fido2.InMem
 RUN dotnet restore "Shark.Fido2.Sample/Shark.Fido2.Sample.csproj"
 COPY . .
 WORKDIR "/src/Shark.Fido2.Sample"
-RUN dotnet build "./Shark.Fido2.Sample.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "./Shark.Fido2.Sample.csproj" -c "$BUILD_CONFIGURATION" -o /app/build
 
 RUN rm -f appsettings.Production.json appsettings.Test.json || true
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Shark.Fido2.Sample.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./Shark.Fido2.Sample.csproj" -c "$BUILD_CONFIGURATION" -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
