@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Options;
 using Shark.Fido2.Metadata.Core.Abstractions;
@@ -14,6 +15,7 @@ namespace Shark.Fido2.Metadata.Core.Services;
 /// Remote blob test service is used for conformance testing for metadata service test cases.
 /// See: https://github.com/fido-alliance/conformance-test-tools-resources/issues/422#issuecomment-508959572.
 /// </summary>
+[ExcludeFromCodeCoverage]
 internal sealed class MetadataCachedTestService : IMetadataCachedService
 {
     private const string KeyPrefix = "md";
