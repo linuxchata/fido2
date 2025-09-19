@@ -223,12 +223,12 @@ internal class MetadataBlobPayloadEntryTests
                         Height = 64,
                         BitDepth = 24,
                         ColorType = 2,
-                        Compression = 0,
-                        Filter = 0,
-                        Interlace = 0,
+                        Compression = 252,
+                        Filter = 7,
+                        Interlace = 16,
                         Plte =
                         [
-                            new RgbPaletteEntry { Red = 0, Green = 255, Blue = 0 },
+                            new RgbPaletteEntry { Red = 1, Green = 2, Blue = 7 },
                         ],
                     },
                 ],
@@ -251,7 +251,7 @@ internal class MetadataBlobPayloadEntryTests
                     new ExtensionDescriptor
                     {
                         Id = "ext-1",
-                        Tag = 1,
+                        Tag = 8,
                         Data = "ext-1-data",
                         FailIfUnknown = true,
                     },
@@ -335,9 +335,21 @@ internal class MetadataBlobPayloadEntryTests
         Assert.That(entry.MetadataStatement.UserVerificationDetails, Has.Count.EqualTo(2));
         Assert.That(entry.MetadataStatement.UserVerificationDetails[0], Has.Length.EqualTo(1));
         Assert.That(entry.MetadataStatement.UserVerificationDetails[0][0].UserVerificationMethod, Is.EqualTo("fingerprint_internal"));
-        Assert.That(entry.MetadataStatement.UserVerificationDetails[0][0].CaDesc, Is.Null);
-        Assert.That(entry.MetadataStatement.UserVerificationDetails[0][0].BaDesc, Is.Null);
-        Assert.That(entry.MetadataStatement.UserVerificationDetails[0][0].PaDesc, Is.Null);
+        Assert.That(entry.MetadataStatement.UserVerificationDetails[0][0].CaDesc, Is.Not.Null);
+        Assert.That(entry.MetadataStatement.UserVerificationDetails[0][0].CaDesc.SystemBase, Is.EqualTo(1));
+        Assert.That(entry.MetadataStatement.UserVerificationDetails[0][0].CaDesc.MinLength, Is.EqualTo(4));
+        Assert.That(entry.MetadataStatement.UserVerificationDetails[0][0].CaDesc.MaxRetries, Is.EqualTo(5));
+        Assert.That(entry.MetadataStatement.UserVerificationDetails[0][0].CaDesc.BlockSlowdown, Is.EqualTo(30));
+        Assert.That(entry.MetadataStatement.UserVerificationDetails[0][0].BaDesc, Is.Not.Null);
+        Assert.That(entry.MetadataStatement.UserVerificationDetails[0][0].BaDesc.SelfAttestedFRR, Is.EqualTo(0.01));
+        Assert.That(entry.MetadataStatement.UserVerificationDetails[0][0].BaDesc.SelfAttestedFAR, Is.EqualTo(0.0001));
+        Assert.That(entry.MetadataStatement.UserVerificationDetails[0][0].BaDesc.MaxTemplates, Is.EqualTo(10));
+        Assert.That(entry.MetadataStatement.UserVerificationDetails[0][0].BaDesc.MaxRetries, Is.EqualTo(5));
+        Assert.That(entry.MetadataStatement.UserVerificationDetails[0][0].BaDesc.BlockSlowdown, Is.EqualTo(30));
+        Assert.That(entry.MetadataStatement.UserVerificationDetails[0][0].PaDesc, Is.Not.Null);
+        Assert.That(entry.MetadataStatement.UserVerificationDetails[0][0].PaDesc.MinComplexity, Is.EqualTo(3));
+        Assert.That(entry.MetadataStatement.UserVerificationDetails[0][0].PaDesc.MaxRetries, Is.EqualTo(5));
+        Assert.That(entry.MetadataStatement.UserVerificationDetails[0][0].PaDesc.BlockSlowdown, Is.EqualTo(30));
         Assert.That(entry.MetadataStatement.UserVerificationDetails[1], Has.Length.EqualTo(1));
         Assert.That(entry.MetadataStatement.UserVerificationDetails[1][0].UserVerificationMethod, Is.EqualTo("faceprint_internal"));
         Assert.That(entry.MetadataStatement.UserVerificationDetails[1][0].CaDesc, Is.Null);
@@ -351,11 +363,36 @@ internal class MetadataBlobPayloadEntryTests
         Assert.That(entry.MetadataStatement.AttachmentHint, Is.EqualTo(["internal", "external"]));
         Assert.That(entry.MetadataStatement.TcDisplay, Is.EqualTo(["any", "privileged_software"]));
         Assert.That(entry.MetadataStatement.TcDisplayContentType, Is.EqualTo("text/plain"));
-        Assert.That(entry.MetadataStatement.TcDisplayPNGCharacteristics, Is.Null);
+        Assert.That(entry.MetadataStatement.TcDisplayPNGCharacteristics, Is.Not.Null);
+        Assert.That(entry.MetadataStatement.TcDisplayPNGCharacteristics, Has.Length.EqualTo(1));
+        Assert.That(entry.MetadataStatement.TcDisplayPNGCharacteristics[0].Width, Is.EqualTo(64));
+        Assert.That(entry.MetadataStatement.TcDisplayPNGCharacteristics[0].Height, Is.EqualTo(64));
+        Assert.That(entry.MetadataStatement.TcDisplayPNGCharacteristics[0].BitDepth, Is.EqualTo(24));
+        Assert.That(entry.MetadataStatement.TcDisplayPNGCharacteristics[0].ColorType, Is.EqualTo(2));
+        Assert.That(entry.MetadataStatement.TcDisplayPNGCharacteristics[0].Compression, Is.EqualTo(252));
+        Assert.That(entry.MetadataStatement.TcDisplayPNGCharacteristics[0].Filter, Is.EqualTo(7));
+        Assert.That(entry.MetadataStatement.TcDisplayPNGCharacteristics[0].Interlace, Is.EqualTo(16));
+        Assert.That(entry.MetadataStatement.TcDisplayPNGCharacteristics[0].Plte, Is.Not.Null);
+        Assert.That(entry.MetadataStatement.TcDisplayPNGCharacteristics[0].Plte, Has.Length.EqualTo(1));
+        Assert.That(entry.MetadataStatement.TcDisplayPNGCharacteristics[0].Plte[0].Red, Is.EqualTo(1));
+        Assert.That(entry.MetadataStatement.TcDisplayPNGCharacteristics[0].Plte[0].Green, Is.EqualTo(2));
+        Assert.That(entry.MetadataStatement.TcDisplayPNGCharacteristics[0].Plte[0].Blue, Is.EqualTo(7));
         Assert.That(entry.MetadataStatement.AttestationRootCertificates, Is.EqualTo(["root-cert-1", "root-cert-2"]));
-        Assert.That(entry.MetadataStatement.EcdaaTrustAnchors, Is.Null);
+        Assert.That(entry.MetadataStatement.EcdaaTrustAnchors, Is.Not.Null);
+        Assert.That(entry.MetadataStatement.EcdaaTrustAnchors, Has.Length.EqualTo(1));
+        Assert.That(entry.MetadataStatement.EcdaaTrustAnchors[0].X, Is.EqualTo("base64url-encoded-x-coordinate"));
+        Assert.That(entry.MetadataStatement.EcdaaTrustAnchors[0].Y, Is.EqualTo("base64url-encoded-y-coordinate"));
+        Assert.That(entry.MetadataStatement.EcdaaTrustAnchors[0].C, Is.EqualTo("US"));
+        Assert.That(entry.MetadataStatement.EcdaaTrustAnchors[0].Sx, Is.EqualTo("Sx"));
+        Assert.That(entry.MetadataStatement.EcdaaTrustAnchors[0].Sy, Is.EqualTo("Sy"));
+        Assert.That(entry.MetadataStatement.EcdaaTrustAnchors[0].G1Curve, Is.EqualTo("P-256"));
         Assert.That(entry.MetadataStatement.Icon, Is.EqualTo("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=="));
-        Assert.That(entry.MetadataStatement.SupportedExtensions, Is.Null);
+        Assert.That(entry.MetadataStatement.SupportedExtensions, Is.Not.Null);
+        Assert.That(entry.MetadataStatement.SupportedExtensions, Has.Length.EqualTo(1));
+        Assert.That(entry.MetadataStatement.SupportedExtensions[0].Id, Is.EqualTo("ext-1"));
+        Assert.That(entry.MetadataStatement.SupportedExtensions[0].Tag, Is.EqualTo(8));
+        Assert.That(entry.MetadataStatement.SupportedExtensions[0].Data, Is.EqualTo("ext-1-data"));
+        Assert.That(entry.MetadataStatement.SupportedExtensions[0].FailIfUnknown, Is.True);
         Assert.That(entry.MetadataStatement.AuthenticatorGetInfo, Is.Not.Null);
         Assert.That(entry.MetadataStatement.AuthenticatorGetInfo["versions"], Is.EqualTo(["FIDO_2_0", "FIDO_2_1"]));
         Assert.That(entry.MetadataStatement.AuthenticatorGetInfo["maxMsgSize"], Is.EqualTo(1200));
