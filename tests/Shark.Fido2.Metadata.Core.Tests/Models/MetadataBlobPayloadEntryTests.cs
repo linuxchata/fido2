@@ -399,4 +399,36 @@ internal class MetadataBlobPayloadEntryTests
         Assert.That(entry.MetadataStatement.AuthenticatorGetInfo["pinUvAuthProtocols"], Is.EqualTo([1, 2]));
         Assert.That(entry.MetadataStatement.ToString(), Is.EqualTo("Test Authenticator Description"));
     }
+
+    [Test]
+    public void ToString_WhenMetadataStatementIsNull_ThenReturnsDash()
+    {
+        // Arrange
+        var jsonContent = File.ReadAllText("Data/WindowsHelloHardwareAuthenticator.json");
+
+        var entry = JsonSerializer.Deserialize<MetadataBlobPayloadEntry>(jsonContent);
+        entry!.MetadataStatement = null!;
+
+        // Act
+        var result = entry.ToString();
+
+        // Assert
+        Assert.That(result, Is.EqualTo("-"));
+    }
+
+    [Test]
+    public void ToString_WhenMetadataStatementDescriptionIsNull_ThenReturnsDash()
+    {
+        // Arrange
+        var jsonContent = File.ReadAllText("Data/WindowsHelloHardwareAuthenticator.json");
+
+        var entry = JsonSerializer.Deserialize<MetadataBlobPayloadEntry>(jsonContent);
+        entry!.MetadataStatement!.Description = null!;
+
+        // Act
+        var result = entry.ToString();
+
+        // Assert
+        Assert.That(result, Is.EqualTo("-"));
+    }
 }
