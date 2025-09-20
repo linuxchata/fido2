@@ -1,5 +1,8 @@
-﻿namespace Shark.Fido2.DynamoDB;
+﻿using System.Diagnostics.CodeAnalysis;
 
+namespace Shark.Fido2.DynamoDB;
+
+[ExcludeFromCodeCoverage]
 internal class AmazonDynamoDbConfiguration
 {
     public string AwsRegion { get; set; } = null!;
