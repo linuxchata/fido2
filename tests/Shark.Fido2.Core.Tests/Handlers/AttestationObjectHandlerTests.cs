@@ -66,7 +66,7 @@ internal class AttestationObjectHandlerTests
 
         // Act
         var result = await _sut.Handle(
-            attestationObject!, ClientDataBuilder.BuildCreate(), null!, CancellationToken.None);
+            attestationObject, ClientDataBuilder.BuildCreate(), null!, CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
