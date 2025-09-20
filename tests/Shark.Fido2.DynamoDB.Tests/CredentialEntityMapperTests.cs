@@ -7,8 +7,8 @@ namespace Shark.Fido2.DynamoDB.Tests;
 [TestFixture]
 internal class CredentialEntityMapperTests
 {
-    private const string UserName = "testuser";
-    private const string UserDisplayName = "Test User";
+    private const string UserName = "UserName";
+    private const string UserDisplayName = "DisplayName";
     private const string CredentialPublicKeyJson = "{'keyType':1,'algorithm':2}";
     private const uint SignCount = 42;
     private const string Transports = "usb;nfc";
