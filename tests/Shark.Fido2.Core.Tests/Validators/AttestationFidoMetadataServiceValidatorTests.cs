@@ -263,7 +263,26 @@ internal class AttestationFidoMetadataServiceValidatorTests
     }
 
     [Test]
-    public async Task ValidateBasicAttestation_MetadataIsFoundWithoutAttestationTypes_ThenReturnsValid()
+    public async Task ValidateBasicAttestation_MetadataIsFoundAndAttestationTypesAreNull_ThenReturnsValid()
+    {
+        // Arrange
+        var trustPath = Array.Empty<X509Certificate2>();
+        var metadataItem = CreateMetadataPayloadItem(null!);
+
+        _metadataServiceMock
+            .Setup(m => m.Get(_aaGuid, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(metadataItem);
+
+        // Act
+        var result = await _sut.ValidateBasicAttestation(_authenticatorData, trustPath, CancellationToken.None);
+
+        // Assert
+        Assert.That(result.IsValid, Is.True);
+        Assert.That(result.Message, Is.Null);
+    }
+
+    [Test]
+    public async Task ValidateBasicAttestation_MetadataIsFoundAndAttestationTypesAreEmptyArray_ThenReturnsValid()
     {
         // Arrange
         var trustPath = Array.Empty<X509Certificate2>();
