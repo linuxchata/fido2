@@ -162,8 +162,8 @@ internal class MetadataBlobPayloadEntryTests
                 Schema = 3,
                 Upv =
                 [
-                    new UnifiedProtocolVersion { Major = 1, Minor = 0 },
-                    new UnifiedProtocolVersion { Major = 1, Minor = 1 },
+                    new UnifiedProtocolVersion { Major = 1, Minor = 2 },
+                    new UnifiedProtocolVersion { Major = 3, Minor = 4 },
                 ],
                 AuthenticationAlgorithms = ["rsassa_pkcsv15_sha256_raw", "ecdsa_p256_sha256_raw"],
                 PublicKeyAlgAndEncodings = ["cose", "jwk"],
@@ -326,9 +326,9 @@ internal class MetadataBlobPayloadEntryTests
         Assert.That(entry.MetadataStatement.Schema, Is.EqualTo(3));
         Assert.That(entry.MetadataStatement.Upv, Has.Length.EqualTo(2));
         Assert.That(entry.MetadataStatement.Upv[0].Major, Is.EqualTo(1));
-        Assert.That(entry.MetadataStatement.Upv[0].Minor, Is.EqualTo(0));
-        Assert.That(entry.MetadataStatement.Upv[1].Major, Is.EqualTo(1));
-        Assert.That(entry.MetadataStatement.Upv[1].Minor, Is.EqualTo(1));
+        Assert.That(entry.MetadataStatement.Upv[0].Minor, Is.EqualTo(2));
+        Assert.That(entry.MetadataStatement.Upv[1].Major, Is.EqualTo(3));
+        Assert.That(entry.MetadataStatement.Upv[1].Minor, Is.EqualTo(4));
         Assert.That(entry.MetadataStatement.AuthenticationAlgorithms, Is.EqualTo(["rsassa_pkcsv15_sha256_raw", "ecdsa_p256_sha256_raw"]));
         Assert.That(entry.MetadataStatement.PublicKeyAlgAndEncodings, Is.EqualTo(["cose", "jwk"]));
         Assert.That(entry.MetadataStatement.AttestationTypes, Is.EqualTo(["basic_full", "basic_surrogate", "attca"]));
