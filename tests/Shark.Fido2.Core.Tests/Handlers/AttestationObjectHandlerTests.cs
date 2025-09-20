@@ -76,7 +76,48 @@ internal class AttestationObjectHandlerTests
     }
 
     [Test]
-    public async Task Handle_WhenAttestationObjectValidAndNoneAttestationFormat_ThenReturnsValue()
+    public void Handle_WhenAttestationObjectHasLeftoversBytes_ThenThrowsArgumentOutOfRangeException()
+    {
+        // Arrange
+        var attestationObject = "o2NmbXRmcGFja2VkZ2F0dFN0bXSjY2FsZyZjc2lnWEcwRQIgB_JH2L3z11Eszp0n_Kz_hz9-_zONjxp7gNxAq6rNOPcCIQCgUxEuaWW8Q0nihL5mPNMGEfCsvFl5ZJ8Pw8l3Rlq0TWN4NWOBWQRFMIIEQTCCAimgAwIBAgIBATANBgkqhkiG9w0BAQsFADCBoTEYMBYGA1UEAwwPRklETzIgVEVTVCBST09UMTEwLwYJKoZIhvcNAQkBFiJjb25mb3JtYW5jZS10b29sc0BmaWRvYWxsaWFuY2Uub3JnMRYwFAYDVQQKDA1GSURPIEFsbGlhbmNlMQwwCgYDVQQLDANDV0cxCzAJBgNVBAYTAlVTMQswCQYDVQQIDAJNWTESMBAGA1UEBwwJV2FrZWZpZWxkMB4XDTE4MDUyMzE0Mzk0M1oXDTI4MDUyMDE0Mzk0M1owgcIxIzAhBgNVBAMMGkZJRE8yIEJBVENIIEtFWSBwcmltZTI1NnYxMTEwLwYJKoZIhvcNAQkBFiJjb25mb3JtYW5jZS10b29sc0BmaWRvYWxsaWFuY2Uub3JnMRYwFAYDVQQKDA1GSURPIEFsbGlhbmNlMSIwIAYDVQQLDBlBdXRoZW50aWNhdG9yIEF0dGVzdGF0aW9uMQswCQYDVQQGEwJVUzELMAkGA1UECAwCTVkxEjAQBgNVBAcMCVdha2VmaWVsZDBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABE86Xl6rbB-8rpf232RJlnYse-9yAEAqdsbyMPZVbxeqmZtZf8S_UIqvjp7wzQE_Wrm9J5FL8IBDeMvMsRuJtUajLDAqMAkGA1UdEwQCMAAwHQYDVR0OBBYEFFZN98D4xlW2oR9sTRnzv0Hi_QF5MA0GCSqGSIb3DQEBCwUAA4ICAQCH3aCf-CCJBdEtQc4JpOnUelwGGw7DxnBMokHHBgrzJxDn9BFcFwxGLxrFV7EfYehQNOD-74OS8fZRgZiNf9EDGAYiHh0-CspfBWd20zCIjlCdDBcyhwq3PLJ65JC_og3CT9AK4kvks4DI-01RYxNv9S8Jx1haO1lgU55hBIr1P_p21ZKnpcCEhPjB_cIFrHJqL5iJGfed-LXni9Suq24OHnp44Mrv4h7OD2elu5yWfdfFb-RGG2TYURFIGYGijsii093w0ZMBOfBS-3Xq_DrHeZbZrrNkY455gJCZ5eV83Nrt9J9_UF0VZHl_hwnSAUC_b3tN_l0ZlC9kPcNzJD04l4ndFBD2KdfQ2HGTX7pybWLZ7yH2BM3ui2OpiacaOzd7OE91rHYB2uZyQ7jdg25yF9M8QI9NHM_itCjdBvAYt4QCT8dX6gmZiIGR2F_YXZAsybtJ16pnUmODVbW80lPbzy-PUQYX79opeD9u6MBorzr9g08Elpb1F3DgSd8VSLlsR2QPllKl4AcJDMIOfZHOQGOzatMV7ipEVRa0L5FnjAWpHHvSNcsjD4Cul562mO3MlI2pCyo-US-nIzG5XZmOeu4Db_Kw_dEPOo2ztHwlU0qKJ7REBsbt63jdQtlwLuiLHwkpiwnrAOZfwbLLu9Yz4tL1eJlQffuwS_Aolsz7HGhhdXRoRGF0YVjESZYN5YgOjGh0NBcPZHZgW4_krrmihjLHmVzzuoMdl2NBAAAAdDJq3PAM70bQk5KY1sSoSnIAIJsR0dMx7XHR5cpOgVaue6iSYUvhkRBTx7w-HaE7eoIOpQECAyYgASFYIL7nxBFER7y8BC2dHlGZyRTNEJSdNQZbK1cEiy9ovcpGIlggagrT30zq5uvWuLSHAt6TaqMB-WsW1IYYge0RoxhE9GHBzkNHCH5a87ywmMl_zniBVKDOCT4_g5yHyM3FcsC3jg";
+        var creationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
+
+        // Act & Assert
+        Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => _sut.Handle(
+            attestationObject,
+            ClientDataBuilder.BuildCreate(),
+            creationOptions,
+            CancellationToken.None));
+    }
+
+    [Test]
+    public async Task Handle_WhenAttestationObjectIsNotValid_ThenReturnsInternalResult()
+    {
+        // Arrange
+        var attestationObject = "o2NmbXRkbm9uZWdhdHRTdG10oGhhdXRoRGF0YViYSZYN5YgOjGh0NBcPZHZgW4/krrmihjLHmVzzuoMdl2NdAAAAAAAAAAAAAAAAAAAAAAAAAAAAFNIOIaOVgJRyI6ffE8tNV4tHvGJVpQECAyYgASFYIEgIOe/+LSvpyPB010CZ4+ox3EAG6dp611nzoff5QH15IlggC/DWA8k1rogu86PSgVzEjD9ObamYaO2dbj710ogx1dw=";
+        var creationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
+
+        _attestationObjectValidatorMock
+            .Setup(a => a.Validate(
+                It.IsAny<AttestationObjectData?>(),
+                It.IsAny<ClientData>(),
+                It.IsAny<PublicKeyCredentialCreationOptions>(),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(ValidatorInternalResult.Invalid("RP ID hash mismatch"));
+
+        // Act
+        var result = await _sut.Handle(
+            attestationObject, ClientDataBuilder.BuildCreate(), creationOptions, CancellationToken.None);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.HasError, Is.True);
+        Assert.That(result.Message, Is.EqualTo("RP ID hash mismatch"));
+        Assert.That(result.Value, Is.Null);
+    }
+
+    [Test]
+    public async Task Handle_WhenAttestationObjectIsValidAndNoneAttestationFormat_ThenReturnsValue()
     {
         // Source: iPhone 8 authenticator.
 
@@ -96,7 +137,7 @@ internal class AttestationObjectHandlerTests
     }
 
     [Test]
-    public async Task Handle_WhenAttestationObjectValidAndNoneAttestationFormat2_ThenReturnsValue()
+    public async Task Handle_WhenAttestationObjectIsValidAndNoneAttestationFormat2_ThenReturnsValue()
     {
         // Source: iPhone 14 authenticator.
 
@@ -116,7 +157,7 @@ internal class AttestationObjectHandlerTests
     }
 
     [Test]
-    public async Task Handle_WhenAttestationObjectValidAndPackedAttestationFormat_ThenReturnsValue()
+    public async Task Handle_WhenAttestationObjectIsValidAndPackedAttestationFormat_ThenReturnsValue()
     {
         // Source: Windows 10 authenticator.
 
@@ -133,20 +174,5 @@ internal class AttestationObjectHandlerTests
         Assert.That(result.HasError, Is.False);
         Assert.That(result.Message, Is.Null);
         Assert.That(result.Value, Is.Not.Null);
-    }
-
-    [Test]
-    public void Handle_WhenAttestationObjectHasLeftoversBytes_ThenThrowsArgumentOutOfRangeException()
-    {
-        // Arrange
-        var attestationObject = "o2NmbXRmcGFja2VkZ2F0dFN0bXSjY2FsZyZjc2lnWEcwRQIgB_JH2L3z11Eszp0n_Kz_hz9-_zONjxp7gNxAq6rNOPcCIQCgUxEuaWW8Q0nihL5mPNMGEfCsvFl5ZJ8Pw8l3Rlq0TWN4NWOBWQRFMIIEQTCCAimgAwIBAgIBATANBgkqhkiG9w0BAQsFADCBoTEYMBYGA1UEAwwPRklETzIgVEVTVCBST09UMTEwLwYJKoZIhvcNAQkBFiJjb25mb3JtYW5jZS10b29sc0BmaWRvYWxsaWFuY2Uub3JnMRYwFAYDVQQKDA1GSURPIEFsbGlhbmNlMQwwCgYDVQQLDANDV0cxCzAJBgNVBAYTAlVTMQswCQYDVQQIDAJNWTESMBAGA1UEBwwJV2FrZWZpZWxkMB4XDTE4MDUyMzE0Mzk0M1oXDTI4MDUyMDE0Mzk0M1owgcIxIzAhBgNVBAMMGkZJRE8yIEJBVENIIEtFWSBwcmltZTI1NnYxMTEwLwYJKoZIhvcNAQkBFiJjb25mb3JtYW5jZS10b29sc0BmaWRvYWxsaWFuY2Uub3JnMRYwFAYDVQQKDA1GSURPIEFsbGlhbmNlMSIwIAYDVQQLDBlBdXRoZW50aWNhdG9yIEF0dGVzdGF0aW9uMQswCQYDVQQGEwJVUzELMAkGA1UECAwCTVkxEjAQBgNVBAcMCVdha2VmaWVsZDBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABE86Xl6rbB-8rpf232RJlnYse-9yAEAqdsbyMPZVbxeqmZtZf8S_UIqvjp7wzQE_Wrm9J5FL8IBDeMvMsRuJtUajLDAqMAkGA1UdEwQCMAAwHQYDVR0OBBYEFFZN98D4xlW2oR9sTRnzv0Hi_QF5MA0GCSqGSIb3DQEBCwUAA4ICAQCH3aCf-CCJBdEtQc4JpOnUelwGGw7DxnBMokHHBgrzJxDn9BFcFwxGLxrFV7EfYehQNOD-74OS8fZRgZiNf9EDGAYiHh0-CspfBWd20zCIjlCdDBcyhwq3PLJ65JC_og3CT9AK4kvks4DI-01RYxNv9S8Jx1haO1lgU55hBIr1P_p21ZKnpcCEhPjB_cIFrHJqL5iJGfed-LXni9Suq24OHnp44Mrv4h7OD2elu5yWfdfFb-RGG2TYURFIGYGijsii093w0ZMBOfBS-3Xq_DrHeZbZrrNkY455gJCZ5eV83Nrt9J9_UF0VZHl_hwnSAUC_b3tN_l0ZlC9kPcNzJD04l4ndFBD2KdfQ2HGTX7pybWLZ7yH2BM3ui2OpiacaOzd7OE91rHYB2uZyQ7jdg25yF9M8QI9NHM_itCjdBvAYt4QCT8dX6gmZiIGR2F_YXZAsybtJ16pnUmODVbW80lPbzy-PUQYX79opeD9u6MBorzr9g08Elpb1F3DgSd8VSLlsR2QPllKl4AcJDMIOfZHOQGOzatMV7ipEVRa0L5FnjAWpHHvSNcsjD4Cul562mO3MlI2pCyo-US-nIzG5XZmOeu4Db_Kw_dEPOo2ztHwlU0qKJ7REBsbt63jdQtlwLuiLHwkpiwnrAOZfwbLLu9Yz4tL1eJlQffuwS_Aolsz7HGhhdXRoRGF0YVjESZYN5YgOjGh0NBcPZHZgW4_krrmihjLHmVzzuoMdl2NBAAAAdDJq3PAM70bQk5KY1sSoSnIAIJsR0dMx7XHR5cpOgVaue6iSYUvhkRBTx7w-HaE7eoIOpQECAyYgASFYIL7nxBFER7y8BC2dHlGZyRTNEJSdNQZbK1cEiy9ovcpGIlggagrT30zq5uvWuLSHAt6TaqMB-WsW1IYYge0RoxhE9GHBzkNHCH5a87ywmMl_zniBVKDOCT4_g5yHyM3FcsC3jg";
-        var creationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
-
-        // Act & Assert
-        Assert.ThrowsAsync<ArgumentOutOfRangeException>(() => _sut.Handle(
-            attestationObject,
-            ClientDataBuilder.BuildCreate(),
-            creationOptions,
-            CancellationToken.None));
     }
 }

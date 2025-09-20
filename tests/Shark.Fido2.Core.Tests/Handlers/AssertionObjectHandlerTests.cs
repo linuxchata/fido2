@@ -121,7 +121,7 @@ internal class AssertionObjectHandlerTests
     }
 
     [Test]
-    public void Handle_WhenAuthenticatorDataStringIsValid_ThenReturnsInternalResult()
+    public void Handle_WhenAuthenticatorDataStringIsValid_ThenReturnsValue()
     {
         // Arrange
         var requestOptions = PublicKeyCredentialRequestOptionsBuilder.Build();
