@@ -72,6 +72,26 @@ internal class UserHandlerValidatorTests
     }
 
     [Test]
+    [TestCase(null)]
+    [TestCase("")]
+    [TestCase("   ")]
+    public void Validate_WhenAllowCredentialsPresentAndUserHandleEmptyAndUsernameIsNullOrEmptyInRequestOptions_ThenReturnsValidResult(string? username)
+    {
+        // Arrange
+        var credential = CreateCredential();
+        var publicKeyCredentialAssertion = CreatePublicKeyCredentialAssertion(null); // Empty user handle
+        var requestOptions = CreatePublicKeyCredentialRequestOptions(true, username!);
+
+        // Act
+        var result = _sut.Validate(credential, publicKeyCredentialAssertion, requestOptions);
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.IsValid, Is.True);
+        Assert.That(result.Message, Is.Null);
+    }
+
+    [Test]
     public void Validate_WhenAllowCredentialsPresentAndUserHandleEmptyAndUsernameDoesNotMatch_ThenReturnsInvalidResult()
     {
         // Arrange

@@ -1,4 +1,5 @@
-﻿using Amazon.DynamoDBv2;
+﻿using System.Diagnostics.CodeAnalysis;
+using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
 using Amazon.Runtime;
 using Shark.Fido2.Core.Abstractions.Repositories;
@@ -13,6 +14,7 @@ namespace Shark.Fido2.DynamoDB;
 /// <remarks>
 /// This implementation uses Amazon DynamoDB as the persistent data store for FIDO2 credentials.
 /// </remarks>
+[ExcludeFromCodeCoverage]
 internal sealed class CredentialRepository : ICredentialRepository
 {
     private const string TableName = "Credential";

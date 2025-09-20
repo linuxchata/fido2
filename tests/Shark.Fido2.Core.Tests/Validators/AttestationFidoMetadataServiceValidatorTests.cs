@@ -229,17 +229,7 @@ internal class AttestationFidoMetadataServiceValidatorTests
     {
         // Arrange
         var trustPath = _certificates;
-
-        var metadataItem = new MetadataPayloadItem
-        {
-            Aaguid = _aaGuid,
-            Description = Description,
-            StatusReports =
-            [
-                new StatusReport { Status = FidoCertifiedStatus, EffectiveDate = _effectiveDate },
-            ],
-            AttestationTypes = ["basic_surrogate"],
-        };
+        var metadataItem = CreateMetadataPayloadItem(["basic_surrogate"]);
 
         _metadataServiceMock
             .Setup(m => m.Get(_aaGuid, It.IsAny<CancellationToken>()))
@@ -258,17 +248,45 @@ internal class AttestationFidoMetadataServiceValidatorTests
     {
         // Arrange
         X509Certificate2[]? trustPath = null;
+        var metadataItem = CreateMetadataPayloadItem(["basic_surrogate"]);
 
-        var metadataItem = new MetadataPayloadItem
-        {
-            Aaguid = _aaGuid,
-            Description = Description,
-            StatusReports =
-            [
-                new StatusReport { Status = FidoCertifiedStatus, EffectiveDate = _effectiveDate },
-            ],
-            AttestationTypes = ["basic_surrogate"],
-        };
+        _metadataServiceMock
+            .Setup(m => m.Get(_aaGuid, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(metadataItem);
+
+        // Act
+        var result = await _sut.ValidateBasicAttestation(_authenticatorData, trustPath, CancellationToken.None);
+
+        // Assert
+        Assert.That(result.IsValid, Is.True);
+        Assert.That(result.Message, Is.Null);
+    }
+
+    [Test]
+    public async Task ValidateBasicAttestation_MetadataIsFoundAndAttestationTypesAreNull_ThenReturnsValid()
+    {
+        // Arrange
+        var trustPath = Array.Empty<X509Certificate2>();
+        var metadataItem = CreateMetadataPayloadItem(null!);
+
+        _metadataServiceMock
+            .Setup(m => m.Get(_aaGuid, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(metadataItem);
+
+        // Act
+        var result = await _sut.ValidateBasicAttestation(_authenticatorData, trustPath, CancellationToken.None);
+
+        // Assert
+        Assert.That(result.IsValid, Is.True);
+        Assert.That(result.Message, Is.Null);
+    }
+
+    [Test]
+    public async Task ValidateBasicAttestation_MetadataIsFoundAndAttestationTypesAreEmptyArray_ThenReturnsValid()
+    {
+        // Arrange
+        var trustPath = Array.Empty<X509Certificate2>();
+        var metadataItem = CreateMetadataPayloadItem([]);
 
         _metadataServiceMock
             .Setup(m => m.Get(_aaGuid, It.IsAny<CancellationToken>()))
@@ -287,16 +305,7 @@ internal class AttestationFidoMetadataServiceValidatorTests
     {
         // Arrange
         var trustPath = Array.Empty<X509Certificate2>();
-        var metadataItem = new MetadataPayloadItem
-        {
-            Aaguid = _aaGuid,
-            Description = Description,
-            StatusReports =
-            [
-                new StatusReport { Status = FidoCertifiedStatus, EffectiveDate = _effectiveDate },
-            ],
-            AttestationTypes = ["basic_surrogate"],
-        };
+        var metadataItem = CreateMetadataPayloadItem(["basic_surrogate"]);
 
         _metadataServiceMock
             .Setup(m => m.Get(_aaGuid, It.IsAny<CancellationToken>()))
@@ -315,16 +324,7 @@ internal class AttestationFidoMetadataServiceValidatorTests
     {
         // Arrange
         var trustPath = _certificates;
-        var metadataItem = new MetadataPayloadItem
-        {
-            Aaguid = _aaGuid,
-            Description = Description,
-            StatusReports =
-            [
-                new StatusReport { Status = FidoCertifiedStatus, EffectiveDate = _effectiveDate },
-            ],
-            AttestationTypes = ["basic", "basic_surrogate", "attca"],
-        };
+        var metadataItem = CreateMetadataPayloadItem(["basic", "basic_surrogate", "attca"]);
 
         _metadataServiceMock
             .Setup(m => m.Get(_aaGuid, It.IsAny<CancellationToken>()))
@@ -343,16 +343,7 @@ internal class AttestationFidoMetadataServiceValidatorTests
     {
         // Arrange
         var trustPath = _certificates;
-        var metadataItem = new MetadataPayloadItem
-        {
-            Aaguid = _aaGuid,
-            Description = Description,
-            StatusReports =
-            [
-                new StatusReport { Status = FidoCertifiedStatus, EffectiveDate = _effectiveDate },
-            ],
-            AttestationTypes = ["basic", "attca"],
-        };
+        var metadataItem = CreateMetadataPayloadItem(["basic", "attca"]);
 
         _metadataServiceMock
             .Setup(m => m.Get(_aaGuid, It.IsAny<CancellationToken>()))
@@ -364,5 +355,19 @@ internal class AttestationFidoMetadataServiceValidatorTests
         // Assert
         Assert.That(result.IsValid, Is.True);
         Assert.That(result.Message, Is.Null);
+    }
+
+    private MetadataPayloadItem CreateMetadataPayloadItem(string[] attestationTypes)
+    {
+        return new MetadataPayloadItem
+        {
+            Aaguid = _aaGuid,
+            Description = Description,
+            StatusReports =
+            [
+                new StatusReport { Status = FidoCertifiedStatus, EffectiveDate = _effectiveDate },
+            ],
+            AttestationTypes = attestationTypes,
+        };
     }
 }

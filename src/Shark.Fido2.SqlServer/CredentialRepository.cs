@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Diagnostics.CodeAnalysis;
 using Dapper;
 using Shark.Fido2.Core.Abstractions.Repositories;
 using Shark.Fido2.Core.Entities;
@@ -13,6 +14,7 @@ namespace Shark.Fido2.SqlServer;
 /// <remarks>
 /// This implementation uses Microsoft SQL Server as the persistent data store for FIDO2 credentials.
 /// </remarks>
+[ExcludeFromCodeCoverage]
 internal sealed class CredentialRepository : ICredentialRepository
 {
     private readonly string _connectionString;
