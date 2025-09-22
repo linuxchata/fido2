@@ -6,6 +6,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -29,6 +37,14 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\tests\Shark.Fido2.Tests.Common\Shark.Fido2.Tests.Common.csproj" />
+    <ProjectReference Include="..\Shark.Fido2.Core\Shark.Fido2.Core.csproj" />
+    <ProjectReference Include="..\Shark.Fido2.Domain\Shark.Fido2.Domain.csproj" />
+    <ProjectReference Include="..\Shark.Fido2.InMemory\Shark.Fido2.InMemory.csproj" />
+    <ProjectReference Include="..\Shark.Fido2.Metadata.Core\Shark.Fido2.Metadata.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
