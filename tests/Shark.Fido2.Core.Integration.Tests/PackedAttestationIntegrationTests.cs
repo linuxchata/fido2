@@ -1,11 +1,11 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Shark.Fido2.Core.Abstractions;
-using Shark.Fido2.Core.Integration.Tests.DataReaders;
 using Shark.Fido2.Domain.Constants;
 using Shark.Fido2.Domain.Enums;
 using Shark.Fido2.Domain.Options;
 using Shark.Fido2.InMemory;
+using Shark.Fido2.Tests.Common.DataReaders;
 
 namespace Shark.Fido2.Core.Integration.Tests;
 
