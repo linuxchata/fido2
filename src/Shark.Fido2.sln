@@ -47,7 +47,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.Sample.Blazor.C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.DynamoDB.Tests", "..\tests\Shark.Fido2.DynamoDB.Tests\Shark.Fido2.DynamoDB.Tests.csproj", "{4997A6C6-C9E7-4E3B-B91A-2EC57A8D5FFB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.Core.Performance.Tests", "Shark.Fido2.Core.Performance.Tests\Shark.Fido2.Core.Performance.Tests.csproj", "{B9AF26AE-1570-4490-B396-12AF051B506A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.Core.Performance.Tests", "..\tests\Shark.Fido2.Core.Performance.Tests\Shark.Fido2.Core.Performance.Tests.csproj", "{B9AF26AE-1570-4490-B396-12AF051B506A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
