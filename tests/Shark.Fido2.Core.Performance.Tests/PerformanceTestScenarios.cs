@@ -1,8 +1,14 @@
+using System.Collections.Concurrent;
+using System.Security.Cryptography;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NBomber.Contracts.Stats;
 using NBomber.CSharp;
+using Shark.Fido2.Common.Extensions;
 using Shark.Fido2.Core.Abstractions;
+using Shark.Fido2.Core.Helpers;
+using Shark.Fido2.Domain.Enums;
+using Shark.Fido2.Domain.Options;
 using Shark.Fido2.InMemory;
 using Shark.Fido2.Tests.Common.DataReaders;
 
@@ -14,6 +20,9 @@ public class PerformanceTestScenarios
     private const string NoneCreationOptions = "NoneCreationOptions.json";
     private const string NoneAssertion = "NoneAssertion.json";
     private const string NoneRequestOptions = "NoneRequestOptions.json";
+
+    private readonly ConcurrentBag<(string CredentialId, string Name)> _enduranceTestUsers = [];
+    private readonly UserIdGenerator _userIdGenerator = new();
 
     private ServiceProvider? _serviceProvider;
 
@@ -35,6 +44,7 @@ public class PerformanceTestScenarios
     [TearDown]
     public void TearDown()
     {
+        _enduranceTestUsers.Clear();
         _serviceProvider?.Dispose();
     }
 
@@ -103,17 +113,33 @@ public class PerformanceTestScenarios
     [Test]
     public void EnduranceTest()
     {
+        var assertion = _serviceProvider!.GetRequiredService<IAssertion>();
+        var attestation = _serviceProvider!.GetRequiredService<IAttestation>();
+
         var registrationScenario = Scenario
             .Create("endurance_registration", async context =>
             {
-                var attestation = _serviceProvider!.GetRequiredService<IAttestation>();
                 var attestationData = DataReader.ReadAttestationData(NoneAttestation);
                 var creationOptions = DataReader.ReadCreationOptions(NoneCreationOptions);
+
+                var username = $"Name_{Guid.NewGuid().ToString().ToLower()}";
+                creationOptions.User = new PublicKeyCredentialUserEntity
+                {
+                    Id = _userIdGenerator.Get(username),
+                    Name = username,
+                    DisplayName = $"DisplayName_{Guid.NewGuid().ToString().ToLower()}",
+                };
+
+                var credentialId = GetCredentialId();
+                attestationData.Id = credentialId;
+                attestationData.RawId = credentialId;
 
                 var result = await attestation.CompleteRegistration(
                     attestationData,
                     creationOptions,
                     CancellationToken.None);
+
+                _enduranceTestUsers.Add((credentialId, username));
 
                 return result != null ? Response.Ok() : Response.Fail();
             })
@@ -123,17 +149,34 @@ public class PerformanceTestScenarios
         var authenticationScenario = Scenario
             .Create("endurance_authentication", async context =>
             {
-                var assertion = _serviceProvider!.GetRequiredService<IAssertion>();
-                var attestation = _serviceProvider!.GetRequiredService<IAttestation>();
+                if (_enduranceTestUsers.IsEmpty)
+                {
+                    return Response.Ok();
+                }
 
-                // Register first
-                var attestationData = DataReader.ReadAttestationData(NoneAttestation);
-                var creationOptions = DataReader.ReadCreationOptions(NoneCreationOptions);
-                await attestation.CompleteRegistration(attestationData, creationOptions, CancellationToken.None);
-
-                // Then authenticate
                 var assertionData = DataReader.ReadAssertionData(NoneAssertion);
-                var requestOptions = DataReader.ReadRequestOptions(NoneRequestOptions);
+                var requestOptionsTemplate = DataReader.ReadRequestOptions(NoneRequestOptions);
+
+                var session = _enduranceTestUsers.ElementAt(new Random().Next(0, _enduranceTestUsers.Count));
+                var requestOptions = new PublicKeyCredentialRequestOptions
+                {
+                    Challenge = requestOptionsTemplate.Challenge,
+                    Timeout = requestOptionsTemplate.Timeout,
+                    RpId = requestOptionsTemplate.RpId,
+                    AllowCredentials =
+                    [
+                        new PublicKeyCredentialDescriptor
+                        {
+                            Id = session.CredentialId.FromBase64Url(),
+                            Transports = [AuthenticatorTransport.Hybrid, AuthenticatorTransport.Internal],
+                        },
+                    ],
+                    UserVerification = requestOptionsTemplate.UserVerification,
+                    Username = session.Name,
+                };
+
+                assertionData.Id = session.CredentialId;
+                assertionData.RawId = session.CredentialId;
 
                 var result = await assertion.CompleteAuthentication(
                     assertionData,
@@ -148,7 +191,7 @@ public class PerformanceTestScenarios
         NBomberRunner
             .RegisterScenarios(registrationScenario, authenticationScenario)
             .WithReportFolder("nbomber_reports/endurance_test")
-            .WithReportFormats(ReportFormat.Html, ReportFormat.Csv, ReportFormat.Md)
+            .WithReportFormats(ReportFormat.Html)
             .Run();
     }
 
@@ -176,5 +219,13 @@ public class PerformanceTestScenarios
             .RegisterScenarios(scenario)
             .WithReportFolder("nbomber_reports/volume_test")
             .Run();
+    }
+
+    private string GetCredentialId()
+    {
+        var credentialIdBytes = new byte[20];
+        using var randomNumberGenerator = RandomNumberGenerator.Create();
+        randomNumberGenerator.GetBytes(credentialIdBytes);
+        return credentialIdBytes.ToBase64Url();
     }
 }
