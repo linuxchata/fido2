@@ -32,7 +32,7 @@ jobs:
       run: dotnet build ./src/Shark.Fido2.sln --configuration Release --no-restore
 
     - name: Test
-      run: dotnet test ./src/Shark.Fido2.sln --collect:"XPlat Code Coverage;Format=json,lcov,cobertura" --results-directory "TestResults" --configuration Release --no-build --verbosity normal
+      run: dotnet test ./src/Shark.Fido2.sln --filter FullyQualifiedName\!~Shark.Fido2.Core.Performance.Tests --collect:"XPlat Code Coverage;Format=json,lcov,cobertura" --results-directory "TestResults" --configuration Release --no-build --verbosity normal
 
     - name: Add .NET global tools to PATH
       run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
