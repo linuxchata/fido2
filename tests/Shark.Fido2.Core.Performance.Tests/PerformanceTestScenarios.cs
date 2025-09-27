@@ -12,6 +12,8 @@ namespace Shark.Fido2.Core.Performance.Tests;
 
 public class PerformanceTestScenarios
 {
+    private const string ReportsLocation = "nbomber_reports";
+
     private readonly ConcurrentBag<(string CredentialId, string Name)> _enduranceTestUsers = [];
     private readonly PerformanceTestHelper _performanceTestHelper = new();
 
@@ -62,7 +64,7 @@ public class PerformanceTestScenarios
 
         NBomberRunner
             .RegisterScenarios(registrationScenario, authenticationScenario)
-            .WithReportFolder($"nbomber_reports/{TestName}")
+            .WithReportFolder($"{ReportsLocation}/{TestName}")
             .WithReportFormats(ReportFormat.Html)
             .Run();
     }
@@ -85,7 +87,7 @@ public class PerformanceTestScenarios
 
         NBomberRunner
             .RegisterScenarios(registrationScenario, authenticationScenario)
-            .WithReportFolder($"nbomber_reports/{TestName}")
+            .WithReportFolder($"{ReportsLocation}/{TestName}")
             .WithReportFormats(ReportFormat.Html)
             .Run();
     }
@@ -108,7 +110,7 @@ public class PerformanceTestScenarios
 
         NBomberRunner
             .RegisterScenarios(registrationScenario, authenticationScenario)
-            .WithReportFolder($"nbomber_reports/{TestName}")
+            .WithReportFolder($"{ReportsLocation}/{TestName}")
             .WithReportFormats(ReportFormat.Html)
             .Run();
     }
@@ -131,7 +133,7 @@ public class PerformanceTestScenarios
 
         NBomberRunner
             .RegisterScenarios(registrationScenario, authenticationScenario)
-            .WithReportFolder($"nbomber_reports/{TestName}")
+            .WithReportFolder($"{ReportsLocation}/{TestName}")
             .WithReportFormats(ReportFormat.Html)
             .Run();
     }
