@@ -19,10 +19,22 @@ jobs:
       run: dotnet build ./src/Shark.Fido2.sln --configuration Release --no-restore
 
     - name: Test
-      run: dotnet test ./src/Shark.Fido2.sln --filter FullyQualifiedName\=Shark.Fido2.Core.Performance.Tests --configuration Release --no-build --verbosity normal
+      run: dotnet test ./src/Shark.Fido2.sln --filter FullyQualifiedName=Shark.Fido2.Core.Performance.Tests --configuration Release --no-build --verbosity normal
+
+    - name: Check for performance reports
+      id: check-reports
+      run: |
+        if [ -d "nbomber_reports" ] && [ "$(ls -A nbomber_reports)" ]; then
+          echo "reports-exist=true" >> $GITHUB_OUTPUT
+          echo "Performance reports found in nbomber_reports/"
+        else
+          echo "reports-exist=false" >> $GITHUB_OUTPUT
+          echo "No performance reports found"
+        fi
 
     - name: Upload Test Results as Artifact
+      if: steps.check-reports.outputs.reports-exist == 'true'
       uses: actions/upload-artifact@v4
       with:
-        name: test-results
+        name: performance-test-results
         path: nbomber_reports/
