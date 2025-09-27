@@ -2,11 +2,11 @@
 using Shark.Fido2.Domain;
 using Shark.Fido2.Domain.Options;
 
-namespace Shark.Fido2.Core.Integration.Tests.DataReaders;
+namespace Shark.Fido2.Tests.Common.DataReaders;
 
-internal static class DataReader
+public static class DataReader
 {
-    internal static PublicKeyCredentialCreationOptions ReadCreationOptions(string fileName)
+    public static PublicKeyCredentialCreationOptions ReadCreationOptions(string fileName)
     {
         var testData = GetTestData(fileName);
         var creationOptions = JsonSerializer.Deserialize<PublicKeyCredentialCreationOptions>(testData)
@@ -15,7 +15,7 @@ internal static class DataReader
         return creationOptions;
     }
 
-    internal static PublicKeyCredentialAttestation ReadAttestationData(string fileName)
+    public static PublicKeyCredentialAttestation ReadAttestationData(string fileName)
     {
         var testData = GetTestData(fileName);
         var attestationData = JsonSerializer.Deserialize<PublicKeyCredentialAttestation>(testData)
@@ -24,7 +24,7 @@ internal static class DataReader
         return attestationData;
     }
 
-    internal static PublicKeyCredentialRequestOptions ReadRequestOptions(string fileName)
+    public static PublicKeyCredentialRequestOptions ReadRequestOptions(string fileName)
     {
         var testData = GetTestData(fileName);
         var requestOptions = JsonSerializer.Deserialize<PublicKeyCredentialRequestOptions>(testData)
@@ -33,7 +33,7 @@ internal static class DataReader
         return requestOptions;
     }
 
-    internal static PublicKeyCredentialAssertion ReadAssertionData(string fileName)
+    public static PublicKeyCredentialAssertion ReadAssertionData(string fileName)
     {
         var testData = GetTestData(fileName);
         var assertionData = JsonSerializer.Deserialize<PublicKeyCredentialAssertion>(testData)

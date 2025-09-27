@@ -1,0 +1,19 @@
+{
+  "NBomberConfig": {
+    "TestSuite": "Shark.Fido2.Performance.Tests",
+    "TestName": "FIDO2_Load_Tests",
+    "TargetScenarios": ["*"],
+    "ReportFolder": "./nbomber_reports",
+    "ReportFormats": ["Html", "Csv", "Md"],
+    "ReportFileName": "fido2_performance_report",
+    "GlobalSettings": {
+      "ScenariosSettings": [
+        {
+          "ScenarioName": "*",
+          "WarmUpDuration": "00:00:10",
+          "LoadSimulationsSettings": []
+        }
+      ]
+    }
+  }
+}

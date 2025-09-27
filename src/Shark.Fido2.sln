@@ -47,6 +47,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.Sample.Blazor.C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.DynamoDB.Tests", "..\tests\Shark.Fido2.DynamoDB.Tests\Shark.Fido2.DynamoDB.Tests.csproj", "{4997A6C6-C9E7-4E3B-B91A-2EC57A8D5FFB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.Core.Performance.Tests", "..\tests\Shark.Fido2.Core.Performance.Tests\Shark.Fido2.Core.Performance.Tests.csproj", "{B9AF26AE-1570-4490-B396-12AF051B506A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -129,6 +131,10 @@ Global
 		{4997A6C6-C9E7-4E3B-B91A-2EC57A8D5FFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4997A6C6-C9E7-4E3B-B91A-2EC57A8D5FFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4997A6C6-C9E7-4E3B-B91A-2EC57A8D5FFB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9AF26AE-1570-4490-B396-12AF051B506A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9AF26AE-1570-4490-B396-12AF051B506A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9AF26AE-1570-4490-B396-12AF051B506A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9AF26AE-1570-4490-B396-12AF051B506A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -148,6 +154,7 @@ Global
 		{F72A4256-6BAC-46CE-8443-A942A5A7F2C9} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{A8C4DBF1-2E26-4556-9A2E-B86E5C15DDD8} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{4997A6C6-C9E7-4E3B-B91A-2EC57A8D5FFB} = {0DBAB265-1DF6-444B-BC5F-7A47857979BB}
+		{B9AF26AE-1570-4490-B396-12AF051B506A} = {0DBAB265-1DF6-444B-BC5F-7A47857979BB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6595BEFB-D38C-43C0-BC2E-48B8A742FC45}
