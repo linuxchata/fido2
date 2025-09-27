@@ -23,9 +23,10 @@ internal class ClientDataHandler : IClientDataHandler
 
     public InternalResult<ClientData> HandleAttestation(string clientDataJson, string expectedChallenge)
     {
-        if (string.IsNullOrWhiteSpace(clientDataJson))
+        var validationResult = Validate(clientDataJson);
+        if (validationResult != null)
         {
-            return new InternalResult<ClientData>("Client data JSON cannot be null");
+            return validationResult;
         }
 
         var clientData = GetAttestationClientData(clientDataJson);
@@ -43,9 +44,10 @@ internal class ClientDataHandler : IClientDataHandler
 
     public InternalResult<ClientData> HandleAssertion(string clientDataJson, string expectedChallenge)
     {
-        if (string.IsNullOrWhiteSpace(clientDataJson))
+        var validationResult = Validate(clientDataJson);
+        if (validationResult != null)
         {
-            return new InternalResult<ClientData>("Client data JSON cannot be null");
+            return validationResult;
         }
 
         var clientData = GetAssertionClientData(clientDataJson);
@@ -61,24 +63,33 @@ internal class ClientDataHandler : IClientDataHandler
         return new InternalResult<ClientData>(clientData!);
     }
 
+    private InternalResult<ClientData> Validate(string clientDataJson)
+    {
+        if (string.IsNullOrWhiteSpace(clientDataJson))
+        {
+            return new InternalResult<ClientData>("Client data JSON cannot be null");
+        }
+
+        if (!clientDataJson.IsBase64Url())
+        {
+            return new InternalResult<ClientData>("Client data JSON is not base64url encoded");
+        }
+
+        return null!;
+    }
+
     private ClientData GetAttestationClientData(string clientDataJson)
     {
         // 7.1. Registering a New Credential (Steps 5 to 6 and 10)
 
         // Step 5
         // Let JSONtext be the result of running UTF-8 decode on the value of response.clientDataJSON.
-        var clientDataJsonArray = clientDataJson.FromBase64Url();
-        var decodedClientDataJson = Encoding.UTF8.GetString(clientDataJsonArray);
-
         // Step 6
         // Let C, the client data claimed as collected during the credential creation,
         // be the result of running an implementation-specific JSON parser on JSONtext.
-        var clientData = JsonSerializer.Deserialize<ClientData>(decodedClientDataJson) ??
-            throw new ArgumentException("Client data cannot be read", nameof(clientDataJson));
-
         // Step 11
         // Let hash be the result of computing a hash over response.clientDataJSON using SHA-256.
-        clientData.ClientDataHash = HashProvider.GetSha256Hash(clientDataJsonArray);
+        var clientData = GetClientData(clientDataJson);
 
         _logger.LogDebug("Client data for attestation is parsed");
 
@@ -91,20 +102,27 @@ internal class ClientDataHandler : IClientDataHandler
 
         // Step 9
         // Let JSONtext be the result of running UTF-8 decode on the value of cData.
-        var clientDataJsonArray = clientDataJson.FromBase64Url();
-        var decodedClientDataJson = Encoding.UTF8.GetString(clientDataJsonArray);
-
         // Step 10
         // Let C, the client data claimed as used for the signature, be the result of running an
         // implementation-specific JSON parser on JSONtext.
+        // Step 19
+        // Let hash be the result of computing a hash over the cData using SHA-256.
+        var clientData = GetClientData(clientDataJson);
+
+        _logger.LogDebug("Client data for assertion is parsed");
+
+        return clientData;
+    }
+
+    private ClientData GetClientData(string clientDataJson)
+    {
+        var clientDataJsonArray = clientDataJson.FromBase64Url();
+        var decodedClientDataJson = Encoding.UTF8.GetString(clientDataJsonArray);
+
         var clientData = JsonSerializer.Deserialize<ClientData>(decodedClientDataJson) ??
             throw new ArgumentException("Client data cannot be read", nameof(clientDataJson));
 
-        // Step 19
-        // Let hash be the result of computing a hash over the cData using SHA-256.
         clientData.ClientDataHash = HashProvider.GetSha256Hash(clientDataJsonArray);
-
-        _logger.LogDebug("Client data for assertion is parsed");
 
         return clientData;
     }
