@@ -23,7 +23,7 @@ internal class ClientDataHandler : IClientDataHandler
 
     public InternalResult<ClientData> HandleAttestation(string clientDataJson, string expectedChallenge)
     {
-        var validationResult = Validate(clientDataJson);
+        var validationResult = ValidateClientDataJson(clientDataJson);
         if (validationResult != null)
         {
             return validationResult;
@@ -44,7 +44,7 @@ internal class ClientDataHandler : IClientDataHandler
 
     public InternalResult<ClientData> HandleAssertion(string clientDataJson, string expectedChallenge)
     {
-        var validationResult = Validate(clientDataJson);
+        var validationResult = ValidateClientDataJson(clientDataJson);
         if (validationResult != null)
         {
             return validationResult;
@@ -63,7 +63,7 @@ internal class ClientDataHandler : IClientDataHandler
         return new InternalResult<ClientData>(clientData!);
     }
 
-    private InternalResult<ClientData> Validate(string clientDataJson)
+    private InternalResult<ClientData> ValidateClientDataJson(string clientDataJson)
     {
         if (string.IsNullOrWhiteSpace(clientDataJson))
         {
