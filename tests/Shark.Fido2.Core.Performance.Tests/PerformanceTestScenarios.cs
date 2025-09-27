@@ -6,10 +6,16 @@ using NBomber.Contracts.Stats;
 using NBomber.CSharp;
 using Shark.Fido2.Common.Extensions;
 using Shark.Fido2.Core.Abstractions;
+using Shark.Fido2.Core.Constants;
+using Shark.Fido2.Core.Converters;
 using Shark.Fido2.Core.Helpers;
+using Shark.Fido2.Core.Performance.Tests.Models;
+using Shark.Fido2.Core.Services;
+using Shark.Fido2.Domain;
 using Shark.Fido2.Domain.Enums;
 using Shark.Fido2.Domain.Options;
 using Shark.Fido2.InMemory;
+using Shark.Fido2.Tests.Common;
 using Shark.Fido2.Tests.Common.DataReaders;
 
 namespace Shark.Fido2.Core.Performance.Tests;
@@ -119,29 +125,16 @@ public class PerformanceTestScenarios
         var registrationScenario = Scenario
             .Create("endurance_registration", async context =>
             {
-                var attestationData = DataReader.ReadAttestationData(NoneAttestation);
-                var creationOptions = DataReader.ReadCreationOptions(NoneCreationOptions);
-
-                var username = $"Name_{Guid.NewGuid().ToString().ToLower()}";
-                creationOptions.User = new PublicKeyCredentialUserEntity
-                {
-                    Id = _userIdGenerator.Get(username),
-                    Name = username,
-                    DisplayName = $"DisplayName_{Guid.NewGuid().ToString().ToLower()}",
-                };
-
-                var credentialId = GetCredentialId();
-                attestationData.Id = credentialId;
-                attestationData.RawId = credentialId;
+                var request = GenerateRegistrationRequest();
 
                 var result = await attestation.CompleteRegistration(
-                    attestationData,
-                    creationOptions,
+                    request.Attestation,
+                    request.CreationOptions,
                     CancellationToken.None);
 
-                _enduranceTestUsers.Add((credentialId, username));
+                _enduranceTestUsers.Add((request.CredentialId.ToBase64Url(), request.Username));
 
-                return result != null ? Response.Ok() : Response.Fail();
+                return result != null && result.IsValid ? Response.Ok() : Response.Fail();
             })
             .WithLoadSimulations(
                 Simulation.Inject(rate: 2, interval: TimeSpan.FromSeconds(1), during: TimeSpan.FromMinutes(5)));
@@ -221,11 +214,52 @@ public class PerformanceTestScenarios
             .Run();
     }
 
-    private string GetCredentialId()
+    private RegistrationRequest GenerateRegistrationRequest()
+    {
+        // Generate creation options
+        var creationOptions = DataReader.ReadCreationOptions(NoneCreationOptions);
+        var username = $"Name_{Guid.NewGuid().ToString().ToLower()}";
+        creationOptions.User = new PublicKeyCredentialUserEntity
+        {
+            Id = _userIdGenerator.Get(username),
+            Name = username,
+            DisplayName = $"DisplayName_{Guid.NewGuid().ToString().ToLower()}",
+        };
+
+        // Generate attestation data
+        // Attestation data must be re-generate for each request to replace credential ID in attestation object
+        var attestationData = DataReader.ReadAttestationData(NoneAttestation);
+
+        var credentialId = GetCredentialId();
+        attestationData.Id = credentialId.ToBase64Url();
+        attestationData.RawId = credentialId.ToBase64Url();
+
+        var decodedAttestationObject = CborConverter.Decode(attestationData.Response.AttestationObject);
+        var authenticatorDataArray = decodedAttestationObject[AttestationObjectKey.AuthData] as byte[];
+        var authenticatorData = new AuthenticatorDataParserService().Parse(authenticatorDataArray);
+        var attestationObject = NoneAttestationGenerator.GenerateAttestationObject(authenticatorData!, credentialId);
+
+        attestationData.Response = new AuthenticatorAttestationResponse
+        {
+            ClientDataJson = attestationData.Response.ClientDataJson,
+            AttestationObject = attestationObject,
+            Transports = attestationData.Response.Transports,
+        };
+
+        return new RegistrationRequest
+        {
+            Username = username,
+            CredentialId = credentialId,
+            CreationOptions = creationOptions,
+            Attestation = attestationData,
+        };
+    }
+
+    private byte[] GetCredentialId()
     {
         var credentialIdBytes = new byte[20];
         using var randomNumberGenerator = RandomNumberGenerator.Create();
         randomNumberGenerator.GetBytes(credentialIdBytes);
-        return credentialIdBytes.ToBase64Url();
+        return credentialIdBytes;
     }
 }
