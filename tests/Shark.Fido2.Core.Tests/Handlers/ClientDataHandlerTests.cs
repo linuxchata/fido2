@@ -1,5 +1,8 @@
+using System.Text;
+using System.Text.Json;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
+using Shark.Fido2.Common.Extensions;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Handlers;
@@ -48,7 +51,48 @@ internal class ClientDataHandlerTests
     }
 
     [Test]
-    public void HandleAttestation_WhenClientDataJsonValid_ThenReturnsInternalResult()
+    public void HandleAttestation_WhenClientDataJsonIsInvalid_ThenReturnsInternalResult()
+    {
+        // Arrange
+        var clientDataJson = "eyJ0eXB";
+        var expectedChallenge = "t2pJGIQ7Y4DXF2b98tnBjg";
+
+        // Act
+        var result = _sut.HandleAttestation(clientDataJson, $"{expectedChallenge}==");
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.HasError, Is.True);
+        Assert.That(result.Message, Is.EqualTo("Client data JSON is not base64url encoded"));
+        Assert.That(result.Value, Is.Null);
+    }
+
+    [Test]
+    public void HandleAttestation_WhenClientDataJsonIsMalformed_ThenThrowsJsonException()
+    {
+        // Arrange
+        var clientDataJson = GetMalformedClientDataJson();
+        var expectedChallenge = "t2pJGIQ7Y4DXF2b98tnBjg";
+
+        // Act
+        // Assert
+        Assert.Throws<JsonException>(() => _sut.HandleAttestation(clientDataJson, $"{expectedChallenge}=="));
+    }
+
+    [Test]
+    public void HandleAttestation_WhenClientDataJsonIsNullString_ThenThrowsArgumentException()
+    {
+        // Arrange
+        var clientDataJson = GetNullClientDataJson();
+        var expectedChallenge = "t2pJGIQ7Y4DXF2b98tnBjg";
+
+        // Act
+        // Assert
+        Assert.Throws<ArgumentException>(() => _sut.HandleAttestation(clientDataJson, $"{expectedChallenge}=="));
+    }
+
+    [Test]
+    public void HandleAttestation_WhenClientDataJsonIsValid_ThenReturnsInternalResult()
     {
         // Arrange
         var clientDataJson = "eyJ0eXBlIjoid2ViYXV0aG4uY3JlYXRlIiwiY2hhbGxlbmdlIjoidDJwSkdJUTdZNERYRjJiOTh0bkJqZyIsIm9yaWdpbiI6Imh0dHBzOi8vbG9jYWxob3N0OjQwMDAiLCJjcm9zc09yaWdpbiI6ZmFsc2UsIm90aGVyX2tleXNfY2FuX2JlX2FkZGVkX2hlcmUiOiJkbyBub3QgY29tcGFyZSBjbGllbnREYXRhSlNPTiBhZ2FpbnN0IGEgdGVtcGxhdGUuIFNlZSBodHRwczovL2dvby5nbC95YWJQZXgifQ==";
@@ -77,7 +121,7 @@ internal class ClientDataHandlerTests
     }
 
     [Test]
-    public void HandleAttestation_WhenClientDataJsonValidAndWithTokenBindingWithNonSupportedStatus_ThenReturnsInternalResult()
+    public void HandleAttestation_WhenClientDataJsonIsValidAndWithTokenBindingWithNonSupportedStatus_ThenReturnsInternalResult()
     {
         // Arrange
         var clientDataJson = "eyJjaGFsbGVuZ2UiOiJ1Vlg4OElnUmEwU1NyTUlSVF9xN2NSY2RmZ2ZSQnhDZ25fcGtwVUFuWEpLMnpPYjMwN3dkMU9MWFEwQXVOYU10QlIzYW1rNkhZenAtX1Z4SlRQcHdHdyIsIm9yaWdpbiI6Imh0dHBzOi8vd2ViYXV0aG4ub3JnIiwidG9rZW5CaW5kaW5nIjp7InN0YXR1cyI6Im5vdC1zdXBwb3J0ZWQifSwidHlwZSI6IndlYmF1dGhuLmNyZWF0ZSJ9";
@@ -106,7 +150,7 @@ internal class ClientDataHandlerTests
     }
 
     [Test]
-    public void HandleAttestation_WhenClientDataJsonValidAndWithTokenBindingWithSupportedStatus_ThenReturnsInternalResult()
+    public void HandleAttestation_WhenClientDataJsonIsValidAndWithTokenBindingWithSupportedStatus_ThenReturnsInternalResult()
     {
         // Arrange
         var clientDataJson = "ew0KCSJ0eXBlIiA6ICJ3ZWJhdXRobi5jcmVhdGUiLA0KCSJjaGFsbGVuZ2UiIDogIndrNkxxRVhBTUFacHFjVFlsWTJ5b3I1RGppeUlfYjFneTluRE90Q0IxeUdZbm1fNFdHNFVrMjRGQXI3QXhUT0ZmUU1laWdrUnhPVExaTnJMeEN2Vl9RIiwNCgkib3JpZ2luIiA6ICJodHRwczovL3dlYmF1dGhuLm9yZyIsDQoJInRva2VuQmluZGluZyIgOiANCgl7DQoJCSJzdGF0dXMiIDogInN1cHBvcnRlZCINCgl9DQp9";
@@ -154,7 +198,48 @@ internal class ClientDataHandlerTests
     }
 
     [Test]
-    public void HandleAssertion_WhenClientDataJsonValid_ThenReturnsInternalResult()
+    public void HandleAssertion_WhenClientDataJsonIsInvalid_ThenReturnsInternalResult()
+    {
+        // Arrange
+        var clientDataJson = "eyJ0eXB";
+        var expectedChallenge = "t2pJGIQ7Y4DXF2b98tnBjg";
+
+        // Act
+        var result = _sut.HandleAssertion(clientDataJson, $"{expectedChallenge}==");
+
+        // Assert
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.HasError, Is.True);
+        Assert.That(result.Message, Is.EqualTo("Client data JSON is not base64url encoded"));
+        Assert.That(result.Value, Is.Null);
+    }
+
+    [Test]
+    public void HandleAssertion_WhenClientDataJsonIsMalformed_ThenThrowsJsonException()
+    {
+        // Arrange
+        var clientDataJson = GetMalformedClientDataJson();
+        var expectedChallenge = "t2pJGIQ7Y4DXF2b98tnBjg";
+
+        // Act
+        // Assert
+        Assert.Throws<JsonException>(() => _sut.HandleAssertion(clientDataJson, $"{expectedChallenge}=="));
+    }
+
+    [Test]
+    public void HandleAssertion_WhenClientDataJsonIsNullString_ThenThrowsArgumentException()
+    {
+        // Arrange
+        var clientDataJson = GetNullClientDataJson();
+        var expectedChallenge = "t2pJGIQ7Y4DXF2b98tnBjg";
+
+        // Act
+        // Assert
+        Assert.Throws<ArgumentException>(() => _sut.HandleAssertion(clientDataJson, $"{expectedChallenge}=="));
+    }
+
+    [Test]
+    public void HandleAssertion_WhenClientDataJsonIsValid_ThenReturnsInternalResult()
     {
         // Arrange
         var clientDataJson = "eyJ0eXBlIjoid2ViYXV0aG4uZ2V0IiwiY2hhbGxlbmdlIjoidDJwSkdJUTdZNERYRjJiOTh0bkJqZyIsIm9yaWdpbiI6Imh0dHBzOi8vbG9jYWxob3N0OjQwMDAiLCJjcm9zc09yaWdpbiI6ZmFsc2UsInRva2VuQmluZGluZyI6bnVsbH0=";
@@ -180,5 +265,20 @@ internal class ClientDataHandlerTests
                     c.CrossOrigin == false),
                 It.IsAny<string>()),
             Times.Once);
+    }
+
+    private string GetMalformedClientDataJson()
+    {
+        var clientData = new { Client = "Client" };
+        var clientDataSerialized = JsonSerializer.Serialize(clientData);
+        var clientDataSerializedArray = Encoding.UTF8.GetBytes(clientDataSerialized);
+        return clientDataSerializedArray.ToBase64Url();
+    }
+
+    private string GetNullClientDataJson()
+    {
+        var clientDataSerialized = "null";
+        var clientDataSerializedArray = Encoding.UTF8.GetBytes(clientDataSerialized);
+        return clientDataSerializedArray.ToBase64Url();
     }
 }
