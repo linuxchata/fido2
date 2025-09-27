@@ -1,34 +1,19 @@
 using System.Collections.Concurrent;
-using System.Security.Cryptography;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NBomber.Contracts;
 using NBomber.Contracts.Stats;
 using NBomber.CSharp;
 using Shark.Fido2.Common.Extensions;
 using Shark.Fido2.Core.Abstractions;
-using Shark.Fido2.Core.Constants;
-using Shark.Fido2.Core.Converters;
-using Shark.Fido2.Core.Helpers;
-using Shark.Fido2.Core.Performance.Tests.Models;
-using Shark.Fido2.Core.Services;
-using Shark.Fido2.Domain;
-using Shark.Fido2.Domain.Enums;
-using Shark.Fido2.Domain.Options;
 using Shark.Fido2.InMemory;
-using Shark.Fido2.Tests.Common;
-using Shark.Fido2.Tests.Common.DataReaders;
 
 namespace Shark.Fido2.Core.Performance.Tests;
 
 public class PerformanceTestScenarios
 {
-    private const string NoneAttestation = "NoneAttestation.json";
-    private const string NoneCreationOptions = "NoneCreationOptions.json";
-    private const string NoneAssertion = "NoneAssertion.json";
-    private const string NoneRequestOptions = "NoneRequestOptions.json";
-
     private readonly ConcurrentBag<(string CredentialId, string Name)> _enduranceTestUsers = [];
-    private readonly UserIdGenerator _userIdGenerator = new();
+    private readonly PerformanceTestHelper _performanceTestHelper = new();
 
     private ServiceProvider? _serviceProvider;
 
@@ -44,6 +29,7 @@ public class PerformanceTestScenarios
         services.AddFido2(configuration);
         services.AddFido2InMemoryStore();
         services.AddLogging();
+
         _serviceProvider = services.BuildServiceProvider();
     }
 
@@ -55,78 +41,107 @@ public class PerformanceTestScenarios
     }
 
     [Test]
-    public void SpikeLoadTest()
+    public void SpikePerformanceTests()
     {
-        var scenario = Scenario
-            .Create("spike_load_test", async context =>
-            {
-                var attestation = _serviceProvider!.GetRequiredService<IAttestation>();
-                var attestationData = DataReader.ReadAttestationData(NoneAttestation);
-                var creationOptions = DataReader.ReadCreationOptions(NoneCreationOptions);
+        const string TestName = "spike";
 
-                var result = await attestation.CompleteRegistration(
-                    attestationData,
-                    creationOptions,
-                    CancellationToken.None);
+        var attestation = _serviceProvider!.GetRequiredService<IAttestation>();
+        var assertion = _serviceProvider!.GetRequiredService<IAssertion>();
 
-                return result != null ? Response.Ok() : Response.Fail();
-            })
+        var registrationScenario = GetAttestationScenario(attestation, TestName)
             .WithLoadSimulations(
-                Simulation.Inject(rate: 5, interval: TimeSpan.FromSeconds(1), during: TimeSpan.FromSeconds(10)),
+                Simulation.Inject(rate: 2, interval: TimeSpan.FromSeconds(1), during: TimeSpan.FromSeconds(10)),
+                Simulation.Inject(rate: 10, interval: TimeSpan.FromSeconds(1), during: TimeSpan.FromSeconds(10)),
+                Simulation.Inject(rate: 2, interval: TimeSpan.FromSeconds(1), during: TimeSpan.FromSeconds(10)));
+
+        var authenticationScenario = GetAssertionScenario(assertion, TestName)
+            .WithLoadSimulations(
+                Simulation.Inject(rate: 10, interval: TimeSpan.FromSeconds(1), during: TimeSpan.FromSeconds(10)),
                 Simulation.Inject(rate: 50, interval: TimeSpan.FromSeconds(1), during: TimeSpan.FromSeconds(10)),
-                Simulation.Inject(rate: 5, interval: TimeSpan.FromSeconds(1), during: TimeSpan.FromSeconds(10)));
+                Simulation.Inject(rate: 10, interval: TimeSpan.FromSeconds(1), during: TimeSpan.FromSeconds(10)));
 
         NBomberRunner
-            .RegisterScenarios(scenario)
-            .WithReportFolder("nbomber_reports/spike_test")
+            .RegisterScenarios(registrationScenario, authenticationScenario)
+            .WithReportFolder($"nbomber_reports/{TestName}")
+            .WithReportFormats(ReportFormat.Html)
             .Run();
     }
 
     [Test]
-    public void StressTest()
+    public void StressPerformanceTests()
     {
-        var scenario = Scenario
-            .Create("stress_test", async context =>
-            {
-                var assertion = _serviceProvider!.GetRequiredService<IAssertion>();
-                var attestation = _serviceProvider!.GetRequiredService<IAttestation>();
+        const string TestName = "stress";
 
-                // Register credential
-                var attestationData = DataReader.ReadAttestationData(NoneAttestation);
-                var creationOptions = DataReader.ReadCreationOptions(NoneCreationOptions);
-                await attestation.CompleteRegistration(attestationData, creationOptions, CancellationToken.None);
+        var attestation = _serviceProvider!.GetRequiredService<IAttestation>();
+        var assertion = _serviceProvider!.GetRequiredService<IAssertion>();
 
-                // Authenticate
-                var assertionData = DataReader.ReadAssertionData(NoneAssertion);
-                var requestOptions = DataReader.ReadRequestOptions(NoneRequestOptions);
+        var registrationScenario = GetAttestationScenario(attestation, TestName)
+            .WithLoadSimulations(
+                Simulation.RampingInject(rate: 25, interval: TimeSpan.FromSeconds(1), during: TimeSpan.FromMinutes(2)));
 
-                var result = await assertion.CompleteAuthentication(
-                    assertionData,
-                    requestOptions,
-                    CancellationToken.None);
-
-                return result != null ? Response.Ok() : Response.Fail();
-            })
+        var authenticationScenario = GetAssertionScenario(assertion, TestName)
             .WithLoadSimulations(
                 Simulation.RampingInject(rate: 100, interval: TimeSpan.FromSeconds(1), during: TimeSpan.FromMinutes(2)));
 
         NBomberRunner
-            .RegisterScenarios(scenario)
-            .WithReportFolder("nbomber_reports/stress_test")
+            .RegisterScenarios(registrationScenario, authenticationScenario)
+            .WithReportFolder($"nbomber_reports/{TestName}")
+            .WithReportFormats(ReportFormat.Html)
             .Run();
     }
 
     [Test]
-    public void EnduranceTest()
+    public void EndurancePerformanceTests()
     {
-        var assertion = _serviceProvider!.GetRequiredService<IAssertion>();
+        const string TestName = "endurance";
+
         var attestation = _serviceProvider!.GetRequiredService<IAttestation>();
+        var assertion = _serviceProvider!.GetRequiredService<IAssertion>();
 
+        var registrationScenario = GetAttestationScenario(attestation, TestName)
+            .WithLoadSimulations(
+                Simulation.Inject(rate: 2, interval: TimeSpan.FromSeconds(1), during: TimeSpan.FromMinutes(5)));
+
+        var authenticationScenario = GetAssertionScenario(assertion, TestName)
+            .WithLoadSimulations(
+                Simulation.Inject(rate: 8, interval: TimeSpan.FromSeconds(5), during: TimeSpan.FromMinutes(5)));
+
+        NBomberRunner
+            .RegisterScenarios(registrationScenario, authenticationScenario)
+            .WithReportFolder($"nbomber_reports/{TestName}")
+            .WithReportFormats(ReportFormat.Html)
+            .Run();
+    }
+
+    [Test]
+    public void VolumePerformanceTests()
+    {
+        const string TestName = "volume";
+
+        var attestation = _serviceProvider!.GetRequiredService<IAttestation>();
+        var assertion = _serviceProvider!.GetRequiredService<IAssertion>();
+
+        var registrationScenario = GetAttestationScenario(attestation, TestName)
+            .WithLoadSimulations(
+                Simulation.RampingInject(rate: 50, interval: TimeSpan.FromSeconds(1), during: TimeSpan.FromMinutes(3)));
+
+        var authenticationScenario = GetAssertionScenario(assertion, TestName)
+            .WithLoadSimulations(
+                Simulation.RampingInject(rate: 200, interval: TimeSpan.FromSeconds(1), during: TimeSpan.FromMinutes(3)));
+
+        NBomberRunner
+            .RegisterScenarios(registrationScenario, authenticationScenario)
+            .WithReportFolder($"nbomber_reports/{TestName}")
+            .WithReportFormats(ReportFormat.Html)
+            .Run();
+    }
+
+    private ScenarioProps GetAttestationScenario(IAttestation attestation, string name)
+    {
         var registrationScenario = Scenario
-            .Create("endurance_registration", async context =>
+            .Create($"{name}_registration", async context =>
             {
-                var request = GenerateRegistrationRequest();
-
+                var request = _performanceTestHelper.GenerateRegistrationRequest();
                 var result = await attestation.CompleteRegistration(
                     request.Attestation,
                     request.CreationOptions,
@@ -135,131 +150,32 @@ public class PerformanceTestScenarios
                 _enduranceTestUsers.Add((request.CredentialId.ToBase64Url(), request.Username));
 
                 return result != null && result.IsValid ? Response.Ok() : Response.Fail();
-            })
-            .WithLoadSimulations(
-                Simulation.Inject(rate: 2, interval: TimeSpan.FromSeconds(1), during: TimeSpan.FromMinutes(5)));
+            });
 
+        return registrationScenario;
+    }
+
+    private ScenarioProps GetAssertionScenario(IAssertion assertion, string name)
+    {
         var authenticationScenario = Scenario
-            .Create("endurance_authentication", async context =>
+            .Create($"{name}_authentication", async context =>
             {
                 if (_enduranceTestUsers.IsEmpty)
                 {
                     return Response.Ok();
                 }
 
-                var assertionData = DataReader.ReadAssertionData(NoneAssertion);
-                var requestOptionsTemplate = DataReader.ReadRequestOptions(NoneRequestOptions);
-
-                var session = _enduranceTestUsers.ElementAt(new Random().Next(0, _enduranceTestUsers.Count));
-                var requestOptions = new PublicKeyCredentialRequestOptions
-                {
-                    Challenge = requestOptionsTemplate.Challenge,
-                    Timeout = requestOptionsTemplate.Timeout,
-                    RpId = requestOptionsTemplate.RpId,
-                    AllowCredentials =
-                    [
-                        new PublicKeyCredentialDescriptor
-                        {
-                            Id = session.CredentialId.FromBase64Url(),
-                            Transports = [AuthenticatorTransport.Hybrid, AuthenticatorTransport.Internal],
-                        },
-                    ],
-                    UserVerification = requestOptionsTemplate.UserVerification,
-                    Username = session.Name,
-                };
-
-                assertionData.Id = session.CredentialId;
-                assertionData.RawId = session.CredentialId;
-
+                var (credentialId, name) = _enduranceTestUsers.ElementAt(
+                    new Random().Next(0, _enduranceTestUsers.Count));
+                var request = _performanceTestHelper.GenerateAuthenticationRequest(credentialId, name);
                 var result = await assertion.CompleteAuthentication(
-                    assertionData,
-                    requestOptions,
+                    request.Assertion,
+                    request.RequestOptions,
                     CancellationToken.None);
 
-                return result != null ? Response.Ok() : Response.Fail();
-            })
-            .WithLoadSimulations(
-                Simulation.Inject(rate: 8, interval: TimeSpan.FromSeconds(5), during: TimeSpan.FromMinutes(5)));
+                return result != null && result.IsValid ? Response.Ok() : Response.Fail();
+            });
 
-        NBomberRunner
-            .RegisterScenarios(registrationScenario, authenticationScenario)
-            .WithReportFolder("nbomber_reports/endurance_test")
-            .WithReportFormats(ReportFormat.Html)
-            .Run();
-    }
-
-    [Test]
-    public void VolumeTest()
-    {
-        var scenario = Scenario
-            .Create("volume_test", async context =>
-            {
-                var attestation = _serviceProvider!.GetRequiredService<IAttestation>();
-                var attestationData = DataReader.ReadAttestationData(NoneAttestation);
-                var creationOptions = DataReader.ReadCreationOptions(NoneCreationOptions);
-
-                var result = await attestation.CompleteRegistration(
-                    attestationData,
-                    creationOptions,
-                    CancellationToken.None);
-
-                return result != null ? Response.Ok() : Response.Fail();
-            })
-            .WithLoadSimulations(
-                Simulation.RampingInject(rate: 200, interval: TimeSpan.FromSeconds(1), during: TimeSpan.FromMinutes(3)));
-
-        NBomberRunner
-            .RegisterScenarios(scenario)
-            .WithReportFolder("nbomber_reports/volume_test")
-            .Run();
-    }
-
-    private RegistrationRequest GenerateRegistrationRequest()
-    {
-        // Generate creation options
-        var creationOptions = DataReader.ReadCreationOptions(NoneCreationOptions);
-        var username = $"Name_{Guid.NewGuid().ToString().ToLower()}";
-        creationOptions.User = new PublicKeyCredentialUserEntity
-        {
-            Id = _userIdGenerator.Get(username),
-            Name = username,
-            DisplayName = $"DisplayName_{Guid.NewGuid().ToString().ToLower()}",
-        };
-
-        // Generate attestation data
-        // Attestation data must be re-generate for each request to replace credential ID in attestation object
-        var attestationData = DataReader.ReadAttestationData(NoneAttestation);
-
-        var credentialId = GetCredentialId();
-        attestationData.Id = credentialId.ToBase64Url();
-        attestationData.RawId = credentialId.ToBase64Url();
-
-        var decodedAttestationObject = CborConverter.Decode(attestationData.Response.AttestationObject);
-        var authenticatorDataArray = decodedAttestationObject[AttestationObjectKey.AuthData] as byte[];
-        var authenticatorData = new AuthenticatorDataParserService().Parse(authenticatorDataArray);
-        var attestationObject = NoneAttestationGenerator.GenerateAttestationObject(authenticatorData!, credentialId);
-
-        attestationData.Response = new AuthenticatorAttestationResponse
-        {
-            ClientDataJson = attestationData.Response.ClientDataJson,
-            AttestationObject = attestationObject,
-            Transports = attestationData.Response.Transports,
-        };
-
-        return new RegistrationRequest
-        {
-            Username = username,
-            CredentialId = credentialId,
-            CreationOptions = creationOptions,
-            Attestation = attestationData,
-        };
-    }
-
-    private byte[] GetCredentialId()
-    {
-        var credentialIdBytes = new byte[20];
-        using var randomNumberGenerator = RandomNumberGenerator.Create();
-        randomNumberGenerator.GetBytes(credentialIdBytes);
-        return credentialIdBytes;
+        return authenticationScenario;
     }
 }
