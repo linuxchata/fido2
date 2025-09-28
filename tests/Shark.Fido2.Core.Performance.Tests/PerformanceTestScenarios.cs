@@ -10,6 +10,8 @@ using Shark.Fido2.InMemory;
 
 namespace Shark.Fido2.Core.Performance.Tests;
 
+[TestFixture]
+[SuppressMessage("Major Code Smell", "S2699:Tests should include assertions", Justification = "Performance tests do not have assertions.")]
 public class PerformanceTestScenarios
 {
     private const string ReportsLocation = "nbomber_reports";
