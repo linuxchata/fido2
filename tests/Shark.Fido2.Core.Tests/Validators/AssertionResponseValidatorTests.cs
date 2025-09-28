@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Options;
 using Moq;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
-using Shark.Fido2.Core.Handlers;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Core.Validators;
 using Shark.Fido2.Domain;

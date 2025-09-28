@@ -23,9 +23,10 @@ internal class ClientDataHandler : IClientDataHandler
 
     public InternalResult<ClientData> HandleAttestation(string clientDataJson, string expectedChallenge)
     {
-        if (string.IsNullOrWhiteSpace(clientDataJson))
+        var validationResult = ValidateClientDataJson(clientDataJson);
+        if (validationResult != null)
         {
-            return new InternalResult<ClientData>("Client data JSON cannot be null");
+            return validationResult;
         }
 
         var clientData = GetAttestationClientData(clientDataJson);
@@ -43,9 +44,10 @@ internal class ClientDataHandler : IClientDataHandler
 
     public InternalResult<ClientData> HandleAssertion(string clientDataJson, string expectedChallenge)
     {
-        if (string.IsNullOrWhiteSpace(clientDataJson))
+        var validationResult = ValidateClientDataJson(clientDataJson);
+        if (validationResult != null)
         {
-            return new InternalResult<ClientData>("Client data JSON cannot be null");
+            return validationResult;
         }
 
         var clientData = GetAssertionClientData(clientDataJson);
@@ -67,18 +69,17 @@ internal class ClientDataHandler : IClientDataHandler
 
         // Step 5
         // Let JSONtext be the result of running UTF-8 decode on the value of response.clientDataJSON.
-        var clientDataJsonArray = clientDataJson.FromBase64Url();
-        var decodedClientDataJson = Encoding.UTF8.GetString(clientDataJsonArray);
+        var clientDataJsonByteArray = GetClientDataJsonByteArray(clientDataJson);
+        var decodedClientDataJson = GetDecodedClientDataJson(clientDataJsonByteArray);
 
         // Step 6
         // Let C, the client data claimed as collected during the credential creation,
         // be the result of running an implementation-specific JSON parser on JSONtext.
-        var clientData = JsonSerializer.Deserialize<ClientData>(decodedClientDataJson) ??
-            throw new ArgumentException("Client data cannot be read", nameof(clientDataJson));
+        var clientData = GetClientData(decodedClientDataJson);
 
         // Step 11
         // Let hash be the result of computing a hash over response.clientDataJSON using SHA-256.
-        clientData.ClientDataHash = HashProvider.GetSha256Hash(clientDataJsonArray);
+        SetClientDataHash(clientData, clientDataJsonByteArray);
 
         _logger.LogDebug("Client data for attestation is parsed");
 
@@ -91,21 +92,56 @@ internal class ClientDataHandler : IClientDataHandler
 
         // Step 9
         // Let JSONtext be the result of running UTF-8 decode on the value of cData.
-        var clientDataJsonArray = clientDataJson.FromBase64Url();
-        var decodedClientDataJson = Encoding.UTF8.GetString(clientDataJsonArray);
+        var clientDataJsonByteArray = GetClientDataJsonByteArray(clientDataJson);
+        var decodedClientDataJson = GetDecodedClientDataJson(clientDataJsonByteArray);
 
         // Step 10
         // Let C, the client data claimed as used for the signature, be the result of running an
         // implementation-specific JSON parser on JSONtext.
-        var clientData = JsonSerializer.Deserialize<ClientData>(decodedClientDataJson) ??
-            throw new ArgumentException("Client data cannot be read", nameof(clientDataJson));
+        var clientData = GetClientData(decodedClientDataJson);
 
         // Step 19
         // Let hash be the result of computing a hash over the cData using SHA-256.
-        clientData.ClientDataHash = HashProvider.GetSha256Hash(clientDataJsonArray);
+        SetClientDataHash(clientData, clientDataJsonByteArray);
 
         _logger.LogDebug("Client data for assertion is parsed");
 
         return clientData;
+    }
+
+    private static InternalResult<ClientData> ValidateClientDataJson(string clientDataJson)
+    {
+        if (string.IsNullOrWhiteSpace(clientDataJson))
+        {
+            return new InternalResult<ClientData>("Client data JSON cannot be null");
+        }
+
+        if (!clientDataJson.IsBase64Url())
+        {
+            return new InternalResult<ClientData>("Client data JSON is not base64url encoded");
+        }
+
+        return null!;
+    }
+
+    private static byte[] GetClientDataJsonByteArray(string clientDataJson)
+    {
+        return clientDataJson.FromBase64Url();
+    }
+
+    private static string GetDecodedClientDataJson(byte[] clientDataJsonByteArray)
+    {
+        return Encoding.UTF8.GetString(clientDataJsonByteArray);
+    }
+
+    private static ClientData GetClientData(string clientDataJson)
+    {
+        return JsonSerializer.Deserialize<ClientData>(clientDataJson) ??
+            throw new ArgumentException("Client data cannot be read", nameof(clientDataJson));
+    }
+
+    private static void SetClientDataHash(ClientData clientData, byte[] clientDataJsonByteArray)
+    {
+        clientData.ClientDataHash = HashProvider.GetSha256Hash(clientDataJsonByteArray);
     }
 }
