@@ -63,21 +63,6 @@ internal class ClientDataHandler : IClientDataHandler
         return new InternalResult<ClientData>(clientData!);
     }
 
-    private InternalResult<ClientData> ValidateClientDataJson(string clientDataJson)
-    {
-        if (string.IsNullOrWhiteSpace(clientDataJson))
-        {
-            return new InternalResult<ClientData>("Client data JSON cannot be null");
-        }
-
-        if (!clientDataJson.IsBase64Url())
-        {
-            return new InternalResult<ClientData>("Client data JSON is not base64url encoded");
-        }
-
-        return null!;
-    }
-
     private ClientData GetAttestationClientData(string clientDataJson)
     {
         // 7.1. Registering a New Credential (Steps 5 to 6 and 10)
@@ -122,6 +107,21 @@ internal class ClientDataHandler : IClientDataHandler
         _logger.LogDebug("Client data for assertion is parsed");
 
         return clientData;
+    }
+
+    private static InternalResult<ClientData> ValidateClientDataJson(string clientDataJson)
+    {
+        if (string.IsNullOrWhiteSpace(clientDataJson))
+        {
+            return new InternalResult<ClientData>("Client data JSON cannot be null");
+        }
+
+        if (!clientDataJson.IsBase64Url())
+        {
+            return new InternalResult<ClientData>("Client data JSON is not base64url encoded");
+        }
+
+        return null!;
     }
 
     private static byte[] GetClientDataJsonByteArray(string clientDataJson)
