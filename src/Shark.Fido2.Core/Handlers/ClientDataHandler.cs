@@ -84,12 +84,17 @@ internal class ClientDataHandler : IClientDataHandler
 
         // Step 5
         // Let JSONtext be the result of running UTF-8 decode on the value of response.clientDataJSON.
+        var clientDataJsonByteArray = GetClientDataJsonByteArray(clientDataJson);
+        var decodedClientDataJson = GetDecodedClientDataJson(clientDataJsonByteArray);
+
         // Step 6
         // Let C, the client data claimed as collected during the credential creation,
         // be the result of running an implementation-specific JSON parser on JSONtext.
+        var clientData = GetClientData(decodedClientDataJson);
+
         // Step 11
         // Let hash be the result of computing a hash over response.clientDataJSON using SHA-256.
-        var clientData = GetClientData(clientDataJson);
+        SetClientDataHash(clientData, clientDataJsonByteArray);
 
         _logger.LogDebug("Client data for attestation is parsed");
 
@@ -102,28 +107,41 @@ internal class ClientDataHandler : IClientDataHandler
 
         // Step 9
         // Let JSONtext be the result of running UTF-8 decode on the value of cData.
+        var clientDataJsonByteArray = GetClientDataJsonByteArray(clientDataJson);
+        var decodedClientDataJson = GetDecodedClientDataJson(clientDataJsonByteArray);
+
         // Step 10
         // Let C, the client data claimed as used for the signature, be the result of running an
         // implementation-specific JSON parser on JSONtext.
+        var clientData = GetClientData(decodedClientDataJson);
+
         // Step 19
         // Let hash be the result of computing a hash over the cData using SHA-256.
-        var clientData = GetClientData(clientDataJson);
+        SetClientDataHash(clientData, clientDataJsonByteArray);
 
         _logger.LogDebug("Client data for assertion is parsed");
 
         return clientData;
     }
 
-    private ClientData GetClientData(string clientDataJson)
+    private static byte[] GetClientDataJsonByteArray(string clientDataJson)
     {
-        var clientDataJsonArray = clientDataJson.FromBase64Url();
-        var decodedClientDataJson = Encoding.UTF8.GetString(clientDataJsonArray);
+        return clientDataJson.FromBase64Url();
+    }
 
-        var clientData = JsonSerializer.Deserialize<ClientData>(decodedClientDataJson) ??
+    private static string GetDecodedClientDataJson(byte[] clientDataJsonByteArray)
+    {
+        return Encoding.UTF8.GetString(clientDataJsonByteArray);
+    }
+
+    private static ClientData GetClientData(string clientDataJson)
+    {
+        return JsonSerializer.Deserialize<ClientData>(clientDataJson) ??
             throw new ArgumentException("Client data cannot be read", nameof(clientDataJson));
+    }
 
-        clientData.ClientDataHash = HashProvider.GetSha256Hash(clientDataJsonArray);
-
-        return clientData;
+    private static void SetClientDataHash(ClientData clientData, byte[] clientDataJsonByteArray)
+    {
+        clientData.ClientDataHash = HashProvider.GetSha256Hash(clientDataJsonByteArray);
     }
 }
