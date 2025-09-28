@@ -1,4 +1,4 @@
-name: Performance
+name: Performance Tests
 
 on:
   workflow_dispatch:
@@ -20,6 +20,11 @@ jobs:
 
     - name: Test
       run: dotnet test ./src/Shark.Fido2.sln --filter FullyQualifiedName=Shark.Fido2.Core.Performance.Tests --configuration Release --no-build --verbosity normal
+
+    - name: Collect performance reports
+      run: |
+        mkdir -p nbomber_reports
+        cp -r tests/Shark.Fido2.Core.Performance.Tests/bin/Release/*/nbomber_reports/* nbomber_reports/ || true
 
     - name: Check for performance reports
       id: check-reports

@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NBomber.Contracts;
@@ -10,6 +11,8 @@ using Shark.Fido2.InMemory;
 
 namespace Shark.Fido2.Core.Performance.Tests;
 
+[TestFixture]
+[SuppressMessage("Major Code Smell", "S2699:Tests should include assertions", Justification = "Performance tests do not have assertions.")]
 public class PerformanceTestScenarios
 {
     private const string ReportsLocation = "nbomber_reports";
@@ -106,7 +109,7 @@ public class PerformanceTestScenarios
 
         var authenticationScenario = GetAssertionScenario(assertion, TestName)
             .WithLoadSimulations(
-                Simulation.Inject(rate: 8, interval: TimeSpan.FromSeconds(5), during: TimeSpan.FromMinutes(5)));
+                Simulation.Inject(rate: 10, interval: TimeSpan.FromSeconds(1), during: TimeSpan.FromMinutes(5)));
 
         NBomberRunner
             .RegisterScenarios(registrationScenario, authenticationScenario)
