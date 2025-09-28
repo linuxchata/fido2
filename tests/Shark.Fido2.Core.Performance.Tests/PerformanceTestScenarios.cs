@@ -109,7 +109,7 @@ public class PerformanceTestScenarios
 
         var authenticationScenario = GetAssertionScenario(assertion, TestName)
             .WithLoadSimulations(
-                Simulation.Inject(rate: 8, interval: TimeSpan.FromSeconds(5), during: TimeSpan.FromMinutes(5)));
+                Simulation.Inject(rate: 10, interval: TimeSpan.FromSeconds(1), during: TimeSpan.FromMinutes(5)));
 
         NBomberRunner
             .RegisterScenarios(registrationScenario, authenticationScenario)
