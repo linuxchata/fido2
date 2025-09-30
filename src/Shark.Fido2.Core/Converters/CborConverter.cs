@@ -8,6 +8,8 @@ namespace Shark.Fido2.Core.Converters;
 /// </summary>
 public static class CborConverter
 {
+    private const int MaxIterations = 10;
+
     public static Dictionary<string, object> Decode(string input)
     {
         var inputBytes = input.FromBase64Url();
@@ -96,11 +98,18 @@ public static class CborConverter
     {
         var map = new Dictionary<string, object>();
         reader.ReadStartMap();
+
+        var counter = 0;
         while (reader.PeekState() != CborReaderState.EndMap)
         {
             var key = reader.ReadTextString();
             var value = Read(reader);
             map[key] = value;
+
+            if (counter++ > MaxIterations)
+            {
+                throw new InvalidOperationException("Exceeded maximum iterations when reading CBOR map");
+            }
         }
 
         reader.ReadEndMap();
@@ -111,9 +120,16 @@ public static class CborConverter
     {
         var array = new List<object>();
         reader.ReadStartArray();
+
+        var counter = 0;
         while (reader.PeekState() != CborReaderState.EndArray)
         {
             array.Add(Read(reader));
+
+            if (counter++ > MaxIterations)
+            {
+                throw new InvalidOperationException("Exceeded maximum iterations when reading CBOR array");
+            }
         }
 
         reader.ReadEndArray();
