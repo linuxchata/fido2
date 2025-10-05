@@ -27,14 +27,14 @@ internal sealed class AndroidSafetyNetJwsResponseValidator : IAndroidSafetyNetJw
 
     public ValidatorInternalResult PreValidate(JwsResponse jwsResponse)
     {
-        if (jwsResponse.CtsProfileMatch == null)
-        {
-            return ValidatorInternalResult.Invalid($"{Prefix} ctsProfileMatch is not found");
-        }
-
         if (jwsResponse.BasicIntegrity == null)
         {
             return ValidatorInternalResult.Invalid($"{Prefix} basicIntegrity is not found");
+        }
+
+        if (jwsResponse.CtsProfileMatch == null)
+        {
+            return ValidatorInternalResult.Invalid($"{Prefix} ctsProfileMatch is not found");
         }
 
         if (string.IsNullOrWhiteSpace(jwsResponse.ApkPackageName) ||
@@ -65,6 +65,11 @@ internal sealed class AndroidSafetyNetJwsResponseValidator : IAndroidSafetyNetJw
         if (!IsTimestampValid(jwsResponse))
         {
             return ValidatorInternalResult.Invalid($"{Prefix} timestamp is not valid");
+        }
+
+        if (!IsAttestationCheckResultValid(jwsResponse))
+        {
+            return ValidatorInternalResult.Invalid($"{Prefix} ctsProfileMatch is not set to true");
         }
 
         if (!IsPackageNameValid(jwsResponse))
@@ -99,6 +104,18 @@ internal sealed class AndroidSafetyNetJwsResponseValidator : IAndroidSafetyNetJw
             }
         }
         catch (Exception)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    private static bool IsAttestationCheckResultValid(JwsResponse jwsResponse)
+    {
+        // Allowing only certified, genuine device that passes CTS (Android compatibility testing).
+        // https://web.archive.org/web/20180710064905/https://developer.android.com/training/safetynet/attestation#possible-results
+        if (jwsResponse.CtsProfileMatch != true)
         {
             return false;
         }
