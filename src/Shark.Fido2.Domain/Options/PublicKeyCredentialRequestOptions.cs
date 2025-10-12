@@ -1,4 +1,5 @@
 ﻿using Shark.Fido2.Domain.Enums;
+using Shark.Fido2.Domain.Extensions;
 
 namespace Shark.Fido2.Domain.Options;
 

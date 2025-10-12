@@ -1,5 +1,6 @@
 ﻿using Shark.Fido2.Core.Results.Attestation;
 using Shark.Fido2.Domain;
+using Shark.Fido2.Domain.Extensions;
 using Shark.Fido2.Domain.Options;
 
 namespace Shark.Fido2.Core.Abstractions.Handlers;

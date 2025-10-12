@@ -1,6 +1,6 @@
-﻿using Shark.Fido2.Domain;
-using Shark.Fido2.Domain.Constants;
+﻿using Shark.Fido2.Domain.Constants;
 using Shark.Fido2.Domain.Enums;
+using Shark.Fido2.Domain.Extensions;
 using Shark.Fido2.Domain.Options;
 
 namespace Shark.Fido2.Core.Tests;
@@ -21,14 +21,14 @@ internal static class PublicKeyCredentialCreationOptionsBuilder
             Challenge = new byte[32],
             ExcludeCredentials = [],
             Extensions = new AuthenticationExtensionsClientInputs(),
-            PublicKeyCredentialParams = new List<PublicKeyCredentialParameter>
-            {
+            PublicKeyCredentialParams =
+            [
                 new PublicKeyCredentialParameter
                 {
                     Type = PublicKeyCredentialType.PublicKey,
                     Algorithm = CoseAlgorithm.Rs256,
                 },
-            }.ToArray(),
+            ],
             RelyingParty = new PublicKeyCredentialRpEntity
             {
                 Id = "https://localhost:44333",

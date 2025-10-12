@@ -1,4 +1,4 @@
-﻿namespace Shark.Fido2.Domain;
+﻿namespace Shark.Fido2.Domain.Extensions;
 
 public sealed class AuthenticationExtensionsLargeBlobOutputs
 {

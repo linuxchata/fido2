@@ -1,6 +1,6 @@
 using Shark.Fido2.Common.Extensions;
-using Shark.Fido2.Domain;
 using Shark.Fido2.Domain.Enums;
+using Shark.Fido2.Domain.Extensions;
 using Shark.Fido2.Domain.Options;
 using Shark.Fido2.Models.Mappers;
 
@@ -97,7 +97,7 @@ internal class PublicKeyCredentialCreationOptionsMapperTests
         Assert.That(result.Extensions.UserVerificationMethod, Is.EqualTo(options.Extensions.UserVerificationMethod));
         Assert.That(result.Extensions.CredentialProperties, Is.EqualTo(options.Extensions.CredentialProperties));
         Assert.That(result.Extensions.LargeBlob, Is.Not.Null);
-        Assert.That(result.Extensions.LargeBlob.Support, Is.EqualTo(options.Extensions.LargeBlob.Support));
+        Assert.That(result.Extensions.LargeBlob.Support, Is.EqualTo(options.Extensions.LargeBlob!.Support));
         Assert.That(result.Extensions.Example, Is.True);
     }
 

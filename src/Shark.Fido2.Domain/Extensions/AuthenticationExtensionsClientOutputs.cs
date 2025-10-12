@@ -1,6 +1,4 @@
-﻿using Shark.Fido2.Domain.Extensions;
-
-namespace Shark.Fido2.Domain;
+﻿namespace Shark.Fido2.Domain.Extensions;
 
 public sealed class AuthenticationExtensionsClientOutputs
 {
