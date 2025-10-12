@@ -48,6 +48,7 @@ async function requestCredential(options) {
         assertion = await navigator.credentials.get(credentialRequestOptions);
     }
     catch (error) {
+        console.error(error.message);
         notify.error(error.message, authenticationTitle);
         return;
     }
@@ -92,6 +93,7 @@ async function fetchAssertionOptions(optionsRequest) {
             throw new Error(`Server responded with status code ${response.status}: ${errorMessage}`);
         }
     } catch (error) {
+        console.error(error.message);
         notify.error("Error creating authentication options", authenticationTitle);
         throw error;
     }
@@ -115,6 +117,7 @@ async function fetchAssertionResult(credentials) {
             throw new Error(responseBody.errorMessage ?? responseBody.title);
         }
     } catch (error) {
+        console.error(error.message);
         notify.error(`Sign-in has failed. ${error.message}`, authenticationTitle);
     }
 }
