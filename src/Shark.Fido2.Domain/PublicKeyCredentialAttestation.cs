@@ -1,4 +1,6 @@
-﻿namespace Shark.Fido2.Domain;
+﻿using Shark.Fido2.Domain.Extensions;
+
+namespace Shark.Fido2.Domain;
 
 /// <summary>
 /// 5.1. PublicKeyCredential Interface

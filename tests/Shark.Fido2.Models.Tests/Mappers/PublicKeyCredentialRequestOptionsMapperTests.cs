@@ -1,6 +1,6 @@
 using Shark.Fido2.Common.Extensions;
-using Shark.Fido2.Domain;
 using Shark.Fido2.Domain.Enums;
+using Shark.Fido2.Domain.Extensions;
 using Shark.Fido2.Domain.Options;
 using Shark.Fido2.Models.Mappers;
 

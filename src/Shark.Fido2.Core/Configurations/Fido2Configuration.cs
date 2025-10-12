@@ -8,9 +8,9 @@ public sealed class Fido2Configuration
 
     /// <summary>
     /// Gets a valid domain string identifying the Relying Party on whose behalf a given registration or authentication
-    /// ceremony is being performed. This is a critical parameter in the WebAuthn standard. It defines the security scope
-    /// within which credentials are valid. Therefore, careful selection is essential, as an incorrect or overly broad value
-    /// can lead to unintended credential reuse or security vulnerabilities.
+    /// ceremony is being performed. This is a critical parameter in the WebAuthn standard. It defines the security
+    /// scope within which credentials are valid. Therefore, careful selection is essential, as an incorrect or overly
+    /// broad value can lead to unintended credential reuse or security vulnerabilities.
     /// </summary>
     public required string RelyingPartyId { get; init; }
 
@@ -49,8 +49,8 @@ public sealed class Fido2Configuration
     public bool AllowSelfAttestation { get; set; } = true;
 
     /// <summary>
-    /// Gets or sets a value indicating whether the Relying Party trusts only keys that are securely generated and stored in
-    /// a Trusted Execution Environment (Android Key Attestation).
+    /// Gets or sets a value indicating whether the Relying Party trusts only keys that are securely generated and
+    /// stored in a Trusted Execution Environment (Android Key Attestation).
     /// </summary>
     public bool EnableTrustedExecutionEnvironmentOnly { get; set; } = true;
 
@@ -60,8 +60,8 @@ public sealed class Fido2Configuration
     public bool EnableMetadataService { get; set; } = true;
 
     /// <summary>
-    /// Gets or sets a value indicating whether the Relying Party requires strict verification of authenticators. If enabled,
-    /// missing metadata for the authenticator would cause attestation to fail.
+    /// Gets or sets a value indicating whether the Relying Party requires strict verification of authenticators. If
+    /// enabled, missing metadata for the authenticator would cause attestation to fail.
     /// </summary>
     public bool EnableStrictAuthenticatorVerification { get; set; } = false;
 
