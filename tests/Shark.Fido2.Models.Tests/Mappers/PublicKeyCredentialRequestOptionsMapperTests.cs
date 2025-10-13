@@ -15,7 +15,7 @@ internal class PublicKeyCredentialRequestOptionsMapperTests
         // Arrange
         var challenge = new byte[] { 1, 2, 3, 4 };
         var credentialId = new byte[] { 5, 6, 7, 8 };
-        var options = new PublicKeyCredentialRequestOptions
+        var requestOptions = new PublicKeyCredentialRequestOptions
         {
             Challenge = challenge,
             Timeout = 60000,
@@ -43,15 +43,15 @@ internal class PublicKeyCredentialRequestOptionsMapperTests
         };
 
         // Act
-        var result = options.Map();
+        var result = requestOptions.Map();
 
         // Assert
         Assert.That(result, Is.Not.Null);
         Assert.That(result.Status, Is.EqualTo("ok"));
         Assert.That(result.ErrorMessage, Is.Empty);
         Assert.That(result.Challenge, Is.EqualTo(challenge.ToBase64Url()));
-        Assert.That(result.Timeout, Is.EqualTo(options.Timeout));
-        Assert.That(result.RpId, Is.EqualTo(options.RpId));
+        Assert.That(result.Timeout, Is.EqualTo(requestOptions.Timeout));
+        Assert.That(result.RpId, Is.EqualTo(requestOptions.RpId));
         Assert.That(result.UserVerification, Is.EqualTo(UserVerificationRequirement.Required.GetValue()));
         Assert.That(result.AllowCredentials, Has.Length.EqualTo(1));
         Assert.That(result.AllowCredentials[0].Type, Is.EqualTo("public-key"));
@@ -59,8 +59,8 @@ internal class PublicKeyCredentialRequestOptionsMapperTests
         Assert.That(result.AllowCredentials[0].Transports, Has.Length.EqualTo(1));
         Assert.That(result.AllowCredentials[0].Transports[0], Is.EqualTo(AuthenticatorTransport.Internal.GetValue()));
         Assert.That(result.Extensions, Is.Not.Null);
-        Assert.That(result.Extensions.AppId, Is.EqualTo(options.Extensions.AppId));
-        Assert.That(result.Extensions.UserVerificationMethod, Is.EqualTo(options.Extensions.UserVerificationMethod));
+        Assert.That(result.Extensions.AppId, Is.EqualTo(requestOptions.Extensions.AppId));
+        Assert.That(result.Extensions.UserVerificationMethod, Is.EqualTo(requestOptions.Extensions.UserVerificationMethod));
         Assert.That(result.Extensions.Example, Is.True);
         Assert.That(result.Extensions.LargeBlob, Is.Not.Null);
         Assert.That(result.Extensions.LargeBlob.Read, Is.True);
@@ -72,7 +72,7 @@ internal class PublicKeyCredentialRequestOptionsMapperTests
     {
         // Arrange
         var challenge = new byte[] { 1, 2, 3, 4 };
-        var options = new PublicKeyCredentialRequestOptions
+        var requestOptions = new PublicKeyCredentialRequestOptions
         {
             Challenge = challenge,
             Timeout = 60000,
@@ -83,7 +83,7 @@ internal class PublicKeyCredentialRequestOptionsMapperTests
         };
 
         // Act
-        var result = options.Map();
+        var result = requestOptions.Map();
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -95,7 +95,7 @@ internal class PublicKeyCredentialRequestOptionsMapperTests
     {
         // Arrange
         var challenge = new byte[] { 1, 2, 3, 4 };
-        var options = new PublicKeyCredentialRequestOptions
+        var requestOptions = new PublicKeyCredentialRequestOptions
         {
             Challenge = challenge,
             Timeout = 60000,
@@ -106,7 +106,7 @@ internal class PublicKeyCredentialRequestOptionsMapperTests
         };
 
         // Act
-        var result = options.Map();
+        var result = requestOptions.Map();
 
         // Assert
         Assert.That(result, Is.Not.Null);

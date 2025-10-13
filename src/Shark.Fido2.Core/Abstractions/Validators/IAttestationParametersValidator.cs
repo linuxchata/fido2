@@ -17,10 +17,10 @@ public interface IAttestationParametersValidator
     /// <summary>
     /// Validates the attestation response and creation options.
     /// </summary>
-    /// <param name="publicKeyCredentialAttestation">The credential attestation response.</param>
+    /// <param name="attestation">The credential attestation response.</param>
     /// <param name="creationOptions">The original creation options.</param>
     /// <returns>A validation result indicating success or failure with error details.</returns>
     AttestationCompleteResult Validate(
-        PublicKeyCredentialAttestation publicKeyCredentialAttestation,
+        PublicKeyCredentialAttestation attestation,
         PublicKeyCredentialCreationOptions creationOptions);
 }

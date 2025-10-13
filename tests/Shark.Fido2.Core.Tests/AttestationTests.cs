@@ -32,9 +32,9 @@ internal class AttestationTests
     private Mock<IUserIdGenerator> _userIdGeneratorMock = null!;
     private Mock<ICredentialRepository> _credentialRepositoryMock = null!;
 
-    private PublicKeyCredentialAttestation _publicKeyCredentialAttestation = null!;
-    private PublicKeyCredentialCreationOptions _publicKeyCredentialCreationOptions = null!;
-    private PublicKeyCredentialUserEntity _publicKeyCredentialUserEntity = null!;
+    private PublicKeyCredentialAttestation _attestation = null!;
+    private PublicKeyCredentialCreationOptions _creationOptions = null!;
+    private PublicKeyCredentialUserEntity _userEntity = null!;
     private Fido2Configuration _fido2Configuration = null!;
 
     private Attestation _sut = null!;
@@ -104,7 +104,7 @@ internal class AttestationTests
             Timeout = 60000,
         };
 
-        _publicKeyCredentialAttestation = new PublicKeyCredentialAttestation
+        _attestation = new PublicKeyCredentialAttestation
         {
             Id = CredentialId,
             RawId = CredentialRawId,
@@ -118,16 +118,16 @@ internal class AttestationTests
             Extensions = new AuthenticationExtensionsClientOutputs(),
         };
 
-        _publicKeyCredentialUserEntity = new PublicKeyCredentialUserEntity
+        _userEntity = new PublicKeyCredentialUserEntity
         {
             Id = Encoding.UTF8.GetBytes(UserName),
             Name = UserName,
             DisplayName = DisplayName,
         };
 
-        _publicKeyCredentialCreationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
-        _publicKeyCredentialCreationOptions.Challenge = [1, 2, 3, 4];
-        _publicKeyCredentialCreationOptions.User = _publicKeyCredentialUserEntity;
+        _creationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
+        _creationOptions.Challenge = [1, 2, 3, 4];
+        _creationOptions.User = _userEntity;
 
         _sut = new Attestation(
             _attestationParametersValidatorMock.Object,
@@ -292,8 +292,8 @@ internal class AttestationTests
         // Act & Assert
         Assert.ThrowsAsync<ArgumentNullException>(() =>
             _sut.CompleteRegistration(
-                _publicKeyCredentialAttestation,
-                _publicKeyCredentialCreationOptions,
+                _attestation,
+                _creationOptions,
                 CancellationToken.None));
     }
 
@@ -309,8 +309,8 @@ internal class AttestationTests
 
         // Act
         var result = await _sut.CompleteRegistration(
-            _publicKeyCredentialAttestation,
-            _publicKeyCredentialCreationOptions,
+            _attestation,
+            _creationOptions,
             CancellationToken.None);
 
         // Assert
@@ -323,12 +323,12 @@ internal class AttestationTests
     public async Task CompleteRegistration_WhenResponseIsNull_ThenReturnsFailure()
     {
         // Arrange
-        _publicKeyCredentialAttestation.Response = null!;
+        _attestation.Response = null!;
 
         // Act
         var result = await _sut.CompleteRegistration(
-            _publicKeyCredentialAttestation,
-            _publicKeyCredentialCreationOptions,
+            _attestation,
+            _creationOptions,
             CancellationToken.None);
 
         // Assert
@@ -341,7 +341,7 @@ internal class AttestationTests
     public async Task CompleteRegistration_WhenClientDataHasError_ThenReturnsFailure()
     {
         // Arrange
-        _publicKeyCredentialAttestation.Response = new AuthenticatorAttestationResponse
+        _attestation.Response = new AuthenticatorAttestationResponse
         {
             ClientDataJson = "invalid-data",
             AttestationObject = "attestation-object",
@@ -354,8 +354,8 @@ internal class AttestationTests
 
         // Act
         var result = await _sut.CompleteRegistration(
-            _publicKeyCredentialAttestation,
-            _publicKeyCredentialCreationOptions,
+            _attestation,
+            _creationOptions,
             CancellationToken.None);
 
         // Assert
@@ -368,7 +368,7 @@ internal class AttestationTests
     public async Task CompleteRegistration_WhenAttestationObjectHasError_ThenReturnsFailure()
     {
         // Arrange
-        _publicKeyCredentialAttestation.Response = new AuthenticatorAttestationResponse
+        _attestation.Response = new AuthenticatorAttestationResponse
         {
             ClientDataJson = "client-data",
             AttestationObject = "invalid-attestation",
@@ -385,8 +385,8 @@ internal class AttestationTests
 
         // Act
         var result = await _sut.CompleteRegistration(
-            _publicKeyCredentialAttestation,
-            _publicKeyCredentialCreationOptions,
+            _attestation,
+            _creationOptions,
             CancellationToken.None);
 
         // Assert
@@ -405,8 +405,8 @@ internal class AttestationTests
 
         // Act
         var result = await _sut.CompleteRegistration(
-            _publicKeyCredentialAttestation,
-            _publicKeyCredentialCreationOptions,
+            _attestation,
+            _creationOptions,
             CancellationToken.None);
 
         // Assert
@@ -427,8 +427,8 @@ internal class AttestationTests
 
         // Act
         var result = await _sut.CompleteRegistration(
-            _publicKeyCredentialAttestation,
-            _publicKeyCredentialCreationOptions,
+            _attestation,
+            _creationOptions,
             CancellationToken.None);
 
         // Assert
@@ -451,7 +451,7 @@ internal class AttestationTests
     public async Task CompleteRegistration_WheniPhoneAndPublicKeyCredentialAttestationIsValid_ThenReturnsSuccess()
     {
         // Arrange
-        var publicKeyCredentialAttestation = new PublicKeyCredentialAttestation
+        var attestation = new PublicKeyCredentialAttestation
         {
             Id = "0g4ho5WAlHIjp98Ty01Xi0e8YlU",
             RawId = "0g4ho5WAlHIjp98Ty01Xi0e8YlU=",
@@ -466,13 +466,13 @@ internal class AttestationTests
         };
 
         var expectedChallenge = "t2pJGIQ7Y4DXF2b98tnBjg";
-        _publicKeyCredentialCreationOptions.Challenge = Convert.FromBase64String($"{expectedChallenge}==");
-        _publicKeyCredentialCreationOptions.User = _publicKeyCredentialUserEntity;
+        _creationOptions.Challenge = Convert.FromBase64String($"{expectedChallenge}==");
+        _creationOptions.User = _userEntity;
 
         // Act
         var result = await _sut.CompleteRegistration(
-            publicKeyCredentialAttestation,
-            _publicKeyCredentialCreationOptions,
+            attestation,
+            _creationOptions,
             CancellationToken.None);
 
         // Assert
@@ -485,7 +485,7 @@ internal class AttestationTests
     public async Task CompleteRegistration_WhenWindowsAndPublicKeyCredentialAttestationIsValid_ThenReturnsSuccess()
     {
         // Arrange
-        var publicKeyCredentialAttestation = new PublicKeyCredentialAttestation
+        var attestation = new PublicKeyCredentialAttestation
         {
             Id = "eCmlfd8Sr1hLO0eSLBvXuezT4_HSL5xJ31pOSbUkPks",
             RawId = "eCmlfd8Sr1hLO0eSLBvXuezT4/HSL5xJ31pOSbUkPks=",
@@ -500,13 +500,13 @@ internal class AttestationTests
         };
 
         var expectedChallenge = "gsjJTjg3rcml3cfELwxAxQ";
-        _publicKeyCredentialCreationOptions.Challenge = Convert.FromBase64String($"{expectedChallenge}==");
-        _publicKeyCredentialCreationOptions.User = _publicKeyCredentialUserEntity;
+        _creationOptions.Challenge = Convert.FromBase64String($"{expectedChallenge}==");
+        _creationOptions.User = _userEntity;
 
         // Act
         var result = await _sut.CompleteRegistration(
-            publicKeyCredentialAttestation,
-            _publicKeyCredentialCreationOptions,
+            attestation,
+            _creationOptions,
             CancellationToken.None);
 
         // Assert

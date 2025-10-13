@@ -21,12 +21,12 @@ public interface IAttestation
     /// <summary>
     /// Verifies an attestation from a client and completes the registration process.
     /// </summary>
-    /// <param name="publicKeyCredentialAttestation">The credential attestation response.</param>
+    /// <param name="attestation">The credential attestation response.</param>
     /// <param name="creationOptions">The original creation options.</param>
     /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>The result of the attestation verification process.</returns>
     Task<AttestationCompleteResult> CompleteRegistration(
-        PublicKeyCredentialAttestation publicKeyCredentialAttestation,
+        PublicKeyCredentialAttestation attestation,
         PublicKeyCredentialCreationOptions creationOptions,
         CancellationToken cancellationToken);
 }

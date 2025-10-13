@@ -14,15 +14,15 @@ internal class AttestationParametersValidatorTests
     private const string UserName = "UserName";
     private const string DisplayName = "DisplayName";
 
-    private PublicKeyCredentialAttestation _publicKeyCredentialAttestation = null!;
-    private PublicKeyCredentialCreationOptions _publicKeyCredentialCreationOptions = null!;
+    private PublicKeyCredentialAttestation _attestation = null!;
+    private PublicKeyCredentialCreationOptions _creationOptions = null!;
 
     private AttestationParametersValidator _sut = null!;
 
     [SetUp]
     public void Setup()
     {
-        _publicKeyCredentialAttestation = new PublicKeyCredentialAttestation
+        _attestation = new PublicKeyCredentialAttestation
         {
             Id = "AQIDBA==",
             RawId = "AQIDBA==",
@@ -36,16 +36,16 @@ internal class AttestationParametersValidatorTests
             Extensions = new AuthenticationExtensionsClientOutputs(),
         };
 
-        var publicKeyCredentialUserEntity = new PublicKeyCredentialUserEntity
+        var userEntity = new PublicKeyCredentialUserEntity
         {
             Id = Encoding.UTF8.GetBytes(UserName),
             Name = UserName,
             DisplayName = DisplayName,
         };
 
-        _publicKeyCredentialCreationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
-        _publicKeyCredentialCreationOptions.Challenge = [1, 2, 3, 4];
-        _publicKeyCredentialCreationOptions.User = publicKeyCredentialUserEntity;
+        _creationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
+        _creationOptions.Challenge = [1, 2, 3, 4];
+        _creationOptions.User = userEntity;
 
         _sut = new AttestationParametersValidator();
     }
@@ -164,22 +164,20 @@ internal class AttestationParametersValidatorTests
     public void Validate_WhenPublicKeyCredentialAttestationIsNull_ThenThrowsArgumentNullException()
     {
         // Arrange
-        PublicKeyCredentialAttestation? publicKeyCredentialAttestation = null;
+        PublicKeyCredentialAttestation? attestation = null;
 
         // Act & Assert
-        Assert.Throws<ArgumentNullException>(() =>
-            _sut.Validate(publicKeyCredentialAttestation!, _publicKeyCredentialCreationOptions));
+        Assert.Throws<ArgumentNullException>(() => _sut.Validate(attestation!, _creationOptions));
     }
 
     [Test]
     public void Validate_WhenIdIsNull_ThenThrowsArgumentNullException()
     {
         // Arrange
-        _publicKeyCredentialAttestation.Id = null!;
+        _attestation.Id = null!;
 
         // Act & Assert
-        Assert.Throws<ArgumentNullException>(() =>
-            _sut.Validate(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions));
+        Assert.Throws<ArgumentNullException>(() => _sut.Validate(_attestation, _creationOptions));
     }
 
     [Test]
@@ -188,22 +186,20 @@ internal class AttestationParametersValidatorTests
     public void Validate_WhenIdIsEmpty_ThenThrowsArgumentException(string id)
     {
         // Arrange
-        _publicKeyCredentialAttestation.Id = id;
+        _attestation.Id = id;
 
         // Act & Assert
-        Assert.Throws<ArgumentException>(() =>
-            _sut.Validate(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions));
+        Assert.Throws<ArgumentException>(() => _sut.Validate(_attestation, _creationOptions));
     }
 
     [Test]
     public void Validate_WhenRawIdIsNull_ThenThrowsArgumentNullException()
     {
         // Arrange
-        _publicKeyCredentialAttestation.RawId = null!;
+        _attestation.RawId = null!;
 
         // Act & Assert
-        Assert.Throws<ArgumentNullException>(() =>
-            _sut.Validate(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions));
+        Assert.Throws<ArgumentNullException>(() => _sut.Validate(_attestation, _creationOptions));
     }
 
     [Test]
@@ -212,11 +208,10 @@ internal class AttestationParametersValidatorTests
     public void Validate_WhenRawIdIsEmpty_ThenThrowsArgumentException(string rawId)
     {
         // Arrange
-        _publicKeyCredentialAttestation.RawId = rawId;
+        _attestation.RawId = rawId;
 
         // Act & Assert
-        Assert.Throws<ArgumentException>(() =>
-            _sut.Validate(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions));
+        Assert.Throws<ArgumentException>(() => _sut.Validate(_attestation, _creationOptions));
     }
 
     [Test]
@@ -226,74 +221,67 @@ internal class AttestationParametersValidatorTests
         PublicKeyCredentialCreationOptions? creationOptions = null;
 
         // Act & Assert
-        Assert.Throws<ArgumentNullException>(() =>
-            _sut.Validate(_publicKeyCredentialAttestation, creationOptions!));
+        Assert.Throws<ArgumentNullException>(() => _sut.Validate(_attestation, creationOptions!));
     }
 
     [Test]
     public void Validate_WhenRelyingPartyIsNull_ThenThrowsArgumentNullException()
     {
         // Arrange
-        _publicKeyCredentialCreationOptions.RelyingParty = null!;
+        _creationOptions.RelyingParty = null!;
 
         // Act & Assert
-        Assert.Throws<ArgumentNullException>(() =>
-            _sut.Validate(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions));
+        Assert.Throws<ArgumentNullException>(() => _sut.Validate(_attestation, _creationOptions));
     }
 
     [Test]
     public void Validate_WhenUserIsNull_ThenThrowsArgumentNullException()
     {
         // Arrange
-        _publicKeyCredentialCreationOptions.User = null!;
+        _creationOptions.User = null!;
 
         // Act & Assert
-        Assert.Throws<ArgumentNullException>(() =>
-            _sut.Validate(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions));
+        Assert.Throws<ArgumentNullException>(() => _sut.Validate(_attestation, _creationOptions));
     }
 
     [Test]
     public void Validate_WhenPublicKeyCredentialParamsAreNull_ThenThrowsArgumentNullException()
     {
         // Arrange
-        _publicKeyCredentialCreationOptions.PublicKeyCredentialParams = null!;
+        _creationOptions.PublicKeyCredentialParams = null!;
 
         // Act & Assert
-        Assert.Throws<ArgumentNullException>(() =>
-            _sut.Validate(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions));
+        Assert.Throws<ArgumentNullException>(() => _sut.Validate(_attestation, _creationOptions));
     }
 
     [Test]
     public void Validate_WhenExcludeCredentialsAreNull_ThenThrowsArgumentNullException()
     {
         // Arrange
-        _publicKeyCredentialCreationOptions.ExcludeCredentials = null!;
+        _creationOptions.ExcludeCredentials = null!;
 
         // Act & Assert
-        Assert.Throws<ArgumentNullException>(() =>
-            _sut.Validate(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions));
+        Assert.Throws<ArgumentNullException>(() => _sut.Validate(_attestation, _creationOptions));
     }
 
     [Test]
     public void Validate_WhenAuthenticatorSelectionIsNull_ThenThrowsArgumentNullException()
     {
         // Arrange
-        _publicKeyCredentialCreationOptions.AuthenticatorSelection = null!;
+        _creationOptions.AuthenticatorSelection = null!;
 
         // Act & Assert
-        Assert.Throws<ArgumentNullException>(() =>
-            _sut.Validate(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions));
+        Assert.Throws<ArgumentNullException>(() => _sut.Validate(_attestation, _creationOptions));
     }
 
     [Test]
     public void Validate_WhenAttestationIsNull_ThenThrowsArgumentNullException()
     {
         // Arrange
-        _publicKeyCredentialCreationOptions.Attestation = null!;
+        _creationOptions.Attestation = null!;
 
         // Act & Assert
-        Assert.Throws<ArgumentNullException>(() =>
-            _sut.Validate(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions));
+        Assert.Throws<ArgumentNullException>(() => _sut.Validate(_attestation, _creationOptions));
     }
 
     [Test]
@@ -302,21 +290,20 @@ internal class AttestationParametersValidatorTests
     public void Validate_WhenAttestationIsEmpty_ThenThrowsArgumentException(string attestation)
     {
         // Arrange
-        _publicKeyCredentialCreationOptions.Attestation = attestation;
+        _creationOptions.Attestation = attestation;
 
         // Act & Assert
-        Assert.Throws<ArgumentException>(() =>
-            _sut.Validate(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions));
+        Assert.Throws<ArgumentException>(() => _sut.Validate(_attestation, _creationOptions));
     }
 
     [Test]
     public void Validate_WhenPublicKeyCredentialAttestationIdIsInvalid_ThenReturnsFailure()
     {
         // Arrange
-        _publicKeyCredentialAttestation.Id = "aaa";
+        _attestation.Id = "aaa";
 
         // Act
-        var result = _sut.Validate(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions);
+        var result = _sut.Validate(_attestation, _creationOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -328,10 +315,10 @@ internal class AttestationParametersValidatorTests
     public void Validate_WhenPublicKeyCredentialAttestationTypeIsInvalid_ThenReturnsFailure()
     {
         // Arrange
-        _publicKeyCredentialAttestation.Type = "invalid-type";
+        _attestation.Type = "invalid-type";
 
         // Act
-        var result = _sut.Validate(_publicKeyCredentialAttestation, _publicKeyCredentialCreationOptions);
+        var result = _sut.Validate(_attestation, _creationOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);

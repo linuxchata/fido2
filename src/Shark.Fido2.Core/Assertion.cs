@@ -61,7 +61,7 @@ public sealed class Assertion : IAssertion
 
         var appId = _configuration.AppId;
 
-        var publicKeyCredentialRequestOptions = new PublicKeyCredentialRequestOptions
+        var requestOptions = new PublicKeyCredentialRequestOptions
         {
             Challenge = _challengeGenerator.Get(),
             Timeout = _configuration.Timeout,
@@ -90,17 +90,15 @@ public sealed class Assertion : IAssertion
 
         _logger.LogDebug("Request options are successfully constructed");
 
-        return publicKeyCredentialRequestOptions;
+        return requestOptions;
     }
 
     public async Task<AssertionCompleteResult> CompleteAuthentication(
-        PublicKeyCredentialAssertion publicKeyCredentialAssertion,
+        PublicKeyCredentialAssertion assertion,
         PublicKeyCredentialRequestOptions requestOptions,
         CancellationToken cancellationToken)
     {
-        var validationResult = _assertionParametersValidator.Validate(
-            publicKeyCredentialAssertion,
-            requestOptions);
+        var validationResult = _assertionParametersValidator.Validate(assertion, requestOptions);
         if (!validationResult.IsValid)
         {
             return AssertionCompleteResult.CreateFailure(validationResult.Message!);
@@ -111,7 +109,7 @@ public sealed class Assertion : IAssertion
         // Step 3
         // Let response be credential.response. If response is not an instance of AuthenticatorAssertionResponse,
         // abort the ceremony with a user-visible error.
-        var response = publicKeyCredentialAssertion.Response;
+        var response = assertion.Response;
         if (response == null)
         {
             return AssertionCompleteResult.CreateFailure("Assertion response cannot be null");
@@ -120,7 +118,7 @@ public sealed class Assertion : IAssertion
         // Step 5
         // If options.allowCredentials is not empty, verify that credential.id identifies one of the public key
         // credentials listed in options.allowCredentials.
-        var credentialId = publicKeyCredentialAssertion.RawId.FromBase64Url();
+        var credentialId = assertion.RawId.FromBase64Url();
         if (IsCredentialNotAllowed(requestOptions, credentialId))
         {
             _logger.LogWarning(
@@ -140,7 +138,7 @@ public sealed class Assertion : IAssertion
         // Step 6
         // Identify the user being authenticated and verify that this user is the owner of the public key credential
         // source credentialSource identified by credential.id
-        var result = _userHandlerValidator.Validate(credential, publicKeyCredentialAssertion, requestOptions);
+        var result = _userHandlerValidator.Validate(credential, assertion, requestOptions);
         if (!result.IsValid)
         {
             _logger.LogWarning("User handler validator error: {Message}", result.Message!);
@@ -171,11 +169,11 @@ public sealed class Assertion : IAssertion
 
         // Steps 15 to 20
         var assertionResult = _assertionObjectHandler.Handle(
-            publicKeyCredentialAssertion.Response.AuthenticatorData,
-            publicKeyCredentialAssertion.Response.Signature,
+            assertion.Response.AuthenticatorData,
+            assertion.Response.Signature,
             clientDataHandlerResult.Value!,
             credential.CredentialPublicKey,
-            publicKeyCredentialAssertion.Extensions,
+            assertion.Extensions,
             requestOptions);
         if (assertionResult.HasError)
         {

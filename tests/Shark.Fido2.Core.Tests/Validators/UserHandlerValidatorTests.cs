@@ -26,11 +26,11 @@ internal class UserHandlerValidatorTests
     {
         // Arrange
         var credential = CreateCredential();
-        var publicKeyCredentialAssertion = CreatePublicKeyCredentialAssertion();
+        var assertion = CreatePublicKeyCredentialAssertion();
         var requestOptions = CreatePublicKeyCredentialRequestOptions();
 
         // Act
-        var result = _sut.Validate(credential, publicKeyCredentialAssertion, requestOptions);
+        var result = _sut.Validate(credential, assertion, requestOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -43,11 +43,11 @@ internal class UserHandlerValidatorTests
     {
         // Arrange
         var credential = CreateCredential();
-        var publicKeyCredentialAssertion = CreatePublicKeyCredentialAssertion(DifferentUserHandleBase64);
+        var assertion = CreatePublicKeyCredentialAssertion(DifferentUserHandleBase64);
         var requestOptions = CreatePublicKeyCredentialRequestOptions();
 
         // Act
-        var result = _sut.Validate(credential, publicKeyCredentialAssertion, requestOptions);
+        var result = _sut.Validate(credential, assertion, requestOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -60,11 +60,11 @@ internal class UserHandlerValidatorTests
     {
         // Arrange
         var credential = CreateCredential();
-        var publicKeyCredentialAssertion = CreatePublicKeyCredentialAssertion(null); // Empty user handle
+        var assertion = CreatePublicKeyCredentialAssertion(null); // Empty user handle
         var requestOptions = CreatePublicKeyCredentialRequestOptions();
 
         // Act
-        var result = _sut.Validate(credential, publicKeyCredentialAssertion, requestOptions);
+        var result = _sut.Validate(credential, assertion, requestOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -80,11 +80,11 @@ internal class UserHandlerValidatorTests
     {
         // Arrange
         var credential = CreateCredential();
-        var publicKeyCredentialAssertion = CreatePublicKeyCredentialAssertion(null); // Empty user handle
+        var assertion = CreatePublicKeyCredentialAssertion(null); // Empty user handle
         var requestOptions = CreatePublicKeyCredentialRequestOptions(true, username!);
 
         // Act
-        var result = _sut.Validate(credential, publicKeyCredentialAssertion, requestOptions);
+        var result = _sut.Validate(credential, assertion, requestOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -97,11 +97,11 @@ internal class UserHandlerValidatorTests
     {
         // Arrange
         var credential = CreateCredential();
-        var publicKeyCredentialAssertion = CreatePublicKeyCredentialAssertion(null); // Empty user handle
+        var assertion = CreatePublicKeyCredentialAssertion(null); // Empty user handle
         var requestOptions = CreatePublicKeyCredentialRequestOptions(true, DifferentUsername);
 
         // Act
-        var result = _sut.Validate(credential, publicKeyCredentialAssertion, requestOptions);
+        var result = _sut.Validate(credential, assertion, requestOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -114,11 +114,11 @@ internal class UserHandlerValidatorTests
     {
         // Arrange
         var credential = CreateCredential();
-        var publicKeyCredentialAssertion = CreatePublicKeyCredentialAssertion(null); // Empty user handle
+        var assertion = CreatePublicKeyCredentialAssertion(null); // Empty user handle
         var requestOptions = CreatePublicKeyCredentialRequestOptions(false);
 
         // Act
-        var result = _sut.Validate(credential, publicKeyCredentialAssertion, requestOptions);
+        var result = _sut.Validate(credential, assertion, requestOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -131,11 +131,11 @@ internal class UserHandlerValidatorTests
     {
         // Arrange
         var credential = CreateCredential();
-        var publicKeyCredentialAssertion = CreatePublicKeyCredentialAssertion(DifferentUserHandleBase64);
+        var assertion = CreatePublicKeyCredentialAssertion(DifferentUserHandleBase64);
         var requestOptions = CreatePublicKeyCredentialRequestOptions(false);
 
         // Act
-        var result = _sut.Validate(credential, publicKeyCredentialAssertion, requestOptions);
+        var result = _sut.Validate(credential, assertion, requestOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -148,11 +148,11 @@ internal class UserHandlerValidatorTests
     {
         // Arrange
         var credential = CreateCredential();
-        var publicKeyCredentialAssertion = CreatePublicKeyCredentialAssertion();
+        var assertion = CreatePublicKeyCredentialAssertion();
         var requestOptions = CreatePublicKeyCredentialRequestOptions(false);
 
         // Act
-        var result = _sut.Validate(credential, publicKeyCredentialAssertion, requestOptions);
+        var result = _sut.Validate(credential, assertion, requestOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);

@@ -71,7 +71,7 @@ public sealed class Attestation : IAttestation
 
         var appIdExclude = _configuration.AppIdExclude;
 
-        var credentialCreationOptions = new PublicKeyCredentialCreationOptions
+        var creationOptions = new PublicKeyCredentialCreationOptions
         {
             RelyingParty = new PublicKeyCredentialRpEntity
             {
@@ -106,17 +106,15 @@ public sealed class Attestation : IAttestation
 
         _logger.LogDebug("Creation options are successfully constructed");
 
-        return credentialCreationOptions;
+        return creationOptions;
     }
 
     public async Task<AttestationCompleteResult> CompleteRegistration(
-        PublicKeyCredentialAttestation publicKeyCredentialAttestation,
+        PublicKeyCredentialAttestation attestation,
         PublicKeyCredentialCreationOptions creationOptions,
         CancellationToken cancellationToken)
     {
-        var validationResult = _attestationParametersValidator.Validate(
-            publicKeyCredentialAttestation,
-            creationOptions);
+        var validationResult = _attestationParametersValidator.Validate(attestation, creationOptions);
         if (!validationResult.IsValid)
         {
             return AttestationCompleteResult.CreateFailure(validationResult.Message!);
@@ -127,7 +125,7 @@ public sealed class Attestation : IAttestation
         // Step 3
         // Let response be credential.response. If response is not an instance of AuthenticatorAttestationResponse,
         // abort the ceremony with a user-visible error.
-        var response = publicKeyCredentialAttestation.Response;
+        var response = attestation.Response;
         if (response == null)
         {
             return AttestationCompleteResult.CreateFailure("Attestation response cannot be null");
@@ -188,7 +186,7 @@ public sealed class Attestation : IAttestation
             UserDisplayName = creationOptions.User.DisplayName,
             CredentialPublicKey = attestedCredentialData.CredentialPublicKey!,
             SignCount = attestationResult.Value.AuthenticatorData!.SignCount,
-            Transports = publicKeyCredentialAttestation.Response.Transports?.Select(t => t.GetValue()).ToArray() ?? [],
+            Transports = attestation.Response.Transports?.Select(t => t.GetValue()).ToArray() ?? [],
         };
 
         await _credentialRepository.Add(credential, cancellationToken);

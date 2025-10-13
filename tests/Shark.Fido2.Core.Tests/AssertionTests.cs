@@ -35,8 +35,8 @@ internal class AssertionTests
     private Mock<ICredentialRepository> _credentialRepositoryMock = null!;
 
     private byte[] _userHandle;
-    private PublicKeyCredentialAssertion _publicKeyCredentialAssertion = null!;
-    private PublicKeyCredentialRequestOptions _publicKeyCredentialRequestOptions = null!;
+    private PublicKeyCredentialAssertion _assertion = null!;
+    private PublicKeyCredentialRequestOptions _requestOptions = null!;
     private Fido2Configuration _fido2Configuration = null!;
 
     private Assertion _sut = null!;
@@ -95,7 +95,7 @@ internal class AssertionTests
             Timeout = 60000,
         };
 
-        _publicKeyCredentialAssertion = new PublicKeyCredentialAssertion
+        _assertion = new PublicKeyCredentialAssertion
         {
             Id = CredentialIdBase64,
             RawId = CredentialRawId,
@@ -109,7 +109,7 @@ internal class AssertionTests
             Extensions = new AuthenticationExtensionsClientOutputs(),
         };
 
-        _publicKeyCredentialRequestOptions = new PublicKeyCredentialRequestOptions
+        _requestOptions = new PublicKeyCredentialRequestOptions
         {
             Challenge = [1, 2, 3, 4],
             RpId = _fido2Configuration.RelyingPartyId,
@@ -247,8 +247,8 @@ internal class AssertionTests
         // Act & Assert
         Assert.ThrowsAsync<ArgumentNullException>(() =>
             _sut.CompleteAuthentication(
-                _publicKeyCredentialAssertion,
-                _publicKeyCredentialRequestOptions,
+                _assertion,
+                _requestOptions,
                 It.IsAny<CancellationToken>()));
     }
 
@@ -264,8 +264,8 @@ internal class AssertionTests
 
         // Act
         var result = await _sut.CompleteAuthentication(
-            _publicKeyCredentialAssertion,
-            _publicKeyCredentialRequestOptions,
+            _assertion,
+            _requestOptions,
             CancellationToken.None);
 
         // Assert
@@ -278,12 +278,12 @@ internal class AssertionTests
     public async Task CompleteAuthentication_WhenResponseIsNull_ThenReturnsFailure()
     {
         // Arrange
-        _publicKeyCredentialAssertion.Response = null!;
+        _assertion.Response = null!;
 
         // Act
         var result = await _sut.CompleteAuthentication(
-            _publicKeyCredentialAssertion,
-            _publicKeyCredentialRequestOptions,
+            _assertion,
+            _requestOptions,
             CancellationToken.None);
 
         // Assert
@@ -311,7 +311,7 @@ internal class AssertionTests
 
         // Act
         var result = await _sut.CompleteAuthentication(
-            _publicKeyCredentialAssertion,
+            _assertion,
             requestOptions,
             CancellationToken.None);
 
@@ -344,7 +344,7 @@ internal class AssertionTests
 
         // Act
         var result = await _sut.CompleteAuthentication(
-            _publicKeyCredentialAssertion,
+            _assertion,
             requestOptions,
             CancellationToken.None);
 
@@ -372,13 +372,13 @@ internal class AssertionTests
             .ReturnsAsync(credential);
 
         _userHandlerValidatorMock
-            .Setup(a => a.Validate(credential, _publicKeyCredentialAssertion, _publicKeyCredentialRequestOptions))
+            .Setup(a => a.Validate(credential, _assertion, _requestOptions))
             .Returns(ValidatorInternalResult.Invalid("User is not the owner of the credential"));
 
         // Act
         var result = await _sut.CompleteAuthentication(
-            _publicKeyCredentialAssertion,
-            _publicKeyCredentialRequestOptions,
+            _assertion,
+            _requestOptions,
             CancellationToken.None);
 
         // Assert
@@ -405,13 +405,13 @@ internal class AssertionTests
             .ReturnsAsync(credential);
 
         _userHandlerValidatorMock
-            .Setup(a => a.Validate(credential, _publicKeyCredentialAssertion, _publicKeyCredentialRequestOptions))
+            .Setup(a => a.Validate(credential, _assertion, _requestOptions))
             .Returns(ValidatorInternalResult.Valid());
 
         // Act
         var result = await _sut.CompleteAuthentication(
-            _publicKeyCredentialAssertion,
-            _publicKeyCredentialRequestOptions,
+            _assertion,
+            _requestOptions,
             CancellationToken.None);
 
         // Assert
@@ -443,8 +443,8 @@ internal class AssertionTests
 
         // Act
         var result = await _sut.CompleteAuthentication(
-            _publicKeyCredentialAssertion,
-            _publicKeyCredentialRequestOptions,
+            _assertion,
+            _requestOptions,
             CancellationToken.None);
 
         // Assert
@@ -482,8 +482,8 @@ internal class AssertionTests
 
         // Act
         var result = await _sut.CompleteAuthentication(
-            _publicKeyCredentialAssertion,
-            _publicKeyCredentialRequestOptions,
+            _assertion,
+            _requestOptions,
             CancellationToken.None);
 
         // Assert
@@ -512,8 +512,8 @@ internal class AssertionTests
 
         // Act
         var result = await _sut.CompleteAuthentication(
-            _publicKeyCredentialAssertion,
-            _publicKeyCredentialRequestOptions,
+            _assertion,
+            _requestOptions,
             CancellationToken.None);
 
         // Assert
@@ -542,8 +542,8 @@ internal class AssertionTests
 
         // Act
         var result = await _sut.CompleteAuthentication(
-            _publicKeyCredentialAssertion,
-            _publicKeyCredentialRequestOptions,
+            _assertion,
+            _requestOptions,
             CancellationToken.None);
 
         // Assert
@@ -589,8 +589,8 @@ internal class AssertionTests
 
         // Act
         var result = await _sut.CompleteAuthentication(
-            _publicKeyCredentialAssertion,
-            _publicKeyCredentialRequestOptions,
+            _assertion,
+            _requestOptions,
             CancellationToken.None);
 
         // Assert

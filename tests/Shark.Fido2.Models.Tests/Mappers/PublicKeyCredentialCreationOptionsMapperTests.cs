@@ -16,7 +16,7 @@ internal class PublicKeyCredentialCreationOptionsMapperTests
         var challenge = new byte[] { 1, 2, 3, 4 };
         var userId = new byte[] { 10, 20, 30, 40 };
         var excludeId = new byte[] { 50, 60, 70, 80 };
-        var options = new PublicKeyCredentialCreationOptions
+        var creationOptions = new PublicKeyCredentialCreationOptions
         {
             RelyingParty = new PublicKeyCredentialRpEntity
             {
@@ -66,22 +66,22 @@ internal class PublicKeyCredentialCreationOptionsMapperTests
         };
 
         // Act
-        var result = options.Map();
+        var result = creationOptions.Map();
 
         // Assert
         Assert.That(result, Is.Not.Null);
         Assert.That(result.Status, Is.EqualTo("ok"));
         Assert.That(result.ErrorMessage, Is.Empty);
         Assert.That(result.Challenge, Is.EqualTo(challenge.ToBase64Url()));
-        Assert.That(result.RelyingParty.Identifier, Is.EqualTo(options.RelyingParty.Id));
-        Assert.That(result.RelyingParty.Name, Is.EqualTo(options.RelyingParty.Name));
+        Assert.That(result.RelyingParty.Identifier, Is.EqualTo(creationOptions.RelyingParty.Id));
+        Assert.That(result.RelyingParty.Name, Is.EqualTo(creationOptions.RelyingParty.Name));
         Assert.That(result.User.Identifier, Is.EqualTo(userId.ToBase64Url()));
-        Assert.That(result.User.Name, Is.EqualTo(options.User.Name));
-        Assert.That(result.User.DisplayName, Is.EqualTo(options.User.DisplayName));
+        Assert.That(result.User.Name, Is.EqualTo(creationOptions.User.Name));
+        Assert.That(result.User.DisplayName, Is.EqualTo(creationOptions.User.DisplayName));
         Assert.That(result.Parameters, Has.Length.EqualTo(1));
         Assert.That(result.Parameters[0].Type, Is.EqualTo("public-key"));
         Assert.That(result.Parameters[0].Algorithm, Is.EqualTo((long)CoseAlgorithm.Es256));
-        Assert.That(result.Timeout, Is.EqualTo(options.Timeout));
+        Assert.That(result.Timeout, Is.EqualTo(creationOptions.Timeout));
         Assert.That(result.ExcludeCredentials, Has.Length.EqualTo(1));
         Assert.That(result.ExcludeCredentials[0].Type, Is.EqualTo("public-key"));
         Assert.That(result.ExcludeCredentials[0].Id, Is.EqualTo(excludeId.ToBase64Url()));
@@ -91,13 +91,13 @@ internal class PublicKeyCredentialCreationOptionsMapperTests
         Assert.That(result.AuthenticatorSelection.ResidentKey, Is.EqualTo(ResidentKeyRequirement.Required.GetValue()));
         Assert.That(result.AuthenticatorSelection.RequireResidentKey, Is.True);
         Assert.That(result.AuthenticatorSelection.UserVerification, Is.EqualTo(UserVerificationRequirement.Required.GetValue()));
-        Assert.That(result.Attestation, Is.EqualTo(options.Attestation));
+        Assert.That(result.Attestation, Is.EqualTo(creationOptions.Attestation));
         Assert.That(result.Extensions, Is.Not.Null);
-        Assert.That(result.Extensions.AppIdExclude, Is.EqualTo(options.Extensions.AppIdExclude));
-        Assert.That(result.Extensions.UserVerificationMethod, Is.EqualTo(options.Extensions.UserVerificationMethod));
-        Assert.That(result.Extensions.CredentialProperties, Is.EqualTo(options.Extensions.CredentialProperties));
+        Assert.That(result.Extensions.AppIdExclude, Is.EqualTo(creationOptions.Extensions.AppIdExclude));
+        Assert.That(result.Extensions.UserVerificationMethod, Is.EqualTo(creationOptions.Extensions.UserVerificationMethod));
+        Assert.That(result.Extensions.CredentialProperties, Is.EqualTo(creationOptions.Extensions.CredentialProperties));
         Assert.That(result.Extensions.LargeBlob, Is.Not.Null);
-        Assert.That(result.Extensions.LargeBlob.Support, Is.EqualTo(options.Extensions.LargeBlob!.Support));
+        Assert.That(result.Extensions.LargeBlob.Support, Is.EqualTo(creationOptions.Extensions.LargeBlob!.Support));
         Assert.That(result.Extensions.Example, Is.True);
     }
 
@@ -105,7 +105,7 @@ internal class PublicKeyCredentialCreationOptionsMapperTests
     public void MapCreationOptions_WhenExtensionsIsNull_ThenReturnsServerResponseWithNullExtensions()
     {
         // Arrange
-        var options = new PublicKeyCredentialCreationOptions
+        var creationOptions = new PublicKeyCredentialCreationOptions
         {
             RelyingParty = new PublicKeyCredentialRpEntity
             {
@@ -141,7 +141,7 @@ internal class PublicKeyCredentialCreationOptionsMapperTests
         };
 
         // Act
-        var result = options.Map();
+        var result = creationOptions.Map();
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -152,7 +152,7 @@ internal class PublicKeyCredentialCreationOptionsMapperTests
     public void MapCreationOptions_WhenAuthenticatorSelectionIsNull_ThenReturnsServerResponseWithPreferredUserVerification()
     {
         // Arrange
-        var options = new PublicKeyCredentialCreationOptions
+        var creationOptions = new PublicKeyCredentialCreationOptions
         {
             RelyingParty = new PublicKeyCredentialRpEntity
             {
@@ -181,7 +181,7 @@ internal class PublicKeyCredentialCreationOptionsMapperTests
         };
 
         // Act
-        var result = options.Map();
+        var result = creationOptions.Map();
 
         // Assert
         Assert.That(result, Is.Not.Null);
