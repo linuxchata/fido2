@@ -8,20 +8,19 @@ namespace Shark.Fido2.Models.Mappers;
 public static class PublicKeyCredentialCreationOptionsRequestMapper
 {
     public static PublicKeyCredentialCreationOptionsRequest Map(
-        this ServerPublicKeyCredentialCreationOptionsRequest serverRequest)
+        this ServerPublicKeyCredentialCreationOptionsRequest request)
     {
-        var request = new PublicKeyCredentialCreationOptionsRequest
+        return new PublicKeyCredentialCreationOptionsRequest
         {
-            UserName = serverRequest.Username,
-            DisplayName = serverRequest.DisplayName,
-            AuthenticatorSelection = Map(serverRequest.AuthenticatorSelection),
-            Attestation = serverRequest.Attestation,
+            UserName = request.Username,
+            DisplayName = request.DisplayName,
+            AuthenticatorSelection = Map(request.AuthenticatorSelection),
+            Attestation = request.Attestation,
         };
-
-        return request;
     }
 
-    private static AuthenticatorSelectionCriteria? Map(ServerAuthenticatorSelectionCriteriaRequest? authenticatorSelection)
+    private static AuthenticatorSelectionCriteria? Map(
+        ServerAuthenticatorSelectionCriteriaRequest? authenticatorSelection)
     {
         if (authenticatorSelection == null)
         {

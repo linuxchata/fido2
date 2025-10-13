@@ -13,11 +13,11 @@ public interface IUserHandlerValidator
     /// Validates that the user is the owner of the credential.
     /// </summary>
     /// <param name="credential">The credential.</param>
-    /// <param name="publicKeyCredentialAssertion">The assertion.</param>
+    /// <param name="assertion">The assertion.</param>
     /// <param name="requestOptions">The original request options.</param>
     /// <returns>A validation result indicating success or failure with error details.</returns>
     ValidatorInternalResult Validate(
         Credential credential,
-        PublicKeyCredentialAssertion publicKeyCredentialAssertion,
+        PublicKeyCredentialAssertion assertion,
         PublicKeyCredentialRequestOptions requestOptions);
 }

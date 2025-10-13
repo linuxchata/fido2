@@ -13,15 +13,15 @@ internal class AssertionParametersValidatorTests
     private const string CredentialIdBase64 = "AQIDBA=="; // Base64 for [1,2,3,4]
     private const string CredentialRawId = "AQIDBA==";
 
-    private PublicKeyCredentialAssertion _publicKeyCredentialAssertion = null!;
-    private PublicKeyCredentialRequestOptions _publicKeyCredentialRequestOptions = null!;
+    private PublicKeyCredentialAssertion _assertion = null!;
+    private PublicKeyCredentialRequestOptions _requestOptions = null!;
 
     private AssertionParametersValidator _sut = null!;
 
     [SetUp]
     public void Setup()
     {
-        _publicKeyCredentialAssertion = new PublicKeyCredentialAssertion
+        _assertion = new PublicKeyCredentialAssertion
         {
             Id = CredentialIdBase64,
             RawId = CredentialRawId,
@@ -35,7 +35,7 @@ internal class AssertionParametersValidatorTests
             Extensions = new AuthenticationExtensionsClientOutputs(),
         };
 
-        _publicKeyCredentialRequestOptions = new PublicKeyCredentialRequestOptions
+        _requestOptions = new PublicKeyCredentialRequestOptions
         {
             Challenge = [1, 2, 3, 4],
             RpId = "localhost",
@@ -74,11 +74,10 @@ internal class AssertionParametersValidatorTests
     public void Validate_WhenPublicKeyCredentialAssertionIsNull_ThenThrowsArgumentNullException()
     {
         // Arrange
-        PublicKeyCredentialAssertion? publicKeyCredentialAssertion = null;
+        PublicKeyCredentialAssertion? assertion = null;
 
         // Act & Assert
-        Assert.Throws<ArgumentNullException>(
-            () => _sut.Validate(publicKeyCredentialAssertion!, _publicKeyCredentialRequestOptions));
+        Assert.Throws<ArgumentNullException>(() => _sut.Validate(assertion!, _requestOptions));
     }
 
     [Test]
@@ -88,18 +87,17 @@ internal class AssertionParametersValidatorTests
         PublicKeyCredentialRequestOptions? requestOptions = null;
 
         // Act & Assert
-        Assert.Throws<ArgumentNullException>(() =>
-            _sut.Validate(_publicKeyCredentialAssertion, requestOptions!));
+        Assert.Throws<ArgumentNullException>(() => _sut.Validate(_assertion, requestOptions!));
     }
 
     [Test]
     public void Validate_WhenPublicKeyCredentialAttestationIdIsInvalid_ThenReturnsFailure()
     {
         // Arrange
-        _publicKeyCredentialAssertion.Id = "aaa";
+        _assertion.Id = "aaa";
 
         // Act
-        var result = _sut.Validate(_publicKeyCredentialAssertion, _publicKeyCredentialRequestOptions);
+        var result = _sut.Validate(_assertion, _requestOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -111,10 +109,10 @@ internal class AssertionParametersValidatorTests
     public void Validate_WhenPublicKeyCredentialAssertionTypeIsInvalid_ThenReturnsFailure()
     {
         // Arrange
-        _publicKeyCredentialAssertion.Type = "invalid-type";
+        _assertion.Type = "invalid-type";
 
         // Act
-        var result = _sut.Validate(_publicKeyCredentialAssertion, _publicKeyCredentialRequestOptions);
+        var result = _sut.Validate(_assertion, _requestOptions);
 
         // Assert
         Assert.That(result, Is.Not.Null);

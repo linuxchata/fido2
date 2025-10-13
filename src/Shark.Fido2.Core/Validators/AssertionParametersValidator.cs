@@ -23,18 +23,18 @@ public sealed class AssertionParametersValidator : IAssertionParametersValidator
     }
 
     public AssertionCompleteResult Validate(
-        PublicKeyCredentialAssertion publicKeyCredentialAssertion,
+        PublicKeyCredentialAssertion assertion,
         PublicKeyCredentialRequestOptions requestOptions)
     {
-        ArgumentNullException.ThrowIfNull(publicKeyCredentialAssertion);
+        ArgumentNullException.ThrowIfNull(assertion);
         ArgumentNullException.ThrowIfNull(requestOptions);
 
-        if (!publicKeyCredentialAssertion.Id.IsBase64Url())
+        if (!assertion.Id.IsBase64Url())
         {
             return AssertionCompleteResult.CreateFailure("Assertion identifier is not Base64URL-encoded");
         }
 
-        if (!string.Equals(publicKeyCredentialAssertion.Type, PublicKeyCredentialType.PublicKey))
+        if (!string.Equals(assertion.Type, PublicKeyCredentialType.PublicKey))
         {
             return AssertionCompleteResult.CreateFailure("Assertion type is not set to \"public-key\"");
         }

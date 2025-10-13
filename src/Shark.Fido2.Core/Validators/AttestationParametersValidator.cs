@@ -33,12 +33,12 @@ public sealed class AttestationParametersValidator : IAttestationParametersValid
     }
 
     public AttestationCompleteResult Validate(
-        PublicKeyCredentialAttestation publicKeyCredentialAttestation,
+        PublicKeyCredentialAttestation attestation,
         PublicKeyCredentialCreationOptions creationOptions)
     {
-        ArgumentNullException.ThrowIfNull(publicKeyCredentialAttestation);
-        ArgumentNullException.ThrowIfNullOrWhiteSpace(publicKeyCredentialAttestation.Id);
-        ArgumentNullException.ThrowIfNullOrWhiteSpace(publicKeyCredentialAttestation.RawId);
+        ArgumentNullException.ThrowIfNull(attestation);
+        ArgumentNullException.ThrowIfNullOrWhiteSpace(attestation.Id);
+        ArgumentNullException.ThrowIfNullOrWhiteSpace(attestation.RawId);
 
         ArgumentNullException.ThrowIfNull(creationOptions);
         ArgumentNullException.ThrowIfNull(creationOptions.RelyingParty);
@@ -48,12 +48,12 @@ public sealed class AttestationParametersValidator : IAttestationParametersValid
         ArgumentNullException.ThrowIfNull(creationOptions.AuthenticatorSelection);
         ArgumentNullException.ThrowIfNullOrWhiteSpace(creationOptions.Attestation);
 
-        if (!publicKeyCredentialAttestation.Id.IsBase64Url())
+        if (!attestation.Id.IsBase64Url())
         {
             return AttestationCompleteResult.CreateFailure("Attestation identifier is not Base64URL-encoded");
         }
 
-        if (!string.Equals(publicKeyCredentialAttestation.Type, PublicKeyCredentialType.PublicKey))
+        if (!string.Equals(attestation.Type, PublicKeyCredentialType.PublicKey))
         {
             return AttestationCompleteResult.CreateFailure("Attestation type is not set to \"public-key\"");
         }

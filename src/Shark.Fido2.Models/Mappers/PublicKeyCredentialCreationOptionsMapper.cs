@@ -29,12 +29,12 @@ public static class PublicKeyCredentialCreationOptionsMapper
         return response;
     }
 
-    private static ServerPublicKeyCredentialRpEntity Map(PublicKeyCredentialRpEntity relyingParty)
+    private static ServerPublicKeyCredentialRpEntity Map(PublicKeyCredentialRpEntity rpEntity)
     {
         return new ServerPublicKeyCredentialRpEntity
         {
-            Identifier = relyingParty.Id,
-            Name = relyingParty.Name,
+            Identifier = rpEntity.Id,
+            Name = rpEntity.Name,
         };
     }
 
@@ -48,9 +48,9 @@ public static class PublicKeyCredentialCreationOptionsMapper
         };
     }
 
-    private static ServerPublicKeyCredentialParameters[] Map(PublicKeyCredentialParameter[] publicKeyCredentialParams)
+    private static ServerPublicKeyCredentialParameters[] Map(PublicKeyCredentialParameter[] parameters)
     {
-        return publicKeyCredentialParams?.Select(p => new ServerPublicKeyCredentialParameters
+        return parameters?.Select(p => new ServerPublicKeyCredentialParameters
         {
             Type = p.Type,
             Algorithm = (long)p.Algorithm,

@@ -13,10 +13,10 @@ internal sealed class UserHandlerValidator : IUserHandlerValidator
 
     public ValidatorInternalResult Validate(
         Credential credential,
-        PublicKeyCredentialAssertion publicKeyCredentialAssertion,
+        PublicKeyCredentialAssertion assertion,
         PublicKeyCredentialRequestOptions requestOptions)
     {
-        var userHandle = publicKeyCredentialAssertion.Response.UserHandle?.FromBase64Url();
+        var userHandle = assertion.Response.UserHandle?.FromBase64Url();
 
         // Step 6
         // Identify the user being authenticated and verify that this user is the owner of the public key credential

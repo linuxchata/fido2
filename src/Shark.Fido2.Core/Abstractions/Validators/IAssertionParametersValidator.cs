@@ -17,10 +17,10 @@ public interface IAssertionParametersValidator
     /// <summary>
     /// Validates the assertion response and request options.
     /// </summary>
-    /// <param name="publicKeyCredentialAssertion">The credential assertion response.</param>
+    /// <param name="assertion">The credential assertion response.</param>
     /// <param name="requestOptions">The original request options.</param>
     /// <returns>A validation result indicating success or failure with error details.</returns>
     AssertionCompleteResult Validate(
-        PublicKeyCredentialAssertion publicKeyCredentialAssertion,
+        PublicKeyCredentialAssertion assertion,
         PublicKeyCredentialRequestOptions requestOptions);
 }
