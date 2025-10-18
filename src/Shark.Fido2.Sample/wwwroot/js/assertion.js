@@ -40,23 +40,9 @@ async function requestCredential(options) {
     }
 
     console.log("Assertion object was received from browser");
+    console.log(`Mapped assertion object ${JSON.stringify(assertion)}`);
 
-    const credentials = {
-        id: assertion.id,
-        rawId: toBase64Url(assertion.rawId),
-        response: {
-            authenticatorData: toBase64Url(assertion.response.authenticatorData),
-            clientDataJson: toBase64Url(assertion.response.clientDataJSON),
-            signature: toBase64Url(assertion.response.signature),
-            userHandle: toBase64Url(assertion.response.userHandle),
-        },
-        type: assertion.type,
-        extensions: assertion.getClientExtensionResults(),
-    };
-
-    console.log(`Mapped assertion object ${JSON.stringify(credentials)}`);
-
-    await fetchAssertionResult(credentials);
+    await fetchAssertionResult(assertion);
 
     console.log("Assertion was completed on server side");
 }
@@ -85,18 +71,18 @@ async function fetchAssertionOptions(optionsRequest) {
     }
 }
 
-async function fetchAssertionResult(credentials) {
+async function fetchAssertionResult(assertion) {
     try {
         const response = await fetch('/assertion/result/', {
             method: 'POST',
             headers: {
                 'content-type': 'application/json'
             },
-            body: JSON.stringify(credentials)
+            body: JSON.stringify(assertion) // Calls toJSON() method
         });
 
         if (response.ok) {
-            window.location.href = `/CredentialDetails?credentialId=${encodeURIComponent(credentials.id)}`;
+            window.location.href = `/CredentialDetails?credentialId=${encodeURIComponent(assertion.id)}`;
         }
         else {
             const responseBody = await response.json();

@@ -63,22 +63,9 @@ async function createCredential(options) {
     }
 
     console.log("Attestation object was received from browser");
+    console.log(`Mapped attestation object ${JSON.stringify(attestation)}`);
 
-    const credentials = {
-        id: attestation.id,
-        rawId: toBase64Url(attestation.rawId),
-        response: {
-            attestationObject: toBase64Url(attestation.response.attestationObject),
-            clientDataJson: toBase64Url(attestation.response.clientDataJSON),
-            transports: attestation.response.getTransports(),
-        },
-        type: attestation.type,
-        extensions: attestation.getClientExtensionResults(),
-    };
-
-    console.log(`Mapped attestation object ${JSON.stringify(credentials)}`);
-
-    await fetchAttestationResult(credentials);
+    await fetchAttestationResult(attestation);
 
     console.log("Attestation was completed on server side");
 }
@@ -107,14 +94,14 @@ async function fetchAttestationOptions(optionsRequest) {
     }
 }
 
-async function fetchAttestationResult(credentials) {
+async function fetchAttestationResult(attestation) {
     try {
         const response = await fetch('/attestation/result/', {
             method: 'POST',
             headers: {
                 'content-type': 'application/json'
             },
-            body: JSON.stringify(credentials)
+            body: JSON.stringify(attestation) // Calls toJSON() method
         });
 
         if (response.ok) {
