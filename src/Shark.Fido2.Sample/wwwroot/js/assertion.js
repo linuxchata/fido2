@@ -25,33 +25,13 @@ async function authenticationCustom(optionsRequest) {
 }
 
 async function requestCredential(options) {
-    let extensions = {
-        ...(options.extensions.appid && { appid: options.extensions.appid }),
-        ...(options.extensions.uvm && { uvm: options.extensions.uvm }),
-        ...(options.extensions.largeBlob && { largeBlob: options.extensions.largeBlob })
-    };
+    const publicKey = PublicKeyCredential.parseRequestOptionsFromJSON(options);
 
-    // https://developer.mozilla.org/en-US/docs/Web/API/PublicKeyCredentialRequestOptions
-    const credentialRequestOptions = {
-        publicKey: {
-            rpId: options.rpId,
-            userVerification: options.userVerification,
-            challenge: toUint8Array(options.challenge),
-            allowCredentials: options.allowCredentials.map(credential => ({
-                id: toUint8Array(credential.id),
-                transports: credential.transports,
-                type: credential.type,
-            })),
-            timeout: options.timeout,
-            extensions: extensions
-        },
-    };
-
-    console.log(`Mapped assertion options\n${JSON.stringify(credentialRequestOptions)}`);
+    console.log(`Mapped assertion options\n${JSON.stringify(publicKey)}`);
 
     let assertion;
     try {
-        assertion = await navigator.credentials.get(credentialRequestOptions);
+        assertion = await navigator.credentials.get({ publicKey });
     }
     catch (error) {
         console.error(error.message);

@@ -43,47 +43,13 @@ async function registrationCustom(optionsRequest) {
 }
 
 async function createCredential(options) {
-    let extensions = {
-        ...(options.extensions.appidExclude && { appidExclude: options.extensions.appidExclude }),
-        ...(options.extensions.uvm && { uvm: options.extensions.uvm }),
-        ...(options.extensions.credProps && { credProps: options.extensions.credProps }),
-        ...(options.extensions.largeBlob && { largeBlob: options.extensions.largeBlob })
-    };
+    const publicKey = PublicKeyCredential.parseCreationOptionsFromJSON(options);
 
-    // https://developer.mozilla.org/en-US/docs/Web/API/PublicKeyCredentialCreationOptions
-    const credentialCreationOptions = {
-        publicKey: {
-            rp: {
-                id: options.rp.id,
-                name: options.rp.name,
-            },
-            user: {
-                id: toUint8Array(options.user.id),
-                name: options.user.name,
-                displayName: options.user.displayName,
-            },
-            pubKeyCredParams: options.pubKeyCredParams.map(param => ({
-                type: param.type,
-                alg: param.alg,
-            })),
-            authenticatorSelection: options.authenticatorSelection,
-            challenge: toUint8Array(options.challenge),
-            excludeCredentials: options.excludeCredentials.map(credential => ({
-                id: toUint8Array(credential.id),
-                transports: credential.transports,
-                type: credential.type,
-            })),
-            timeout: options.timeout,
-            attestation: options.attestation,
-            extensions: extensions
-        },
-    };
-
-    console.log(`Mapped attestation options\n${JSON.stringify(credentialCreationOptions)}`);
+    console.log(`Mapped attestation options\n${JSON.stringify(publicKey)}`);
 
     let attestation;
     try {
-        attestation = await navigator.credentials.create(credentialCreationOptions);
+        attestation = await navigator.credentials.create({ publicKey });
     }
     catch (error) {
         console.error(error.message);
