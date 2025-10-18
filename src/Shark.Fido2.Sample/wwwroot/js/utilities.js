@@ -1,4 +1,11 @@
-﻿function toUint8Array(base64Url) {
+﻿// These utility methods are not directly used in the sample application because the following methods of
+// PublicKeyCredential are utilized instead:
+//   - parseCreationOptionsFromJSON()
+//   - parseRequestOptionsFromJSON()
+//   - toJSON()
+// These utility methods remain included for reference, as they are mentioned in the documentation, which aims to
+// provide examples that also work in older browsers lacking support for newer PublicKeyCredential methods.
+function toUint8Array(base64Url) {
     // Decode the Base64 string to a binary string
     const binaryString = atob(base64UrlToBase64(base64Url));
 

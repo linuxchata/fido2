@@ -43,47 +43,13 @@ async function registrationCustom(optionsRequest) {
 }
 
 async function createCredential(options) {
-    let extensions = {
-        ...(options.extensions.appidExclude && { appidExclude: options.extensions.appidExclude }),
-        ...(options.extensions.uvm && { uvm: options.extensions.uvm }),
-        ...(options.extensions.credProps && { credProps: options.extensions.credProps }),
-        ...(options.extensions.largeBlob && { largeBlob: options.extensions.largeBlob })
-    };
+    const publicKey = PublicKeyCredential.parseCreationOptionsFromJSON(options);
 
-    // https://developer.mozilla.org/en-US/docs/Web/API/PublicKeyCredentialCreationOptions
-    const credentialCreationOptions = {
-        publicKey: {
-            rp: {
-                id: options.rp.id,
-                name: options.rp.name,
-            },
-            user: {
-                id: toUint8Array(options.user.id),
-                name: options.user.name,
-                displayName: options.user.displayName,
-            },
-            pubKeyCredParams: options.pubKeyCredParams.map(param => ({
-                type: param.type,
-                alg: param.alg,
-            })),
-            authenticatorSelection: options.authenticatorSelection,
-            challenge: toUint8Array(options.challenge),
-            excludeCredentials: options.excludeCredentials.map(credential => ({
-                id: toUint8Array(credential.id),
-                transports: credential.transports,
-                type: credential.type,
-            })),
-            timeout: options.timeout,
-            attestation: options.attestation,
-            extensions: extensions
-        },
-    };
-
-    console.log(`Mapped attestation options\n${JSON.stringify(credentialCreationOptions)}`);
+    console.log(`Mapped attestation options\n${JSON.stringify(publicKey)}`);
 
     let attestation;
     try {
-        attestation = await navigator.credentials.create(credentialCreationOptions);
+        attestation = await navigator.credentials.create({ publicKey });
     }
     catch (error) {
         console.error(error.message);
@@ -97,22 +63,9 @@ async function createCredential(options) {
     }
 
     console.log("Attestation object was received from browser");
+    console.log(`Mapped attestation object ${JSON.stringify(attestation)}`);
 
-    const credentials = {
-        id: attestation.id,
-        rawId: toBase64Url(attestation.rawId),
-        response: {
-            attestationObject: toBase64Url(attestation.response.attestationObject),
-            clientDataJson: toBase64Url(attestation.response.clientDataJSON),
-            transports: attestation.response.getTransports(),
-        },
-        type: attestation.type,
-        extensions: attestation.getClientExtensionResults(),
-    };
-
-    console.log(`Mapped attestation object ${JSON.stringify(credentials)}`);
-
-    await fetchAttestationResult(credentials);
+    await fetchAttestationResult(attestation);
 
     console.log("Attestation was completed on server side");
 }
@@ -141,14 +94,14 @@ async function fetchAttestationOptions(optionsRequest) {
     }
 }
 
-async function fetchAttestationResult(credentials) {
+async function fetchAttestationResult(attestation) {
     try {
         const response = await fetch('/attestation/result/', {
             method: 'POST',
             headers: {
                 'content-type': 'application/json'
             },
-            body: JSON.stringify(credentials)
+            body: JSON.stringify(attestation) // Calls toJSON() method
         });
 
         if (response.ok) {
