@@ -4,7 +4,7 @@ public sealed class AuthenticationExtensionsLargeBlobInputs
 {
     public string? Support { get; init; }
 
-    public bool? Read { get; init; }
+    public bool? Read { get; set; }
 
-    public byte[]? Write { get; init; }
+    public string? Write { get; set; }
 }

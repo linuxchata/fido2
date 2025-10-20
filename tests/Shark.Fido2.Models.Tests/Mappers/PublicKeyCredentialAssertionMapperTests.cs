@@ -88,7 +88,7 @@ internal class PublicKeyCredentialAssertionMapperTests
                 UserVerificationMethod = [[1236]],
                 LargeBlob = new ServerAuthenticationExtensionsLargeBlobOutputs
                 {
-                    Blob = Encoding.ASCII.GetBytes("blob-data"),
+                    Blob = "blob-data",
                     Written = true,
                 },
             },

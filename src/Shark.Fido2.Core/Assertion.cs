@@ -80,10 +80,7 @@ public sealed class Assertion : IAssertion
                 AppId = !string.IsNullOrWhiteSpace(appId) ? appId : null,
                 UserVerificationMethod = _configuration.UseUserVerificationMethod,
                 LargeBlob = _configuration.UseLargeBlob ?
-                new AuthenticationExtensionsLargeBlobInputs
-                {
-                    Read = true,
-                }
+                new AuthenticationExtensionsLargeBlobInputs()
                 : null,
             },
         };
