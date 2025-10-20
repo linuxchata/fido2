@@ -9,7 +9,7 @@ public sealed class ServerAuthenticationExtensionsLargeBlobOutputs
     public bool? Supported { get; init; }
 
     [JsonPropertyName("blob")]
-    public byte[]? Blob { get; init; }
+    public string? Blob { get; init; }
 
     [JsonPropertyName("written")]
     public bool? Written { get; init; }

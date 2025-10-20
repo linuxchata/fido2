@@ -60,7 +60,7 @@ public static class PublicKeyCredentialRequestOptionsMapper
                 Read = extensions.LargeBlob.Read,
                 Write = extensions.LargeBlob.Write,
             }
-             : null,
+            : null,
             Example = true,
         };
     }

@@ -110,7 +110,6 @@ internal class AttestationObjectValidator : IAttestationObjectValidator
         // Step 17
         // Verify that the values of the client extension outputs in clientExtensionResults and the authenticator
         // extension outputs in the extensions in authData are as expected
-        // TODO: Implement
 
         // Step 18
         // Determine the attestation statement format by performing a USASCII case-sensitive match on fmt against

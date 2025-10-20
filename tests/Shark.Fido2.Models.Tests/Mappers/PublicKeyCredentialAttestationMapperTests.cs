@@ -87,7 +87,7 @@ internal class PublicKeyCredentialAttestationMapperTests
                 LargeBlob = new ServerAuthenticationExtensionsLargeBlobOutputs
                 {
                     Supported = true,
-                    Blob = System.Text.Encoding.ASCII.GetBytes("blob-data"),
+                    Blob = "blob-data",
                 },
             },
         };

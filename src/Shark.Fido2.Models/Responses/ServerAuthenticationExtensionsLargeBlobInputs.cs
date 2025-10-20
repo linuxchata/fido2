@@ -14,5 +14,5 @@ public sealed class ServerAuthenticationExtensionsLargeBlobInputs
 
     [JsonPropertyName("write")]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public byte[]? Write { get; init; }
+    public string? Write { get; init; }
 }

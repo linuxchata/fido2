@@ -19,6 +19,6 @@ public sealed class ServerPublicKeyCredentialAttestation
     [JsonPropertyName("type")]
     public required string Type { get; init; }
 
-    [JsonPropertyName("extensions")]
+    [JsonPropertyName("clientExtensionResults")]
     public ServerAuthenticationExtensionsClientOutputs? Extensions { get; init; }
 }
