@@ -14,16 +14,16 @@ using Shark.Fido2.Domain.Options;
 
 namespace Shark.Fido2.Core.Validators;
 
-internal class AssertionResponseValidator : IAssertionObjectValidator
+internal class AssertionObjectValidator : IAssertionObjectValidator
 {
     private readonly ISignatureAttestationStatementValidator _signatureAttestationStatementValidator;
     private readonly Fido2Configuration _configuration;
-    private readonly ILogger<AssertionResponseValidator> _logger;
+    private readonly ILogger<AssertionObjectValidator> _logger;
 
-    public AssertionResponseValidator(
+    public AssertionObjectValidator(
         ISignatureAttestationStatementValidator signatureAttestationStatementValidator,
         IOptions<Fido2Configuration> options,
-        ILogger<AssertionResponseValidator> logger)
+        ILogger<AssertionObjectValidator> logger)
     {
         _signatureAttestationStatementValidator = signatureAttestationStatementValidator;
         _configuration = options.Value;

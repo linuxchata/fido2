@@ -1,4 +1,3 @@
-using System.Text;
 using Shark.Fido2.Models.Mappers;
 using Shark.Fido2.Models.Responses;
 

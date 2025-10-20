@@ -12,7 +12,7 @@ using Shark.Fido2.Domain.Options;
 namespace Shark.Fido2.Core.Tests.Validators;
 
 [TestFixture]
-internal class AssertionResponseValidatorTests
+internal class AssertionObjectValidatorTests
 {
     private const string Signature = "signature";
 
@@ -20,7 +20,7 @@ internal class AssertionResponseValidatorTests
 
     private Mock<ISignatureAttestationStatementValidator> _signatureAttestationStatementValidatorMock;
 
-    private AssertionResponseValidator _sut;
+    private AssertionObjectValidator _sut;
 
     [SetUp]
     public void Setup()
@@ -38,10 +38,10 @@ internal class AssertionResponseValidatorTests
             .Setup(a => a.Validate(It.IsAny<byte[]>(), It.IsAny<byte[]>(), It.IsAny<CredentialPublicKey>()))
             .Returns(ValidatorInternalResult.Valid());
 
-        _sut = new AssertionResponseValidator(
+        _sut = new AssertionObjectValidator(
             _signatureAttestationStatementValidatorMock.Object,
             Options.Create(Fido2ConfigurationBuilder.Build()),
-            NullLogger<AssertionResponseValidator>.Instance);
+            NullLogger<AssertionObjectValidator>.Instance);
     }
 
     [Test]
