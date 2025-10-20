@@ -66,22 +66,14 @@ public sealed class Assertion : IAssertion
             Challenge = _challengeGenerator.Get(),
             Timeout = _configuration.Timeout,
             RpId = _configuration.RelyingPartyId,
-            AllowCredentials = credentials?
-                .Select(c => new PublicKeyCredentialDescriptor
-                {
-                    Id = c.CredentialId,
-                    Transports = c.Transports?.Select(t => t.ToEnum<AuthenticatorTransport>()).ToArray() ?? [],
-                })
-                .ToArray(),
+            AllowCredentials = GetAllowCredentials(credentials),
             Username = userName,
             UserVerification = request.UserVerification ?? UserVerificationRequirement.Preferred,
             Extensions = new AuthenticationExtensionsClientInputs
             {
                 AppId = !string.IsNullOrWhiteSpace(appId) ? appId : null,
                 UserVerificationMethod = _configuration.UseUserVerificationMethod,
-                LargeBlob = _configuration.UseLargeBlob ?
-                new AuthenticationExtensionsLargeBlobInputs()
-                : null,
+                LargeBlob = _configuration.UseLargeBlob ? new AuthenticationExtensionsLargeBlobInputs() : null,
             },
         };
 
@@ -222,6 +214,17 @@ public sealed class Assertion : IAssertion
         _logger.LogDebug("Assertion is successfully completed");
 
         return AssertionCompleteResult.Create();
+    }
+
+    private static PublicKeyCredentialDescriptor[]? GetAllowCredentials(List<CredentialDescriptor>? credentials)
+    {
+        return credentials?
+            .Select(c => new PublicKeyCredentialDescriptor
+            {
+                Id = c.CredentialId,
+                Transports = c.Transports?.Select(t => t.ToEnum<AuthenticatorTransport>()).ToArray() ?? [],
+            })
+            .ToArray();
     }
 
     private static bool IsCredentialNotAllowed(PublicKeyCredentialRequestOptions requestOptions, byte[] credentialId)
