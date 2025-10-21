@@ -11,10 +11,6 @@
     <PackageReference Include="Shark.Fido2.Core" Version="1.1.9.81" />
     <PackageReference Include="Shark.Fido2.InMemory" Version="1.1.9.81" />
     <PackageReference Include="Shark.Fido2.Models" Version="1.1.9.81" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
