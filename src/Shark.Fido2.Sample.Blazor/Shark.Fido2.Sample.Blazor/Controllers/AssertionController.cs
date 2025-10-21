@@ -42,11 +42,9 @@ public class AssertionController(IAssertion assertion) : ControllerBase
 
         var requestOptions = await _assertion.BeginAuthentication(request.Map(), cancellationToken);
 
-        var response = requestOptions.Map();
-
         HttpContext.Session.SetString(SessionName, JsonSerializer.Serialize(requestOptions));
 
-        return Ok(response);
+        return Ok(requestOptions.Map());
     }
 
     /// <summary>
@@ -70,7 +68,6 @@ public class AssertionController(IAssertion assertion) : ControllerBase
         }
 
         var requestOptionsString = HttpContext.Session.GetString(SessionName);
-
         if (string.IsNullOrWhiteSpace(requestOptionsString))
         {
             return BadRequest(ServerResponse.CreateFailed());

@@ -2,7 +2,6 @@ using System.Globalization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Shark.Fido2.Common.Extensions;
 using Shark.Fido2.Sample.Abstractions.Services;
 
 namespace Shark.Fido2.Sample.Pages;
@@ -56,7 +55,7 @@ public class CredentialsDetailsModel : PageModel
             return;
         }
 
-        var credential = await _credentialService.Get(credentialId.FromBase64Url(), cancellationToken);
+        var credential = await _credentialService.Get(credentialId, cancellationToken);
         if (credential is null)
         {
             Response.Redirect("/");
