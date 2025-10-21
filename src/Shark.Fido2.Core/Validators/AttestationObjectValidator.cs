@@ -159,7 +159,9 @@ internal class AttestationObjectValidator : IAttestationObjectValidator
             return trustAnchorValidationResult;
         }
 
-        _logger.LogDebug("Attestation trust anchor is verified");
+        _logger.LogDebug(
+            "Attestation trust anchor is verified. AAGUID of the authenticator is '{AaGuid}'",
+            attestationObjectData.AuthenticatorData?.AttestedCredentialData.AaGuid ?? Guid.Empty);
 
         // Step 21
         // Assess the attestation trustworthiness using the outputs of the verification procedure in step 19
