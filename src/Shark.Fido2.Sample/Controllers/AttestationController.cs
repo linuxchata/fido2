@@ -49,11 +49,9 @@ public class AttestationController(IAttestation attestation, ILogger<Attestation
 
         var createOptions = await _attestation.BeginRegistration(request.Map(), cancellationToken);
 
-        var response = createOptions.Map();
-
         HttpContext.Session.SetString(SessionName, JsonSerializer.Serialize(createOptions));
 
-        return Ok(response);
+        return Ok(createOptions.Map());
     }
 
     /// <summary>
@@ -77,17 +75,15 @@ public class AttestationController(IAttestation attestation, ILogger<Attestation
         }
 
         var createOptionsString = HttpContext.Session.GetString(SessionName);
-
         if (string.IsNullOrWhiteSpace(createOptionsString))
         {
             return BadRequest(ServerResponse.CreateFailed());
         }
 
+        logger.LogInformation("Create options: {CreateOptionsString}", createOptionsString);
         var createOptions = JsonSerializer.Deserialize<PublicKeyCredentialCreationOptions>(createOptionsString!);
 
-        logger.LogInformation("Attestation create options: {CreateOptions}", createOptionsString);
-        logger.LogInformation("Attestation: {Request}", JsonSerializer.Serialize(request.Map()));
-
+        logger.LogInformation("Attestation request: {Request}", JsonSerializer.Serialize(request.Map()));
         var response = await _attestation.CompleteRegistration(request.Map(), createOptions!, cancellationToken);
 
         HttpContext.Session.Remove(SessionName);

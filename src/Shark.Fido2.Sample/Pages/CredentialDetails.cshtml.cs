@@ -56,7 +56,7 @@ public class CredentialsDetailsModel : PageModel
             return;
         }
 
-        var credential = await _credentialService.Get(credentialId.FromBase64Url(), cancellationToken);
+        var credential = await _credentialService.Get(credentialId, cancellationToken);
         if (credential is null)
         {
             Response.Redirect("/");

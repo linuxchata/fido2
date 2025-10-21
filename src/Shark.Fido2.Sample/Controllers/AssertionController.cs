@@ -22,6 +22,7 @@ namespace Shark.Fido2.Sample.Controllers;
 [TypeFilter(typeof(RestApiExceptionFilter))]
 public class AssertionController(
     IAssertion assertion,
+    ICredentialService credentialService,
     ILoginService loginService,
     ILogger<AssertionController> logger) : ControllerBase
 {
@@ -53,11 +54,9 @@ public class AssertionController(
 
         var requestOptions = await _assertion.BeginAuthentication(request.Map(), cancellationToken);
 
-        var response = requestOptions.Map();
-
         HttpContext.Session.SetString(SessionName, JsonSerializer.Serialize(requestOptions));
 
-        return Ok(response);
+        return Ok(requestOptions.Map());
     }
 
     /// <summary>
@@ -71,6 +70,7 @@ public class AssertionController(
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Result(
         ServerPublicKeyCredentialAssertion request,
         CancellationToken cancellationToken)
@@ -81,24 +81,28 @@ public class AssertionController(
         }
 
         var requestOptionsString = HttpContext.Session.GetString(SessionName);
-
         if (string.IsNullOrWhiteSpace(requestOptionsString))
         {
             return BadRequest(ServerResponse.CreateFailed());
         }
 
+        logger.LogInformation("Request options: {RequestOptionsString}", requestOptionsString);
         var requestOptions = JsonSerializer.Deserialize<PublicKeyCredentialRequestOptions>(requestOptionsString!);
 
-        logger.LogInformation("Assertion create options: {RequestOptionsString}", requestOptionsString);
-        logger.LogInformation("Assertion: {Request}", JsonSerializer.Serialize(request.Map()));
-
+        logger.LogInformation("Assertion request: {Request}", JsonSerializer.Serialize(request.Map()));
         var response = await _assertion.CompleteAuthentication(request.Map(), requestOptions!, cancellationToken);
 
         HttpContext.Session.Remove(SessionName);
 
         if (response.IsValid)
         {
-            await loginService.Login(HttpContext, requestOptions?.Username);
+            var credential = await credentialService.Get(request.Id, cancellationToken);
+            if (credential is null)
+            {
+                return NotFound();
+            }
+
+            await loginService.Login(HttpContext, credential.UserName);
 
             return Ok(ServerResponse.Create());
         }

@@ -10,8 +10,8 @@ public interface ICredentialService
     /// <summary>
     /// Gets credential details by the credential identifier.
     /// </summary>
-    /// <param name="id">The credential identifier.</param>
+    /// <param name="credentialId">The credential identifier.</param>
     /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>The credential details.</returns>
-    Task<Credential?> Get(byte[] id, CancellationToken cancellationToken);
+    Task<Credential?> Get(string credentialId, CancellationToken cancellationToken);
 }
