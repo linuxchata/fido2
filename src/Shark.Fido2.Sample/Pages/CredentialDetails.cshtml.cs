@@ -2,7 +2,6 @@ using System.Globalization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Shark.Fido2.Common.Extensions;
 using Shark.Fido2.Sample.Abstractions.Services;
 
 namespace Shark.Fido2.Sample.Pages;
