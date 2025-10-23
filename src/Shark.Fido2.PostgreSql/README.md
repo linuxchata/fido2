@@ -2,4 +2,4 @@ Shark WebAuthn library for .NET provides a server-side implementation of the Web
 
 This package provides PostgreSQL implementation for storing WebAuthn credentials.
 
-Table name is `Credential`.
+Table name is `credential`.

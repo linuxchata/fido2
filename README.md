@@ -20,6 +20,7 @@ This repository provides a server-side implementation of the WebAuthn standard, 
 - Supported cryptographic algorithms: ES256, EdDSA, ES384, ES512, PS256, PS384, PS512, ES256K, RS256, RS384, RS512, RS1
 - **Built-in storage providers**:
   - Microsoft SQL Server
+  - PostgreSQL
   - Amazon DynamoDB
   - In-memory storage
  - **FIDO Metadata Service**
@@ -33,6 +34,7 @@ This repository provides a server-side implementation of the WebAuthn standard, 
 | Shark.Fido2.DynamoDB | [![NuGet](https://img.shields.io/nuget/v/Shark.Fido2.DynamoDB.svg)](https://www.nuget.org/packages/Shark.Fido2.DynamoDB/) |
 | Shark.Fido2.InMemory | [![NuGet](https://img.shields.io/nuget/v/Shark.Fido2.InMemory.svg)](https://www.nuget.org/packages/Shark.Fido2.InMemory/) |
 | Shark.Fido2.Models | [![NuGet](https://img.shields.io/nuget/v/Shark.Fido2.Models.svg)](https://www.nuget.org/packages/Shark.Fido2.Models/) |
+| Shark.Fido2.PostgreSQL | [![NuGet](https://img.shields.io/nuget/v/Shark.Fido2.PostgreSql.svg)](https://www.nuget.org/packages/Shark.Fido2.PostgreSql/) |
 | Shark.Fido2.SqlServer | [![NuGet](https://img.shields.io/nuget/v/Shark.Fido2.SqlServer.svg)](https://www.nuget.org/packages/Shark.Fido2.SqlServer/) |
 
 # Usage
