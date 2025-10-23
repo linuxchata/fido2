@@ -33,9 +33,9 @@ internal sealed class CredentialRepository : ICredentialRepository
         }
 
         const string query = @"
-            SELECT ""CredentialId"", ""UserHandle"", ""UserName"", ""UserDisplayName"", ""CredentialPublicKeyJson"", ""SignCount"", ""Transports"", ""CreatedAt"", ""UpdatedAt""
-            FROM ""Credential""
-            WHERE ""CredentialId"" = @CredentialId";
+            SELECT credential_id, user_handle, user_name, user_display_name, credential_public_key_json, sign_count, transports, created_at, updated_at
+            FROM credential
+            WHERE credential_id = @CredentialId";
 
         using var connection = PostgreSqlConnectionFactory.GetConnection(_connectionString);
 
@@ -57,9 +57,9 @@ internal sealed class CredentialRepository : ICredentialRepository
         }
 
         const string query = @"
-            SELECT ""CredentialId"", ""Transports""
-            FROM ""Credential""
-            WHERE ""UserName"" = @userName";
+            SELECT credential_id, transports
+            FROM credential
+            WHERE user_name = @userName";
 
         using var connection = PostgreSqlConnectionFactory.GetConnection(_connectionString);
 
@@ -82,8 +82,8 @@ internal sealed class CredentialRepository : ICredentialRepository
 
         const string query = @"
             SELECT COUNT(1)
-            FROM ""Credential""
-            WHERE ""CredentialId"" = @CredentialId";
+            FROM credential
+            WHERE credential_id = @CredentialId";
 
         using var connection = PostgreSqlConnectionFactory.GetConnection(_connectionString);
 
@@ -106,7 +106,7 @@ internal sealed class CredentialRepository : ICredentialRepository
         ArgumentNullException.ThrowIfNull(credential.CredentialPublicKey);
 
         const string query = @"
-            INSERT INTO ""Credential"" (""CredentialId"", ""UserHandle"", ""UserName"", ""UserDisplayName"", ""CredentialPublicKeyJson"", ""SignCount"", ""Transports"")
+            INSERT INTO credential (credential_id, user_handle, user_name, user_display_name, credential_public_key_json, sign_count, transports)
             VALUES (@CredentialId, @UserHandle, @UserName, @UserDisplayName, @CredentialPublicKeyJson, @SignCount, @Transports)";
 
         var entity = credential.ToEntity();
@@ -135,9 +135,9 @@ internal sealed class CredentialRepository : ICredentialRepository
         ArgumentNullException.ThrowIfNull(credentialId);
 
         const string query = @"
-            UPDATE ""Credential""
-            SET ""SignCount"" = @SignCount, ""UpdatedAt"" = CURRENT_TIMESTAMP AT TIME ZONE 'UTC', ""LastUsedAt"" = CURRENT_TIMESTAMP AT TIME ZONE 'UTC'
-            WHERE ""CredentialId"" = @CredentialId";
+            UPDATE credential
+            SET sign_count = @SignCount, updated_at = CURRENT_TIMESTAMP, last_used_at = CURRENT_TIMESTAMP
+            WHERE credential_id = @CredentialId";
 
         using var connection = PostgreSqlConnectionFactory.GetConnection(_connectionString);
 
@@ -154,9 +154,9 @@ internal sealed class CredentialRepository : ICredentialRepository
         ArgumentNullException.ThrowIfNull(credentialId);
 
         const string query = @"
-            UPDATE ""Credential""
-            SET ""LastUsedAt"" = CURRENT_TIMESTAMP AT TIME ZONE 'UTC'
-            WHERE ""CredentialId"" = @CredentialId";
+            UPDATE credential
+            SET last_used_at = CURRENT_TIMESTAMP
+            WHERE credential_id = @CredentialId";
 
         using var connection = PostgreSqlConnectionFactory.GetConnection(_connectionString);
 
