@@ -24,6 +24,7 @@
     <ProjectReference Include="..\Shark.Fido2.DynamoDB\Shark.Fido2.DynamoDB.csproj" />
     <ProjectReference Include="..\Shark.Fido2.Models\Shark.Fido2.Models.csproj" />
     <ProjectReference Include="..\Shark.Fido2.InMemory\Shark.Fido2.InMemory.csproj" />
+    <ProjectReference Include="..\Shark.Fido2.PostgreSql\Shark.Fido2.PostgreSql.csproj" />
     <ProjectReference Include="..\Shark.Fido2.SqlServer\Shark.Fido2.SqlServer.csproj" />
   </ItemGroup>
 

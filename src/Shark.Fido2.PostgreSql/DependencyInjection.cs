@@ -1,14 +1,14 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Shark.Fido2.Core.Abstractions.Repositories;
 
-namespace Shark.Fido2.SqlServer;
+namespace Shark.Fido2.PostgreSql;
 
 [ExcludeFromCodeCoverage]
 public static class DependencyInjection
 {
-    public static void AddFido2SqlServer(
+    public static void AddFido2PostgreSql(
         this IServiceCollection services,
         string connectionStringName = "DefaultConnection")
     {
