@@ -21,6 +21,7 @@ jobs:
           - ./src/Shark.Fido2.InMemory/Shark.Fido2.InMemory.csproj
           - ./src/Shark.Fido2.Models/Shark.Fido2.Models.csproj
           - ./src/Shark.Fido2.SqlServer/Shark.Fido2.SqlServer.csproj
+          - ./src/Shark.Fido2.PostgreSql/Shark.Fido2.PostgreSql.csproj
 
     steps:
     - uses: actions/checkout@v4
