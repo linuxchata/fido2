@@ -33,7 +33,17 @@ internal sealed class CredentialRepository : ICredentialRepository
         }
 
         const string query = @"
-            SELECT credential_id, user_handle, user_name, user_display_name, credential_public_key_json, sign_count, transports, created_at, updated_at
+            SELECT
+                credential_id AS ""CredentialId"",
+                user_handle AS ""UserHandle"",
+                user_name AS ""UserName"",
+                user_display_name AS ""UserDisplayName"",
+                credential_public_key_json AS ""CredentialPublicKeyJson"",
+                sign_count AS ""SignCount"",
+                transports AS ""Transports"",
+                created_at AS ""CreatedAt"",
+                updated_at AS ""UpdatedAt"",
+                last_used_at AS ""LastUsedAt""
             FROM credential
             WHERE credential_id = @CredentialId";
 
@@ -57,7 +67,7 @@ internal sealed class CredentialRepository : ICredentialRepository
         }
 
         const string query = @"
-            SELECT credential_id, transports
+            SELECT credential_id AS ""CredentialId"", transports AS ""Transports""
             FROM credential
             WHERE user_name = @userName";
 
