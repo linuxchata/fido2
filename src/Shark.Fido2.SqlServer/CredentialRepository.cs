@@ -33,7 +33,17 @@ internal sealed class CredentialRepository : ICredentialRepository
         }
 
         const string query = @"
-            SELECT CredentialId, UserHandle, UserName, UserDisplayName, CredentialPublicKeyJson, SignCount, Transports, CreatedAt, UpdatedAt
+            SELECT
+                CredentialId,
+                UserHandle,
+                UserName,
+                UserDisplayName,
+                CredentialPublicKeyJson,
+                SignCount,
+                Transports,
+                CreatedAt,
+                UpdatedAt,
+                LastUsedAt
             FROM Credential
             WHERE CredentialId = @CredentialId";
 
@@ -106,8 +116,22 @@ internal sealed class CredentialRepository : ICredentialRepository
         ArgumentNullException.ThrowIfNull(credential.CredentialPublicKey);
 
         const string query = @"
-            INSERT INTO Credential (CredentialId, UserHandle, UserName, UserDisplayName, CredentialPublicKeyJson, SignCount, Transports)
-            VALUES (@CredentialId, @UserHandle, @UserName, @UserDisplayName, @CredentialPublicKeyJson, @SignCount, @Transports)";
+            INSERT INTO Credential (
+                CredentialId,
+                UserHandle,
+                UserName,
+                UserDisplayName,
+                CredentialPublicKeyJson,
+                SignCount,
+                Transports)
+            VALUES (
+                @CredentialId,
+                @UserHandle,
+                @UserName,
+                @UserDisplayName,
+                @CredentialPublicKeyJson,
+                @SignCount,
+                @Transports)";
 
         var entity = credential.ToEntity();
 
