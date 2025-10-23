@@ -20,6 +20,7 @@ This repository provides a server-side implementation of the WebAuthn standard, 
 - Supported cryptographic algorithms: ES256, EdDSA, ES384, ES512, PS256, PS384, PS512, ES256K, RS256, RS384, RS512, RS1
 - **Built-in storage providers**:
   - Microsoft SQL Server
+  - PostgreSQL
   - Amazon DynamoDB
   - In-memory storage
  - **FIDO Metadata Service**
