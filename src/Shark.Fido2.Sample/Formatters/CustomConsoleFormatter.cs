@@ -17,7 +17,7 @@ public class CustomConsoleFormatter : ConsoleFormatter
         IExternalScopeProvider? scopeProvider,
         TextWriter textWriter)
     {
-        textWriter.Write($" {logEntry.LogLevel} ");
+        textWriter.Write($"{logEntry.LogLevel} ");
 
         WriteScopeInformation(scopeProvider, textWriter);
 
