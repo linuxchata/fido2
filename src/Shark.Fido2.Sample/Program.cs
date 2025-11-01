@@ -17,15 +17,27 @@ builder.WebHost.ConfigureKestrel(options =>
     options.AddServerHeader = false;
 });
 
-builder.Logging.AddConsole(options =>
+if (builder.Environment.IsDevelopment())
 {
-    options.FormatterName = CustomConsoleFormatter.FormatterName;
-});
+    builder.Logging.AddConsole(options =>
+    {
+        options.FormatterName = DevelopmentConsoleFormatter.FormatterName;
+    });
+    builder.Logging.AddConsoleFormatter<DevelopmentConsoleFormatter, ConsoleFormatterOptions>();
+}
+else
+{
+    builder.Logging.AddConsole(options =>
+    {
+        options.FormatterName = CustomConsoleFormatter.FormatterName;
+    });
+    builder.Logging.AddConsoleFormatter<CustomConsoleFormatter, ConsoleFormatterOptions>();
+}
+
 builder.Logging.Configure(options =>
 {
     options.ActivityTrackingOptions = ActivityTrackingOptions.TraceId;
 });
-builder.Logging.AddConsoleFormatter<CustomConsoleFormatter, ConsoleFormatterOptions>();
 
 builder.Services.AddRazorPages();
 builder.Services.AddControllers();

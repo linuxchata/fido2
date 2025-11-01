@@ -17,8 +17,7 @@ public class CustomConsoleFormatter : ConsoleFormatter
         IExternalScopeProvider? scopeProvider,
         TextWriter textWriter)
     {
-        var timestamp = DateTime.UtcNow.ToString("dd-MM-yyyy HH:mm:ss");
-        textWriter.Write($"{timestamp} {logEntry.LogLevel} ");
+        textWriter.Write($" {logEntry.LogLevel} ");
 
         WriteScopeInformation(scopeProvider, textWriter);
 
