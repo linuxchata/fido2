@@ -41,13 +41,14 @@ This repository provides a server-side implementation of the WebAuthn standard, 
 ASP.NET Core Identity includes built-in support for passkeys starting in .NET 10.
 | Capability | Shark WebAuthn | ASP.NET Core Identity |
 |---|---|---|
-| Library Scope | General-purpose WebAuthn library, not tied to ASP.NET Core Identity | Integrated with ASP.NET Core Identity; not a general WebAuthn framework and primarily scoped to Identity use cases |
-| .NET Version | ✅ Targets .NET 8 (compatible with .NET 8/9/10) | ⚠️ Requires .NET 10 SDK |
-| Attestation Support | ✅ Comprehensive support for all attestation formats | ⚠️ No default attestation validation |
-| Cryptographic Algorithms | ✅ Supports all WebAuthn-defined cryptographic algorithms | ⚠️ Supports all WebAuthn-defined cryptographic algorithms except EdDSA. [Source](https://github.com/dotnet/aspnetcore/pull/62112) |
-| Persistent Data Stores | ✅ Provides built-in providers for Microsoft SQL Server, PostgreSQL, Amazon DynamoDB, and in-memory storage | ⚠️ Uses ASP.NET Core Identity's configured storage providers |
-| FIDO Metadata Service | ✅ Built-in integration with the FIDO Metadata Service | ❌ No built-in integration with the FIDO Metadata Service |
-| FIDO Conformance Tool | ✅ Tested | ✅ Tested |
+| Library Scope | General-purpose WebAuthn library, not tied to ASP.NET Core Identity | Integrated with ASP.NET Core Identity; not a general WebAuthn library and primarily scoped to Identity use cases |
+| .NET Version | Targets .NET 8 (compatible with .NET 8/9/10) | Requires .NET 10 SDK |
+| Developer Experience | Available as NuGet packages | Built into .NET 10, no package to install |
+| Attestation Support | Comprehensive support for all attestation formats | :x: No default attestation validation |
+| Cryptographic Algorithms | Supports all WebAuthn-defined cryptographic algorithms | Supports all WebAuthn-defined cryptographic algorithms except EdDSA. [Source](https://github.com/dotnet/aspnetcore/pull/62112) |
+| Persistent Data Stores | Provides built-in providers for Microsoft SQL Server, PostgreSQL, Amazon DynamoDB, and in-memory storage | Uses ASP.NET Core Identity's configured storage providers |
+| FIDO Metadata Service | Built-in integration with the FIDO Metadata Service | :x: No built-in integration with the FIDO Metadata Service |
+| FIDO Conformance Tool | Tested | Tested |
 
 **Choose Shark WebAuthn when:**
 - You need full, standards-compliant WebAuthn support
