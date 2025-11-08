@@ -37,6 +37,30 @@ This repository provides a server-side implementation of the WebAuthn standard, 
 | Shark.Fido2.PostgreSQL | [![NuGet](https://img.shields.io/nuget/v/Shark.Fido2.PostgreSql.svg)](https://www.nuget.org/packages/Shark.Fido2.PostgreSql/) |
 | Shark.Fido2.SqlServer | [![NuGet](https://img.shields.io/nuget/v/Shark.Fido2.SqlServer.svg)](https://www.nuget.org/packages/Shark.Fido2.SqlServer/) |
 
+# Passkeys in ASP.NET Core Identity
+ASP.NET Core Identity includes built-in support for passkeys starting in .NET 10.
+| Capability | Shark WebAuthn | ASP.NET Core Identity |
+|---|---|---|
+| Library Scope | General-purpose WebAuthn library, not tied to ASP.NET Core Identity | Integrated with ASP.NET Core Identity; not a general WebAuthn library and primarily scoped to Identity use cases |
+| .NET Version | Targets .NET 8 (compatible with .NET 8/9/10) | Requires .NET 10 SDK |
+| Developer Experience | Available as NuGet packages | Built into .NET 10, no package to install |
+| Attestation Support | Comprehensive support for all attestation formats | :x: No default attestation validation |
+| Cryptographic Algorithms | Supports all WebAuthn-defined cryptographic algorithms | Supports all WebAuthn-defined cryptographic algorithms except EdDSA. [Source](https://github.com/dotnet/aspnetcore/pull/62112) |
+| Persistent Data Stores | Provides built-in providers for Microsoft SQL Server, PostgreSQL, Amazon DynamoDB, and in-memory storage | Uses ASP.NET Core Identity's configured storage providers |
+| FIDO Metadata Service | Built-in integration with the FIDO Metadata Service | :x: No built-in integration with the FIDO Metadata Service |
+| FIDO Conformance Tool | Tested | Tested |
+
+**Choose Shark WebAuthn when:**
+- You need full, standards-compliant WebAuthn support
+- You need flexibility in choosing the persistent data store
+- You are building with enterprise or regulatory compliance requirements in mind
+- You require additional authenticator validation via the FIDO Metadata Service
+
+**Choose Passkeys in ASP.NET Core Identity when:**
+- You are already using ASP.NET Core Identity in your application
+- You only need basic passkey-based, passwordless authentication
+- You are willing to implement custom attestation validation if needed
+
 # Usage
 The following examples demonstrate how to implement passwordless authentication in your application. For complete reference and additional details, see the [full documentation](https://shark-fido2.com/Documentation).
 
