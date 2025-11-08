@@ -45,7 +45,7 @@ ASP.NET Core Identity includes built-in support for passkeys starting in .NET 10
 | .NET Version | ✅ Targets .NET 8 (compatible with .NET 8/9/10) | ⚠️ Requires .NET 10 SDK |
 | Attestation Support | ✅ Comprehensive support for all attestation formats | ⚠️ No default attestation validation |
 | Cryptographic Algorithms | ✅ Supports all WebAuthn-defined cryptographic algorithms | ⚠️ Supports all WebAuthn-defined cryptographic algorithms except EdDSA. [Source](https://github.com/dotnet/aspnetcore/pull/62112) |
-| Persistent Data Stores | ✅ Provides built-in providers for Microsoft SQL Server, PostgreSQL, Amazon DynamoDB, and in-memory storage | ⚠️ Uses ASP.NET Core Identity’s configured storage providers |
+| Persistent Data Stores | ✅ Provides built-in providers for Microsoft SQL Server, PostgreSQL, Amazon DynamoDB, and in-memory storage | ⚠️ Uses ASP.NET Core Identity's configured storage providers |
 | FIDO Metadata Service | ✅ Built-in integration with the FIDO Metadata Service | ❌ No built-in integration with the FIDO Metadata Service |
 | FIDO Conformance Tool | ✅ Tested | ✅ Tested |
 
