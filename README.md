@@ -154,7 +154,8 @@ docker run -d -e ASPNETCORE_ENVIRONMENT=Development -p 8080:8080 linuxchata/shar
 The application will be accessible at `http://localhost:8080`.
 
 # FIDO Conformance Tests
-All test cases successfully passed using the [FIDO Conformance Tool](https://fidoalliance.org/certification/conformance/).
+All test cases successfully passed using the official [FIDO Conformance Tool](https://fidoalliance.org/certification/conformance/), confirming full compliance with the WebAuthn Level 2 and FIDO2 specifications.
+
 <img alt="FIDO Conformance Tests" src="https://github.com/user-attachments/assets/8b214f9c-f92f-4930-af66-996a617cc131" />
 
 # License
