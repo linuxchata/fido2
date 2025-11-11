@@ -51,15 +51,15 @@ ASP.NET Core Identity includes built-in support for passkeys starting in .NET 10
 | FIDO Conformance Tool | Tested | Tested |
 
 **Choose Shark WebAuthn when:**
-- You need full, standards-compliant WebAuthn support
-- You need flexibility in choosing the persistent data store
-- You are building with enterprise or regulatory compliance requirements in mind
-- You require additional authenticator validation via the FIDO Metadata Service
+- You require full, standards-compliant WebAuthn support.
+- You want flexibility in choosing the persistent data store.
+- You need to meet enterprise or regulatory compliance requirements.
+- You require authenticator validation through the FIDO Metadata Service.
 
 **Choose Passkeys in ASP.NET Core Identity when:**
-- You are already using ASP.NET Core Identity in your application
-- You only need basic passkey-based, passwordless authentication
-- You are willing to implement custom attestation validation if needed
+- You are already using ASP.NET Core Identity in your application.
+- You only need basic passwordless, passkey-based authentication.
+- You are comfortable implementing additional attestation validation if necessary.
 
 # Usage
 The following examples demonstrate how to implement passwordless authentication in your application. For complete reference and additional details, see the [full documentation](https://shark-fido2.com/Documentation).
