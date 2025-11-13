@@ -18,6 +18,7 @@ This repository provides a server-side implementation of the WebAuthn standard, 
   - None
   - Apple Anonymous
 - Supported cryptographic algorithms: ES256, EdDSA, ES384, ES512, PS256, PS384, PS512, ES256K, RS256, RS384, RS512, RS1
+- WebAuthn extensions, including credential properties (credProps) and large blob storage (largeBlob).
 - **Built-in storage providers**:
   - Microsoft SQL Server
   - PostgreSQL
