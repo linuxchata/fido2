@@ -7,10 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.21" />
-    <PackageReference Include="Shark.Fido2.Core" Version="1.2.0.83" />
-    <PackageReference Include="Shark.Fido2.InMemory" Version="1.2.0.83" />
-    <PackageReference Include="Shark.Fido2.Models" Version="1.2.0.83" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.22" />
+    <PackageReference Include="Shark.Fido2.Core" Version="1.2.0.85" />
+    <PackageReference Include="Shark.Fido2.InMemory" Version="1.2.0.85" />
+    <PackageReference Include="Shark.Fido2.Models" Version="1.2.0.85" />
   </ItemGroup>
 
   <ItemGroup>
