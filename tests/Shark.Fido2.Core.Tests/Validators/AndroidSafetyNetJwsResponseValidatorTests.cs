@@ -3,7 +3,6 @@ using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.Extensions.Time.Testing;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json.Linq;
 using Shark.Fido2.Core.Validators.AttestationStatementValidators;
 using Shark.Fido2.Domain;
 
