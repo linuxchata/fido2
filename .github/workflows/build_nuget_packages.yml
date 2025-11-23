@@ -56,7 +56,7 @@ jobs:
         dotnet nuget push "./nupkg/Shark.Fido2.*.*.snupkg" --api-key $OAUTH_GITHUB_PAT --source "github" --skip-duplicate
 
     - name: Login to nuget.org
-      uses: NuGet/login@v1
+      uses: NuGet/login@d22cc5f58ff5b88bf9bd452535b4335137e24544 #v1
       id: nuget-login
       with:
         user: ${{ env.NUGET_USER }}
