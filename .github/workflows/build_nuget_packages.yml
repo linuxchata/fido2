@@ -3,6 +3,7 @@ name: NuGet
 permissions:
   contents: read
   packages: write
+  id-token: write # Required for GitHub OIDC Trusted Publishing
 
 on:
   workflow_dispatch:
@@ -15,7 +16,7 @@ jobs:
       CI: true # Enable deterministic builds
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       OAUTH_GITHUB_PAT: ${{ secrets.OAUTH_GITHUB_PAT }}
-      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+      NUGET_USER: ${{ secrets.NUGET_USER }}
 
     strategy:
       matrix:
@@ -30,7 +31,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
       with:
-        fetch-depth: 0  # Required for Source Link to work with full git history
+        fetch-depth: 0 # Required for Source Link to work with full git history
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
@@ -54,7 +55,13 @@ jobs:
         dotnet nuget push "./nupkg/Shark.Fido2.*.*.nupkg" --api-key $OAUTH_GITHUB_PAT --source "github" --skip-duplicate
         dotnet nuget push "./nupkg/Shark.Fido2.*.*.snupkg" --api-key $OAUTH_GITHUB_PAT --source "github" --skip-duplicate
 
+    - name: Login to nuget.org
+      uses: NuGet/login@v1
+      id: nuget-login
+      with:
+        user: ${{ env.NUGET_USER }}
+
     - name: Push packages to nuget.org
       run: |
-        dotnet nuget push "./nupkg/Shark.Fido2.*.*.nupkg" --api-key $NUGET_API_KEY --source https://api.nuget.org/v3/index.json --skip-duplicate
-        dotnet nuget push "./nupkg/Shark.Fido2.*.*.snupkg" --api-key $NUGET_API_KEY --source https://api.nuget.org/v3/index.json --skip-duplicate
+        dotnet nuget push "./nupkg/Shark.Fido2.*.*.nupkg" --api-key ${{ steps.nuget-login.outputs.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+        dotnet nuget push "./nupkg/Shark.Fido2.*.*.snupkg" --api-key ${{ steps.nuget-login.outputs.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
