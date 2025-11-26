@@ -85,7 +85,7 @@ internal class AttestationFidoMetadataServiceValidatorTests
         };
 
         _metadataServiceMock
-            .Setup(m => m.Get(_aaGuid, It.IsAny<CancellationToken>()))
+            .Setup(m => m.Get(_aaGuid, CancellationToken.None))
             .ReturnsAsync(metadataItem);
 
         // Act
@@ -112,7 +112,7 @@ internal class AttestationFidoMetadataServiceValidatorTests
         };
 
         _metadataServiceMock
-            .Setup(m => m.Get(_aaGuid, It.IsAny<CancellationToken>()))
+            .Setup(m => m.Get(_aaGuid, CancellationToken.None))
             .ReturnsAsync(metadataItem);
 
         // Act
@@ -143,7 +143,7 @@ internal class AttestationFidoMetadataServiceValidatorTests
         };
 
         _metadataServiceMock
-            .Setup(m => m.Get(_aaGuid, It.IsAny<CancellationToken>()))
+            .Setup(m => m.Get(_aaGuid, CancellationToken.None))
             .ReturnsAsync(metadataItem);
 
         // Act
@@ -161,7 +161,7 @@ internal class AttestationFidoMetadataServiceValidatorTests
         _configuration.EnableStrictAuthenticatorVerification = false;
 
         _metadataServiceMock
-            .Setup(m => m.Get(_aaGuid, It.IsAny<CancellationToken>()))
+            .Setup(m => m.Get(_aaGuid, CancellationToken.None))
             .ReturnsAsync((MetadataPayloadItem?)null);
 
         // Act
@@ -179,7 +179,7 @@ internal class AttestationFidoMetadataServiceValidatorTests
         _configuration.EnableStrictAuthenticatorVerification = true;
 
         _metadataServiceMock
-            .Setup(m => m.Get(_aaGuid, It.IsAny<CancellationToken>()))
+            .Setup(m => m.Get(_aaGuid, CancellationToken.None))
             .ReturnsAsync((MetadataPayloadItem?)null);
 
         // Act
@@ -213,7 +213,7 @@ internal class AttestationFidoMetadataServiceValidatorTests
         var trustPath = _certificates;
 
         _metadataServiceMock
-            .Setup(m => m.Get(_aaGuid, It.IsAny<CancellationToken>()))
+            .Setup(m => m.Get(_aaGuid, CancellationToken.None))
             .ReturnsAsync((MetadataPayloadItem?)null);
 
         // Act
@@ -232,7 +232,7 @@ internal class AttestationFidoMetadataServiceValidatorTests
         var metadataItem = CreateMetadataPayloadItem(["basic_surrogate"]);
 
         _metadataServiceMock
-            .Setup(m => m.Get(_aaGuid, It.IsAny<CancellationToken>()))
+            .Setup(m => m.Get(_aaGuid, CancellationToken.None))
             .ReturnsAsync(metadataItem);
 
         // Act
@@ -251,7 +251,7 @@ internal class AttestationFidoMetadataServiceValidatorTests
         var metadataItem = CreateMetadataPayloadItem(["basic_surrogate"]);
 
         _metadataServiceMock
-            .Setup(m => m.Get(_aaGuid, It.IsAny<CancellationToken>()))
+            .Setup(m => m.Get(_aaGuid, CancellationToken.None))
             .ReturnsAsync(metadataItem);
 
         // Act
@@ -270,7 +270,7 @@ internal class AttestationFidoMetadataServiceValidatorTests
         var metadataItem = CreateMetadataPayloadItem(null!);
 
         _metadataServiceMock
-            .Setup(m => m.Get(_aaGuid, It.IsAny<CancellationToken>()))
+            .Setup(m => m.Get(_aaGuid, CancellationToken.None))
             .ReturnsAsync(metadataItem);
 
         // Act
@@ -289,7 +289,7 @@ internal class AttestationFidoMetadataServiceValidatorTests
         var metadataItem = CreateMetadataPayloadItem([]);
 
         _metadataServiceMock
-            .Setup(m => m.Get(_aaGuid, It.IsAny<CancellationToken>()))
+            .Setup(m => m.Get(_aaGuid, CancellationToken.None))
             .ReturnsAsync(metadataItem);
 
         // Act
@@ -308,7 +308,7 @@ internal class AttestationFidoMetadataServiceValidatorTests
         var metadataItem = CreateMetadataPayloadItem(["basic_surrogate"]);
 
         _metadataServiceMock
-            .Setup(m => m.Get(_aaGuid, It.IsAny<CancellationToken>()))
+            .Setup(m => m.Get(_aaGuid, CancellationToken.None))
             .ReturnsAsync(metadataItem);
 
         // Act
@@ -327,7 +327,7 @@ internal class AttestationFidoMetadataServiceValidatorTests
         var metadataItem = CreateMetadataPayloadItem(["basic", "basic_surrogate", "attca"]);
 
         _metadataServiceMock
-            .Setup(m => m.Get(_aaGuid, It.IsAny<CancellationToken>()))
+            .Setup(m => m.Get(_aaGuid, CancellationToken.None))
             .ReturnsAsync(metadataItem);
 
         // Act
@@ -346,7 +346,7 @@ internal class AttestationFidoMetadataServiceValidatorTests
         var metadataItem = CreateMetadataPayloadItem(["basic", "attca"]);
 
         _metadataServiceMock
-            .Setup(m => m.Get(_aaGuid, It.IsAny<CancellationToken>()))
+            .Setup(m => m.Get(_aaGuid, CancellationToken.None))
             .ReturnsAsync(metadataItem);
 
         // Act

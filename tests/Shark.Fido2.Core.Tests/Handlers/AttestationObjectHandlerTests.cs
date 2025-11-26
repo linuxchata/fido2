@@ -29,7 +29,7 @@ internal class AttestationObjectHandlerTests
                 It.IsAny<AttestationObjectData?>(),
                 It.IsAny<ClientData>(),
                 It.IsAny<PublicKeyCredentialCreationOptions>(),
-                It.IsAny<CancellationToken>()))
+                CancellationToken.None))
             .ReturnsAsync(ValidatorInternalResult.Valid());
 
         _sut = new AttestationObjectHandler(
@@ -102,7 +102,7 @@ internal class AttestationObjectHandlerTests
                 It.IsAny<AttestationObjectData?>(),
                 It.IsAny<ClientData>(),
                 It.IsAny<PublicKeyCredentialCreationOptions>(),
-                It.IsAny<CancellationToken>()))
+                CancellationToken.None))
             .ReturnsAsync(ValidatorInternalResult.Invalid("RP ID hash mismatch"));
 
         // Act

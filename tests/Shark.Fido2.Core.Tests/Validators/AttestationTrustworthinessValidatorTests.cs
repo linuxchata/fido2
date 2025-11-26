@@ -31,7 +31,7 @@ internal class AttestationTrustworthinessValidatorTests
             .Setup(a => a.ValidateBasicAttestation(
                 It.IsAny<AuthenticatorData>(),
                 It.IsAny<X509Certificate2[]>(),
-                It.IsAny<CancellationToken>()))
+                CancellationToken.None))
             .ReturnsAsync(ValidatorInternalResult.Valid());
 
         _authenticatorData = new AuthenticatorData
@@ -181,7 +181,7 @@ internal class AttestationTrustworthinessValidatorTests
             .Setup(a => a.ValidateBasicAttestation(
                 It.IsAny<AuthenticatorData>(),
                 It.IsAny<X509Certificate2[]>(),
-                It.IsAny<CancellationToken>()))
+                CancellationToken.None))
             .ReturnsAsync(ValidatorInternalResult.Invalid(errorMessage));
 
         var certificates = CertificateDataReader.Read("Packed.pem");

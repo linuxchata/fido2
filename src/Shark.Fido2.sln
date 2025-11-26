@@ -51,6 +51,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.Core.Performanc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.PostgreSql", "Shark.Fido2.PostgreSql\Shark.Fido2.PostgreSql.csproj", "{9BED5EF2-38EC-AADA-5FBA-4F9D33D1EC28}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.InMemory.Tests", "..\tests\Shark.Fido2.InMemory.Tests\Shark.Fido2.InMemory.Tests.csproj", "{D0880235-D8C8-04BD-41F9-3B8EE4C6A911}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -141,6 +143,10 @@ Global
 		{9BED5EF2-38EC-AADA-5FBA-4F9D33D1EC28}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9BED5EF2-38EC-AADA-5FBA-4F9D33D1EC28}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9BED5EF2-38EC-AADA-5FBA-4F9D33D1EC28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0880235-D8C8-04BD-41F9-3B8EE4C6A911}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0880235-D8C8-04BD-41F9-3B8EE4C6A911}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0880235-D8C8-04BD-41F9-3B8EE4C6A911}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0880235-D8C8-04BD-41F9-3B8EE4C6A911}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -162,6 +168,7 @@ Global
 		{4997A6C6-C9E7-4E3B-B91A-2EC57A8D5FFB} = {0DBAB265-1DF6-444B-BC5F-7A47857979BB}
 		{B9AF26AE-1570-4490-B396-12AF051B506A} = {0DBAB265-1DF6-444B-BC5F-7A47857979BB}
 		{9BED5EF2-38EC-AADA-5FBA-4F9D33D1EC28} = {06FE717D-4AC9-4959-A179-260EE0DBCB27}
+		{D0880235-D8C8-04BD-41F9-3B8EE4C6A911} = {0DBAB265-1DF6-444B-BC5F-7A47857979BB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6595BEFB-D38C-43C0-BC2E-48B8A742FC45}

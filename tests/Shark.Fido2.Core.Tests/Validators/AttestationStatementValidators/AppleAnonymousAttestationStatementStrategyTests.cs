@@ -33,7 +33,7 @@ internal class AppleAnonymousAttestationStatementStrategyTests
                 It.IsAny<AttestationObjectData>(),
                 It.IsAny<ClientData>(),
                 It.IsAny<PublicKeyCredentialCreationOptions>(),
-                It.IsAny<CancellationToken>()))
+                CancellationToken.None))
             .ReturnsAsync(ValidatorInternalResult.Valid());
 
         _provider = new AuthenticatorDataParserService();
