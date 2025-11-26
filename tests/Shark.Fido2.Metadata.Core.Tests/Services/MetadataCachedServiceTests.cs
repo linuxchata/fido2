@@ -173,7 +173,7 @@ internal class MetadataCachedServiceTests
                 _cancellationToken),
             Times.Never);
 
-        _metadataServiceMock.Verify(x => x.Get(It.IsAny<CancellationToken>()), Times.Never);
+        _metadataServiceMock.Verify(x => x.Get(CancellationToken.None), Times.Never);
     }
 
     [Test]
@@ -209,7 +209,7 @@ internal class MetadataCachedServiceTests
                 _cancellationToken),
             Times.Never);
 
-        _metadataServiceMock.Verify(x => x.Get(It.IsAny<CancellationToken>()), Times.Never);
+        _metadataServiceMock.Verify(x => x.Get(CancellationToken.None), Times.Never);
     }
 
     [Test]
@@ -255,7 +255,7 @@ internal class MetadataCachedServiceTests
                 _cancellationToken),
             Times.Once);
 
-        _metadataServiceMock.Verify(x => x.Get(It.IsAny<CancellationToken>()), Times.Once);
+        _metadataServiceMock.Verify(x => x.Get(CancellationToken.None), Times.Once);
     }
 
     [Test]
@@ -309,7 +309,7 @@ internal class MetadataCachedServiceTests
                 _cancellationToken),
             Times.Once);
 
-        _metadataServiceMock.Verify(x => x.Get(It.IsAny<CancellationToken>()), Times.Once);
+        _metadataServiceMock.Verify(x => x.Get(CancellationToken.None), Times.Once);
     }
 
     [Test]
@@ -356,6 +356,6 @@ internal class MetadataCachedServiceTests
                 _cancellationToken),
             Times.Once);
 
-        _metadataServiceMock.Verify(x => x.Get(It.IsAny<CancellationToken>()), Times.Once);
+        _metadataServiceMock.Verify(x => x.Get(CancellationToken.None), Times.Once);
     }
 }

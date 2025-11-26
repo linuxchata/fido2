@@ -57,12 +57,12 @@ internal class AttestationObjectValidatorTests
             .Setup(a => a.Validate(
                 It.IsAny<AuthenticatorData>(),
                 It.IsAny<AttestationStatementInternalResult>(),
-                It.IsAny<CancellationToken>()))
+                CancellationToken.None))
             .ReturnsAsync(ValidatorInternalResult.Valid());
 
         _attestationTrustAnchorValidatorMock = new Mock<IAttestationTrustAnchorValidator>();
         _attestationTrustAnchorValidatorMock
-            .Setup(a => a.Validate(It.IsAny<AuthenticatorData>(), It.IsAny<CancellationToken>()))
+            .Setup(a => a.Validate(It.IsAny<AuthenticatorData>(), CancellationToken.None))
             .ReturnsAsync(ValidatorInternalResult.Valid());
 
         _sut = new AttestationObjectValidator(
@@ -410,7 +410,7 @@ internal class AttestationObjectValidatorTests
 
         var errorMessage = "Metadata for authenticator 9876e770-4250-4572-90a1-645d16f59463 is not available";
         _attestationTrustAnchorValidatorMock
-            .Setup(a => a.Validate(It.IsAny<AuthenticatorData>(), It.IsAny<CancellationToken>()))
+            .Setup(a => a.Validate(It.IsAny<AuthenticatorData>(), CancellationToken.None))
             .ReturnsAsync(ValidatorInternalResult.Invalid(errorMessage));
 
         // Act
@@ -435,7 +435,7 @@ internal class AttestationObjectValidatorTests
             .Setup(a => a.Validate(
                 It.IsAny<AuthenticatorData>(),
                 It.IsAny<AttestationStatementInternalResult>(),
-                It.IsAny<CancellationToken>()))
+                CancellationToken.None))
             .ReturnsAsync(ValidatorInternalResult.Invalid(errorMessage));
 
         // Act
