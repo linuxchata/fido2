@@ -312,10 +312,10 @@ internal class CredentialRepositoryTests
     #region UpdateSignCount Tests
 
     [Test]
-    public async Task UpdateSignCount_WhenCredentialDoesNotExist_ThenDoesNothing()
+    public void UpdateSignCount_WhenCredentialDoesNotExist_ThenNotThrowException()
     {
         // Act & Assert
-        await _sut.UpdateSignCount(CredentialId, 42, CancellationToken.None);
+        Assert.DoesNotThrowAsync(() => _sut.UpdateSignCount(CredentialId, 42, CancellationToken.None));
     }
 
     [Test]
@@ -344,10 +344,10 @@ internal class CredentialRepositoryTests
     #region UpdateLastUsedAt Tests
 
     [Test]
-    public async Task UpdateLastUsedAt_WhenCredentialDoesNotExist_ThenDoesNothing()
+    public void UpdateLastUsedAt_WhenCredentialDoesNotExist_ThenNotThrowException()
     {
         // Act & Assert
-        await _sut.UpdateLastUsedAt(CredentialId, CancellationToken.None);
+        Assert.DoesNotThrowAsync(() => _sut.UpdateLastUsedAt(CredentialId, CancellationToken.None));
     }
 
     [Test]
