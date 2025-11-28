@@ -8,9 +8,9 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.22" />
-    <PackageReference Include="Shark.Fido2.Core" Version="1.2.0.85" />
-    <PackageReference Include="Shark.Fido2.InMemory" Version="1.2.0.85" />
-    <PackageReference Include="Shark.Fido2.Models" Version="1.2.0.85" />
+    <PackageReference Include="Shark.Fido2.Core" Version="1.2.1.94" />
+    <PackageReference Include="Shark.Fido2.InMemory" Version="1.2.1.94" />
+    <PackageReference Include="Shark.Fido2.Models" Version="1.2.1.94" />
   </ItemGroup>
 
   <ItemGroup>
