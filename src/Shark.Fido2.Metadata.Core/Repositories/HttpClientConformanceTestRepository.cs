@@ -18,7 +18,9 @@ internal class HttpClientConformanceTestRepository(
         var content = await response.Content.ReadAsStringAsync(cancellationToken);
 
         var apiResponse = JsonSerializer.Deserialize<ApiResponse>(content);
-        if (apiResponse == null || apiResponse.status != "ok" || apiResponse.result is null)
+        if (apiResponse == null ||
+            !string.Equals(apiResponse.status, "ok", StringComparison.OrdinalIgnoreCase) ||
+            apiResponse.result is null)
         {
             return [];
         }

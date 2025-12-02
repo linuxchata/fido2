@@ -9,7 +9,8 @@ internal static class UrlOriginComparer
             Uri uriLeft = new(left);
             Uri uriRight = new(right);
 
-            return uriLeft.Scheme == uriRight.Scheme && uriLeft.Host == uriRight.Host;
+            return string.Equals(uriLeft.Scheme, uriRight.Scheme, StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(uriLeft.Host, uriRight.Host, StringComparison.OrdinalIgnoreCase);
         }
         catch (UriFormatException)
         {

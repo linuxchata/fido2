@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using System.Globalization;
+using System.Security.Cryptography;
 using Shark.Fido2.Common.Extensions;
 using Shark.Fido2.Core.Constants;
 using Shark.Fido2.Core.Converters;
@@ -31,12 +32,12 @@ internal class PerformanceTestHelper
     {
         // Generate creation options
         var creationOptions = DataReader.ReadCreationOptions(NoneCreationOptions);
-        var username = $"Name_{Guid.NewGuid().ToString().ToLower()}";
+        var username = $"Name_{Guid.NewGuid().ToString().ToLower(CultureInfo.CurrentCulture)}";
         creationOptions.User = new PublicKeyCredentialUserEntity
         {
             Id = _userIdGenerator.Get(username),
             Name = username,
-            DisplayName = $"DisplayName_{Guid.NewGuid().ToString().ToLower()}",
+            DisplayName = $"DisplayName_{Guid.NewGuid().ToString().ToLower(CultureInfo.CurrentCulture)}",
         };
 
         // Generate attestation data
