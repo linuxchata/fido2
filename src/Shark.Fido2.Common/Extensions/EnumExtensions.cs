@@ -27,13 +27,13 @@ public static class EnumExtensions
         foreach (var field in typeof(T).GetFields(BindingFlags.Public | BindingFlags.Static))
         {
             var attribute = field.GetCustomAttribute<EnumMemberAttribute>();
-            if (attribute?.Value == value)
+            if (string.Equals(attribute?.Value, value, StringComparison.OrdinalIgnoreCase))
             {
                 return (T)field.GetValue(null)!;
             }
         }
 
-        throw new ArgumentException($"Value '{value}' cannot be convert to {typeof(T).Name} enum");
+        throw new ArgumentException(value, $"Value '{value}' cannot be convert to {typeof(T).Name} enum");
     }
 
     public static T? ToNullableEnum<T>(this string? value)

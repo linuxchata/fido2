@@ -4,7 +4,7 @@ using Shark.Fido2.Core.Services;
 namespace Shark.Fido2.Core.Tests.Services;
 
 [TestFixture]
-internal class CertificateReaderTests
+internal class CertificateReaderServiceTests
 {
     private const string EmbeddedCertificateName = "certificate.pem";
 

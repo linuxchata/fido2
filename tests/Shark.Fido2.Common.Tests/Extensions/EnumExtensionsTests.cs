@@ -1,14 +1,6 @@
-using System.Runtime.Serialization;
 using Shark.Fido2.Common.Extensions;
 
 namespace Shark.Fido2.Common.Tests.Extensions;
-
-public enum TestEnum
-{
-    [EnumMember(Value = "custom-value")]
-    WithAttribute,
-    WithoutAttribute,
-}
 
 [TestFixture]
 internal class EnumExtensionsTests
