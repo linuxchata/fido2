@@ -134,7 +134,7 @@ internal class PublicKeyCredentialAssertionMapperTests
             {
                 AppId = true,
                 UserVerificationMethod = [[1236]],
-                LargeBlob = null,
+                LargeBlob = null!,
             },
         };
 
