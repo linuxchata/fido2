@@ -21,6 +21,9 @@ internal class NoneAttestationStatementStrategy : IAttestationStatementStrategy
     /// <returns>A ValidatorInternalResult indicating whether the attestation statement is valid.</returns>
     public ValidatorInternalResult Validate(AttestationObjectData attestationObjectData, ClientData clientData)
     {
+        ArgumentNullException.ThrowIfNull(attestationObjectData);
+        ArgumentNullException.ThrowIfNull(attestationObjectData.AttestationStatement);
+
         if (attestationObjectData.AttestationStatement is not Dictionary<string, object> attestationStatementDict)
         {
             throw new ArgumentException("None attestation statement cannot be read", nameof(attestationObjectData));

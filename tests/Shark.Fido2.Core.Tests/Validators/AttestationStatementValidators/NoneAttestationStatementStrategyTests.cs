@@ -18,7 +18,7 @@ internal class NoneAttestationStatementStrategyTests
 {
     private Mock<IAttestationObjectValidator> _attestationObjectValidatorMock = null!;
     private AttestationObjectHandler _attestationObjectHandler = null!;
-    private AuthenticatorDataParserService _provider = null!;
+    private AuthenticatorDataParserService _authenticatorDataParserService = null!;
     private PublicKeyCredentialCreationOptions _creationOptions = null!;
 
     private NoneAttestationStatementStrategy _sut = null!;
@@ -35,12 +35,12 @@ internal class NoneAttestationStatementStrategyTests
                 CancellationToken.None))
             .ReturnsAsync(ValidatorInternalResult.Valid());
 
-        _provider = new AuthenticatorDataParserService();
+        _authenticatorDataParserService = new AuthenticatorDataParserService();
 
         _creationOptions = PublicKeyCredentialCreationOptionsBuilder.Build();
 
         _attestationObjectHandler = new AttestationObjectHandler(
-            _provider, _attestationObjectValidatorMock.Object, NullLogger<AttestationObjectHandler>.Instance);
+            _authenticatorDataParserService, _attestationObjectValidatorMock.Object, NullLogger<AttestationObjectHandler>.Instance);
 
         _sut = new NoneAttestationStatementStrategy();
     }
@@ -67,5 +67,52 @@ internal class NoneAttestationStatementStrategyTests
         Assert.That(result.AttestationStatementFormat, Is.EqualTo(AttestationStatementFormatIdentifier.None));
         Assert.That(result.AttestationType, Is.EqualTo(AttestationType.None));
         Assert.That(result.TrustPath, Is.Null);
+    }
+
+    [Test]
+    public void Validate_WhenAttestationObjectDataIsNull_ThenThrowsArgumentNullException()
+    {
+        // Arrange
+        var clientData = ClientDataBuilder.BuildCreate();
+
+        // Act & Assert
+        Assert.Throws<ArgumentNullException>(() => _sut.Validate(null!, clientData));
+    }
+
+    [Test]
+    public void Validate_WhenAttestationStatementIsNull_ThenThrowsArgumentNullException()
+    {
+        // Arrange
+        var attestationObjectData = new AttestationObjectData
+        {
+            AttestationStatement = null!,
+        };
+
+        // Act & Assert
+        Assert.Throws<ArgumentNullException>(() => _sut.Validate(attestationObjectData, null!));
+    }
+
+    [Test]
+    public void Validate_WhenAttestationStatementIsNotDictionary_ThenThrowsArgumentException()
+    {
+        // Arrange
+        var attestationObjectData = new AttestationObjectData { AttestationStatement = "not a dictionary" };
+        var clientData = ClientDataBuilder.BuildCreate();
+
+        // Act & Assert
+        Assert.Throws<ArgumentException>(() => _sut.Validate(attestationObjectData, clientData));
+    }
+
+    [Test]
+    public void Validate_WhenClientDataIsNull_ThenDoesThrowException()
+    {
+        // Arrange
+        var attestationObjectData = new AttestationObjectData
+        {
+            AttestationStatement = new Dictionary<string, object>(),
+        };
+
+        // Act & Assert
+        Assert.DoesNotThrow(() => _sut.Validate(attestationObjectData, null!));
     }
 }
