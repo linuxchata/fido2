@@ -1,0 +1,30 @@
+<Solution>
+  <Folder Name="/Samples/">
+    <Project Path="Shark.Fido2.Sample.Blazor/Shark.Fido2.Sample.Blazor.Client/Shark.Fido2.Sample.Blazor.Client.csproj" />
+    <Project Path="Shark.Fido2.Sample.Blazor/Shark.Fido2.Sample.Blazor/Shark.Fido2.Sample.Blazor.csproj" />
+    <Project Path="Shark.Fido2.Sample/Shark.Fido2.Sample.csproj" />
+  </Folder>
+  <Folder Name="/Storages/">
+    <Project Path="Shark.Fido2.DynamoDB/Shark.Fido2.DynamoDB.csproj" />
+    <Project Path="Shark.Fido2.InMemory/Shark.Fido2.InMemory.csproj" />
+    <Project Path="Shark.Fido2.PostgreSql/Shark.Fido2.PostgreSql.csproj" />
+    <Project Path="Shark.Fido2.SqlServer/Shark.Fido2.SqlServer.csproj" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="../tests/Shark.Fido2.Common.Tests/Shark.Fido2.Common.Tests.csproj" />
+    <Project Path="../tests/Shark.Fido2.Core.Integration.Tests/Shark.Fido2.Core.Integration.Tests.csproj" />
+    <Project Path="../tests/Shark.Fido2.Core.Performance.Tests/Shark.Fido2.Core.Performance.Tests.csproj" />
+    <Project Path="../tests/Shark.Fido2.Core.Tests/Shark.Fido2.Core.Tests.csproj" />
+    <Project Path="../tests/Shark.Fido2.Domain.Tests/Shark.Fido2.Domain.Tests.csproj" />
+    <Project Path="../tests/Shark.Fido2.DynamoDB.Tests/Shark.Fido2.DynamoDB.Tests.csproj" />
+    <Project Path="../tests/Shark.Fido2.InMemory.Tests/Shark.Fido2.InMemory.Tests.csproj" />
+    <Project Path="../tests/Shark.Fido2.Metadata.Core.Tests/Shark.Fido2.Metadata.Core.Tests.csproj" />
+    <Project Path="../tests/Shark.Fido2.Models.Tests/Shark.Fido2.Models.Tests.csproj" />
+    <Project Path="../tests/Shark.Fido2.Tests.Common/Shark.Fido2.Tests.Common.csproj" />
+  </Folder>
+  <Project Path="Shark.Fido2.Common/Shark.Fido2.Common.csproj" />
+  <Project Path="Shark.Fido2.Core/Shark.Fido2.Core.csproj" />
+  <Project Path="Shark.Fido2.Domain/Shark.Fido2.Domain.csproj" />
+  <Project Path="Shark.Fido2.Metadata.Core/Shark.Fido2.Metadata.Core.csproj" />
+  <Project Path="Shark.Fido2.Models/Shark.Fido2.Models.csproj" />
+</Solution>
