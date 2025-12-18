@@ -169,20 +169,10 @@ internal class PackedAttestationStatementStrategyTests
     }
 
     [Test]
-    public void Validate_WhenClientDataIsNull_ThenThrowsArgumentNullException()
-    {
-        // Arrange
-        var attestationObjectData = new AttestationObjectData();
-
-        // Act & Assert
-        Assert.Throws<ArgumentNullException>(() => _sut.Validate(attestationObjectData, null!));
-    }
-
-    [Test]
     public void Validate_WhenAttestationStatementIsNull_ThenThrowsArgumentNullException()
     {
         // Arrange
-        var attestationObjectData = new AttestationObjectData { AttestationStatement = null };
+        var attestationObjectData = new AttestationObjectData { AttestationStatement = null! };
         var clientData = ClientDataBuilder.BuildCreate();
 
         // Act & Assert
@@ -198,5 +188,18 @@ internal class PackedAttestationStatementStrategyTests
 
         // Act & Assert
         Assert.Throws<ArgumentException>(() => _sut.Validate(attestationObjectData, clientData));
+    }
+
+    [Test]
+    public void Validate_WhenClientDataIsNull_ThenThrowsArgumentNullException()
+    {
+        // Arrange
+        var attestationObjectData = new AttestationObjectData
+        {
+            AttestationStatement = new Dictionary<string, object>(),
+        };
+
+        // Act & Assert
+        Assert.Throws<ArgumentNullException>(() => _sut.Validate(attestationObjectData, null!));
     }
 }

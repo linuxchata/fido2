@@ -83,13 +83,11 @@ internal class NoneAttestationStatementStrategyTests
     public void Validate_WhenAttestationStatementIsNull_ThenThrowsArgumentNullException()
     {
         // Arrange
-        var attestationObjectData = new AttestationObjectData
-        {
-            AttestationStatement = null!,
-        };
+        var attestationObjectData = new AttestationObjectData { AttestationStatement = null! };
+        var clientData = ClientDataBuilder.BuildCreate();
 
         // Act & Assert
-        Assert.Throws<ArgumentNullException>(() => _sut.Validate(attestationObjectData, null!));
+        Assert.Throws<ArgumentNullException>(() => _sut.Validate(attestationObjectData, clientData));
     }
 
     [Test]

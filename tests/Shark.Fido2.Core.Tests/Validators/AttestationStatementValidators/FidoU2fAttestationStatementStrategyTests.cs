@@ -99,13 +99,14 @@ internal class FidoU2FAttestationStatementStrategyTests
     }
 
     [Test]
-    public void Validate_WhenClientDataIsNull_ThenThrowsArgumentNullException()
+    public void Validate_WhenAttestationStatementIsNull_ThenThrowsArgumentNullException()
     {
         // Arrange
-        var attestationObjectData = new AttestationObjectData();
+        var attestationObjectData = new AttestationObjectData { AttestationStatement = null! };
+        var clientData = ClientDataBuilder.BuildCreate();
 
         // Act & Assert
-        Assert.Throws<ArgumentNullException>(() => _sut.Validate(attestationObjectData, null!));
+        Assert.Throws<ArgumentNullException>(() => _sut.Validate(attestationObjectData, clientData));
     }
 
     [Test]
@@ -117,5 +118,18 @@ internal class FidoU2FAttestationStatementStrategyTests
 
         // Act & Assert
         Assert.Throws<ArgumentException>(() => _sut.Validate(attestationObjectData, clientData));
+    }
+
+    [Test]
+    public void Validate_WhenClientDataIsNull_ThenThrowsArgumentNullException()
+    {
+        // Arrange
+        var attestationObjectData = new AttestationObjectData
+        {
+            AttestationStatement = new Dictionary<string, object>(),
+        };
+
+        // Act & Assert
+        Assert.Throws<ArgumentNullException>(() => _sut.Validate(attestationObjectData, null!));
     }
 }
