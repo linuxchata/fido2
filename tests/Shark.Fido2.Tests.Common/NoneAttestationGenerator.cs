@@ -1,9 +1,11 @@
-﻿using System.Formats.Cbor;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Formats.Cbor;
 using Shark.Fido2.Common.Extensions;
 using Shark.Fido2.Domain;
 
 namespace Shark.Fido2.Tests.Common;
 
+[ExcludeFromCodeCoverage]
 public static class NoneAttestationGenerator
 {
     public static string GenerateAttestationObject(AuthenticatorData sourceAuthenticatorData, byte[] credentialId)
