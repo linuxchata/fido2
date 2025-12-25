@@ -2,7 +2,7 @@
 
 const authenticationTitle = 'Web Authentication';
 
-async function authenticationWithDiscoverableCredential() {
+async function authentication() {
     const optionsRequest = {};
 
     console.log("Start fetching assertion options");
