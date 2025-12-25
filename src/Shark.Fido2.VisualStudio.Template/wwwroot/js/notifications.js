@@ -11,40 +11,24 @@ const notyf = new Notyf({
             type: 'info',
             background: '#34a853',
             duration: 3000,
-            dismissible: true,
-            icon: {
-                className: 'notyf__icon fa-solid fa-circle-info',
-                tagName: 'i'
-            }
+            dismissible: true
         },
         {
             type: 'warning',
             background: '#ffc107',
-            dismissible: true,
-            icon: {
-                className: 'notyf__icon fa-solid fa-triangle-exclamation',
-                tagName: 'i'
-            }
+            dismissible: true
         },
         {
             type: 'error',
             background: '#dc3545',
             duration: 6000,
-            dismissible: true,
-            icon: {
-                className: 'notyf__icon fa-solid fa-circle-xmark',
-                tagName: 'i'
-            }
+            dismissible: true
         },
         {
             type: 'success',
             background: '#198754',
             duration: 3000,
-            dismissible: true,
-            icon: {
-                className: 'notyf__icon fa-solid fa-circle-check',
-                tagName: 'i'
-            }
+            dismissible: true
         }
     ]
 });
