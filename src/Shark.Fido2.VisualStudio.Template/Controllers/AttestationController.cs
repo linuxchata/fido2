@@ -11,8 +11,7 @@ namespace Shark.Fido2.VisualStudio.Template.Controllers;
 
 [Route("[controller]")]
 [ApiController]
-[TypeFilter(typeof(RestApiExceptionFilter))]
-public class AttestationController(IAttestation attestation, ILogger<AttestationController> logger) : ControllerBase
+public class AttestationController(IAttestation attestation) : ControllerBase
 {
     private const string SessionName = "WebAuthn.CreateOptions";
 
@@ -64,7 +63,6 @@ public class AttestationController(IAttestation attestation, ILogger<Attestation
         }
         else
         {
-            logger.LogError("{Message}", response.Message);
             return BadRequest(ServerResponse.CreateFailed(response.Message));
         }
     }

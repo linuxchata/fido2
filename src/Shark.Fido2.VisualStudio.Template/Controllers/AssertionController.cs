@@ -12,11 +12,7 @@ namespace Shark.Fido2.VisualStudio.Template.Controllers;
 
 [Route("[controller]")]
 [ApiController]
-[TypeFilter(typeof(RestApiExceptionFilter))]
-public class AssertionController(
-    IAssertion assertion,
-    ICredentialService credentialService,
-    ILogger<AssertionController> logger) : ControllerBase
+public class AssertionController(IAssertion assertion, ICredentialService credentialService) : ControllerBase
 {
     private const string SessionName = "WebAuthn.RequestOptions";
 
@@ -74,7 +70,6 @@ public class AssertionController(
         }
         else
         {
-            logger.LogError("{Message}", response.Message);
             return BadRequest(ServerResponse.CreateFailed(response.Message));
         }
     }
