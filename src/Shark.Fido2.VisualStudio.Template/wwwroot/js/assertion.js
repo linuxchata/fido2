@@ -85,5 +85,3 @@ async function fetchAssertionResult(assertion) {
 }
 
 window.authentication = authentication;
-window.authenticationWithDiscoverableCredential = authenticationWithDiscoverableCredential;
-window.authenticationCustom = authenticationCustom;

@@ -99,5 +99,3 @@ async function fetchAttestationResult(attestation) {
 }
 
 window.registration = registration;
-window.registrationOfDiscoverableCredential = registrationOfDiscoverableCredential;
-window.registrationCustom = registrationCustom;
