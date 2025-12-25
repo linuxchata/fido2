@@ -1,0 +1,38 @@
+@page
+@model IndexModel
+
+<div class="container">
+    <h1>Public Key Credentials</h1>
+
+    <div class="card-grid">
+        <!-- Registration -->
+        <div class="card">
+            <h3>Registration</h3>
+            <div class="form-group">
+                <label class="form-label" for="username-registration">Username</label>
+                <input type="text" id="username-registration" class="form-control" placeholder="e.g. john.doe">
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="display-name-registration">Display Name</label>
+                <input type="text" id="display-name-registration" class="form-control" placeholder="e.g. John Doe">
+            </div>
+            <div id="error-message-registration" class="error-message"></div>
+            <button id="btn-register" class="btn btn-primary" onclick="register()">Register</button>
+        </div>
+
+        <!-- Authentication -->
+        <div class="card">
+            <h3>Authentication</h3>
+            <div class="form-group">
+                <label class="form-label" for="username-authentication">Username</label>
+                <input type="text" id="username-authentication" class="form-control" placeholder="e.g. john.doe">
+            </div>
+            <div id="error-message-authentication" class="error-message"></div>
+            <button id="btn-authenticate" class="btn btn-primary" onclick="authenticate()">Authenticate</button>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Simplified FIDO2 implementation powered by Shark.Fido2</p>
+    </div>
+</div>

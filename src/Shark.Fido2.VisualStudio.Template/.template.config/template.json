@@ -1,0 +1,20 @@
+{
+    "$schema": "http://json.schemastore.org/template",
+    "author": "Shark Corporation",
+    "classifications": [
+        "Web",
+        "WebAPI",
+        "Fido2",
+        "WebAuthn"
+    ],
+    "name": "Shark.Fido2 Sample Template",
+    "generatorId": "Shark.Fido2.VisualStudio.Template",
+    "identity": "Shark.Fido2.VisualStudio.Template",
+    "shortName": "fido2-sample",
+    "tags": {
+        "language": "C#",
+        "type": "project"
+    },
+    "sourceName": "Shark.Fido2.VisualStudio.Template",
+    "preferNameDirectory": true
+}
