@@ -2,26 +2,26 @@
 @model IndexModel
 
 <div class="main">
-    <h1 class="mb-4 text-center">Public Key Credentials</h1>
+    <h1>Public Key Credentials</h1>
 
     <div class="main-controls-container">
-        <div id="registration-container" class="section p-4 border rounded">
-            <h3 class="mb-3">Registration</h3>
+        <div id="registration-container" class="section">
+            <h3>Registration</h3>
             <label for="username-registration" class="form-label">Username</label>
             <input id="username-registration"
                    type="text"
-                   class="form-control mb-3 input-text"
+                   class="input-text"
                    maxlength="64"
                    placeholder="Enter username" />
             <label for="display-name-registration" class="form-label">Display Name</label>
             <input id="display-name-registration"
                    type="text"
-                   class="form-control mb-3 input-text"
+                   class="input-text"
                    maxlength="64"
                    placeholder="Enter display name" />
-            <span id="error-message-registration" class="d-block mt-2 mb-2 text-danger"></span>
+            <span id="error-message-registration" class="status-message error"></span>
             <div class="button-container">
-                <button id="registration" data-action="registration" class="button btn btn-secondary">
+                <button id="registration" data-action="registration" class="button">
                     <svg width="20" height="20" viewBox="0 0 22 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                         <path d="M14.422 19.4878H0.728094C0.728094 19.4624 0.728094 19.438 0.728094 19.4135C0.728094 18.7085 0.718798 18.0033 0.730573 17.2986C0.752883 15.9622 1.15385 14.7469 1.94122 13.6655C2.73231 12.5788 3.77222 11.8245 5.04329 11.391C5.66302 11.1797 6.3029 11.0691 6.95764 11.0657C8.09361 11.0598 9.22989 11.0576 10.3659 11.0657C11.1796 11.0713 11.9632 11.2389 12.7137 11.5556C12.7512 11.5714 12.7893 11.6095 12.8067 11.6467C13.172 12.4359 13.6926 13.1031 14.3718 13.6463C14.4074 13.6748 14.4232 13.7023 14.4229 13.7488C14.4217 15.639 14.422 17.5292 14.422 19.4194C14.422 19.4395 14.422 19.46 14.422 19.4878Z" fill="#1f2937" />
                         <path d="M13.3681 4.73909C13.3684 7.35467 11.2443 9.47974 8.629 9.48005C6.01033 9.48005 3.88712 7.35436 3.88867 4.7329C3.88991 2.1198 6.01714 -0.00123892 8.6352 5.42951e-07C11.2449 0.00124001 13.3678 2.12723 13.3681 4.73909Z" fill="#1f2937" />
@@ -32,10 +32,10 @@
             </div>
         </div>
 
-        <div id="authentication-container" class="section p-4 border rounded">
-            <h3 class="mb-3">Authentication</h3>
+        <div id="authentication-container" class="section">
+            <h3>Authentication</h3>
             <div class="button-container">
-                <button id="authentication" data-action="authentication" class="button btn btn-secondary">
+                <button id="authentication" data-action="authentication" class="button">
                     <svg width="20" height="20" viewBox="0 0 22 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                         <path d="M14.422 19.4878H0.728094C0.728094 19.4624 0.728094 19.438 0.728094 19.4135C0.728094 18.7085 0.718798 18.0033 0.730573 17.2986C0.752883 15.9622 1.15385 14.7469 1.94122 13.6655C2.73231 12.5788 3.77222 11.8245 5.04329 11.391C5.66302 11.1797 6.3029 11.0691 6.95764 11.0657C8.09361 11.0598 9.22989 11.0576 10.3659 11.0657C11.1796 11.0713 11.9632 11.2389 12.7137 11.5556C12.7512 11.5714 12.7893 11.6095 12.8067 11.6467C13.172 12.4359 13.6926 13.1031 14.3718 13.6463C14.4074 13.6748 14.4232 13.7023 14.4229 13.7488C14.4217 15.639 14.422 17.5292 14.422 19.4194C14.422 19.4395 14.422 19.46 14.422 19.4878Z" fill="#1f2937" />
                         <path d="M13.3681 4.73909C13.3684 7.35467 11.2443 9.47974 8.629 9.48005C6.01033 9.48005 3.88712 7.35436 3.88867 4.7329C3.88991 2.1198 6.01714 -0.00123892 8.6352 5.42951e-07C11.2449 0.00124001 13.3678 2.12723 13.3681 4.73909Z" fill="#1f2937" />

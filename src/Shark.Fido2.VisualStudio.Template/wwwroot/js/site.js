@@ -56,7 +56,7 @@ function isValidInput(value) {
 }
 
 function disableButton(button) {
-    button.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Processing...';
+    button.innerHTML = '<span class="spinner"></span> Processing...';
     button.disabled = true;
 }
 
