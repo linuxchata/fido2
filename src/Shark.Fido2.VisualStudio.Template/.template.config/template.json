@@ -1,20 +1,23 @@
 {
-    "$schema": "http://json.schemastore.org/template",
-    "author": "Shark Corporation",
-    "classifications": [
-        "Web",
-        "WebAPI",
-        "Fido2",
-        "WebAuthn"
-    ],
-    "name": "Shark.Fido2 Sample Template",
-    "generatorId": "Shark.Fido2.VisualStudio.Template",
-    "identity": "Shark.Fido2.VisualStudio.Template",
-    "shortName": "fido2-sample",
-    "tags": {
-        "language": "C#",
-        "type": "project"
-    },
-    "sourceName": "Shark.Fido2.VisualStudio.Template",
-    "preferNameDirectory": true
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Shark Corporation",
+  "classifications": [
+    "security",
+    "passwordless",
+    "passwordless-authentication",
+    "webauthn",
+    "fido2",
+    "fido2-standard",
+    "passkeys"
+  ],
+  "name": "Shark WebAuthn Visual Studio Template",
+  "generatorId": "Shark.Fido2.VisualStudio.Template",
+  "identity": "Shark.Fido2.VisualStudio.Template",
+  "shortName": "shark-webauthn-vs-template",
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+  "sourceName": "Shark.Fido2.VisualStudio.Template",
+  "preferNameDirectory": true
 }
