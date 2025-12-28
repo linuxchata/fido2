@@ -1,4 +1,4 @@
-name: Build and Pack Template
+name: Visual Studio Template
 
 permissions:
   contents: read
