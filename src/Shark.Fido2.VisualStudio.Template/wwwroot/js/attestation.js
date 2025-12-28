@@ -98,4 +98,4 @@ async function fetchAttestationResult(attestation) {
     }
 }
 
-window.registration = registration;
+globalThis.registration = registration;

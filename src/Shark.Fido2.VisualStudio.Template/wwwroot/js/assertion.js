@@ -72,7 +72,7 @@ async function fetchAssertionResult(assertion) {
         });
 
         if (response.ok) {
-            window.location.href = `/CredentialDetails?credentialId=${encodeURIComponent(assertion.id)}`;
+            globalThis.location.href = `/CredentialDetails?credentialId=${encodeURIComponent(assertion.id)}`;
         }
         else {
             const responseBody = await response.json();
@@ -84,4 +84,4 @@ async function fetchAssertionResult(assertion) {
     }
 }
 
-window.authentication = authentication;
+globalThis.authentication = authentication;
