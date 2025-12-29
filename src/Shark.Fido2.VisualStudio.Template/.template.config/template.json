@@ -1,6 +1,6 @@
 {
   "$schema": "http://json.schemastore.org/template",
-  "author": "Shark Corporation",
+  "author": "linuxchata",
   "classifications": [
     "WebAuthn"
   ],
