@@ -6,10 +6,6 @@ permissions:
   id-token: write
 
 on:
-  push:
-    branches: [ main ]
-    paths:
-      - 'src/Shark.Fido2.VisualStudio.Template/**'
   workflow_dispatch:
 
 jobs:
