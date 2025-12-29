@@ -8,7 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include=".template.config\template.json" />
+    <Content Update="appsettings.json;wwwroot\**;Pages\**;Controllers\**;Services\**" Pack="true" PackagePath="content\" />
+    <Compile Update="**\*.cs" Pack="true" PackagePath="content\" />
+    <Content Include=".template.config\**" Pack="true" PackagePath="content\.template.config\" />
+    <None Include="Shark.Fido2.VisualStudio.Template.csproj" Pack="true" PackagePath="content\" />
   </ItemGroup>
 
   <ItemGroup>
