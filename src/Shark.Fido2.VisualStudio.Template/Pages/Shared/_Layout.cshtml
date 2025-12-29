@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shark WebAuthn</title>
+    <link rel="stylesheet" href="~/css/modern-normalize.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/notyf/dist/css/notyf.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    @RenderBody()
+    <script src="~/lib/notyf/dist/js/notyf.min.js" asp-append-version="true"></script>
+    <script src="~/js/notifications.js" asp-append-version="true"></script>
+    <script src="~/js/attestation.js" asp-append-version="true"></script>
+    <script src="~/js/assertion.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

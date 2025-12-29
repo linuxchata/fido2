@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.12.35506.116
+# Visual Studio Version 18
+VisualStudioVersion = 18.1.11312.151 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.Sample", "Shark.Fido2.Sample\Shark.Fido2.Sample.csproj", "{AAF934D8-96F0-4D60-8E26-82E22F23A9D4}"
 EndProject
@@ -52,6 +52,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.PostgreSql", "Shark.Fido2.PostgreSql\Shark.Fido2.PostgreSql.csproj", "{9BED5EF2-38EC-AADA-5FBA-4F9D33D1EC28}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.InMemory.Tests", "..\tests\Shark.Fido2.InMemory.Tests\Shark.Fido2.InMemory.Tests.csproj", "{D0880235-D8C8-04BD-41F9-3B8EE4C6A911}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.VisualStudio.Template", "Shark.Fido2.VisualStudio.Template\Shark.Fido2.VisualStudio.Template.csproj", "{A7A2ED4B-6DB4-3A6E-CAD2-0DCB2AC0B9D3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -147,6 +149,10 @@ Global
 		{D0880235-D8C8-04BD-41F9-3B8EE4C6A911}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D0880235-D8C8-04BD-41F9-3B8EE4C6A911}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D0880235-D8C8-04BD-41F9-3B8EE4C6A911}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7A2ED4B-6DB4-3A6E-CAD2-0DCB2AC0B9D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7A2ED4B-6DB4-3A6E-CAD2-0DCB2AC0B9D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7A2ED4B-6DB4-3A6E-CAD2-0DCB2AC0B9D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7A2ED4B-6DB4-3A6E-CAD2-0DCB2AC0B9D3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

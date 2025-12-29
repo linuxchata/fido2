@@ -1,0 +1,68 @@
+name: Visual Studio Template
+
+permissions:
+  contents: read
+  packages: write
+  id-token: write
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'src/Shark.Fido2.VisualStudio.Template/**'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    env:
+      CI: true # Enable deterministic builds
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      OAUTH_GITHUB_PAT: ${{ secrets.OAUTH_GITHUB_PAT }}
+      NUGET_USER: ${{ secrets.NUGET_USER }}
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Restore dependencies
+      run: dotnet restore src/Shark.Fido2.VisualStudio.Template/Shark.Fido2.VisualStudio.Template.csproj
+
+    - name: Build
+      run: dotnet build src/Shark.Fido2.VisualStudio.Template/Shark.Fido2.VisualStudio.Template.csproj --configuration Release --no-restore
+
+    - name: Pack
+      run: |
+        dotnet pack src/Shark.Fido2.VisualStudio.Template/Shark.Fido2.VisualStudio.Template.csproj --configuration Release --no-restore --output ./out /p:Version=1.2.1.${{ github.run_number }} /p:EmbedUntrackedSources=true /p:IncludeSymbols=true /p:SymbolPackageFormat=snupkg /p:ContinuousIntegrationBuild=true /p:DebugType=portable /p:DebugSymbols=true
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: Shark.Fido2.VisualStudio.Template
+        path: out/*.nupkg
+
+    - name: Add nuget source
+      run: dotnet nuget add source --username linuxchata --password $GITHUB_TOKEN --store-password-in-clear-text --name github "https://nuget.pkg.github.com/linuxchata/index.json"
+
+    - name: Push packages to github.com
+      run: |
+        dotnet nuget push "./out/*.nupkg" --api-key $OAUTH_GITHUB_PAT --source "github" --skip-duplicate
+        dotnet nuget push "./out/*.snupkg" --api-key $OAUTH_GITHUB_PAT --source "github" --skip-duplicate
+
+    - name: Login to nuget.org
+      uses: NuGet/login@d22cc5f58ff5b88bf9bd452535b4335137e24544 #v1
+      id: nuget-login
+      with:
+        user: ${{ env.NUGET_USER }}
+
+    - name: Push packages to nuget.org
+      run: |
+        dotnet nuget push "./out/*.nupkg" --api-key ${{ steps.nuget-login.outputs.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+        dotnet nuget push "./out/*.snupkg" --api-key ${{ steps.nuget-login.outputs.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
