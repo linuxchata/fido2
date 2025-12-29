@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <NoWarn>1701;1702;1591</NoWarn>
+    <IsPackable>true</IsPackable>
     <ExcludeFromCodeCoverage>true</ExcludeFromCodeCoverage>
     <SonarQubeExclude>true</SonarQubeExclude>
   </PropertyGroup>
