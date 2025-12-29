@@ -1,1 +1,1 @@
-Visual Studio project template for Shark WebAuthn library for .NET
+Visual Studio Project Template for the Shark WebAuthn .NET Library
