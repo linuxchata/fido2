@@ -9,7 +9,12 @@
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <ContentTargetFolders>content</ContentTargetFolders>
   </PropertyGroup>
-
+  
+  <ItemGroup>
+    <Content Include="**\*" Exclude="**\bin\**;**\obj\**" />
+    <Compile Remove="**\*" />
+  </ItemGroup>
+  
   <ItemGroup>
     <PackageReference Include="Shark.Fido2.Core" Version="1.2.1.94" />
     <PackageReference Include="Shark.Fido2.InMemory" Version="1.2.1.94" />
