@@ -1,9 +1,7 @@
 {
   "$schema": "http://json.schemastore.org/template",
   "author": "linuxchata",
-  "classifications": [
-    "WebAuthn"
-  ],
+  "classifications": [ "Web" ],
   "name": "Shark WebAuthn Visual Studio Template",
   "generatorId": "Shark.Fido2.VisualStudio.Template",
   "identity": "Shark.Fido2.VisualStudio.Template",
