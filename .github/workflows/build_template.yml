@@ -35,8 +35,7 @@ jobs:
       run: dotnet build src/Shark.Fido2.VisualStudio.Template/Shark.Fido2.VisualStudio.Template.csproj --configuration Release --no-restore
 
     - name: Pack
-      run: |
-        dotnet pack src/Shark.Fido2.VisualStudio.Template/Shark.Fido2.VisualStudio.Template.csproj --configuration Release --no-restore --output ./out /p:Version=1.2.1.${{ github.run_number }} /p:EmbedUntrackedSources=true /p:IncludeSymbols=true /p:SymbolPackageFormat=snupkg /p:ContinuousIntegrationBuild=true /p:DebugType=portable /p:DebugSymbols=true
+      run: dotnet pack src/Shark.Fido2.VisualStudio.Template/Shark.Fido2.VisualStudio.Template.csproj --configuration Release --no-restore --output ./out /p:Version=1.2.1.${{ github.run_number }}
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
@@ -57,4 +56,4 @@ jobs:
         user: ${{ env.NUGET_USER }}
 
     - name: Push packages to nuget.org
-      run: dotnet nuget push "./out/*.nupkg" --api-key ${{ steps.nuget-login.outputs.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate  --no-symbols
+      run: dotnet nuget push "./out/*.nupkg" --api-key ${{ steps.nuget-login.outputs.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate --no-symbols
