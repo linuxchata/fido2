@@ -2,7 +2,7 @@ using Shark.Fido2.Common.Extensions;
 using Shark.Fido2.Core.Abstractions.Repositories;
 using Shark.Fido2.Domain;
 
-namespace Shark.Fido2.VisualStudio.Template.Services;
+namespace Shark.Fido2.Sample.Template.Services;
 
 public sealed class CredentialService(ICredentialRepository credentialRepository) : ICredentialService
 {

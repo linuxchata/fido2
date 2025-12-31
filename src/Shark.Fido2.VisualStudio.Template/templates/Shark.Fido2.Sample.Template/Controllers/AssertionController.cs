@@ -6,9 +6,9 @@ using Shark.Fido2.Domain.Options;
 using Shark.Fido2.Models.Mappers;
 using Shark.Fido2.Models.Requests;
 using Shark.Fido2.Models.Responses;
-using Shark.Fido2.VisualStudio.Template.Services;
+using Shark.Fido2.Sample.Template.Services;
 
-namespace Shark.Fido2.VisualStudio.Template.Controllers;
+namespace Shark.Fido2.Sample.Template.Controllers;
 
 [Route("[controller]")]
 [ApiController]

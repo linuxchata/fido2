@@ -1,9 +1,9 @@
 using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Shark.Fido2.VisualStudio.Template.Services;
+using Shark.Fido2.Sample.Template.Services;
 
-namespace Shark.Fido2.VisualStudio.Template.Pages;
+namespace Shark.Fido2.Sample.Template.Pages;
 
 public class CredentialsDetailsModel : PageModel
 {

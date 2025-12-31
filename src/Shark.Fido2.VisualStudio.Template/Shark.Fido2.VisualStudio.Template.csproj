@@ -1,10 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <ExcludeFromCodeCoverage>true</ExcludeFromCodeCoverage>
+    <SonarQubeExclude>true</SonarQubeExclude>
+
     <IsPackable>true</IsPackable>
     <IsNuGetPackable>true</IsNuGetPackable>
     <PackageType>Template</PackageType>
-
     <EnableDefaultContentItems>false</EnableDefaultContentItems>
     <IncludeContentInPack>true</IncludeContentInPack>
     <IncludeBuildOutput>false</IncludeBuildOutput>
@@ -13,18 +15,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="templates\Shark.Fido2.VisualStudio.Template\**\*" />
+    <Compile Remove="templates\Shark.Fido2.Sample.Template\**\*" />
     <Content
-      Include="templates\Shark.Fido2.VisualStudio.Template\**\*"
-      Exclude="templates\Shark.Fido2.VisualStudio.Template\.vs\**;templates\Shark.Fido2.VisualStudio.Template\bin\**;templates\Shark.Fido2.VisualStudio.Template\obj\**"
+      Include="templates\Shark.Fido2.Sample.Template\**\*"
+      Exclude="templates\Shark.Fido2.Sample.Template\.vs\**;templates\Shark.Fido2.Sample.Template\bin\**;templates\Shark.Fido2.Sample.Template\obj\**"
       Pack="true"
       PackagePath="content/" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Shark.Fido2.Core" Version="1.2.1.94" />
-    <PackageReference Include="Shark.Fido2.InMemory" Version="1.2.1.94" />
-    <PackageReference Include="Shark.Fido2.Models" Version="1.2.1.94" />
   </ItemGroup>
 
 </Project>

@@ -7,7 +7,7 @@ using Shark.Fido2.Models.Mappers;
 using Shark.Fido2.Models.Requests;
 using Shark.Fido2.Models.Responses;
 
-namespace Shark.Fido2.VisualStudio.Template.Controllers;
+namespace Shark.Fido2.Sample.Template.Controllers;
 
 [Route("[controller]")]
 [ApiController]

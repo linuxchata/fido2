@@ -1,6 +1,6 @@
 using Shark.Fido2.Core;
 using Shark.Fido2.InMemory;
-using Shark.Fido2.VisualStudio.Template.Services;
+using Shark.Fido2.Sample.Template.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
