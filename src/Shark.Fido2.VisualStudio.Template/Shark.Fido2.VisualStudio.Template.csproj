@@ -5,7 +5,7 @@
     <IsNuGetPackable>true</IsNuGetPackable>
     <PackageType>Template</PackageType>
 
-    <EnableDefaultContentItems>false</EnableDefaultContentItems>
+    <EnableDefaultContentItems>true</EnableDefaultContentItems>
     <IncludeContentInPack>true</IncludeContentInPack>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <ContentTargetFolders>content</ContentTargetFolders>
@@ -16,10 +16,6 @@
     <Content
       Include="templates\Shark.Fido2.VisualStudio.Template\**\*"
       Exclude="templates\Shark.Fido2.VisualStudio.Template\.vs\**;templates\Shark.Fido2.VisualStudio.Template\bin\**;templates\Shark.Fido2.VisualStudio.Template\obj\**"
-      Pack="true"
-      PackagePath="content/" />
-    <Content
-      Include="templates\Shark.Fido2.VisualStudio.Template\**\*.cshtml"
       Pack="true"
       PackagePath="content/" />
   </ItemGroup>
