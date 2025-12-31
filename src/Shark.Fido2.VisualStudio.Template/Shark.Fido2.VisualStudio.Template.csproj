@@ -13,7 +13,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="templates\Shark.Fido2.VisualStudio.ProjectTemplate\**\*" />
+    <Content
+      Include="templates\Shark.Fido2.VisualStudio.ProjectTemplate\**\*"
+      Pack="true"
+      PackagePath="content/Shark.Fido2.VisualStudio.ProjectTemplate/" />
   </ItemGroup>
 
   <ItemGroup>

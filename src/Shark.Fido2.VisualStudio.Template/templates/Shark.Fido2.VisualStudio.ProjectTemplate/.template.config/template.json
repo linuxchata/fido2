@@ -6,7 +6,7 @@
   "generatorId": "Shark.Fido2.VisualStudio.Template",
   "identity": "Shark.Fido2.VisualStudio.Template",
   "shortName": "shark-webauthn-vs-template",
-  "description": "Visual Studio Project Template for the Shark WebAuthn .NET Library",
+  "description": "Visual Studio Project Template for Shark WebAuthn .NET Library",
   "tags": {
     "language": "C#",
     "type": "project"
