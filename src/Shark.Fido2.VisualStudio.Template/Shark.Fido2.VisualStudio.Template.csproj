@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <IsPackable>true</IsPackable>
@@ -13,14 +13,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="templates\Shark.Fido2.VisualStudio.Template\**\*" />
     <Content
       Include="templates\Shark.Fido2.VisualStudio.Template\**\*"
-      Exclude="templates\Shark.Fido2.VisualStudio.Template\.vs\**;templates\Shark.Fido2.VisualStudio.Template\bin\**;templates\Shark.Fido2.VisualStudio.Template\obj\**"
-      Pack="true"
-      PackagePath="content/" />
-
-    <None
-      Include="templates\Shark.Fido2.VisualStudio.Template\**\*.cshtml"
       Exclude="templates\Shark.Fido2.VisualStudio.Template\.vs\**;templates\Shark.Fido2.VisualStudio.Template\bin\**;templates\Shark.Fido2.VisualStudio.Template\obj\**"
       Pack="true"
       PackagePath="content/" />
