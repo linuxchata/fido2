@@ -12,5 +12,11 @@
     "type": "project"
   },
   "sourceName": "Shark.Fido2.VisualStudio.Template",
-  "preferNameDirectory": true
+  "preferNameDirectory": true,
+  "sources": [
+    {
+      "source": "./",
+      "target": "./"
+    }
+  ]
 }
