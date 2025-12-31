@@ -18,7 +18,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="templates\**\*" />
+    <Content Include="templates\Shark.Fido2.VisualStudio.ProjectTemplate\**\*" />
   </ItemGroup>
 
   <ItemGroup>
