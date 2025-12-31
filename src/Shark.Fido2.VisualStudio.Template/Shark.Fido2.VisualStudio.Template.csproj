@@ -15,6 +15,7 @@
   <ItemGroup>
     <Content
       Include="templates\Shark.Fido2.VisualStudio.Template\**\*"
+      Exclude="templates\Shark.Fido2.VisualStudio.Template\.vs\**;templates\Shark.Fido2.VisualStudio.Template\bin\**;templates\Shark.Fido2.VisualStudio.Template\obj\**"
       Pack="true"
       PackagePath="content/" />
   </ItemGroup>
