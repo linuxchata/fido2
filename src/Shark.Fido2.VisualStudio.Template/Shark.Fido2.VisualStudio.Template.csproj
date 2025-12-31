@@ -16,7 +16,7 @@
     <Content
       Include="templates\Shark.Fido2.VisualStudio.Template\**\*"
       Pack="true"
-      PackagePath="content/Shark.Fido2.VisualStudio.Template/" />
+      PackagePath="content/" />
   </ItemGroup>
 
   <ItemGroup>
