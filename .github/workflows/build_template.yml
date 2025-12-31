@@ -48,7 +48,7 @@ jobs:
       run: dotnet nuget add source --username linuxchata --password $GITHUB_TOKEN --store-password-in-clear-text --name github "https://nuget.pkg.github.com/linuxchata/index.json"
 
     - name: Push packages to github.com
-      run: dotnet nuget push "./out/*.nupkg" --api-key $OAUTH_GITHUB_PAT --source "github" --skip-duplicate
+      run: dotnet nuget push "./out/*.nupkg" --api-key $OAUTH_GITHUB_PAT --source "github" --skip-duplicate --no-symbols
 
     - name: Login to nuget.org
       uses: NuGet/login@d22cc5f58ff5b88bf9bd452535b4335137e24544 #v1
@@ -57,4 +57,4 @@ jobs:
         user: ${{ env.NUGET_USER }}
 
     - name: Push packages to nuget.org
-      run: dotnet nuget push "./out/*.nupkg" --api-key ${{ steps.nuget-login.outputs.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+      run: dotnet nuget push "./out/*.nupkg" --api-key ${{ steps.nuget-login.outputs.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate  --no-symbols
