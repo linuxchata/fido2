@@ -14,9 +14,13 @@
 
   <ItemGroup>
     <Content
-      Include="templates\Shark.Fido2.VisualStudio.ProjectTemplate\**\*"
+      Include="templates\Shark.Fido2.VisualStudio.Template\**\*"
       Pack="true"
-      PackagePath="content/Shark.Fido2.VisualStudio.ProjectTemplate/" />
+      PackagePath="content/Shark.Fido2.VisualStudio.Template/" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="templates\Shark.Fido2.VisualStudio.Template\.template.config\template.json" />
   </ItemGroup>
 
   <ItemGroup>

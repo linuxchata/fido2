@@ -10,9 +10,6 @@
     <Project Path="Shark.Fido2.PostgreSql/Shark.Fido2.PostgreSql.csproj" />
     <Project Path="Shark.Fido2.SqlServer/Shark.Fido2.SqlServer.csproj" />
   </Folder>
-  <Folder Name="/Templates/">
-    <Project Path="Shark.Fido2.VisualStudio.Template/Shark.Fido2.VisualStudio.Template.csproj" />
-  </Folder>
   <Folder Name="/Tests/">
     <Project Path="../tests/Shark.Fido2.Common.Tests/Shark.Fido2.Common.Tests.csproj" />
     <Project Path="../tests/Shark.Fido2.Core.Integration.Tests/Shark.Fido2.Core.Integration.Tests.csproj" />
@@ -30,4 +27,5 @@
   <Project Path="Shark.Fido2.Domain/Shark.Fido2.Domain.csproj" />
   <Project Path="Shark.Fido2.Metadata.Core/Shark.Fido2.Metadata.Core.csproj" />
   <Project Path="Shark.Fido2.Models/Shark.Fido2.Models.csproj" />
+  <Project Path="Shark.Fido2.VisualStudio.Template/Shark.Fido2.VisualStudio.Template.csproj" />
 </Solution>
