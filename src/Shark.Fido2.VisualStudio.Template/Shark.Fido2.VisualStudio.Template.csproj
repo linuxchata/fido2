@@ -10,6 +10,7 @@
     <IsNuGetPackable>true</IsNuGetPackable>
     <PackageType>Template</PackageType>
 
+    <EnableDefaultContentItems>false</EnableDefaultContentItems>
     <IncludeContentInPack>true</IncludeContentInPack>
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <ContentTargetFolders>content</ContentTargetFolders>
