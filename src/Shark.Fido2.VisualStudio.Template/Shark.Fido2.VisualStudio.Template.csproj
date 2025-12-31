@@ -4,6 +4,9 @@
     <IsPackable>true</IsPackable>
     <IsNuGetPackable>true</IsNuGetPackable>
     <PackageType>Template</PackageType>
+    <IncludeContentInPack>true</IncludeContentInPack>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <ContentTargetFolders>content</ContentTargetFolders>
   </PropertyGroup>
 
   <ItemGroup>
