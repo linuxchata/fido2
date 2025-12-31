@@ -17,6 +17,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="templates\**\*" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Shark.Fido2.Core" Version="1.2.1.94" />
     <PackageReference Include="Shark.Fido2.InMemory" Version="1.2.1.94" />
     <PackageReference Include="Shark.Fido2.Models" Version="1.2.1.94" />
