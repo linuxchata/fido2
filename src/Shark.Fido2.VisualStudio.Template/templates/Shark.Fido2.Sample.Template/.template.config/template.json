@@ -6,7 +6,7 @@
   "generatorId": "Shark.Fido2.Sample.Template",
   "identity": "Shark.Fido2.Sample.Template",
   "shortName": "shark-webauthn-vs-template",
-  "description": "A project template for create a web app with WebAuthn / passkeys support",
+  "description": "A project template for creating a web app with WebAuthn / passkeys support",
   "tags": {
     "language": "C#",
     "type": "project"
