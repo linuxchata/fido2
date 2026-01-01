@@ -10,12 +10,21 @@ using Shark.Fido2.Sample.Template.Services;
 
 namespace Shark.Fido2.Sample.Template.Controllers;
 
+/// <summary>
+/// Assertion (authentication).
+/// </summary>
 [Route("[controller]")]
 [ApiController]
 public class AssertionController(IAssertion assertion, ICredentialService credentialService) : ControllerBase
 {
     private const string SessionName = "WebAuthn.RequestOptions";
 
+    /// <summary>
+    /// Gets credential request options.
+    /// </summary>
+    /// <param name="request">The request.</param>
+    /// <param name="cancellationToken">A cancellation token.</param>
+    /// <returns>The HTTP response.</returns>
     [HttpPost("options")]
     [Produces(MediaTypeNames.Application.Json)]
     public async Task<IActionResult> Options(
@@ -34,6 +43,12 @@ public class AssertionController(IAssertion assertion, ICredentialService creden
         return Ok(requestOptions.Map());
     }
 
+    /// <summary>
+    /// Validates credential.
+    /// </summary>
+    /// <param name="request">The request.</param>
+    /// <param name="cancellationToken">A cancellation token.</param>
+    /// <returns>The HTTP response.</returns>
     [HttpPost("result")]
     [Consumes(MediaTypeNames.Application.Json)]
     [Produces(MediaTypeNames.Application.Json)]
