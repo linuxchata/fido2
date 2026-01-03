@@ -18,7 +18,7 @@
 
   <ItemGroup>
     <SonarQubeSetting Include="sonar.coverage.exclusions">
-      <Value>**/*.cs</Value>
+      <Value>**/*.cs, **/*.razor</Value>
     </SonarQubeSetting>
   </ItemGroup>
 
