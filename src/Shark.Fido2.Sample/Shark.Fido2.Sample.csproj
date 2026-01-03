@@ -27,4 +27,10 @@
     <ProjectReference Include="..\Shark.Fido2.SqlServer\Shark.Fido2.SqlServer.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <SonarQubeSetting Include="sonar.coverage.exclusions">
+      <Value>**/*.cs</Value>
+    </SonarQubeSetting>
+  </ItemGroup>
+
 </Project>
