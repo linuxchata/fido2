@@ -6,7 +6,6 @@
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <ExcludeFromCodeCoverage>true</ExcludeFromCodeCoverage>
-    <SonarQubeExclude>true</SonarQubeExclude>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,6 +25,12 @@
     <ProjectReference Include="..\Shark.Fido2.InMemory\Shark.Fido2.InMemory.csproj" />
     <ProjectReference Include="..\Shark.Fido2.PostgreSql\Shark.Fido2.PostgreSql.csproj" />
     <ProjectReference Include="..\Shark.Fido2.SqlServer\Shark.Fido2.SqlServer.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <SonarQubeSetting Include="sonar.coverage.exclusions">
+      <Value>**/*.cs</Value>
+    </SonarQubeSetting>
   </ItemGroup>
 
 </Project>

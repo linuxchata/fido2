@@ -3,7 +3,6 @@
   <PropertyGroup>
     <NoWarn>1701;1702;1591</NoWarn>
     <ExcludeFromCodeCoverage>true</ExcludeFromCodeCoverage>
-    <SonarQubeExclude>true</SonarQubeExclude>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,6 +14,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Shark.Fido2.Sample.Blazor.Client\Shark.Fido2.Sample.Blazor.Client.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <SonarQubeSetting Include="sonar.coverage.exclusions">
+      <Value>**/*.cs, **/*.razor</Value>
+    </SonarQubeSetting>
   </ItemGroup>
 
 </Project>

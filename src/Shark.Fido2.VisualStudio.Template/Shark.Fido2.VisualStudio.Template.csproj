@@ -2,8 +2,6 @@
 
   <PropertyGroup>
     <ExcludeFromCodeCoverage>true</ExcludeFromCodeCoverage>
-    <SonarQubeExclude>true</SonarQubeExclude>
-
     <IsPackable>true</IsPackable>
     <IsNuGetPackable>true</IsNuGetPackable>
     <PackageType>Template</PackageType>
@@ -20,6 +18,12 @@
              Exclude="content\.vs\**;content\bin\**;content\obj\**"
              Pack="true"
              PackagePath="content/" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <SonarQubeSetting Include="sonar.coverage.exclusions">
+      <Value>content/**/*.cs</Value>
+    </SonarQubeSetting>
   </ItemGroup>
 
 </Project>
