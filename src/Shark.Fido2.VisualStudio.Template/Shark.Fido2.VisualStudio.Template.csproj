@@ -2,8 +2,6 @@
 
   <PropertyGroup>
     <ExcludeFromCodeCoverage>true</ExcludeFromCodeCoverage>
-    <SonarQubeExclude>true</SonarQubeExclude>
-
     <IsPackable>true</IsPackable>
     <IsNuGetPackable>true</IsNuGetPackable>
     <PackageType>Template</PackageType>

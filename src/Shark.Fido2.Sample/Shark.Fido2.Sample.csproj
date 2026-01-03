@@ -6,7 +6,6 @@
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <ExcludeFromCodeCoverage>true</ExcludeFromCodeCoverage>
-    <SonarQubeExclude>true</SonarQubeExclude>
   </PropertyGroup>
 
   <ItemGroup>

@@ -3,7 +3,6 @@
   <PropertyGroup>
     <NoWarn>1701;1702;1591</NoWarn>
     <ExcludeFromCodeCoverage>true</ExcludeFromCodeCoverage>
-    <SonarQubeExclude>true</SonarQubeExclude>
   </PropertyGroup>
 
   <ItemGroup>
