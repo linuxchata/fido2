@@ -1,6 +1,6 @@
 using Shark.Fido2.Domain;
 
-namespace Shark.Fido2.Sample.Template.Services;
+namespace Shark.Fido2.Sample.VisualStudio.Template.Services;
 
 public interface ICredentialService
 {

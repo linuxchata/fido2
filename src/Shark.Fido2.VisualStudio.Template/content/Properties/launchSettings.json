@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "Shark.Fido2.VisualStudio.Template": {
+    "Shark.Fido2.Sample.VisualStudio.Template": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {

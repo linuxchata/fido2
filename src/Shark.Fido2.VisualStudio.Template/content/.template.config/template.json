@@ -3,14 +3,14 @@
   "author": "linuxchata",
   "classifications": [ "Web" ],
   "name": "Shark WebAuthn Visual Studio Template",
-  "generatorId": "Shark.Fido2.Sample.Template",
-  "identity": "Shark.Fido2.Sample.Template",
+  "generatorId": "Shark.Fido2.Sample.VisualStudio.Template",
+  "identity": "Shark.Fido2.Sample.VisualStudio.Template",
   "shortName": "shark-webauthn-vs-template",
-  "description": "A project template for creating a web app with WebAuthn / passkeys support",
+  "description": "A project template for creating a web app with passkeys support",
   "tags": {
     "language": "C#",
     "type": "project"
   },
-  "sourceName": "Shark.Fido2.Sample.Template",
+  "sourceName": "Shark.Fido2.Sample.VisualStudio.Template",
   "preferNameDirectory": true
 }

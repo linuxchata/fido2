@@ -15,12 +15,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="templates\Shark.Fido2.Sample.Template\**\*" />
-    <Content
-      Include="templates\Shark.Fido2.Sample.Template\**\*"
-      Exclude="templates\Shark.Fido2.Sample.Template\.vs\**;templates\Shark.Fido2.Sample.Template\bin\**;templates\Shark.Fido2.Sample.Template\obj\**"
-      Pack="true"
-      PackagePath="content/" />
+    <Compile Remove="content\**\*" />
+    <Content Include="content\**\*"
+             Exclude="content\.vs\**;content\bin\**;content\obj\**"
+             Pack="true"
+             PackagePath="content/" />
   </ItemGroup>
 
 </Project>

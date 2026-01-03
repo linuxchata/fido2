@@ -6,21 +6,20 @@ using Shark.Fido2.Domain.Options;
 using Shark.Fido2.Models.Mappers;
 using Shark.Fido2.Models.Requests;
 using Shark.Fido2.Models.Responses;
-using Shark.Fido2.Sample.Template.Services;
 
-namespace Shark.Fido2.Sample.Template.Controllers;
+namespace Shark.Fido2.Sample.VisualStudio.Template.Controllers;
 
 /// <summary>
-/// Assertion (authentication).
+/// Attestation (registration).
 /// </summary>
 [Route("[controller]")]
 [ApiController]
-public class AssertionController(IAssertion assertion, ICredentialService credentialService) : ControllerBase
+public class AttestationController(IAttestation attestation) : ControllerBase
 {
-    private const string SessionName = "WebAuthn.RequestOptions";
+    private const string SessionName = "WebAuthn.CreateOptions";
 
     /// <summary>
-    /// Gets credential request options.
+    /// Gets credential create options.
     /// </summary>
     /// <param name="request">The request.</param>
     /// <param name="cancellationToken">A cancellation token.</param>
@@ -28,7 +27,7 @@ public class AssertionController(IAssertion assertion, ICredentialService creden
     [HttpPost("options")]
     [Produces(MediaTypeNames.Application.Json)]
     public async Task<IActionResult> Options(
-        ServerPublicKeyCredentialGetOptionsRequest request,
+        ServerPublicKeyCredentialCreationOptionsRequest request,
         CancellationToken cancellationToken)
     {
         if (request == null)
@@ -36,15 +35,15 @@ public class AssertionController(IAssertion assertion, ICredentialService creden
             return BadRequest(ServerResponse.CreateFailed());
         }
 
-        var requestOptions = await assertion.BeginAuthentication(request.Map(), cancellationToken);
+        var createOptions = await attestation.BeginRegistration(request.Map(), cancellationToken);
 
-        HttpContext.Session.SetString(SessionName, JsonSerializer.Serialize(requestOptions));
+        HttpContext.Session.SetString(SessionName, JsonSerializer.Serialize(createOptions));
 
-        return Ok(requestOptions.Map());
+        return Ok(createOptions.Map());
     }
 
     /// <summary>
-    /// Validates credential.
+    /// Creates credential.
     /// </summary>
     /// <param name="request">The request.</param>
     /// <param name="cancellationToken">A cancellation token.</param>
@@ -53,7 +52,7 @@ public class AssertionController(IAssertion assertion, ICredentialService creden
     [Consumes(MediaTypeNames.Application.Json)]
     [Produces(MediaTypeNames.Application.Json)]
     public async Task<IActionResult> Result(
-        ServerPublicKeyCredentialAssertion request,
+        ServerPublicKeyCredentialAttestation request,
         CancellationToken cancellationToken)
     {
         if (request == null || request.Response == null)
@@ -61,26 +60,20 @@ public class AssertionController(IAssertion assertion, ICredentialService creden
             return BadRequest(ServerResponse.CreateFailed());
         }
 
-        var requestOptionsString = HttpContext.Session.GetString(SessionName);
-        if (string.IsNullOrWhiteSpace(requestOptionsString))
+        var createOptionsString = HttpContext.Session.GetString(SessionName);
+        if (string.IsNullOrWhiteSpace(createOptionsString))
         {
             return BadRequest(ServerResponse.CreateFailed());
         }
 
-        var requestOptions = JsonSerializer.Deserialize<PublicKeyCredentialRequestOptions>(requestOptionsString!);
+        var createOptions = JsonSerializer.Deserialize<PublicKeyCredentialCreationOptions>(createOptionsString!);
 
-        var response = await assertion.CompleteAuthentication(request.Map(), requestOptions!, cancellationToken);
+        var response = await attestation.CompleteRegistration(request.Map(), createOptions!, cancellationToken);
 
         HttpContext.Session.Remove(SessionName);
 
         if (response.IsValid)
         {
-            var credential = await credentialService.Get(request.Id, cancellationToken);
-            if (credential is null)
-            {
-                return NotFound();
-            }
-
             return Ok(ServerResponse.Create());
         }
         else

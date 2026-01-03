@@ -1,1 +1,1 @@
-Visual Studio Project Template for the Shark WebAuthn .NET Library
+Visual Studio Project Template for creating a web app with passkeys support
