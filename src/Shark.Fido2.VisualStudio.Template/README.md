@@ -1,0 +1,1 @@
+Visual Studio Project Template for creating a web app with passkeys support

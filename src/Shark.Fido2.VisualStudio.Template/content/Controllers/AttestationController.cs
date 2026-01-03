@@ -7,14 +7,23 @@ using Shark.Fido2.Models.Mappers;
 using Shark.Fido2.Models.Requests;
 using Shark.Fido2.Models.Responses;
 
-namespace Shark.Fido2.VisualStudio.Template.Controllers;
+namespace Shark.Fido2.Sample.VisualStudio.Template.Controllers;
 
+/// <summary>
+/// Attestation (registration).
+/// </summary>
 [Route("[controller]")]
 [ApiController]
 public class AttestationController(IAttestation attestation) : ControllerBase
 {
     private const string SessionName = "WebAuthn.CreateOptions";
 
+    /// <summary>
+    /// Gets credential create options.
+    /// </summary>
+    /// <param name="request">The request.</param>
+    /// <param name="cancellationToken">A cancellation token.</param>
+    /// <returns>The HTTP response.</returns>
     [HttpPost("options")]
     [Produces(MediaTypeNames.Application.Json)]
     public async Task<IActionResult> Options(
@@ -33,6 +42,12 @@ public class AttestationController(IAttestation attestation) : ControllerBase
         return Ok(createOptions.Map());
     }
 
+    /// <summary>
+    /// Creates credential.
+    /// </summary>
+    /// <param name="request">The request.</param>
+    /// <param name="cancellationToken">A cancellation token.</param>
+    /// <returns>The HTTP response.</returns>
     [HttpPost("result")]
     [Consumes(MediaTypeNames.Application.Json)]
     [Produces(MediaTypeNames.Application.Json)]

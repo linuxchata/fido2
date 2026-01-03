@@ -6,16 +6,25 @@ using Shark.Fido2.Domain.Options;
 using Shark.Fido2.Models.Mappers;
 using Shark.Fido2.Models.Requests;
 using Shark.Fido2.Models.Responses;
-using Shark.Fido2.VisualStudio.Template.Services;
+using Shark.Fido2.Sample.VisualStudio.Template.Services;
 
-namespace Shark.Fido2.VisualStudio.Template.Controllers;
+namespace Shark.Fido2.Sample.VisualStudio.Template.Controllers;
 
+/// <summary>
+/// Assertion (authentication).
+/// </summary>
 [Route("[controller]")]
 [ApiController]
 public class AssertionController(IAssertion assertion, ICredentialService credentialService) : ControllerBase
 {
     private const string SessionName = "WebAuthn.RequestOptions";
 
+    /// <summary>
+    /// Gets credential request options.
+    /// </summary>
+    /// <param name="request">The request.</param>
+    /// <param name="cancellationToken">A cancellation token.</param>
+    /// <returns>The HTTP response.</returns>
     [HttpPost("options")]
     [Produces(MediaTypeNames.Application.Json)]
     public async Task<IActionResult> Options(
@@ -34,6 +43,12 @@ public class AssertionController(IAssertion assertion, ICredentialService creden
         return Ok(requestOptions.Map());
     }
 
+    /// <summary>
+    /// Validates credential.
+    /// </summary>
+    /// <param name="request">The request.</param>
+    /// <param name="cancellationToken">A cancellation token.</param>
+    /// <returns>The HTTP response.</returns>
     [HttpPost("result")]
     [Consumes(MediaTypeNames.Application.Json)]
     [Produces(MediaTypeNames.Application.Json)]

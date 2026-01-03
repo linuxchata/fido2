@@ -11,6 +11,7 @@
     <Project Path="Shark.Fido2.SqlServer/Shark.Fido2.SqlServer.csproj" />
   </Folder>
   <Folder Name="/Templates/">
+    <Project Path="Shark.Fido2.VisualStudio.Template/content/Shark.Fido2.Sample.VisualStudio.Template.csproj" />
     <Project Path="Shark.Fido2.VisualStudio.Template/Shark.Fido2.VisualStudio.Template.csproj" />
   </Folder>
   <Folder Name="/Tests/">

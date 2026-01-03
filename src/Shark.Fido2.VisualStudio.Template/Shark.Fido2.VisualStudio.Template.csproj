@@ -1,19 +1,25 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <NoWarn>1701;1702;1591</NoWarn>
     <ExcludeFromCodeCoverage>true</ExcludeFromCodeCoverage>
     <SonarQubeExclude>true</SonarQubeExclude>
+
+    <IsPackable>true</IsPackable>
+    <IsNuGetPackable>true</IsNuGetPackable>
+    <PackageType>Template</PackageType>
+    <EnableDefaultContentItems>false</EnableDefaultContentItems>
+    <IncludeContentInPack>true</IncludeContentInPack>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <ContentTargetFolders>content</ContentTargetFolders>
+    <NoWarn>$(NoWarn);NU5128</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include=".template.config\template.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Shark.Fido2.Core" Version="1.2.1.94" />
-    <PackageReference Include="Shark.Fido2.InMemory" Version="1.2.1.94" />
-    <PackageReference Include="Shark.Fido2.Models" Version="1.2.1.94" />
+    <Compile Remove="content\**\*" />
+    <Content Include="content\**\*"
+             Exclude="content\.vs\**;content\bin\**;content\obj\**"
+             Pack="true"
+             PackagePath="content/" />
   </ItemGroup>
 
 </Project>

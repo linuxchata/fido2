@@ -44,7 +44,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"linuxchata_fido2" /o:"linuxchata" /d:sonar.token="$env:SONAR_TOKEN" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.exclusions="src/Shark.Fido2.Sample/wwwroot/lib/**/*.js,src/Shark.Fido2.Sample/wwwroot/lib/**/*.css,src/Shark.Fido2.Sample/wwwroot/js/*.js,src/Shark.Fido2.Sample.Blazor\Shark.Fido2.Sample.Blazor/wwwroot/lib/**/*.js,src/Shark.Fido2.Sample.Blazor\Shark.Fido2.Sample.Blazor/wwwroot/lib/**/*.css,src/Shark.Fido2.Sample.Blazor\Shark.Fido2.Sample.Blazor/wwwroot/js/*.js,src/Shark.Fido2.VisualStudio.Template/wwwroot/lib/**/*.js,src/Shark.Fido2.VisualStudio.Template/wwwroot/lib/**/*.css,src/Shark.Fido2.VisualStudio.Template/wwwroot/js/*.js" /d:sonar.cs.opencover.reportsPaths="tests/*.Tests/TestResults/**/coverage.opencover.xml"
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"linuxchata_fido2" /o:"linuxchata" /d:sonar.token="$env:SONAR_TOKEN" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.exclusions="src/Shark.Fido2.Sample/wwwroot/lib/**/*.js,src/Shark.Fido2.Sample/wwwroot/lib/**/*.css,src/Shark.Fido2.Sample/wwwroot/js/*.js,src/Shark.Fido2.Sample.Blazor\Shark.Fido2.Sample.Blazor/wwwroot/lib/**/*.js,src/Shark.Fido2.Sample.Blazor\Shark.Fido2.Sample.Blazor/wwwroot/lib/**/*.css,src/Shark.Fido2.Sample.Blazor\Shark.Fido2.Sample.Blazor/wwwroot/js/*.js,src\Shark.Fido2.VisualStudio.Template\content/wwwroot/lib/**/*.js,src\Shark.Fido2.VisualStudio.Template\content/wwwroot/lib/**/*.css,src\Shark.Fido2.VisualStudio.Template\content/wwwroot/js/*.js" /d:sonar.cs.opencover.reportsPaths="tests/*.Tests/TestResults/**/coverage.opencover.xml"
 
           dotnet build ./src/Shark.Fido2.slnx
 
