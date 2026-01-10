@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using Shark.Fido2.Metadata.Core.Converters;
 
 namespace Shark.Fido2.Metadata.Core.Models;
 
@@ -8,6 +9,7 @@ public sealed class MetadataBlobPayloadEntry
     public string? Aaid { get; set; }
 
     [JsonPropertyName("aaguid")]
+    [JsonConverter(typeof(CustomNullableGuidConverter))]
     public Guid? Aaguid { get; set; }
 
     [JsonPropertyName("attestationCertificateKeyIdentifiers")]
