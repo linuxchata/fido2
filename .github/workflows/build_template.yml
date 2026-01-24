@@ -39,7 +39,7 @@ jobs:
       run: dotnet build src/Shark.Fido2.VisualStudio.Template/Shark.Fido2.VisualStudio.Template.csproj --configuration Release --no-restore
 
     - name: Pack
-      run: dotnet pack src/Shark.Fido2.VisualStudio.Template/Shark.Fido2.VisualStudio.Template.csproj --configuration Release --no-restore --output ./out /p:Version=1.2.1.${{ github.run_number }}
+      run: dotnet pack src/Shark.Fido2.VisualStudio.Template/Shark.Fido2.VisualStudio.Template.csproj --configuration Release --no-restore --output ./out /p:Version=1.2.2.${{ github.run_number }}
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
