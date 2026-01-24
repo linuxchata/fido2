@@ -1,6 +1,7 @@
 {
     "legalHeader": "https://fidoalliance.org/metadata/metadata-statement-legal-header/",
     "description": "Virtual Secp256K1 FIDO2 Conformance Testing U2F Authenticator",
+    "aaguid": "00000000-0000-0000-0000-000000000000",
     "alternativeDescriptions": {
         "ru-RU": "Виртуальный Secp256K1 U2F аутентификатор для тестирование серверов на соответсвие спецификации FIDO2"
     },
