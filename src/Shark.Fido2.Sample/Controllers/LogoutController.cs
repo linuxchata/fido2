@@ -15,6 +15,7 @@ public class LogoutController(ILoginService loginService) : Controller
     /// </summary>
     /// <returns>The HTTP response.</returns>
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Index()
     {
         await loginService.Logout(HttpContext);
