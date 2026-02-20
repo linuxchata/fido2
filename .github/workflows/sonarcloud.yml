@@ -5,6 +5,8 @@ permissions:
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '0 21 * * 6' # Run every Saturday at 21:00 UTC
 
 jobs:
   build:
