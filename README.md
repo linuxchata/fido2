@@ -1,5 +1,5 @@
 # Overview
-This repository provides a server-side implementation of the WebAuthn standard, enabling secure passwordless and multi-factor authentication (MFA) for web applications. It supports key WebAuthn operations – credential registration and authentication – ensuring compliance with the [WebAuthn Level 2 specification](https://www.w3.org/TR/webauthn-2/) (Web Authentication: An API for accessing Public Key Credentials Level 2).
+This repository provides a mature, production-ready server-side implementation of the WebAuthn standard, enabling secure passwordless and multi-factor authentication (MFA) for web applications. It supports key WebAuthn operations – credential registration and authentication – ensuring compliance with the [WebAuthn Level 2 specification](https://www.w3.org/TR/webauthn-2/) (Web Authentication: An API for accessing Public Key Credentials Level 2).
 
 [![build](https://github.com/linuxchata/fido2/actions/workflows/build.yml/badge.svg)](https://github.com/linuxchata/fido2/actions/workflows/build.yml)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=linuxchata_fido2&metric=coverage)](https://sonarcloud.io/summary/new_code?id=linuxchata_fido2)
