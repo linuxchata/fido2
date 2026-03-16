@@ -15,7 +15,7 @@ jobs:
     env:
       CI: true # Enable deterministic builds
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      OAUTH_GITHUB_PAT: ${{ secrets.OAUTH_GITHUB_PAT }}
+      OAUTH_GITHUB_PAT: ${{ secrets.FIDO2_GITHUB_PAT }}
       NUGET_USER: ${{ secrets.NUGET_USER }}
 
     strategy:
