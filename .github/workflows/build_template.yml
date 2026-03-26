@@ -19,7 +19,7 @@ jobs:
     env:
       CI: true # Enable deterministic builds
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      OAUTH_GITHUB_PAT: ${{ secrets.OAUTH_GITHUB_PAT }}
+      FIDO2_GITHUB_PAT: ${{ secrets.FIDO2_GITHUB_PAT }}
       NUGET_USER: ${{ secrets.NUGET_USER }}
 
     steps:
@@ -51,7 +51,7 @@ jobs:
       run: dotnet nuget add source --username linuxchata --password $GITHUB_TOKEN --store-password-in-clear-text --name github "https://nuget.pkg.github.com/linuxchata/index.json"
 
     - name: Push packages to github.com
-      run: dotnet nuget push "./out/*.nupkg" --api-key $OAUTH_GITHUB_PAT --source "github" --skip-duplicate --no-symbols
+      run: dotnet nuget push "./out/*.nupkg" --api-key $FIDO2_GITHUB_PAT --source "github" --skip-duplicate --no-symbols
 
     - name: Login to nuget.org
       uses: NuGet/login@d22cc5f58ff5b88bf9bd452535b4335137e24544 #v1
