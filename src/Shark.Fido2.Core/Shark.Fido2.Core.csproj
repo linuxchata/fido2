@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <IsPackable>true</IsPackable>
@@ -15,9 +15,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BouncyCastle.Cryptography" Version="2.6.2" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.9.0" />
-    <PackageReference Include="System.Security.Cryptography.Cose" Version="8.0.2" />
+    <PackageReference Include="BouncyCastle.Cryptography" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
+    <PackageReference Include="System.Security.Cryptography.Cose" />
   </ItemGroup>
 
   <ItemGroup>
