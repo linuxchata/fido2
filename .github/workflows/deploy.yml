@@ -13,10 +13,10 @@ jobs:
       contents: read
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Set up .NET Core
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '8.x'
 
@@ -27,7 +27,7 @@ jobs:
         run: dotnet publish ./src/Shark.Fido2.Sample/Shark.Fido2.Sample.csproj --configuration Release -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: .net-app
           path: ${{env.DOTNET_ROOT}}/myapp
@@ -41,12 +41,12 @@ jobs:
 
     steps:
       - name: Download artifact from build job
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: .net-app
 
       - name: Login to Azure
-        uses: azure/login@a457da9ea143d694b1b9c7c869ebb04ebe844ef5 #v2.3.0
+        uses: azure/login@532459ea530d8321f2fb9bb10d1e0bcf23869a43 v3.0.0
         with:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_02B3B2F5A1F44132B08C9522CDED9F0F }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_63A6AB4AEC864A17836B9C058420DE2C }}
@@ -54,7 +54,7 @@ jobs:
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
-        uses: azure/webapps-deploy@122b7ec46017e53a3f71e3a027d67550a1641f5e #v2.2.17
+        uses: azure/webapps-deploy@5cfb776471c748b351e1ebf5770e208a54ace016 #v2.2.19
         with:
           app-name: 'app-fido2-dev-04'
           slot-name: 'Production'
