@@ -23,12 +23,12 @@ jobs:
       NUGET_USER: ${{ secrets.NUGET_USER }}
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
       with:
         fetch-depth: 0
 
     - name: Setup .NET
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@v5
       with:
         dotnet-version: 8.0.x
 
@@ -42,7 +42,7 @@ jobs:
       run: dotnet pack src/Shark.Fido2.VisualStudio.Template/Shark.Fido2.VisualStudio.Template.csproj --configuration Release --no-restore --output ./out /p:Version=1.2.2.${{ github.run_number }}
 
     - name: Upload Artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: Shark.Fido2.VisualStudio.Template
         path: out/*.nupkg
