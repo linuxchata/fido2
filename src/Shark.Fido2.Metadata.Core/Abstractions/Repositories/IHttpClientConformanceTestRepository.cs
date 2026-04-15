@@ -8,19 +8,19 @@ namespace Shark.Fido2.Metadata.Core.Abstractions.Repositories;
 public interface IHttpClientConformanceTestRepository
 {
     /// <summary>
-    /// Gets metadata blob endpoints from a remote URL.
+    /// Gets metadata BLOB endpoints from a remote URL.
     /// </summary>
     /// <param name="remoteUrl">The remote URL.</param>
     /// <param name="cancellationToken">A cancellation token.</param>
-    /// <returns>A list of metadata blob endpoints.</returns>
+    /// <returns>A list of metadata BLOB endpoints.</returns>
     Task<List<string>> GetMetadataBlobEndpoints(string remoteUrl, CancellationToken cancellationToken);
 
     /// <summary>
-    /// Gets a metadata blob from an endpoint.
+    /// Gets a metadata BLOB from an endpoint.
     /// </summary>
-    /// <param name="endpoint">The endpoint of a metadata blob.</param>
+    /// <param name="endpoint">The endpoint of a metadata BLOB.</param>
     /// <param name="cancellationToken">A cancellation token.</param>
-    /// <returns>The metadata blob content.</returns>
+    /// <returns>The metadata BLOB content.</returns>
     Task<string> GetMetadataBlob(string endpoint, CancellationToken cancellationToken);
 
     /// <summary>
