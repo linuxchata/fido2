@@ -8,10 +8,10 @@ namespace Shark.Fido2.Metadata.Core.Abstractions.Repositories;
 public interface IHttpClientRepository
 {
     /// <summary>
-    /// Gets a metadata blob.
+    /// Gets a metadata BLOB.
     /// </summary>
     /// <param name="cancellationToken">A cancellation token.</param>
-    /// <returns>The metadata blob content.</returns>
+    /// <returns>The metadata BLOB content.</returns>
     Task<string> GetMetadataBlob(CancellationToken cancellationToken);
 
     /// <summary>

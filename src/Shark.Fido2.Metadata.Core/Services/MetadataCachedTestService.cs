@@ -12,7 +12,7 @@ using Shark.Fido2.Metadata.Core.Models;
 namespace Shark.Fido2.Metadata.Core.Services;
 
 /// <summary>
-/// Remote blob test service is used for conformance testing for metadata service test cases.
+/// Remote BLOB test service is used for conformance testing for metadata service test cases.
 /// See: https://github.com/fido-alliance/conformance-test-tools-resources/issues/422#issuecomment-508959572.
 /// </summary>
 [ExcludeFromCodeCoverage]
@@ -68,7 +68,7 @@ internal sealed class MetadataCachedTestService : IMetadataCachedService
         var metadataBlobLocation = _configuration.MetadataBlobLocation.Split(';');
         if (metadataBlobLocation.Length != 2)
         {
-            throw new FormatException("Metadata blob location should be in the format 'remoteUrl;localPath'");
+            throw new FormatException("Metadata BLOB location should be in the format 'remoteUrl;localPath'");
         }
 
         var remoteUrl = metadataBlobLocation[0];
