@@ -4,6 +4,7 @@ CREATE TABLE [Credential] (
     [UserName] NVARCHAR(64) NOT NULL,
     [UserDisplayName] NVARCHAR(64) NOT NULL,
     [CredentialPublicKeyJson] NVARCHAR(2048) NOT NULL,
+    [AaGuid] UNIQUEIDENTIFIER NOT NULL,
     [SignCount] BIGINT NOT NULL,
     [Transports] NVARCHAR(50) NULL,
     [CreatedAt] DATETIME2 NOT NULL CONSTRAINT [DF_Credential_CreatedAt] DEFAULT GETUTCDATE(),

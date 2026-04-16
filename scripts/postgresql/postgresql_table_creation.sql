@@ -4,6 +4,7 @@ CREATE TABLE credential (
     user_name varchar(64) NOT NULL,
     user_display_name varchar(64) NOT NULL,
     credential_public_key_json varchar(2048) NOT NULL,
+    aa_guid uuid NOT NULL,
     sign_count bigint NOT NULL,
     transports varchar(50) NULL,
     created_at timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,

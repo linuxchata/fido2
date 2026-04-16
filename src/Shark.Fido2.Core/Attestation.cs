@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Shark.Fido2.Common.Extensions;
 using Shark.Fido2.Core.Abstractions;
@@ -185,6 +185,7 @@ public sealed class Attestation : IAttestation
             UserName = creationOptions.User.Name,
             UserDisplayName = creationOptions.User.DisplayName,
             CredentialPublicKey = attestedCredentialData.CredentialPublicKey!,
+            AaGuid = attestedCredentialData.AaGuid,
             SignCount = attestationResult.Value.AuthenticatorData!.SignCount,
             Transports = attestation.Response.Transports?.Select(t => t.GetValue()).ToArray() ?? [],
         };

@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using Amazon.DynamoDBv2.Model;
 using Shark.Fido2.Core.Entities;
 
@@ -16,6 +16,7 @@ internal static class CredentialEntityMapper
             UserDisplayName = item[AttributeNames.UserDisplayName].S,
             CredentialPublicKey = null!,
             CredentialPublicKeyJson = item[AttributeNames.CredentialPublicKeyJson].S,
+            AaGuid = Guid.Parse(item[AttributeNames.AaGuid].S),
             SignCount = uint.Parse(item[AttributeNames.SignCount].N),
             Transports = item[AttributeNames.Transports].S,
             CreatedAt = GetDateTime(item, AttributeNames.CreatedAt),
@@ -43,6 +44,7 @@ internal static class CredentialEntityMapper
             { AttributeNames.UserName, new AttributeValue { S = entity.UserName } },
             { AttributeNames.UserDisplayName, new AttributeValue { S = entity.UserDisplayName } },
             { AttributeNames.CredentialPublicKeyJson, new AttributeValue { S = entity.CredentialPublicKeyJson } },
+            { AttributeNames.AaGuid, new AttributeValue { S = entity.AaGuid.ToString() } },
             { AttributeNames.SignCount, new AttributeValue { N = $"{entity.SignCount}" } },
             { AttributeNames.Transports, new AttributeValue { S = entity.Transports } },
             { AttributeNames.CreatedAt, new AttributeValue { S = createdAt } },

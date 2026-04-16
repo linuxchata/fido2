@@ -12,6 +12,7 @@ internal class CredentialEntityMapperTests
     private const string CredentialPublicKeyJson = "{'keyType':1,'algorithm':2}";
     private const uint SignCount = 42;
     private const string Transports = "usb;nfc";
+    private static readonly Guid AaGuid = Guid.Parse("f38122bb-ad2d-4f1d-8468-76605b9f1d07");
 
     private static readonly byte[] CredentialId = [1, 2, 3, 4];
     private static readonly byte[] UserHandle = [5, 6, 7, 8];
@@ -30,6 +31,7 @@ internal class CredentialEntityMapperTests
             { AttributeNames.UserName, new AttributeValue { S = UserName } },
             { AttributeNames.UserDisplayName, new AttributeValue { S = UserDisplayName } },
             { AttributeNames.CredentialPublicKeyJson, new AttributeValue { S = CredentialPublicKeyJson } },
+            { AttributeNames.AaGuid, new AttributeValue { S = AaGuid.ToString() } },
             { AttributeNames.SignCount, new AttributeValue { N = SignCount.ToString() } },
             { AttributeNames.Transports, new AttributeValue { S = Transports } },
             { AttributeNames.CreatedAt, new AttributeValue { S = CreatedAt.ToString(DateTimeFormatInfo.InvariantInfo) } },
@@ -46,6 +48,7 @@ internal class CredentialEntityMapperTests
         Assert.That(entity.UserName, Is.EqualTo(UserName));
         Assert.That(entity.UserDisplayName, Is.EqualTo(UserDisplayName));
         Assert.That(entity.CredentialPublicKeyJson, Is.EqualTo(CredentialPublicKeyJson));
+        Assert.That(entity.AaGuid, Is.EqualTo(AaGuid));
         Assert.That(entity.SignCount, Is.EqualTo(SignCount));
         Assert.That(entity.Transports, Is.EqualTo(Transports));
         Assert.That(entity.CreatedAt, Is.EqualTo(CreatedAt));
@@ -65,6 +68,7 @@ internal class CredentialEntityMapperTests
             { AttributeNames.UserName, new AttributeValue { S = UserName } },
             { AttributeNames.UserDisplayName, new AttributeValue { S = UserDisplayName } },
             { AttributeNames.CredentialPublicKeyJson, new AttributeValue { S = CredentialPublicKeyJson } },
+            { AttributeNames.AaGuid, new AttributeValue { S = AaGuid.ToString() } },
             { AttributeNames.SignCount, new AttributeValue { N = SignCount.ToString() } },
             { AttributeNames.Transports, new AttributeValue { S = Transports } },
             { AttributeNames.CreatedAt, new AttributeValue { S = CreatedAt.ToString(DateTimeFormatInfo.InvariantInfo) } },
@@ -92,6 +96,7 @@ internal class CredentialEntityMapperTests
             { AttributeNames.UserName, new AttributeValue { S = UserName } },
             { AttributeNames.UserDisplayName, new AttributeValue { S = UserDisplayName } },
             { AttributeNames.CredentialPublicKeyJson, new AttributeValue { S = CredentialPublicKeyJson } },
+            { AttributeNames.AaGuid, new AttributeValue { S = AaGuid.ToString() } },
             { AttributeNames.SignCount, new AttributeValue { N = SignCount.ToString() } },
             { AttributeNames.Transports, new AttributeValue { S = Transports } },
             { AttributeNames.CreatedAt, new AttributeValue { S = CreatedAt.ToString(DateTimeFormatInfo.InvariantInfo) } },
@@ -138,6 +143,7 @@ internal class CredentialEntityMapperTests
             UserDisplayName = UserDisplayName,
             CredentialPublicKey = new CredentialPublicKeyEntity(),
             CredentialPublicKeyJson = CredentialPublicKeyJson,
+            AaGuid = AaGuid,
             SignCount = SignCount,
             Transports = Transports,
             CreatedAt = CreatedAt,
@@ -155,6 +161,7 @@ internal class CredentialEntityMapperTests
         Assert.That(item[AttributeNames.UserName].S, Is.EqualTo(UserName));
         Assert.That(item[AttributeNames.UserDisplayName].S, Is.EqualTo(UserDisplayName));
         Assert.That(item[AttributeNames.CredentialPublicKeyJson].S, Is.EqualTo(CredentialPublicKeyJson));
+        Assert.That(item[AttributeNames.AaGuid].S, Is.EqualTo(AaGuid.ToString()));
         Assert.That(item[AttributeNames.SignCount].N, Is.EqualTo(SignCount.ToString()));
         Assert.That(item[AttributeNames.Transports].S, Is.EqualTo(Transports));
         Assert.That(item[AttributeNames.CreatedAt].S, Is.EqualTo(createdAtString));
