@@ -1,5 +1,4 @@
 ﻿using System.Net.Mime;
-using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Shark.Fido2.Core.Abstractions;
@@ -23,8 +22,6 @@ public class AttestationController(IAttestation attestation, ILogger<Attestation
 {
     private const string SessionName = "WebAuthn.CreateOptions";
 
-    private readonly IAttestation _attestation = attestation;
-
     /// <summary>
     /// Gets credential create options.
     /// </summary>
@@ -47,7 +44,7 @@ public class AttestationController(IAttestation attestation, ILogger<Attestation
             return BadRequest(ServerResponse.CreateFailed());
         }
 
-        var createOptions = await _attestation.BeginRegistration(request.Map(), cancellationToken);
+        var createOptions = await attestation.BeginRegistration(request.Map(), cancellationToken);
 
         HttpContext.Session.SetString(SessionName, JsonSerializer.Serialize(createOptions));
 
@@ -84,7 +81,7 @@ public class AttestationController(IAttestation attestation, ILogger<Attestation
         var createOptions = JsonSerializer.Deserialize<PublicKeyCredentialCreationOptions>(createOptionsString!);
 
         logger.LogInformation("Attestation request: {Request}", JsonSerializer.Serialize(request.Map()));
-        var response = await _attestation.CompleteRegistration(request.Map(), createOptions!, cancellationToken);
+        var response = await attestation.CompleteRegistration(request.Map(), createOptions!, cancellationToken);
 
         HttpContext.Session.Remove(SessionName);
 
