@@ -13,8 +13,8 @@ public sealed class CredentialService : ICredentialService
         _credentialRepository = credentialRepository;
     }
 
-    public async Task<Credential?> Get(byte[] id, CancellationToken cancellationToken)
+    public Task<Credential?> Get(byte[] id, CancellationToken cancellationToken)
     {
-        return await _credentialRepository.Get(id, cancellationToken);
+        return _credentialRepository.Get(id, cancellationToken);
     }
 }
