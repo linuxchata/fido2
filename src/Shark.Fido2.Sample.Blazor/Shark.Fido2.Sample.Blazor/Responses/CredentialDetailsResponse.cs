@@ -10,6 +10,8 @@ public class CredentialDetailsResponse
 
     public string UserDisplayName { get; init; } = null!;
 
+    public string AaGuid { get; init; } = null!;
+
     public uint SignCount { get; init; }
 
     public string Algorithm { get; init; } = null!;

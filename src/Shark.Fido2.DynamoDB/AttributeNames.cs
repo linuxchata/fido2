@@ -31,6 +31,11 @@ internal static class AttributeNames
     public const string CredentialPublicKeyJson = "cpk";
 
     /// <summary>
+    /// Authenticator attestation GUID.
+    /// </summary>
+    public const string AaGuid = "aag";
+
+    /// <summary>
     /// Sign count.
     /// </summary>
     public const string SignCount = "sc";

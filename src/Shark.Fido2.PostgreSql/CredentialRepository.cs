@@ -39,6 +39,7 @@ internal sealed class CredentialRepository : ICredentialRepository
                 user_name AS ""UserName"",
                 user_display_name AS ""UserDisplayName"",
                 credential_public_key_json AS ""CredentialPublicKeyJson"",
+                aa_guid AS ""AaGuid"",
                 sign_count AS ""SignCount"",
                 transports AS ""Transports"",
                 created_at AS ""CreatedAt"",
@@ -116,8 +117,8 @@ internal sealed class CredentialRepository : ICredentialRepository
         ArgumentNullException.ThrowIfNull(credential.CredentialPublicKey);
 
         const string query = @"
-            INSERT INTO credential (credential_id, user_handle, user_name, user_display_name, credential_public_key_json, sign_count, transports)
-            VALUES (@CredentialId, @UserHandle, @UserName, @UserDisplayName, @CredentialPublicKeyJson, @SignCount, @Transports)";
+            INSERT INTO credential (credential_id, user_handle, user_name, user_display_name, credential_public_key_json, aa_guid, sign_count, transports)
+            VALUES (@CredentialId, @UserHandle, @UserName, @UserDisplayName, @CredentialPublicKeyJson, @AaGuid, @SignCount, @Transports)";
 
         var entity = credential.ToEntity();
 
@@ -132,6 +133,7 @@ internal sealed class CredentialRepository : ICredentialRepository
                 entity.UserName,
                 entity.UserDisplayName,
                 entity.CredentialPublicKeyJson,
+                entity.AaGuid,
                 SignCount = (long)entity.SignCount,
                 entity.Transports,
             },

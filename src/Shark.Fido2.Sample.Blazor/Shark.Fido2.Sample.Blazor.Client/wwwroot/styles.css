@@ -221,6 +221,12 @@ p {
     color: #dc2626;
 }
 
+.aa-guid {
+    font-family: monospace;
+    font-size: var(--font-size-sm);
+    color: #dc2626;
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
     .page-container {

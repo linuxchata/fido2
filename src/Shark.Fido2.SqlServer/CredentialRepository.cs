@@ -1,4 +1,4 @@
-﻿using System.Data;
+using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using Dapper;
 using Shark.Fido2.Core.Abstractions.Repositories;
@@ -39,6 +39,7 @@ internal sealed class CredentialRepository : ICredentialRepository
                 UserName,
                 UserDisplayName,
                 CredentialPublicKeyJson,
+                AaGuid,
                 SignCount,
                 Transports,
                 CreatedAt,
@@ -122,6 +123,7 @@ internal sealed class CredentialRepository : ICredentialRepository
                 UserName,
                 UserDisplayName,
                 CredentialPublicKeyJson,
+                AaGuid,
                 SignCount,
                 Transports)
             VALUES (
@@ -130,6 +132,7 @@ internal sealed class CredentialRepository : ICredentialRepository
                 @UserName,
                 @UserDisplayName,
                 @CredentialPublicKeyJson,
+                @AaGuid,
                 @SignCount,
                 @Transports)";
 
@@ -146,6 +149,7 @@ internal sealed class CredentialRepository : ICredentialRepository
                 entity.UserName,
                 entity.UserDisplayName,
                 entity.CredentialPublicKeyJson,
+                entity.AaGuid,
                 SignCount = (long)entity.SignCount,
                 entity.Transports,
             },

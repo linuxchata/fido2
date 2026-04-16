@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 
 namespace Shark.Fido2.Core.Entities;
 
@@ -13,6 +13,8 @@ public sealed class CredentialEntity
     public required string UserDisplayName { get; set; }
 
     public required CredentialPublicKeyEntity CredentialPublicKey { get; set; }
+
+    public Guid AaGuid { get; set; }
 
     [JsonIgnore]
     public string CredentialPublicKeyJson { get; set; } = null!;

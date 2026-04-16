@@ -30,6 +30,7 @@ internal class CredentialMapperTests
                 YCoordinate = [17, 18, 19],
                 Key = [20, 21, 22],
             },
+            AaGuid = Guid.NewGuid(),
             SignCount = 1,
             Transports = ["usb", "nfc"],
             CreatedAt = DateTime.UtcNow,
@@ -44,6 +45,7 @@ internal class CredentialMapperTests
         Assert.That(entity.UserHandle, Is.EqualTo(credential.UserHandle));
         Assert.That(entity.UserName, Is.EqualTo(credential.UserName));
         Assert.That(entity.UserDisplayName, Is.EqualTo(credential.UserDisplayName));
+        Assert.That(entity.AaGuid, Is.EqualTo(credential.AaGuid));
         Assert.That(entity.SignCount, Is.EqualTo(credential.SignCount));
         Assert.That(entity.Transports, Is.EqualTo("usb;nfc"));
         Assert.That(entity.CreatedAt, Is.EqualTo(credential.CreatedAt));
@@ -81,6 +83,7 @@ internal class CredentialMapperTests
                 YCoordinate = [17, 18, 19],
                 Key = [20, 21, 22],
             },
+            AaGuid = Guid.NewGuid(),
             SignCount = 1,
             Transports = "usb;nfc",
             CreatedAt = DateTime.UtcNow,
@@ -96,6 +99,7 @@ internal class CredentialMapperTests
         Assert.That(domain.UserHandle, Is.EqualTo(entity.UserHandle));
         Assert.That(domain.UserName, Is.EqualTo(entity.UserName));
         Assert.That(domain.UserDisplayName, Is.EqualTo(entity.UserDisplayName));
+        Assert.That(domain.AaGuid, Is.EqualTo(entity.AaGuid));
         Assert.That(domain.SignCount, Is.EqualTo(entity.SignCount));
         Assert.That(domain.Transports, Is.EqualTo(ExpectedTransports));
         Assert.That(domain.CreatedAt, Is.EqualTo(entity.CreatedAt));

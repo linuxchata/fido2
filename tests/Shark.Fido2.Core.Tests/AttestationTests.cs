@@ -67,6 +67,7 @@ internal class AttestationTests
                 {
                     AttestedCredentialData = new AttestedCredentialData
                     {
+                        AaGuid = Guid.Parse("f38122bb-ad2d-4f1d-8468-76605b9f1d07"),
                         CredentialId = [1, 2, 3, 4],
                         CredentialPublicKey = new CredentialPublicKey
                         {
@@ -443,6 +444,7 @@ internal class AttestationTests
         Assert.That(credential.CredentialPublicKey.Curve, Is.EqualTo(1));
         Assert.That(credential.CredentialPublicKey.XCoordinate, Is.EqualTo(new byte[] { 5, 6, 7, 8 }));
         Assert.That(credential.CredentialPublicKey.YCoordinate, Is.EqualTo(new byte[] { 9, 10, 11, 12 }));
+        Assert.That(credential.AaGuid, Is.EqualTo(Guid.Parse("f38122bb-ad2d-4f1d-8468-76605b9f1d07")));
         Assert.That(credential.SignCount, Is.EqualTo(1));
         Assert.That(credential.Transports, Is.EquivalentTo(["internal"]));
     }

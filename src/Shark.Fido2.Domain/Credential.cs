@@ -1,4 +1,4 @@
-﻿namespace Shark.Fido2.Domain;
+namespace Shark.Fido2.Domain;
 
 /// <summary>
 /// The credential.
@@ -29,6 +29,11 @@ public sealed class Credential
     /// Gets or sets the credential's public key.
     /// </summary>
     public required CredentialPublicKey CredentialPublicKey { get; set; }
+
+    /// <summary>
+    /// Gets or sets the authenticator attestation GUID.
+    /// </summary>
+    public Guid AaGuid { get; set; }
 
     /// <summary>
     /// Gets or sets the authenticator’s signature counter.
