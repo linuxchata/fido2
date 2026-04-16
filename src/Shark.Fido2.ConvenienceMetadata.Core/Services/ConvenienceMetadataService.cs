@@ -23,7 +23,7 @@ internal sealed class ConvenienceMetadataService : IConvenienceMetadataService
 
     public async Task<ConvenienceMetadataPayload?> Get(CancellationToken cancellationToken)
     {
-        var convenienceMetadataBlob = await _httpClientRepository.GetMetadataBlob(cancellationToken);
+        var convenienceMetadataBlob = await _httpClientRepository.GetConvenienceMetadataBlob(cancellationToken);
 
         _logger.LogDebug("Convenience metadata BLOB was downloaded");
 

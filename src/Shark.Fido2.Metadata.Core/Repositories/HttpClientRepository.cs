@@ -14,7 +14,7 @@ internal sealed class HttpClientRepository(
     public async Task<string> GetMetadataBlob(CancellationToken cancellationToken)
     {
         using var httpClient = httpClientFactory.CreateClient();
-        using var stream = await httpClient.GetStreamAsync(options.Value.MetadataBlobLocation, cancellationToken);
+        await using var stream = await httpClient.GetStreamAsync(options.Value.MetadataBlobLocation, cancellationToken);
         using var reader = new StreamReader(stream);
         return await reader.ReadToEndAsync(cancellationToken);
     }

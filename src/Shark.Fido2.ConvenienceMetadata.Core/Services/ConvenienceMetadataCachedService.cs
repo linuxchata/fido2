@@ -9,25 +9,26 @@ namespace Shark.Fido2.ConvenienceMetadata.Core.Services;
 
 internal sealed class ConvenienceMetadataCachedService : IConvenienceMetadataCachedService
 {
-    private const string KeyPrefix = "cmd";
+    private const string CacheKey = "cmds_payload";
+    private const string KeyPrefix = "cmds";
     private const int DefaultDistributedCacheExpirationInMinutes = 30;
     private const int DefaultMemoryCacheExpirationInMinutes = 10;
 
     private static readonly SemaphoreSlim OperationLock = new(1, 1);
 
-    private readonly IConvenienceMetadataService _metadataService;
-    private readonly IDistributedCache _cache;
+    private readonly IConvenienceMetadataService _convenienceMetadataService;
+    private readonly IDistributedCache _distributedCache;
     private readonly IMemoryCache _memoryCache;
     private readonly TimeProvider _timeProvider;
 
     public ConvenienceMetadataCachedService(
-        IConvenienceMetadataService metadataService,
-        IDistributedCache cache,
+        IConvenienceMetadataService convenienceMetadataService,
+        IDistributedCache distributedCache,
         IMemoryCache memoryCache,
         TimeProvider timeProvider)
     {
-        _metadataService = metadataService;
-        _cache = cache;
+        _convenienceMetadataService = convenienceMetadataService;
+        _distributedCache = distributedCache;
         _memoryCache = memoryCache;
         _timeProvider = timeProvider;
     }
@@ -45,32 +46,32 @@ internal sealed class ConvenienceMetadataCachedService : IConvenienceMetadataCac
         string? serializedPayload;
         try
         {
-            serializedPayload = await _cache.GetStringAsync(KeyPrefix, cancellationToken);
-            serializedPayload ??= await StoreCacheInDistributedCache(cancellationToken);
+            serializedPayload = await _distributedCache.GetStringAsync(CacheKey, cancellationToken);
+            serializedPayload ??= await StoreInDistributedCache(cancellationToken);
         }
         finally
         {
             OperationLock.Release();
         }
 
-        var metadataPayloadItem = GetMetadataPayloadItem(serializedPayload, aaguid);
+        var payloadItem = GetMetadataPayloadItem(serializedPayload, aaguid);
 
-        if (metadataPayloadItem != null)
+        if (payloadItem != null)
         {
             var cacheOptions = new MemoryCacheEntryOptions()
                 .SetAbsoluteExpiration(DateTime.UtcNow.AddMinutes(DefaultMemoryCacheExpirationInMinutes));
 
-            _memoryCache.Set(memoryCacheKey, metadataPayloadItem, cacheOptions);
+            _memoryCache.Set(memoryCacheKey, payloadItem, cacheOptions);
         }
 
-        return metadataPayloadItem;
+        return payloadItem;
     }
 
-    private async Task<string> StoreCacheInDistributedCache(CancellationToken cancellationToken)
+    private async Task<string> StoreInDistributedCache(CancellationToken cancellationToken)
     {
-        var metadata = await _metadataService.Get(cancellationToken);
+        var convenienceMetadata = await _convenienceMetadataService.Get(cancellationToken);
 
-        var serializedPayload = JsonSerializer.Serialize(metadata?.Entries);
+        var serializedPayload = JsonSerializer.Serialize(convenienceMetadata?.Entries);
 
         var options = new DistributedCacheEntryOptions
         {
@@ -79,7 +80,7 @@ internal sealed class ConvenienceMetadataCachedService : IConvenienceMetadataCac
 
         if (serializedPayload != null)
         {
-            await _cache.SetStringAsync(KeyPrefix, serializedPayload, options, cancellationToken);
+            await _distributedCache.SetStringAsync(CacheKey, serializedPayload, options, cancellationToken);
         }
 
         return serializedPayload ?? string.Empty;
