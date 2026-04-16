@@ -61,6 +61,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.Sample.VisualSt
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.ConvenienceMetadata.Core", "Shark.Fido2.ConvenienceMetadata.Core\Shark.Fido2.ConvenienceMetadata.Core.csproj", "{27CA81BA-F81D-44A9-9064-EF5F2426291F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.ConvenienceMetadata.Core.Tests", "..\tests\Shark.Fido2.ConvenienceMetadata.Core.Tests\Shark.Fido2.ConvenienceMetadata.Core.Tests.csproj", "{E8084625-0099-4CA9-892C-A8FAE55B3455}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -371,6 +373,18 @@ Global
 		{27CA81BA-F81D-44A9-9064-EF5F2426291F}.Release|x64.Build.0 = Release|Any CPU
 		{27CA81BA-F81D-44A9-9064-EF5F2426291F}.Release|x86.ActiveCfg = Release|Any CPU
 		{27CA81BA-F81D-44A9-9064-EF5F2426291F}.Release|x86.Build.0 = Release|Any CPU
+		{E8084625-0099-4CA9-892C-A8FAE55B3455}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8084625-0099-4CA9-892C-A8FAE55B3455}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8084625-0099-4CA9-892C-A8FAE55B3455}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E8084625-0099-4CA9-892C-A8FAE55B3455}.Debug|x64.Build.0 = Debug|Any CPU
+		{E8084625-0099-4CA9-892C-A8FAE55B3455}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E8084625-0099-4CA9-892C-A8FAE55B3455}.Debug|x86.Build.0 = Debug|Any CPU
+		{E8084625-0099-4CA9-892C-A8FAE55B3455}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8084625-0099-4CA9-892C-A8FAE55B3455}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8084625-0099-4CA9-892C-A8FAE55B3455}.Release|x64.ActiveCfg = Release|Any CPU
+		{E8084625-0099-4CA9-892C-A8FAE55B3455}.Release|x64.Build.0 = Release|Any CPU
+		{E8084625-0099-4CA9-892C-A8FAE55B3455}.Release|x86.ActiveCfg = Release|Any CPU
+		{E8084625-0099-4CA9-892C-A8FAE55B3455}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
