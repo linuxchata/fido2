@@ -45,7 +45,7 @@ public class CredentialController(ICredentialService credentialService) : Contro
             UserHandle = credential.UserHandle.ToBase64Url(),
             UserName = credential.UserName,
             UserDisplayName = credential.UserDisplayName,
-            AaGuid = "-",
+            AaGuid = $"{credential.AaGuid}",
             SignCount = credential.SignCount,
             Algorithm = PublicKeyAlgorithms.Get(credential.CredentialPublicKey.Algorithm),
             Transports = credential.Transports ?? [],
