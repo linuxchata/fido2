@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.Caching.Distributed;
@@ -14,7 +15,7 @@ namespace Shark.Fido2.Metadata.Core.Tests.Services;
 internal class MetadataCachedServiceTests
 {
     private const string Description = nameof(Description);
-    private const string KeyPrefix = "md";
+    private const string CacheKey = "mds_payload";
     private const int DefaultDistributedCacheExpirationInMinutes = 30;
 
     private Guid _aaguid;
@@ -55,7 +56,7 @@ internal class MetadataCachedServiceTests
             Aaguid = _aaguid,
             MetadataStatement = metadataStatement,
             StatusReports = [],
-            TimeOfLastStatusChange = DateTime.UtcNow.ToString(),
+            TimeOfLastStatusChange = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture),
         };
 
         _metadataServiceMock = new Mock<IMetadataService>();
@@ -91,7 +92,7 @@ internal class MetadataCachedServiceTests
             .Returns(false);
 
         _distributedCacheMock
-            .Setup(x => x.GetAsync(KeyPrefix, _cancellationToken))
+            .Setup(x => x.GetAsync(CacheKey, _cancellationToken))
             .ThrowsAsync(expectedException);
 
         // Act & Assert
@@ -111,7 +112,7 @@ internal class MetadataCachedServiceTests
             .Returns(false);
 
         _distributedCacheMock
-            .Setup(x => x.GetAsync(KeyPrefix, _cancellationToken))
+            .Setup(x => x.GetAsync(CacheKey, _cancellationToken))
             .ReturnsAsync((byte[]?)null!);
 
         _metadataServiceMock
@@ -154,7 +155,7 @@ internal class MetadataCachedServiceTests
             .Returns(false);
 
         _distributedCacheMock
-            .Setup(x => x.GetAsync(KeyPrefix, _cancellationToken))
+            .Setup(x => x.GetAsync(CacheKey, _cancellationToken))
             .ReturnsAsync(Encoding.UTF8.GetBytes(serializedPayload));
 
         // Act
@@ -167,7 +168,7 @@ internal class MetadataCachedServiceTests
 
         _distributedCacheMock.Verify(
             x => x.SetAsync(
-                KeyPrefix,
+                CacheKey,
                 It.IsAny<byte[]>(),
                 It.IsAny<DistributedCacheEntryOptions>(),
                 _cancellationToken),
@@ -188,7 +189,7 @@ internal class MetadataCachedServiceTests
             .Returns(false);
 
         _distributedCacheMock
-            .Setup(x => x.GetAsync(KeyPrefix, _cancellationToken))
+            .Setup(x => x.GetAsync(CacheKey, _cancellationToken))
             .ReturnsAsync(Encoding.UTF8.GetBytes(serializedPayload));
 
         // Act
@@ -203,7 +204,7 @@ internal class MetadataCachedServiceTests
 
         _distributedCacheMock.Verify(
             x => x.SetAsync(
-                KeyPrefix,
+                CacheKey,
                 It.IsAny<byte[]>(),
                 It.IsAny<DistributedCacheEntryOptions>(),
                 _cancellationToken),
@@ -230,7 +231,7 @@ internal class MetadataCachedServiceTests
             .Returns(false);
 
         _distributedCacheMock
-            .Setup(x => x.GetAsync(KeyPrefix, _cancellationToken))
+            .Setup(x => x.GetAsync(CacheKey, _cancellationToken))
             .ReturnsAsync((byte[]?)null!);
 
         _metadataServiceMock
@@ -249,7 +250,7 @@ internal class MetadataCachedServiceTests
 
         _distributedCacheMock.Verify(
             x => x.SetAsync(
-                KeyPrefix,
+                CacheKey,
                 It.IsAny<byte[]>(),
                 It.IsAny<DistributedCacheEntryOptions>(),
                 _cancellationToken),
@@ -280,7 +281,7 @@ internal class MetadataCachedServiceTests
             .Returns(false);
 
         _distributedCacheMock
-            .Setup(x => x.GetAsync(KeyPrefix, _cancellationToken))
+            .Setup(x => x.GetAsync(CacheKey, _cancellationToken))
             .ReturnsAsync((byte[]?)null!);
 
         _metadataServiceMock
@@ -301,7 +302,7 @@ internal class MetadataCachedServiceTests
 
         _distributedCacheMock.Verify(
             x => x.SetAsync(
-                KeyPrefix,
+                CacheKey,
                 It.IsAny<byte[]>(),
                 It.Is<DistributedCacheEntryOptions>(options =>
                     options.AbsoluteExpiration!.Value <= nowTime.AddMinutes(DefaultDistributedCacheExpirationInMinutes + 1) &&
@@ -332,7 +333,7 @@ internal class MetadataCachedServiceTests
             .Returns(false);
 
         _distributedCacheMock
-            .Setup(x => x.GetAsync(KeyPrefix, _cancellationToken))
+            .Setup(x => x.GetAsync(CacheKey, _cancellationToken))
             .ReturnsAsync((byte[]?)null!);
 
         _metadataServiceMock
@@ -349,7 +350,7 @@ internal class MetadataCachedServiceTests
 
         _distributedCacheMock.Verify(
             x => x.SetAsync(
-                KeyPrefix,
+                CacheKey,
                 It.IsAny<byte[]>(),
                 It.Is<DistributedCacheEntryOptions>(options =>
                     options.AbsoluteExpiration == new DateTimeOffset(futureNextUpdate)),

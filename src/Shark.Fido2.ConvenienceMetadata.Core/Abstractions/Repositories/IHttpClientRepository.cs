@@ -10,5 +10,5 @@ public interface IHttpClientRepository
     /// </summary>
     /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>The metadata BLOB content.</returns>
-    Task<string> GetMetadataBlob(CancellationToken cancellationToken);
+    Task<string> GetConvenienceMetadataBlob(CancellationToken cancellationToken);
 }
