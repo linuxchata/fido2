@@ -12,10 +12,12 @@ namespace Shark.Fido2.ConvenienceMetadata.Core;
 [ExcludeFromCodeCoverage]
 public static class DependencyInjection
 {
-    public static void AddConvenienceMetadataService(this IServiceCollection services, IConfigurationSection configurationSection)
+    public static void AddFido2ConvenienceMetadataService(
+        this IServiceCollection services,
+        IConfiguration configuration)
     {
-        var convenienceMetadataServiceConfigurationSection = configurationSection.GetSection(ConvenienceMetadataServiceConfiguration.Name);
-        services.Configure<ConvenienceMetadataServiceConfiguration>(convenienceMetadataServiceConfigurationSection);
+        var configurationSection = configuration.GetSection(ConvenienceMetadataServiceConfiguration.Name);
+        services.Configure<ConvenienceMetadataServiceConfiguration>(configurationSection);
 
         services.AddDistributedMemoryCache();
         services.AddMemoryCache();
@@ -23,8 +25,8 @@ public static class DependencyInjection
         services.AddHttpClient();
 
         services.AddTransient<IHttpClientRepository, HttpClientRepository>();
-        services.AddTransient<IConvenienceMetadataReaderService, ConvenienceMetadataReaderService>();
         services.AddTransient<IConvenienceMetadataService, ConvenienceMetadataService>();
+        services.AddTransient<IConvenienceMetadataReaderService, ConvenienceMetadataReaderService>();
         services.AddTransient<IConvenienceMetadataCachedService, ConvenienceMetadataCachedService>();
     }
 }
