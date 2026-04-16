@@ -3,7 +3,7 @@ using Shark.Fido2.ConvenienceMetadata.Core.Models;
 namespace Shark.Fido2.ConvenienceMetadata.Core.Abstractions;
 
 /// <summary>
-/// The interface representing the logic to retrieve the Convenience Metadata Service BLOB.
+/// The interface representing the logic to retrieve the convenience metadata BLOB.
 /// </summary>
 public interface IConvenienceMetadataService
 {

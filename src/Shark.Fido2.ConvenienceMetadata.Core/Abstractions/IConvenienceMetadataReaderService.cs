@@ -10,7 +10,7 @@ public interface IConvenienceMetadataReaderService
     /// <summary>
     /// Reads a convenience metadata BLOB object.
     /// </summary>
-    /// <param name="metadataBlob">The metadata BLOB content.</param>
+    /// <param name="convenienceMetadataBlob">The convenience metadata BLOB content.</param>
     /// <returns>The convenience metadata payload.</returns>
-    ConvenienceMetadataPayload Read(string metadataBlob);
+    ConvenienceMetadataPayload Read(string convenienceMetadataBlob);
 }

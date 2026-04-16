@@ -5,7 +5,7 @@ public sealed class ConvenienceMetadataServiceConfiguration
     public const string Name = nameof(ConvenienceMetadataServiceConfiguration);
 
     /// <summary>
-    /// Gets or sets a location of the Convenience Metadata Service BLOB.
+    /// Gets or sets a location of the convenience metadata service BLOB.
     /// </summary>
-    public string MetadataBlobLocation { get; set; } = "https://c-mds.fidoalliance.org/";
+    public string ConvenienceMetadataBlobLocation { get; set; } = "https://c-mds.fidoalliance.org/";
 }

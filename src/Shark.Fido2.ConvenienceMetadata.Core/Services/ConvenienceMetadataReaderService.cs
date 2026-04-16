@@ -14,11 +14,11 @@ internal sealed class ConvenienceMetadataReaderService : IConvenienceMetadataRea
         _logger = logger;
     }
 
-    public ConvenienceMetadataPayload Read(string metadataBlob)
+    public ConvenienceMetadataPayload Read(string convenienceMetadataBlob)
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(metadataBlob);
+        ArgumentException.ThrowIfNullOrWhiteSpace(convenienceMetadataBlob);
 
-        var payload = JsonSerializer.Deserialize<ConvenienceMetadataPayload>(metadataBlob);
+        var payload = JsonSerializer.Deserialize<ConvenienceMetadataPayload>(convenienceMetadataBlob);
         if (payload == null)
         {
             throw new InvalidDataException(
