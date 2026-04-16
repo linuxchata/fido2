@@ -9,11 +9,11 @@ namespace Shark.Fido2.ConvenienceMetadata.Core.Services;
 
 internal sealed class ConvenienceMetadataCachedService : IConvenienceMetadataCachedService
 {
-    private const string KeyPrefix = "cmds";
+    private const string KeyPrefix = "cmd";
     private const int DefaultDistributedCacheExpirationInMinutes = 30;
     private const int DefaultMemoryCacheExpirationInMinutes = 10;
 
-    private static readonly SemaphoreSlim _operationLock = new(1, 1);
+    private static readonly SemaphoreSlim OperationLock = new(1, 1);
 
     private readonly IConvenienceMetadataService _metadataService;
     private readonly IDistributedCache _cache;
@@ -40,9 +40,9 @@ internal sealed class ConvenienceMetadataCachedService : IConvenienceMetadataCac
             return cachedItem;
         }
 
-        await _operationLock.WaitAsync(cancellationToken);
+        await OperationLock.WaitAsync(cancellationToken);
 
-        string? serializedPayload = null;
+        string? serializedPayload;
         try
         {
             serializedPayload = await _cache.GetStringAsync(KeyPrefix, cancellationToken);
@@ -50,7 +50,7 @@ internal sealed class ConvenienceMetadataCachedService : IConvenienceMetadataCac
         }
         finally
         {
-            _operationLock.Release();
+            OperationLock.Release();
         }
 
         var metadataPayloadItem = GetMetadataPayloadItem(serializedPayload, aaguid);
