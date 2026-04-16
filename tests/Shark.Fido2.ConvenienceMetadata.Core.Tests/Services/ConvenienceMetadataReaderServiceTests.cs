@@ -33,10 +33,20 @@ internal class ConvenienceMetadataReaderServiceTests
     public void Read_WhenBlobIsInvalidJson_ThenThrowsJsonException()
     {
         // Arrange
-        var invalidJson = "invalid-json";
+        var blob = "invalid-json";
 
         // Act & Assert
-        Assert.Throws<JsonException>(() => _sut.Read(invalidJson));
+        Assert.Throws<JsonException>(() => _sut.Read(blob));
+    }
+
+    [Test]
+    public void Read_WhenBlobIsNullJson_ThenThrowsInvalidDataException()
+    {
+        // Arrange
+        var blob = "null";
+
+        // Act & Assert
+        Assert.Throws<InvalidDataException>(() => _sut.Read(blob));
     }
 
     [Test]
