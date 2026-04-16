@@ -2,6 +2,10 @@
 
   <PropertyGroup>
     <IsPackable>true</IsPackable>
+    <IsNuGetPackable>true</IsNuGetPackable>
+    <PackageId>Shark.Fido2.ConvenienceMetadata.Core</PackageId>
+    <Description>FIDO Alliance Convenience Metadata Service for Shark WebAuthn .NET library</Description>
+    <Product>FIDO Alliance Convenience Metadata Service for Shark WebAuthn .NET library</Product>
   </PropertyGroup>
 
   <ItemGroup>
