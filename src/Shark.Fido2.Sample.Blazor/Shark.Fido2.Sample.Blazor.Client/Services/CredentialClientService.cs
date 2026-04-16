@@ -37,19 +37,19 @@ public class CredentialClientService : ICredentialClientService
                 }
                 else
                 {
-                    var errorMessage = $"An unknown error occurred while fetching public key credential details.";
+                    var errorMessage = "An unknown error occurred while fetching public key credential details.";
                     return Response<CredentialDetailsViewModel>.CreateFailed(errorMessage);
                 }
             }
             else
             {
-                var errorMessage = $"Failed to load public key credential details.";
+                var errorMessage = "Failed to load public key credential details.";
                 return Response<CredentialDetailsViewModel>.CreateFailed(errorMessage);
             }
         }
         catch
         {
-            var errorMessage = $"An error occurred while fetching public key credential details.";
+            var errorMessage = "An error occurred while fetching public key credential details.";
             return Response<CredentialDetailsViewModel>.CreateFailed(errorMessage);
         }
     }
