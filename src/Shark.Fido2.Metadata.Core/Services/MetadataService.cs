@@ -38,7 +38,7 @@ internal sealed class MetadataService : IMetadataService
         // date when the download SHOULD occur at latest.
         var metadataBlob = await _httpClientRepository.GetMetadataBlob(cancellationToken);
 
-        _logger.LogDebug("Metadata blob was downloaded");
+        _logger.LogDebug("Metadata BLOB was downloaded");
 
         // Steps 4-7
         return await _metadataReaderService.ValidateAndRead(metadataBlob, rootCertificate, cancellationToken);

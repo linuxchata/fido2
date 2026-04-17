@@ -27,6 +27,7 @@ This repository provides a mature, production-ready server-side implementation o
   - Amazon DynamoDB
   - In-memory storage
  - **FIDO Metadata Service**
+ - **FIDO Convenience Metadata Service**
  - **Fully tested** with the [FIDO Conformance Tool](https://fidoalliance.org/certification/conformance/) – all test cases successfully passed
  - Code samples and demo website
 

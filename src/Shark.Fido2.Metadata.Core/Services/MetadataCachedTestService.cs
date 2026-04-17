@@ -12,7 +12,7 @@ using Shark.Fido2.Metadata.Core.Models;
 namespace Shark.Fido2.Metadata.Core.Services;
 
 /// <summary>
-/// Remote blob test service is used for conformance testing for metadata service test cases.
+/// Remote BLOB test service is used for conformance testing for metadata service test cases.
 /// See: https://github.com/fido-alliance/conformance-test-tools-resources/issues/422#issuecomment-508959572.
 /// </summary>
 [ExcludeFromCodeCoverage]
@@ -21,7 +21,7 @@ internal sealed class MetadataCachedTestService : IMetadataCachedService
     private const string KeyPrefix = "md";
     private const int DefaultExpirationInMinutes = 5;
 
-    private static readonly SemaphoreSlim _semaphore = new(1, 1);
+    private static readonly SemaphoreSlim OperationLock = new(1, 1);
 
     private readonly IHttpClientConformanceTestRepository _httpClientRepository;
     private readonly IMetadataReaderService _metadataReaderService;
@@ -42,9 +42,9 @@ internal sealed class MetadataCachedTestService : IMetadataCachedService
 
     public async Task<MetadataPayloadItem?> Get(Guid aaguid, CancellationToken cancellationToken)
     {
-        await _semaphore.WaitAsync(cancellationToken);
+        await OperationLock.WaitAsync(cancellationToken);
 
-        string? serializedPayload = null;
+        string? serializedPayload;
 
         try
         {
@@ -53,7 +53,7 @@ internal sealed class MetadataCachedTestService : IMetadataCachedService
         }
         finally
         {
-            _semaphore.Release();
+            OperationLock.Release();
         }
 
         var payloadEntries = JsonSerializer.Deserialize<List<MetadataBlobPayloadEntry>>(serializedPayload);
@@ -68,7 +68,7 @@ internal sealed class MetadataCachedTestService : IMetadataCachedService
         var metadataBlobLocation = _configuration.MetadataBlobLocation.Split(';');
         if (metadataBlobLocation.Length != 2)
         {
-            throw new FormatException("Metadata blob location should be in the format 'remoteUrl;localPath'");
+            throw new FormatException("Metadata BLOB location should be in the format 'remoteUrl;localPath'");
         }
 
         var remoteUrl = metadataBlobLocation[0];

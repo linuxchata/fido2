@@ -10,25 +10,26 @@ namespace Shark.Fido2.Metadata.Core.Services;
 
 internal sealed class MetadataCachedService : IMetadataCachedService
 {
-    private const string KeyPrefix = "md";
+    private const string CacheKey = "mds_payload";
+    private const string KeyPrefix = "mds";
     private const int DefaultDistributedCacheExpirationInMinutes = 30;
     private const int DefaultMemoryCacheExpirationInMinutes = 10;
 
-    private static readonly SemaphoreSlim _operationLock = new(1, 1);
+    private static readonly SemaphoreSlim OperationLock = new(1, 1);
 
     private readonly IMetadataService _metadataService;
-    private readonly IDistributedCache _cache;
+    private readonly IDistributedCache _distributedCache;
     private readonly IMemoryCache _memoryCache;
     private readonly TimeProvider _timeProvider;
 
     public MetadataCachedService(
         IMetadataService metadataService,
-        IDistributedCache cache,
+        IDistributedCache distributedCache,
         IMemoryCache memoryCache,
         TimeProvider timeProvider)
     {
         _metadataService = metadataService;
-        _cache = cache;
+        _distributedCache = distributedCache;
         _memoryCache = memoryCache;
         _timeProvider = timeProvider;
     }
@@ -43,35 +44,35 @@ internal sealed class MetadataCachedService : IMetadataCachedService
         }
 
         // Then check distributed cache
-        await _operationLock.WaitAsync(cancellationToken);
+        await OperationLock.WaitAsync(cancellationToken);
 
-        string? serializedPayload = null;
+        string? serializedPayload;
 
         try
         {
-            serializedPayload = await _cache.GetStringAsync(KeyPrefix, cancellationToken);
-            serializedPayload ??= await StoreCacheInDistributedCache(cancellationToken);
+            serializedPayload = await _distributedCache.GetStringAsync(CacheKey, cancellationToken);
+            serializedPayload ??= await StoreInDistributedCache(cancellationToken);
         }
         finally
         {
-            _operationLock.Release();
+            OperationLock.Release();
         }
 
-        var metadataPayloadItem = GetMetadataPayloadItem(serializedPayload, aaguid);
+        var payloadItem = GetMetadataPayloadItem(serializedPayload, aaguid);
 
         // Cache the result in memory if found
-        if (metadataPayloadItem != null)
+        if (payloadItem != null)
         {
             var cacheOptions = new MemoryCacheEntryOptions()
                 .SetAbsoluteExpiration(DateTime.UtcNow.AddMinutes(DefaultMemoryCacheExpirationInMinutes));
 
-            _memoryCache.Set(memoryCacheKey, metadataPayloadItem, cacheOptions);
+            _memoryCache.Set(memoryCacheKey, payloadItem, cacheOptions);
         }
 
-        return metadataPayloadItem;
+        return payloadItem;
     }
 
-    private async Task<string> StoreCacheInDistributedCache(CancellationToken cancellationToken)
+    private async Task<string> StoreInDistributedCache(CancellationToken cancellationToken)
     {
         var metadata = await _metadataService.Get(cancellationToken);
 
@@ -82,7 +83,7 @@ internal sealed class MetadataCachedService : IMetadataCachedService
             AbsoluteExpiration = GetAbsoluteExpiration(metadata.NextUpdate),
         };
 
-        await _cache.SetStringAsync(KeyPrefix, serializedPayload, options, cancellationToken);
+        await _distributedCache.SetStringAsync(CacheKey, serializedPayload, options, cancellationToken);
 
         return serializedPayload;
     }
