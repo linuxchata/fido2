@@ -1,3 +1,5 @@
+using Shark.Fido2.ConvenienceMetadata.Core.Constants;
+
 namespace Shark.Fido2.ConvenienceMetadata.Core.Domain;
 
 public sealed class ConvenienceMetadataPayloadItem
@@ -13,4 +15,9 @@ public sealed class ConvenienceMetadataPayloadItem
     public string? ProviderLogoLight { get; init; }
 
     public string? ProviderLogoDark { get; init; }
+
+    public string? GetDefaultName()
+    {
+        return FriendlyNames.GetValueOrDefault(Culture.EnglishUs);
+    }
 }
