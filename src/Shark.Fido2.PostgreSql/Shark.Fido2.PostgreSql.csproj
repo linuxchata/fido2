@@ -6,6 +6,8 @@
     <PackageId>Shark.Fido2.PostgreSql</PackageId>
     <Description>PostgreSQL data store for Shark WebAuthn .NET library</Description>
     <Product>PostgreSQL data store for Shark WebAuthn .NET library</Product>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
