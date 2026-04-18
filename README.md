@@ -35,6 +35,7 @@ This repository provides a mature, production-ready server-side implementation o
 | Package Name | Status |
 |-|-|
 | Shark.Fido2.Core | [![NuGet](https://img.shields.io/nuget/v/Shark.Fido2.Core.svg)](https://www.nuget.org/packages/Shark.Fido2.Core/) |
+| Shark.Fido2.ConvenienceMetadata.Core | [![NuGet](https://img.shields.io/nuget/v/Shark.Fido2.ConvenienceMetadata.Core.svg)](https://www.nuget.org/packages/Shark.Fido2.ConvenienceMetadata.Core/) |
 | Shark.Fido2.DynamoDB | [![NuGet](https://img.shields.io/nuget/v/Shark.Fido2.DynamoDB.svg)](https://www.nuget.org/packages/Shark.Fido2.DynamoDB/) |
 | Shark.Fido2.InMemory | [![NuGet](https://img.shields.io/nuget/v/Shark.Fido2.InMemory.svg)](https://www.nuget.org/packages/Shark.Fido2.InMemory/) |
 | Shark.Fido2.Models | [![NuGet](https://img.shields.io/nuget/v/Shark.Fido2.Models.svg)](https://www.nuget.org/packages/Shark.Fido2.Models/) |

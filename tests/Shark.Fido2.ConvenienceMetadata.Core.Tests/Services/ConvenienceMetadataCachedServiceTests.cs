@@ -3,6 +3,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using Moq;
 using Shark.Fido2.ConvenienceMetadata.Core.Abstractions;
+using Shark.Fido2.ConvenienceMetadata.Core.Constants;
 using Shark.Fido2.ConvenienceMetadata.Core.Domain;
 using Shark.Fido2.ConvenienceMetadata.Core.Models;
 using Shark.Fido2.ConvenienceMetadata.Core.Services;
@@ -49,7 +50,14 @@ internal class ConvenienceMetadataCachedServiceTests
     public async Task Get_WhenItemIsInMemoryCache_ThenReturnsItemFromMemoryCache()
     {
         // Arrange
-        var expectedItem = new ConvenienceMetadataPayloadItem { Aaguid = _aaguid };
+        var expectedItem = new ConvenienceMetadataPayloadItem
+        {
+            Aaguid = _aaguid,
+            FriendlyNames = new Dictionary<string, string>
+            {
+                [Culture.EnglishUs] = "Test"
+            }
+        };
         object? cachedValue = expectedItem;
 
         _memoryCacheMock
@@ -61,6 +69,7 @@ internal class ConvenienceMetadataCachedServiceTests
 
         // Assert
         Assert.That(result, Is.EqualTo(expectedItem));
+        Assert.That(result.GetDefaultName(), Is.EqualTo("Test"));
         _distributedCacheMock.Verify(x => x.GetAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
@@ -75,7 +84,7 @@ internal class ConvenienceMetadataCachedServiceTests
 
         var entries = new Dictionary<string, object>
         {
-            [_aaguid.ToString()] = new { friendlyNames = new Dictionary<string, string> { ["en"] = "Test" } },
+            [_aaguid.ToString()] = new { friendlyNames = new Dictionary<string, string> { [Culture.EnglishUs] = "Test" } },
         };
         var serializedEntries = JsonSerializer.Serialize(entries);
         var bytes = System.Text.Encoding.UTF8.GetBytes(serializedEntries);
@@ -108,7 +117,7 @@ internal class ConvenienceMetadataCachedServiceTests
 
         var serviceEntries = new Dictionary<string, JsonElement>();
         var entryJson = JsonSerializer.SerializeToElement(
-            new { friendlyNames = new Dictionary<string, string> { ["en"] = "Test" } });
+            new { friendlyNames = new Dictionary<string, string> { [Culture.EnglishUs] = "Test" } });
         serviceEntries[_aaguid.ToString()] = entryJson;
 
         var servicePayload = new ConvenienceMetadataPayload { Entries = serviceEntries };

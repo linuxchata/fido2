@@ -58,7 +58,7 @@ internal class ConvenienceMetadataReaderServiceTests
           "no": 1,
           "00000000-0000-0000-0000-000000000000": {
             "friendlyNames": {
-              "en": "Test Authenticator"
+              "en-US": "Test Authenticator"
             }
           }
         }
