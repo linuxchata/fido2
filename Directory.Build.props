@@ -21,11 +21,6 @@
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
   </PropertyGroup>
 
-  <!-- Generate XML documentation file so it is included in the NuGet package -->
-  <PropertyGroup Condition="'$(IsNuGetPackable)' == 'true'">
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-  </PropertyGroup>
-
   <!-- Source Link package for NuGet packages -->
   <ItemGroup Condition="'$(IsPackable)' == 'true'">
     <PackageReference Include="Microsoft.SourceLink.GitHub" PrivateAssets="All" />

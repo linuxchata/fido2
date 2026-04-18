@@ -7,6 +7,7 @@
     <RepositoryUrl>https://github.com/linuxchata/fido2</RepositoryUrl>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageReleaseNotes>https://github.com/linuxchata/fido2/releases</PackageReleaseNotes>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <!-- Common package files -->
