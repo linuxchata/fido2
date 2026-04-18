@@ -5,6 +5,7 @@ namespace Shark.Fido2.ConvenienceMetadata.Core.Configurations;
 [ExcludeFromCodeCoverage]
 public sealed class ConvenienceMetadataServiceConfiguration
 {
+    public const string RootName = "Fido2Configuration";
     public const string Name = nameof(ConvenienceMetadataServiceConfiguration);
 
     /// <summary>

@@ -16,8 +16,10 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        var configurationSection = configuration.GetSection(ConvenienceMetadataServiceConfiguration.Name);
-        services.Configure<ConvenienceMetadataServiceConfiguration>(configurationSection);
+        var configurationSection = configuration.GetSection(ConvenienceMetadataServiceConfiguration.RootName);
+        var convenienceMetadataServiceConfigurationSection = configurationSection.GetSection(
+            ConvenienceMetadataServiceConfiguration.Name);
+        services.Configure<ConvenienceMetadataServiceConfiguration>(convenienceMetadataServiceConfigurationSection);
 
         services.AddDistributedMemoryCache();
         services.AddMemoryCache();
