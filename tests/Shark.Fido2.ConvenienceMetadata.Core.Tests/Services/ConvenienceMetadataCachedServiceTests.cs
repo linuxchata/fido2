@@ -55,8 +55,8 @@ internal class ConvenienceMetadataCachedServiceTests
             Aaguid = _aaguid,
             FriendlyNames = new Dictionary<string, string>
             {
-                [Culture.EnglishUs] = "Test"
-            }
+                [Culture.EnglishUs] = "Test",
+            },
         };
         object? cachedValue = expectedItem;
 
