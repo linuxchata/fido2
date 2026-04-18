@@ -6,6 +6,8 @@
     <PackageId>Shark.Fido2.ConvenienceMetadata.Core</PackageId>
     <Description>FIDO Alliance Convenience Metadata Service for Shark WebAuthn .NET library</Description>
     <Product>FIDO Alliance Convenience Metadata Service for Shark WebAuthn .NET library</Product>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
