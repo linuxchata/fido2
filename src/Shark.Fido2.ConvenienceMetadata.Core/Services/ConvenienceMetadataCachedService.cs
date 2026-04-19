@@ -11,7 +11,7 @@ internal sealed class ConvenienceMetadataCachedService : IConvenienceMetadataCac
 {
     private const string CacheKey = "cmds_payload";
     private const string KeyPrefix = "cmds";
-    private const int DefaultDistributedCacheExpirationInMinutes = 30;
+    private const int DefaultDistributedCacheExpirationInHours = 24;
     private const int DefaultMemoryCacheExpirationInMinutes = 10;
 
     private static readonly SemaphoreSlim OperationLock = new(1, 1);
@@ -89,7 +89,7 @@ internal sealed class ConvenienceMetadataCachedService : IConvenienceMetadataCac
 
     private DateTimeOffset GetAbsoluteExpiration()
     {
-        return _timeProvider.GetUtcNow().AddMinutes(DefaultDistributedCacheExpirationInMinutes);
+        return _timeProvider.GetUtcNow().AddHours(DefaultDistributedCacheExpirationInHours);
     }
 
     private static ConvenienceMetadataPayloadItem? GetMetadataPayloadItem(string serializedPayload, Guid aaguid)
@@ -108,7 +108,7 @@ internal sealed class ConvenienceMetadataCachedService : IConvenienceMetadataCac
                 return new ConvenienceMetadataPayloadItem
                 {
                     Aaguid = aaguid,
-                    FriendlyNames = details.FriendlyNames ?? new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase),
+                    FriendlyNames = details.FriendlyNames,
                     Icon = details.Icon,
                     IconDark = details.IconDark,
                     ProviderLogoLight = details.ProviderLogoLight,
