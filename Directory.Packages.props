@@ -33,9 +33,9 @@
     <PackageVersion Include="NUnit3TestAdapter" Version="6.2.0" />
     <PackageVersion Include="prometheus-net" Version="8.2.1" />
     <PackageVersion Include="prometheus-net.AspNetCore" Version="8.2.1" />
-    <PackageVersion Include="Shark.Fido2.Core" Version="1.3.0.110" />
-    <PackageVersion Include="Shark.Fido2.InMemory" Version="1.3.0.110" />
-    <PackageVersion Include="Shark.Fido2.Models" Version="1.3.0.110" />
+    <PackageVersion Include="Shark.Fido2.Core" Version="1.4.0.123" />
+    <PackageVersion Include="Shark.Fido2.InMemory" Version="1.4.0.123" />
+    <PackageVersion Include="Shark.Fido2.Models" Version="1.4.0.123" />
     <PackageVersion Include="StyleCop.Analyzers" Version="1.1.118" />
     <PackageVersion Include="Swashbuckle.AspNetCore" Version="[8.1.4, 9.0.0)" />
     <PackageVersion Include="Swashbuckle.AspNetCore.Filters" Version="[8.0.3, 9.0.0)" />
