@@ -78,12 +78,13 @@ internal sealed class ConvenienceMetadataCachedService : IConvenienceMetadataCac
             AbsoluteExpiration = GetAbsoluteExpiration(),
         };
 
-        if (serializedPayload != null)
+        if (string.Equals(serializedPayload, "null", StringComparison.OrdinalIgnoreCase))
         {
-            await _distributedCache.SetStringAsync(CacheKey, serializedPayload, options, cancellationToken);
+            return string.Empty;
         }
 
-        return serializedPayload ?? string.Empty;
+        await _distributedCache.SetStringAsync(CacheKey, serializedPayload, options, cancellationToken);
+        return serializedPayload;
     }
 
     private DateTimeOffset GetAbsoluteExpiration()

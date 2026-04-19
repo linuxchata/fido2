@@ -23,10 +23,20 @@ internal sealed class ConvenienceMetadataService : IConvenienceMetadataService
 
     public async Task<ConvenienceMetadataPayload?> Get(CancellationToken cancellationToken)
     {
-        var convenienceMetadataBlob = await _httpClientRepository.GetConvenienceMetadataBlob(cancellationToken);
+        try
+        {
+            var convenienceMetadataBlob = await _httpClientRepository.GetConvenienceMetadataBlob(cancellationToken);
 
-        _logger.LogDebug("Convenience metadata BLOB was downloaded");
+            _logger.LogDebug("Convenience metadata BLOB was downloaded");
 
-        return _metadataReaderService.Read(convenienceMetadataBlob);
+            return _metadataReaderService.Read(convenienceMetadataBlob);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(
+                ex,
+                "Failed to download or read convenience metadata BLOB from FIDO Convenience Metadata Service.");
+            return null;
+        }
     }
 }
