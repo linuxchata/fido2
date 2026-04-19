@@ -14,7 +14,6 @@ internal class MetadataReaderServiceTests
 {
     private const string ValidMetadataBlobLocation = "https://example.com/metadata";
 
-    private CancellationToken _cancellationToken;
     private Mock<X509Certificate2> _rootCertificateMock;
 
     private Mock<IHttpClientRepository> _httpClientRepositoryMock;
@@ -26,7 +25,6 @@ internal class MetadataReaderServiceTests
     [SetUp]
     public void Setup()
     {
-        _cancellationToken = CancellationToken.None;
         _rootCertificateMock = new Mock<X509Certificate2>();
 
         _httpClientRepositoryMock = new Mock<IHttpClientRepository>();
@@ -55,7 +53,7 @@ internal class MetadataReaderServiceTests
         Assert.ThrowsAsync<ArgumentNullException>(() => _sut.ValidateAndRead(
             null!,
             _rootCertificateMock.Object,
-            _cancellationToken));
+            CancellationToken.None));
     }
 
     [Test]
@@ -67,7 +65,7 @@ internal class MetadataReaderServiceTests
         Assert.ThrowsAsync<ArgumentException>(() => _sut.ValidateAndRead(
             metadataBlob,
             _rootCertificateMock.Object,
-            _cancellationToken));
+            CancellationToken.None));
     }
 
     [Test]
@@ -80,7 +78,7 @@ internal class MetadataReaderServiceTests
         Assert.ThrowsAsync<ArgumentNullException>(() => _sut.ValidateAndRead(
             invalidJwt,
             null!,
-            _cancellationToken));
+            CancellationToken.None));
     }
 
     [Test]
@@ -94,19 +92,19 @@ internal class MetadataReaderServiceTests
         Assert.ThrowsAsync<InvalidOperationException>(() => _sut.ValidateAndRead(
             metadataBlob,
             _rootCertificateMock.Object,
-            _cancellationToken));
+            CancellationToken.None));
     }
 
     [Test]
     public void ValidateAndRead_WhenMetadataBlobIsInvalid_ThenThrowsInvalidOperationException()
     {
-        // Arrrange
+        // Arrange
         var metadataBlob = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.invalid.signature";
 
         // Act & Assert
         Assert.ThrowsAsync<InvalidOperationException>(() => _sut.ValidateAndRead(
             metadataBlob,
             _rootCertificateMock.Object,
-            _cancellationToken));
+            CancellationToken.None));
     }
 }

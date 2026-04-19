@@ -6,7 +6,6 @@ namespace Shark.Fido2.Metadata.Core.Tests.Services;
 internal class MetadataCachedNullServiceTests
 {
     private Guid _aaguid;
-    private CancellationToken _cancellationToken;
 
     private MetadataCachedNullService _sut;
 
@@ -14,7 +13,6 @@ internal class MetadataCachedNullServiceTests
     public void Setup()
     {
         _aaguid = Guid.NewGuid();
-        _cancellationToken = CancellationToken.None;
 
         _sut = new MetadataCachedNullService();
     }
@@ -23,7 +21,7 @@ internal class MetadataCachedNullServiceTests
     public async Task Get_WhenAaguidIsValid_ThenReturnsNull()
     {
         // Act
-        var result = await _sut.Get(_aaguid, _cancellationToken);
+        var result = await _sut.Get(_aaguid, CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Null);
@@ -33,7 +31,7 @@ internal class MetadataCachedNullServiceTests
     public async Task Get_WhenAaguidIsEmptyGuid_ThenReturnsNull()
     {
         // Act
-        var result = await _sut.Get(Guid.Empty, _cancellationToken);
+        var result = await _sut.Get(Guid.Empty, CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Null);
@@ -46,7 +44,7 @@ internal class MetadataCachedNullServiceTests
         var newGuid = Guid.NewGuid();
 
         // Act
-        var result = await _sut.Get(newGuid, _cancellationToken);
+        var result = await _sut.Get(newGuid, CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Null);
@@ -56,9 +54,9 @@ internal class MetadataCachedNullServiceTests
     public async Task Get_WhenCalledMultipleTimes_ThenReturnsNull()
     {
         // Act
-        var result1 = await _sut.Get(_aaguid, _cancellationToken);
-        var result2 = await _sut.Get(_aaguid, _cancellationToken);
-        var result3 = await _sut.Get(Guid.NewGuid(), _cancellationToken);
+        var result1 = await _sut.Get(_aaguid, CancellationToken.None);
+        var result2 = await _sut.Get(_aaguid, CancellationToken.None);
+        var result3 = await _sut.Get(Guid.NewGuid(), CancellationToken.None);
 
         // Assert
         Assert.That(result1, Is.Null);

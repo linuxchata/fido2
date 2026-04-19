@@ -167,4 +167,60 @@ internal class ConvenienceMetadataCachedServiceTests
         // Assert
         Assert.That(result, Is.Null);
     }
+
+    [Test]
+    public async Task Get_WhenCalledConcurrently_ThenPopulatesDistributedCacheOnlyOnce()
+    {
+        // Arrange
+        object? nullMemoryCacheValue = null;
+        _memoryCacheMock
+            .Setup(x => x.TryGetValue(It.IsAny<object>(), out nullMemoryCacheValue))
+            .Returns(false);
+
+        var serviceEntries = new Dictionary<string, JsonElement>();
+        var entryJson = JsonSerializer.SerializeToElement(
+            new { friendlyNames = new Dictionary<string, string> { [Culture.EnglishUs] = "Test" } });
+        serviceEntries[_aaguid.ToString()] = entryJson;
+        var servicePayload = new ConvenienceMetadataPayload { Entries = serviceEntries };
+
+        var callCount = 0;
+        _convenienceMetadataServiceMock
+            .Setup(x => x.Get(It.IsAny<CancellationToken>()))
+            .Returns(async () =>
+            {
+                Interlocked.Increment(ref callCount);
+                await Task.Delay(100);
+                return servicePayload;
+            });
+
+        byte[]? cachedBytes = null;
+        _distributedCacheMock
+            .Setup(x => x.GetAsync(CacheKey, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(() => cachedBytes);
+
+        _distributedCacheMock
+            .Setup(x => x.SetAsync(
+                CacheKey,
+                It.IsAny<byte[]>(),
+                It.IsAny<DistributedCacheEntryOptions>(),
+                It.IsAny<CancellationToken>()))
+            .Callback<string, byte[], DistributedCacheEntryOptions, CancellationToken>(
+                (_, value, _, _) => cachedBytes = value)
+            .Returns(Task.CompletedTask);
+
+        // Act
+        var tasks = Enumerable.Range(0, 10).Select(_ => _sut.Get(_aaguid, CancellationToken.None)).ToList();
+        await Task.WhenAll(tasks);
+
+        // Assert
+        Assert.That(callCount, Is.EqualTo(1));
+        _convenienceMetadataServiceMock.Verify(x => x.Get(It.IsAny<CancellationToken>()), Times.Once);
+        _distributedCacheMock.Verify(
+            x => x.SetAsync(
+                CacheKey,
+                It.IsAny<byte[]>(),
+                It.IsAny<DistributedCacheEntryOptions>(),
+                It.IsAny<CancellationToken>()),
+            Times.Once);
+    }
 }

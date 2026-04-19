@@ -19,7 +19,6 @@ internal class MetadataCachedServiceTests
     private const int DefaultDistributedCacheExpirationInMinutes = 30;
 
     private Guid _aaguid;
-    private CancellationToken _cancellationToken;
     private DateTime _nextUpdate;
     private MetadataBlobPayloadEntry _metadataBlobPayloadEntry;
 
@@ -34,7 +33,6 @@ internal class MetadataCachedServiceTests
     public void Setup()
     {
         _aaguid = Guid.NewGuid();
-        _cancellationToken = CancellationToken.None;
         _nextUpdate = DateTime.UtcNow.AddDays(30);
 
         var metadataStatement = new MetadataStatement
@@ -92,11 +90,11 @@ internal class MetadataCachedServiceTests
             .Returns(false);
 
         _distributedCacheMock
-            .Setup(x => x.GetAsync(CacheKey, _cancellationToken))
+            .Setup(x => x.GetAsync(CacheKey, CancellationToken.None))
             .ThrowsAsync(expectedException);
 
         // Act & Assert
-        Assert.ThrowsAsync<InvalidOperationException>(() => _sut.Get(_aaguid, _cancellationToken));
+        Assert.ThrowsAsync<InvalidOperationException>(() => _sut.Get(_aaguid, CancellationToken.None));
     }
 
     [Test]
@@ -112,15 +110,15 @@ internal class MetadataCachedServiceTests
             .Returns(false);
 
         _distributedCacheMock
-            .Setup(x => x.GetAsync(CacheKey, _cancellationToken))
+            .Setup(x => x.GetAsync(CacheKey, CancellationToken.None))
             .ReturnsAsync((byte[]?)null!);
 
         _metadataServiceMock
-            .Setup(x => x.Get(_cancellationToken))
+            .Setup(x => x.Get(CancellationToken.None))
             .ThrowsAsync(expectedException);
 
         // Act & Assert
-        Assert.ThrowsAsync<HttpRequestException>(() => _sut.Get(_aaguid, _cancellationToken));
+        Assert.ThrowsAsync<HttpRequestException>(() => _sut.Get(_aaguid, CancellationToken.None));
     }
 
     [Test]
@@ -136,7 +134,7 @@ internal class MetadataCachedServiceTests
             .Returns(true);
 
         // Act
-        var result = await _sut.Get(_aaguid, _cancellationToken);
+        var result = await _sut.Get(_aaguid, CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.EqualTo(expectedValue));
@@ -155,11 +153,11 @@ internal class MetadataCachedServiceTests
             .Returns(false);
 
         _distributedCacheMock
-            .Setup(x => x.GetAsync(CacheKey, _cancellationToken))
+            .Setup(x => x.GetAsync(CacheKey, CancellationToken.None))
             .ReturnsAsync(Encoding.UTF8.GetBytes(serializedPayload));
 
         // Act
-        var result = await _sut.Get(_aaguid, _cancellationToken);
+        var result = await _sut.Get(_aaguid, CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Null);
@@ -171,7 +169,7 @@ internal class MetadataCachedServiceTests
                 CacheKey,
                 It.IsAny<byte[]>(),
                 It.IsAny<DistributedCacheEntryOptions>(),
-                _cancellationToken),
+                CancellationToken.None),
             Times.Never);
 
         _metadataServiceMock.Verify(x => x.Get(CancellationToken.None), Times.Never);
@@ -189,11 +187,11 @@ internal class MetadataCachedServiceTests
             .Returns(false);
 
         _distributedCacheMock
-            .Setup(x => x.GetAsync(CacheKey, _cancellationToken))
+            .Setup(x => x.GetAsync(CacheKey, CancellationToken.None))
             .ReturnsAsync(Encoding.UTF8.GetBytes(serializedPayload));
 
         // Act
-        var result = await _sut.Get(_aaguid, _cancellationToken);
+        var result = await _sut.Get(_aaguid, CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -207,7 +205,7 @@ internal class MetadataCachedServiceTests
                 CacheKey,
                 It.IsAny<byte[]>(),
                 It.IsAny<DistributedCacheEntryOptions>(),
-                _cancellationToken),
+                CancellationToken.None),
             Times.Never);
 
         _metadataServiceMock.Verify(x => x.Get(CancellationToken.None), Times.Never);
@@ -231,15 +229,15 @@ internal class MetadataCachedServiceTests
             .Returns(false);
 
         _distributedCacheMock
-            .Setup(x => x.GetAsync(CacheKey, _cancellationToken))
+            .Setup(x => x.GetAsync(CacheKey, CancellationToken.None))
             .ReturnsAsync((byte[]?)null!);
 
         _metadataServiceMock
-            .Setup(x => x.Get(_cancellationToken))
+            .Setup(x => x.Get(CancellationToken.None))
             .ReturnsAsync(metadataBlobPayload);
 
         // Act
-        var result = await _sut.Get(_aaguid, _cancellationToken);
+        var result = await _sut.Get(_aaguid, CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -253,7 +251,7 @@ internal class MetadataCachedServiceTests
                 CacheKey,
                 It.IsAny<byte[]>(),
                 It.IsAny<DistributedCacheEntryOptions>(),
-                _cancellationToken),
+                CancellationToken.None),
             Times.Once);
 
         _metadataServiceMock.Verify(x => x.Get(CancellationToken.None), Times.Once);
@@ -281,11 +279,11 @@ internal class MetadataCachedServiceTests
             .Returns(false);
 
         _distributedCacheMock
-            .Setup(x => x.GetAsync(CacheKey, _cancellationToken))
+            .Setup(x => x.GetAsync(CacheKey, CancellationToken.None))
             .ReturnsAsync((byte[]?)null!);
 
         _metadataServiceMock
-            .Setup(x => x.Get(_cancellationToken))
+            .Setup(x => x.Get(CancellationToken.None))
             .ReturnsAsync(metadataBlobPayload);
 
         _timeProviderMock
@@ -293,7 +291,7 @@ internal class MetadataCachedServiceTests
             .Returns(nowTime);
 
         // Act
-        var result = await _sut.Get(_aaguid, _cancellationToken);
+        var result = await _sut.Get(_aaguid, CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -307,7 +305,7 @@ internal class MetadataCachedServiceTests
                 It.Is<DistributedCacheEntryOptions>(options =>
                     options.AbsoluteExpiration!.Value <= nowTime.AddMinutes(DefaultDistributedCacheExpirationInMinutes + 1) &&
                     options.AbsoluteExpiration!.Value >= nowTime.AddMinutes(DefaultDistributedCacheExpirationInMinutes - 1)),
-                _cancellationToken),
+                CancellationToken.None),
             Times.Once);
 
         _metadataServiceMock.Verify(x => x.Get(CancellationToken.None), Times.Once);
@@ -333,15 +331,15 @@ internal class MetadataCachedServiceTests
             .Returns(false);
 
         _distributedCacheMock
-            .Setup(x => x.GetAsync(CacheKey, _cancellationToken))
+            .Setup(x => x.GetAsync(CacheKey, CancellationToken.None))
             .ReturnsAsync((byte[]?)null!);
 
         _metadataServiceMock
-            .Setup(x => x.Get(_cancellationToken))
+            .Setup(x => x.Get(CancellationToken.None))
             .ReturnsAsync(metadataBlobPayload);
 
         // Act
-        var result = await _sut.Get(_aaguid, _cancellationToken);
+        var result = await _sut.Get(_aaguid, CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -354,9 +352,66 @@ internal class MetadataCachedServiceTests
                 It.IsAny<byte[]>(),
                 It.Is<DistributedCacheEntryOptions>(options =>
                     options.AbsoluteExpiration == new DateTimeOffset(futureNextUpdate)),
-                _cancellationToken),
+                CancellationToken.None),
             Times.Once);
 
         _metadataServiceMock.Verify(x => x.Get(CancellationToken.None), Times.Once);
+    }
+
+    [Test]
+    public async Task Get_WhenCalledConcurrently_ThenPopulatesDistributedCacheOnlyOnce()
+    {
+        // Arrange
+        var metadataBlobPayload = new MetadataBlobPayload
+        {
+            Payload = [_metadataBlobPayloadEntry],
+            NextUpdate = _nextUpdate,
+            Number = 1,
+        };
+
+        object? nullValue = null!;
+        _memoryCacheMock
+            .Setup(x => x.TryGetValue(It.IsAny<string>(), out nullValue))
+            .Returns(false);
+
+        var callCount = 0;
+        _metadataServiceMock
+            .Setup(x => x.Get(It.IsAny<CancellationToken>()))
+            .Returns(async () =>
+            {
+                Interlocked.Increment(ref callCount);
+                await Task.Delay(100, CancellationToken.None);
+                return metadataBlobPayload;
+            });
+
+        byte[]? cachedBytes = null;
+        _distributedCacheMock
+            .Setup(x => x.GetAsync(CacheKey, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(() => cachedBytes);
+
+        _distributedCacheMock
+            .Setup(x => x.SetAsync(
+                CacheKey,
+                It.IsAny<byte[]>(),
+                It.IsAny<DistributedCacheEntryOptions>(),
+                It.IsAny<CancellationToken>()))
+            .Callback<string, byte[], DistributedCacheEntryOptions, CancellationToken>(
+                (_, value, _, _) => cachedBytes = value)
+            .Returns(Task.CompletedTask);
+
+        // Act
+        var tasks = Enumerable.Range(0, 10).Select(_ => _sut.Get(_aaguid, CancellationToken.None)).ToList();
+        await Task.WhenAll(tasks);
+
+        // Assert
+        Assert.That(callCount, Is.EqualTo(1));
+        _metadataServiceMock.Verify(x => x.Get(It.IsAny<CancellationToken>()), Times.Once);
+        _distributedCacheMock.Verify(
+            x => x.SetAsync(
+                CacheKey,
+                It.IsAny<byte[]>(),
+                It.IsAny<DistributedCacheEntryOptions>(),
+                It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 }
