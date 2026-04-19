@@ -27,7 +27,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.Metadata.Core",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.SqlServer", "Shark.Fido2.SqlServer\Shark.Fido2.SqlServer.csproj", "{D540F937-D674-408B-B5BE-54C5BAED77EF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.Core.Integration.Tests", "..\tests\Shark.Fido2.Core.Integration.Tests\Shark.Fido2.Core.Integration.Tests.csproj", "{235ECDC5-C002-475E-BAEF-9590948C7CCB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shark.Fido2.Core.Component.Tests", "..\tests\Shark.Fido2.Core.Component.Tests\Shark.Fido2.Core.Component.Tests.csproj", "{235ECDC5-C002-475E-BAEF-9590948C7CCB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
@@ -409,6 +409,7 @@ Global
 		{D0880235-D8C8-04BD-41F9-3B8EE4C6A911} = {0DBAB265-1DF6-444B-BC5F-7A47857979BB}
 		{A7A2ED4B-6DB4-3A6E-CAD2-0DCB2AC0B9D3} = {9932CECD-B487-4BB5-89C1-62B33F8D0175}
 		{7DFCA5E6-F5B2-84A8-15F1-C50051D8B723} = {9932CECD-B487-4BB5-89C1-62B33F8D0175}
+		{E8084625-0099-4CA9-892C-A8FAE55B3455} = {0DBAB265-1DF6-444B-BC5F-7A47857979BB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6595BEFB-D38C-43C0-BC2E-48B8A742FC45}
