@@ -46,7 +46,7 @@ internal static class AttestationStatementFormatIdentifier
     /// </summary>
     public const string None = "none";
 
-    public readonly static HashSet<string> Supported =
+    public static readonly HashSet<string> Supported =
     [
         Packed, Tpm, AndroidKey, AndroidSafetyNet, FidoU2F, Apple, None
     ];

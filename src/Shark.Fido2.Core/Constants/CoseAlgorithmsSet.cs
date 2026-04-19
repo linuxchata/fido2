@@ -8,5 +8,5 @@ internal static class CoseAlgorithmsSet
 
     public const string Extended = nameof(Extended);
 
-    public readonly static HashSet<string> Supported = [Required, Recommended, Extended];
+    public static readonly HashSet<string> Supported = [Required, Recommended, Extended];
 }
