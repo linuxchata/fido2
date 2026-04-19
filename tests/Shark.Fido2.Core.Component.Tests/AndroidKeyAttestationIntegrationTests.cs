@@ -7,16 +7,16 @@ using Shark.Fido2.Domain.Options;
 using Shark.Fido2.InMemory;
 using Shark.Fido2.Tests.Common.DataReaders;
 
-namespace Shark.Fido2.Core.Integration.Tests;
+namespace Shark.Fido2.Core.Component.Tests;
 
 /// <summary>
 /// Source: FIDO Conformance Tools.
 /// </summary>
 [TestFixture]
-internal class FidoU2fAttestationIntegrationTests
+internal class AndroidKeyAttestationIntegrationTests
 {
-    private const string FidoU2fAttestation = "FidoU2fAttestation.json";
-    private const string FidoU2fCreationOptions = "FidoU2fCreationOptions.json";
+    private const string AndroidKeyAttestation = "AndroidKeyAttestation.json";
+    private const string AndroidKeyCreationOptions = "AndroidKeyCreationOptions.json";
 
     private ServiceProvider _serviceProvider = null!;
 
@@ -42,7 +42,7 @@ internal class FidoU2fAttestationIntegrationTests
     }
 
     [Test]
-    public async Task BeginRegistration_WhenFidoU2fAttestation_ThenReturnsSuccess()
+    public async Task BeginRegistration_WhenAndroidKeyAttestation_ThenReturnsSuccess()
     {
         // Arrange
         var attestation = _serviceProvider.GetRequiredService<IAttestation>();
@@ -83,13 +83,13 @@ internal class FidoU2fAttestationIntegrationTests
     }
 
     [Test]
-    public async Task CompleteRegistration_WhenFidoU2fAttestation_ThenReturnsSuccess()
+    public async Task CompleteRegistration_WhenAndroidKeyAttestation_ThenReturnsSuccess()
     {
         // Arrange
         var attestation = _serviceProvider.GetRequiredService<IAttestation>();
 
-        var attestationData = DataReader.ReadAttestationData(FidoU2fAttestation);
-        var creationOptions = DataReader.ReadCreationOptions(FidoU2fCreationOptions);
+        var attestationData = DataReader.ReadAttestationData(AndroidKeyAttestation);
+        var creationOptions = DataReader.ReadCreationOptions(AndroidKeyCreationOptions);
 
         // Act
         var result = await attestation.CompleteRegistration(attestationData, creationOptions, CancellationToken.None);
@@ -101,13 +101,13 @@ internal class FidoU2fAttestationIntegrationTests
     }
 
     [Test]
-    public async Task CompleteRegistration_WhenFidoU2fAttestationUsedTwice_ThenReturnsFailure()
+    public async Task CompleteRegistration_WhenAndroidKeyAttestationUsedTwice_ThenReturnsFailure()
     {
         // Arrange
         var attestation = _serviceProvider.GetRequiredService<IAttestation>();
 
-        var attestationData = DataReader.ReadAttestationData(FidoU2fAttestation);
-        var creationOptions = DataReader.ReadCreationOptions(FidoU2fCreationOptions);
+        var attestationData = DataReader.ReadAttestationData(AndroidKeyAttestation);
+        var creationOptions = DataReader.ReadCreationOptions(AndroidKeyCreationOptions);
 
         await attestation.CompleteRegistration(attestationData, creationOptions, CancellationToken.None);
 

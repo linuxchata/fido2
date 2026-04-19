@@ -7,18 +7,18 @@ using Shark.Fido2.Domain.Options;
 using Shark.Fido2.InMemory;
 using Shark.Fido2.Tests.Common.DataReaders;
 
-namespace Shark.Fido2.Core.Integration.Tests;
+namespace Shark.Fido2.Core.Component.Tests;
 
 /// <summary>
-/// Source: Windows 11 Windows Hello authenticator.
+/// Source: iOS 26.0 iPhone 14 authenticator.
 /// </summary>
 [TestFixture]
-internal class TpmAttestationIntegrationTests
+internal class NoneAttestationIntegrationTests
 {
-    private const string TpmAttestation = "TpmAttestation.json";
-    private const string TpmCreationOptions = "TpmCreationOptions.json";
-    private const string TpmAssertion = "TpmAssertion.json";
-    private const string TpmRequestOptions = "TpmRequestOptions.json";
+    private const string NoneAttestation = "NoneAttestation.json";
+    private const string NoneCreationOptions = "NoneCreationOptions.json";
+    private const string NoneAssertion = "NoneAssertion.json";
+    private const string NoneRequestOptions = "NoneRequestOptions.json";
 
     private ServiceProvider _serviceProvider = null!;
 
@@ -44,7 +44,7 @@ internal class TpmAttestationIntegrationTests
     }
 
     [Test]
-    public async Task BeginRegistration_WhenTpmAttestation_ThenReturnsSuccess()
+    public async Task BeginRegistration_WhenNoneAttestation_ThenReturnsSuccess()
     {
         // Arrange
         var attestation = _serviceProvider.GetRequiredService<IAttestation>();
@@ -85,13 +85,13 @@ internal class TpmAttestationIntegrationTests
     }
 
     [Test]
-    public async Task CompleteRegistration_WhenTpmAttestation_ThenReturnsSuccess()
+    public async Task CompleteRegistration_WhenNoneAttestation_ThenReturnsSuccess()
     {
         // Arrange
         var attestation = _serviceProvider.GetRequiredService<IAttestation>();
 
-        var attestationData = DataReader.ReadAttestationData(TpmAttestation);
-        var creationOptions = DataReader.ReadCreationOptions(TpmCreationOptions);
+        var attestationData = DataReader.ReadAttestationData(NoneAttestation);
+        var creationOptions = DataReader.ReadCreationOptions(NoneCreationOptions);
 
         // Act
         var result = await attestation.CompleteRegistration(attestationData, creationOptions, CancellationToken.None);
@@ -103,13 +103,13 @@ internal class TpmAttestationIntegrationTests
     }
 
     [Test]
-    public async Task CompleteRegistration_WhenTpmAttestationUsedTwice_ThenReturnsFailure()
+    public async Task CompleteRegistration_WhenNoneAttestationUsedTwice_ThenReturnsFailure()
     {
         // Arrange
         var attestation = _serviceProvider.GetRequiredService<IAttestation>();
 
-        var attestationData = DataReader.ReadAttestationData(TpmAttestation);
-        var creationOptions = DataReader.ReadCreationOptions(TpmCreationOptions);
+        var attestationData = DataReader.ReadAttestationData(NoneAttestation);
+        var creationOptions = DataReader.ReadCreationOptions(NoneCreationOptions);
 
         await attestation.CompleteRegistration(attestationData, creationOptions, CancellationToken.None);
 
@@ -123,7 +123,7 @@ internal class TpmAttestationIntegrationTests
     }
 
     [Test]
-    public async Task BeginAuthentication_WhenTpmAssertion_ThenReturnsSuccess()
+    public async Task BeginAuthentication_WhenNoneAssertion_ThenReturnsSuccess()
     {
         // Arrange
         var assertion = _serviceProvider.GetRequiredService<IAssertion>();
@@ -154,18 +154,18 @@ internal class TpmAttestationIntegrationTests
     }
 
     [Test]
-    public async Task CompleteAuthentication_WhenTpmAssertion_ThenReturnsSuccess()
+    public async Task CompleteAuthentication_WhenNoneAssertion_ThenReturnsSuccess()
     {
         // Arrange
         var assertion = _serviceProvider.GetRequiredService<IAssertion>();
         var attestation = _serviceProvider.GetRequiredService<IAttestation>();
 
-        var attestationData = DataReader.ReadAttestationData(TpmAttestation);
-        var creationOptions = DataReader.ReadCreationOptions(TpmCreationOptions);
+        var attestationData = DataReader.ReadAttestationData(NoneAttestation);
+        var creationOptions = DataReader.ReadCreationOptions(NoneCreationOptions);
         await attestation.CompleteRegistration(attestationData, creationOptions, CancellationToken.None);
 
-        var assertionData = DataReader.ReadAssertionData(TpmAssertion);
-        var requestOptions = DataReader.ReadRequestOptions(TpmRequestOptions);
+        var assertionData = DataReader.ReadAssertionData(NoneAssertion);
+        var requestOptions = DataReader.ReadRequestOptions(NoneRequestOptions);
 
         // Act
         var result = await assertion.CompleteAuthentication(assertionData, requestOptions, CancellationToken.None);
@@ -177,18 +177,18 @@ internal class TpmAttestationIntegrationTests
     }
 
     [Test]
-    public async Task CompleteAuthentication_WhenTpmAssertionUsedTwice_ThenReturnsFailure()
+    public async Task CompleteAuthentication_WhenNoneAssertionUsedTwice_ThenReturnsFailure()
     {
         // Arrange
         var assertion = _serviceProvider.GetRequiredService<IAssertion>();
         var attestation = _serviceProvider.GetRequiredService<IAttestation>();
 
-        var attestationData = DataReader.ReadAttestationData(TpmAttestation);
-        var creationOptions = DataReader.ReadCreationOptions(TpmCreationOptions);
+        var attestationData = DataReader.ReadAttestationData(NoneAttestation);
+        var creationOptions = DataReader.ReadCreationOptions(NoneCreationOptions);
         await attestation.CompleteRegistration(attestationData, creationOptions, CancellationToken.None);
 
-        var assertionData = DataReader.ReadAssertionData(TpmAssertion);
-        var requestOptions = DataReader.ReadRequestOptions(TpmRequestOptions);
+        var assertionData = DataReader.ReadAssertionData(NoneAssertion);
+        var requestOptions = DataReader.ReadRequestOptions(NoneRequestOptions);
 
         await assertion.CompleteAuthentication(assertionData, requestOptions, CancellationToken.None);
 
@@ -197,7 +197,7 @@ internal class TpmAttestationIntegrationTests
 
         // Assert
         Assert.That(result, Is.Not.Null);
-        Assert.That(result.IsValid, Is.False);
-        Assert.That(result.Message, Is.EqualTo("The authenticator's signature counter value is less than or equal to the previously stored count, indicating that the device may have been cloned or duplicated."));
+        Assert.That(result.IsValid, Is.True);
+        Assert.That(result.Message, Is.Null);
     }
 }
