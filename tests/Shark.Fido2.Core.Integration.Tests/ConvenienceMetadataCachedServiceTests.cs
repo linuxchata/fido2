@@ -6,19 +6,13 @@ using Shark.Fido2.InMemory;
 
 namespace Shark.Fido2.Core.Integration.Tests;
 
-/// <summary>
-/// Integration tests for FIDO Convenience Metadata Service.
-/// </summary>
 [TestFixture]
-public class FidoConvenienceMetadataServiceIntegrationTests
+public class ConvenienceMetadataCachedServiceTests
 {
-    private readonly Guid _aaGuid = new Guid("6028b017-b1d4-4c02-b4b3-afcdafc96bb2");
+    private readonly Guid _aaGuid = new("6028b017-b1d4-4c02-b4b3-afcdafc96bb2");
 
     private ServiceProvider _serviceProvider = null!;
 
-    /// <summary>
-    /// Setup for the tests.
-    /// </summary>
     [SetUp]
     public void Setup()
     {
