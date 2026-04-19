@@ -14,8 +14,6 @@ internal class MetadataServiceTests
 {
     private X509Certificate2 _rootCertificate;
 
-    private CancellationToken _cancellationToken;
-
     private Mock<IHttpClientRepository> _httpClientRepositoryMock;
     private Mock<IMetadataReaderService> _metadataReaderServiceMock;
 
@@ -27,8 +25,6 @@ internal class MetadataServiceTests
         using var rsa = RSA.Create(2048);
         var certificateRequest = new CertificateRequest("CN=Test", rsa, HashAlgorithmName.SHA256, RSASignaturePadding.Pkcs1);
         _rootCertificate = certificateRequest.CreateSelfSigned(DateTimeOffset.UtcNow, DateTimeOffset.UtcNow.AddDays(1));
-
-        _cancellationToken = CancellationToken.None;
 
         _httpClientRepositoryMock = new Mock<IHttpClientRepository>();
         _metadataReaderServiceMock = new Mock<IMetadataReaderService>();
@@ -52,11 +48,11 @@ internal class MetadataServiceTests
         var expectedException = new HttpRequestException("Network error");
 
         _httpClientRepositoryMock
-            .Setup(x => x.GetRootCertificate(_cancellationToken))
+            .Setup(x => x.GetRootCertificate(CancellationToken.None))
             .ThrowsAsync(expectedException);
 
         // Act & Assert
-        Assert.ThrowsAsync<HttpRequestException>(() => _sut.Get(_cancellationToken));
+        Assert.ThrowsAsync<HttpRequestException>(() => _sut.Get(CancellationToken.None));
     }
 
     [Test]
@@ -67,19 +63,19 @@ internal class MetadataServiceTests
         var expectedException = new InvalidOperationException("Validation failed");
 
         _httpClientRepositoryMock
-            .Setup(x => x.GetRootCertificate(_cancellationToken))
+            .Setup(x => x.GetRootCertificate(CancellationToken.None))
             .ReturnsAsync(_rootCertificate);
 
         _httpClientRepositoryMock
-            .Setup(x => x.GetMetadataBlob(_cancellationToken))
+            .Setup(x => x.GetMetadataBlob(CancellationToken.None))
             .ReturnsAsync(metadataBlob);
 
         _metadataReaderServiceMock
-            .Setup(x => x.ValidateAndRead(metadataBlob, _rootCertificate, _cancellationToken))
+            .Setup(x => x.ValidateAndRead(metadataBlob, _rootCertificate, CancellationToken.None))
             .ThrowsAsync(expectedException);
 
         // Act & Assert
-        Assert.ThrowsAsync<InvalidOperationException>(() => _sut.Get(_cancellationToken));
+        Assert.ThrowsAsync<InvalidOperationException>(() => _sut.Get(CancellationToken.None));
     }
 
     [Test]
@@ -89,15 +85,15 @@ internal class MetadataServiceTests
         var expectedException = new HttpRequestException("Metadata blob download failed");
 
         _httpClientRepositoryMock
-            .Setup(x => x.GetRootCertificate(_cancellationToken))
+            .Setup(x => x.GetRootCertificate(CancellationToken.None))
             .ReturnsAsync(_rootCertificate);
 
         _httpClientRepositoryMock
-            .Setup(x => x.GetMetadataBlob(_cancellationToken))
+            .Setup(x => x.GetMetadataBlob(CancellationToken.None))
             .ThrowsAsync(expectedException);
 
         // Act & Assert
-        Assert.ThrowsAsync<HttpRequestException>(() => _sut.Get(_cancellationToken));
+        Assert.ThrowsAsync<HttpRequestException>(() => _sut.Get(CancellationToken.None));
     }
 
     [Test]
@@ -113,27 +109,27 @@ internal class MetadataServiceTests
         };
 
         _httpClientRepositoryMock
-            .Setup(x => x.GetRootCertificate(_cancellationToken))
+            .Setup(x => x.GetRootCertificate(CancellationToken.None))
             .ReturnsAsync(_rootCertificate);
 
         _httpClientRepositoryMock
-            .Setup(x => x.GetMetadataBlob(_cancellationToken))
+            .Setup(x => x.GetMetadataBlob(CancellationToken.None))
             .ReturnsAsync(metadataBlob);
 
         _metadataReaderServiceMock
-            .Setup(x => x.ValidateAndRead(metadataBlob, _rootCertificate, _cancellationToken))
+            .Setup(x => x.ValidateAndRead(metadataBlob, _rootCertificate, CancellationToken.None))
             .ReturnsAsync(expectedPayload);
 
         // Act
-        var result = await _sut.Get(_cancellationToken);
+        var result = await _sut.Get(CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.EqualTo(expectedPayload));
 
-        _httpClientRepositoryMock.Verify(x => x.GetRootCertificate(_cancellationToken), Times.Once);
-        _httpClientRepositoryMock.Verify(x => x.GetMetadataBlob(_cancellationToken), Times.Once);
+        _httpClientRepositoryMock.Verify(x => x.GetRootCertificate(CancellationToken.None), Times.Once);
+        _httpClientRepositoryMock.Verify(x => x.GetMetadataBlob(CancellationToken.None), Times.Once);
         _metadataReaderServiceMock.Verify(
-            x => x.ValidateAndRead(metadataBlob, _rootCertificate, _cancellationToken), Times.Once);
+            x => x.ValidateAndRead(metadataBlob, _rootCertificate, CancellationToken.None), Times.Once);
     }
 
     [Test]
@@ -149,19 +145,19 @@ internal class MetadataServiceTests
         };
 
         _httpClientRepositoryMock
-            .Setup(x => x.GetRootCertificate(_cancellationToken))
+            .Setup(x => x.GetRootCertificate(CancellationToken.None))
             .ReturnsAsync(_rootCertificate);
 
         _httpClientRepositoryMock
-            .Setup(x => x.GetMetadataBlob(_cancellationToken))
+            .Setup(x => x.GetMetadataBlob(CancellationToken.None))
             .ReturnsAsync(metadataBlob);
 
         _metadataReaderServiceMock
-            .Setup(x => x.ValidateAndRead(metadataBlob, _rootCertificate, _cancellationToken))
+            .Setup(x => x.ValidateAndRead(metadataBlob, _rootCertificate, CancellationToken.None))
             .ReturnsAsync(expectedPayload);
 
         // Act
-        var result = await _sut.Get(_cancellationToken);
+        var result = await _sut.Get(CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -191,19 +187,19 @@ internal class MetadataServiceTests
         };
 
         _httpClientRepositoryMock
-            .Setup(x => x.GetRootCertificate(_cancellationToken))
+            .Setup(x => x.GetRootCertificate(CancellationToken.None))
             .ReturnsAsync(_rootCertificate);
 
         _httpClientRepositoryMock
-            .Setup(x => x.GetMetadataBlob(_cancellationToken))
+            .Setup(x => x.GetMetadataBlob(CancellationToken.None))
             .ReturnsAsync(metadataBlob);
 
         _metadataReaderServiceMock
-            .Setup(x => x.ValidateAndRead(metadataBlob, _rootCertificate, _cancellationToken))
+            .Setup(x => x.ValidateAndRead(metadataBlob, _rootCertificate, CancellationToken.None))
             .ReturnsAsync(expectedPayload);
 
         // Act
-        var result = await _sut.Get(_cancellationToken);
+        var result = await _sut.Get(CancellationToken.None);
 
         // Assert
         Assert.That(result, Is.Not.Null);
