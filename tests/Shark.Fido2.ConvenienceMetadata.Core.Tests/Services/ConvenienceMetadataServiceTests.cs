@@ -27,19 +27,22 @@ internal class ConvenienceMetadataServiceTests
     }
 
     [Test]
-    public void Get_WhenRepositoryThrowsException_ThenRethrowsException()
+    public async Task Get_WhenRepositoryThrowsException_ThenReturnsNull()
     {
         // Arrange
         _httpClientRepositoryMock
             .Setup(x => x.GetConvenienceMetadataBlob(CancellationToken.None))
             .ThrowsAsync(new HttpRequestException());
 
-        // Act & Assert
-        Assert.ThrowsAsync<HttpRequestException>(() => _sut.Get(CancellationToken.None));
+        // Act
+        var result = await _sut.Get(CancellationToken.None);
+
+        // Assert
+        Assert.That(result, Is.Null);
     }
 
     [Test]
-    public void Get_WhenReaderServiceThrowsException_ThenRethrowsException()
+    public async Task Get_WhenReaderServiceThrowsException_ThenReturnsNull()
     {
         // Arrange
         var blob = "some-blob";
@@ -51,8 +54,11 @@ internal class ConvenienceMetadataServiceTests
             .Setup(x => x.Read(blob))
             .Throws(new InvalidDataException());
 
-        // Act & Assert
-        Assert.ThrowsAsync<InvalidDataException>(() => _sut.Get(CancellationToken.None));
+        // Act
+        var result = await _sut.Get(CancellationToken.None);
+
+        // Assert
+        Assert.That(result, Is.Null);
     }
 
     [Test]
