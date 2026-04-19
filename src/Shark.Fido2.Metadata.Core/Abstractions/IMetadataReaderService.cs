@@ -9,12 +9,12 @@ namespace Shark.Fido2.Metadata.Core.Abstractions;
 public interface IMetadataReaderService
 {
     /// <summary>
-    /// Validates and reads a metadata blob.
+    /// Validates and reads a metadata BLOB.
     /// </summary>
-    /// <param name="metadataBlob">The metadata blob.</param>
+    /// <param name="metadataBlob">The metadata BLOB.</param>
     /// <param name="rootCertificate">The root certificate.</param>
     /// <param name="cancellationToken">A cancellation token.</param>
-    /// <returns>The validated metadata blob payload.</returns>
+    /// <returns>The validated metadata BLOB payload.</returns>
     Task<MetadataBlobPayload> ValidateAndRead(
         string metadataBlob,
         X509Certificate2 rootCertificate,

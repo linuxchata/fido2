@@ -27,6 +27,7 @@ jobs:
           - ./src/Shark.Fido2.Models/Shark.Fido2.Models.csproj
           - ./src/Shark.Fido2.PostgreSql/Shark.Fido2.PostgreSql.csproj
           - ./src/Shark.Fido2.SqlServer/Shark.Fido2.SqlServer.csproj
+          - ./src/Shark.Fido2.ConvenienceMetadata.Core/Shark.Fido2.ConvenienceMetadata.Core.csproj
 
     steps:
     - uses: actions/checkout@v6

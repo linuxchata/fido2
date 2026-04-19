@@ -2,6 +2,7 @@ using System.Globalization;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Shark.Fido2.ConvenienceMetadata.Core.Abstractions;
 using Shark.Fido2.Sample.Abstractions.Services;
 
 namespace Shark.Fido2.Sample.Pages;
@@ -10,12 +11,16 @@ namespace Shark.Fido2.Sample.Pages;
 public class CredentialsDetailsModel : PageModel
 {
     private const string DateTimeFormat = "yyyy-MM-dd HH:mm:ss";
+    private readonly IConvenienceMetadataCachedService _convenienceMetadataService;
 
     private readonly ICredentialService _credentialService;
 
-    public CredentialsDetailsModel(ICredentialService credentialService)
+    public CredentialsDetailsModel(
+        ICredentialService credentialService,
+        IConvenienceMetadataCachedService convenienceMetadataService)
     {
         _credentialService = credentialService;
+        _convenienceMetadataService = convenienceMetadataService;
     }
 
     [BindProperty]
@@ -32,6 +37,9 @@ public class CredentialsDetailsModel : PageModel
 
     [BindProperty]
     public required string AaGuid { get; set; }
+
+    [BindProperty]
+    public string? Authenticator { get; set; }
 
     [BindProperty]
     public uint SignCount { get; set; }
@@ -65,11 +73,15 @@ public class CredentialsDetailsModel : PageModel
             return;
         }
 
+        var authenticator = await _convenienceMetadataService.Get(credential.AaGuid, cancellationToken);
+        var authenticatorName = authenticator?.GetDefaultName();
+
         CredentialId = credential.CredentialId;
         UserHandle = credential.UserHandle;
         UserName = credential.UserName;
         UserDisplayName = credential.UserDisplayName;
         AaGuid = $"{credential.AaGuid}";
+        Authenticator = authenticatorName;
         SignCount = credential.SignCount;
         Algorithm = PublicKeyAlgorithms.Get(credential.CredentialPublicKey.Algorithm);
         Transports = credential.Transports;

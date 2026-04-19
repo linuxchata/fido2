@@ -1,6 +1,5 @@
 ﻿using System.Net.Mime;
 using System.Text.Json;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Domain.Options;
@@ -28,8 +27,6 @@ public class AssertionController(
 {
     private const string SessionName = "WebAuthn.RequestOptions";
 
-    private readonly IAssertion _assertion = assertion;
-
     /// <summary>
     /// Gets credential request options.
     /// </summary>
@@ -52,7 +49,7 @@ public class AssertionController(
             return BadRequest(ServerResponse.CreateFailed());
         }
 
-        var requestOptions = await _assertion.BeginAuthentication(request.Map(), cancellationToken);
+        var requestOptions = await assertion.BeginAuthentication(request.Map(), cancellationToken);
 
         HttpContext.Session.SetString(SessionName, JsonSerializer.Serialize(requestOptions));
 
@@ -90,7 +87,7 @@ public class AssertionController(
         var requestOptions = JsonSerializer.Deserialize<PublicKeyCredentialRequestOptions>(requestOptionsString!);
 
         logger.LogInformation("Assertion request: {Request}", JsonSerializer.Serialize(request.Map()));
-        var response = await _assertion.CompleteAuthentication(request.Map(), requestOptions!, cancellationToken);
+        var response = await assertion.CompleteAuthentication(request.Map(), requestOptions!, cancellationToken);
 
         HttpContext.Session.Remove(SessionName);
 

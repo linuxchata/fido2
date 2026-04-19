@@ -27,6 +27,7 @@ This repository provides a mature, production-ready server-side implementation o
   - Amazon DynamoDB
   - In-memory storage
  - **FIDO Metadata Service**
+ - **FIDO Convenience Metadata Service**
  - **Fully tested** with the [FIDO Conformance Tool](https://fidoalliance.org/certification/conformance/) – all test cases successfully passed
  - Code samples and demo website
 
@@ -34,6 +35,7 @@ This repository provides a mature, production-ready server-side implementation o
 | Package Name | Status |
 |-|-|
 | Shark.Fido2.Core | [![NuGet](https://img.shields.io/nuget/v/Shark.Fido2.Core.svg)](https://www.nuget.org/packages/Shark.Fido2.Core/) |
+| Shark.Fido2.ConvenienceMetadata.Core | [![NuGet](https://img.shields.io/nuget/v/Shark.Fido2.ConvenienceMetadata.Core.svg)](https://www.nuget.org/packages/Shark.Fido2.ConvenienceMetadata.Core/) |
 | Shark.Fido2.DynamoDB | [![NuGet](https://img.shields.io/nuget/v/Shark.Fido2.DynamoDB.svg)](https://www.nuget.org/packages/Shark.Fido2.DynamoDB/) |
 | Shark.Fido2.InMemory | [![NuGet](https://img.shields.io/nuget/v/Shark.Fido2.InMemory.svg)](https://www.nuget.org/packages/Shark.Fido2.InMemory/) |
 | Shark.Fido2.Models | [![NuGet](https://img.shields.io/nuget/v/Shark.Fido2.Models.svg)](https://www.nuget.org/packages/Shark.Fido2.Models/) |
@@ -80,7 +82,7 @@ builder.Services.AddFido2InMemoryStore();
 ### Server-side Configuration
 The server side can be customized using the following configuration options. You can set these options in an `appsettings.json` file.
 
-**Core Configuration**
+**Core Configuration** (`Fido2Configuration` section)
 
 | Option | Default | Description |
 |-|-|-|
@@ -95,13 +97,19 @@ The server side can be customized using the following configuration options. You
 | `EnableMetadataService` | `true` | Value indicating whether the Relying Party uses the FIDO Metadata Service to verify the attestation object. Metadata from the FIDO Metadata Service is stored in an in-memory cache and remains valid until the `nextUpdate` timestamp, which is received from the metadata BLOB and indicates the latest time a new metadata BLOB may be provided. |
 | `EnableStrictAuthenticatorVerification` | `false` | Value indicating whether the Relying Party requires strict verification of authenticators. If enabled, missing metadata for the authenticator would cause attestation to fail. This parameter is ignored if the FIDO Metadata Service is disabled. |
 
-**FIDO Metadata Service Configuration**
+**FIDO Metadata Service Configuration** (`Fido2Configuration.MetadataServiceConfiguration` section)
 
 | Option | Default | Description |
 |-|-|-|
 | `MetadataBlobLocation` | `https://mds3.fidoalliance.org/` | Location of the centralized and trusted source of information about FIDO authenticators (Metadata Service BLOB). |
 | `RootCertificateLocationUrl` | `https://secure.globalsign.com/cacert/root-r3.crt` | Location of GlobalSign Root R3 certificate for Metadata Service BLOB. |
-| `MaximumTokenSizeInBytes` | `8388608` | Maximum token size in bytes that will be processed. This configuration is related to the Metadata Service BLOB size. |
+| `MaximumTokenSizeInBytes` | `10485760` | Maximum token size in bytes that will be processed. This configuration is related to the Metadata Service BLOB size. |
+
+**FIDO Convenience Metadata Service** (`Fido2Configuration.ConvenienceMetadataServiceConfiguration` section)
+
+| Option | Default | Description |
+|-|-|-|
+| `ConvenienceMetadataBlobLocation` | `https://c-mds.fidoalliance.org/` | Location of the convenience centric information about FIDO authenticators (Convenience Metadata Service BLOB). |
 
 Example `appsettings.json` file: [appsettings.Production.json](https://github.com/linuxchata/fido2/blob/main/src/Shark.Fido2.Sample/appsettings.Production.json)
 

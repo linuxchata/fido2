@@ -1,5 +1,8 @@
-﻿namespace Shark.Fido2.Metadata.Core.Configurations;
+﻿using System.Diagnostics.CodeAnalysis;
 
+namespace Shark.Fido2.Metadata.Core.Configurations;
+
+[ExcludeFromCodeCoverage]
 public sealed class MetadataServiceConfiguration
 {
     public const string Name = nameof(MetadataServiceConfiguration);

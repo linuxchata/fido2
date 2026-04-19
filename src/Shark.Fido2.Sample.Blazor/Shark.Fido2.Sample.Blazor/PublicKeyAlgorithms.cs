@@ -2,7 +2,7 @@
 
 public static class PublicKeyAlgorithms
 {
-    private readonly static Dictionary<int, string> _algorithms = new()
+    private static readonly Dictionary<int, string> _algorithms = new()
     {
         { -7, "ES256 (ECDSA w/ SHA-256)" },
         { -8, "EdDSA (EdDSA)" },
