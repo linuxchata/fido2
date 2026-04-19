@@ -26,6 +26,7 @@
     <Project Path="../tests/Shark.Fido2.Metadata.Core.Tests/Shark.Fido2.Metadata.Core.Tests.csproj" />
     <Project Path="../tests/Shark.Fido2.Models.Tests/Shark.Fido2.Models.Tests.csproj" />
     <Project Path="../tests/Shark.Fido2.Tests.Common/Shark.Fido2.Tests.Common.csproj" />
+    <Project Path="../tests/Shark.Fido2.Core.Integration.Tests/Shark.Fido2.Core.Integration.Tests.csproj" />
   </Folder>
   <Project Path="Shark.Fido2.Common/Shark.Fido2.Common.csproj" />
   <Project Path="Shark.Fido2.ConvenienceMetadata.Core/Shark.Fido2.ConvenienceMetadata.Core.csproj" />

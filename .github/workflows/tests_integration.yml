@@ -1,0 +1,27 @@
+name: Integration Tests
+
+permissions:
+  contents: read
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 21 * * *'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v6
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v5
+      with:
+        dotnet-version: 8.0.x
+    - name: Restore dependencies
+      run: dotnet restore ./src/Shark.Fido2.slnx
+
+    - name: Build
+      run: dotnet build ./src/Shark.Fido2.slnx --configuration Release --no-restore
+
+    - name: Run Integration Tests
+      run: dotnet test ./src/Shark.Fido2.slnx --filter FullyQualifiedName~Shark.Fido2.Core.Integration.Tests --configuration Release --no-build --verbosity normal
