@@ -2,7 +2,7 @@
 
 public static class PublicKeyAlgorithms
 {
-    private static readonly Dictionary<int, string> _algorithms = new()
+    private static readonly Dictionary<int, string> Algorithms = new()
     {
         { -7, "ES256 (ECDSA w/ SHA-256)" },
         { -8, "EdDSA (EdDSA)" },
@@ -20,6 +20,6 @@ public static class PublicKeyAlgorithms
 
     public static string Get(int key)
     {
-        return _algorithms.FirstOrDefault(x => x.Key == key).Value ?? "Unknown";
+        return Algorithms.FirstOrDefault(x => x.Key == key).Value ?? "Unknown";
     }
 }
