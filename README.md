@@ -215,6 +215,7 @@ See [Contributing](https://github.com/linuxchata/fido2/blob/main/CONTRIBUTING.md
 **FIDO Metadata Service**
 - [FIDO Metadata Service](https://fidoalliance.org/specs/mds/fido-metadata-service-v3.0-ps-20210518.html)
 - [FIDO Metadata Statement](https://fidoalliance.org/specs/mds/fido-metadata-statement-v3.0-ps-20210518.html)
+- [FIDO Convenience Metadata Service](https://fidoalliance.org/specs/mds/fido-convenience-metadata-service-v1.0-ps-20250521.html)
 
 **Tools**
 - [FIDO Alliance - Certification Conformance Test Tools](https://github.com/fido-alliance/conformance-test-tools-resources/tree/main)
