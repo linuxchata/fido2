@@ -7,12 +7,14 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" />
-    <PackageReference Include="Shark.Fido2.Core" />
-    <PackageReference Include="Shark.Fido2.InMemory" />
-    <PackageReference Include="Shark.Fido2.Models" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Shark.Fido2.Common\Shark.Fido2.Common.csproj" />
+    <ProjectReference Include="..\..\Shark.Fido2.Core\Shark.Fido2.Core.csproj" />
+    <ProjectReference Include="..\..\Shark.Fido2.Domain\Shark.Fido2.Domain.csproj" />
+    <ProjectReference Include="..\..\Shark.Fido2.InMemory\Shark.Fido2.InMemory.csproj" />
+    <ProjectReference Include="..\..\Shark.Fido2.Models\Shark.Fido2.Models.csproj" />
     <ProjectReference Include="..\Shark.Fido2.Sample.Blazor.Client\Shark.Fido2.Sample.Blazor.Client.csproj" />
   </ItemGroup>
 
