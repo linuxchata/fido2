@@ -6,20 +6,21 @@ using Shark.Fido2.Domain.Options;
 using Shark.Fido2.Models.Mappers;
 using Shark.Fido2.Models.Requests;
 using Shark.Fido2.Models.Responses;
+using Shark.Fido2.Sample.VisualStudio.Template.Services;
 
 namespace Shark.Fido2.Sample.VisualStudio.Template.Controllers;
 
 /// <summary>
-/// Attestation (registration).
+/// Assertion (authentication).
 /// </summary>
 [Route("[controller]")]
 [ApiController]
-public class AttestationController(IAttestation attestation) : ControllerBase
+public class AssertionController(IAssertion assertion, ICredentialService credentialService) : ControllerBase
 {
-    private const string SessionName = "WebAuthn.CreateOptions";
+    private const string SessionName = "WebAuthn.RequestOptions";
 
     /// <summary>
-    /// Gets credential create options.
+    /// Gets credential request options.
     /// </summary>
     /// <param name="request">The request.</param>
     /// <param name="cancellationToken">A cancellation token.</param>
@@ -27,23 +28,18 @@ public class AttestationController(IAttestation attestation) : ControllerBase
     [HttpPost("options")]
     [Produces(MediaTypeNames.Application.Json)]
     public async Task<IActionResult> Options(
-        ServerPublicKeyCredentialCreationOptionsRequest request,
+        ServerPublicKeyCredentialGetOptionsRequest request,
         CancellationToken cancellationToken)
     {
-        if (request == null)
-        {
-            return BadRequest(ServerResponse.CreateFailed());
-        }
+        var requestOptions = await assertion.BeginAuthentication(request.Map(), cancellationToken);
 
-        var createOptions = await attestation.BeginRegistration(request.Map(), cancellationToken);
+        HttpContext.Session.SetString(SessionName, JsonSerializer.Serialize(requestOptions));
 
-        HttpContext.Session.SetString(SessionName, JsonSerializer.Serialize(createOptions));
-
-        return Ok(createOptions.Map());
+        return Ok(requestOptions.Map());
     }
 
     /// <summary>
-    /// Creates credential.
+    /// Validates credential.
     /// </summary>
     /// <param name="request">The request.</param>
     /// <param name="cancellationToken">A cancellation token.</param>
@@ -52,28 +48,29 @@ public class AttestationController(IAttestation attestation) : ControllerBase
     [Consumes(MediaTypeNames.Application.Json)]
     [Produces(MediaTypeNames.Application.Json)]
     public async Task<IActionResult> Result(
-        ServerPublicKeyCredentialAttestation request,
+        ServerPublicKeyCredentialAssertion request,
         CancellationToken cancellationToken)
     {
-        if (request == null || request.Response == null)
+        var requestOptionsString = HttpContext.Session.GetString(SessionName);
+        if (string.IsNullOrWhiteSpace(requestOptionsString))
         {
             return BadRequest(ServerResponse.CreateFailed());
         }
 
-        var createOptionsString = HttpContext.Session.GetString(SessionName);
-        if (string.IsNullOrWhiteSpace(createOptionsString))
-        {
-            return BadRequest(ServerResponse.CreateFailed());
-        }
+        var requestOptions = JsonSerializer.Deserialize<PublicKeyCredentialRequestOptions>(requestOptionsString);
 
-        var createOptions = JsonSerializer.Deserialize<PublicKeyCredentialCreationOptions>(createOptionsString!);
-
-        var response = await attestation.CompleteRegistration(request.Map(), createOptions!, cancellationToken);
+        var response = await assertion.CompleteAuthentication(request.Map(), requestOptions!, cancellationToken);
 
         HttpContext.Session.Remove(SessionName);
 
         if (response.IsValid)
         {
+            var credential = await credentialService.Get(request.Id, cancellationToken);
+            if (credential is null)
+            {
+                return NotFound();
+            }
+
             return Ok(ServerResponse.Create());
         }
         else

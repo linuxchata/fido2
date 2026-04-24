@@ -6,9 +6,9 @@ namespace Shark.Fido2.Sample.VisualStudio.Template.Services;
 
 public sealed class CredentialService(ICredentialRepository credentialRepository) : ICredentialService
 {
-    public async Task<Credential?> Get(string credentialId, CancellationToken cancellationToken)
+    public Task<Credential?> Get(string credentialId, CancellationToken cancellationToken)
     {
         var id = credentialId.FromBase64Url();
-        return await credentialRepository.Get(id, cancellationToken);
+        return credentialRepository.Get(id, cancellationToken);
     }
 }

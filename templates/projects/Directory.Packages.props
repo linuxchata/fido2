@@ -1,0 +1,8 @@
+<Project>
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Packages.props', '$(MSBuildThisFileDirectory)../'))" />
+  <ItemGroup>
+    <PackageVersion Include="Shark.Fido2.Core" Version="1.4.0.124" />
+    <PackageVersion Include="Shark.Fido2.InMemory" Version="1.4.0.124" />
+    <PackageVersion Include="Shark.Fido2.Models" Version="1.4.0.124" />
+  </ItemGroup>
+</Project>
