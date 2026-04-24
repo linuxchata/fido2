@@ -10,6 +10,8 @@
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <ContentTargetFolders>content</ContentTargetFolders>
     <NoWarn>$(NoWarn);NU5128</NoWarn>
+    <WarningsNotAsErrors>NU5128</WarningsNotAsErrors>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
   </PropertyGroup>
 
   <ItemGroup>
