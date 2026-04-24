@@ -191,7 +191,7 @@ The application will be accessible at `http://localhost:8080`.
 # FIDO Conformance Tests
 All test cases successfully passed using the official [FIDO Conformance Tool](https://fidoalliance.org/certification/conformance/), confirming full compliance with the WebAuthn Level 2 and FIDO2 specifications.
 
-<img alt="FIDO Conformance Tests" src="https://github.com/user-attachments/assets/1d32a892-1940-48f7-b8dd-da628900daea" />
+<img alt="FIDO Conformance Tests" src="https://github.com/user-attachments/assets/2fb8d419-bd98-4936-bce1-54e3c6e6cd4d" />
 
 # License
 This project is licensed under the [BSD 3-Clause License](LICENSE).
@@ -212,7 +212,7 @@ See [Contributing](https://github.com/linuxchata/fido2/blob/main/CONTRIBUTING.md
 - [Web Authentication: An API for accessing Public Key Credentials Level 3](https://www.w3.org/TR/webauthn-3/)
 - [PublicKeyCredential](https://developer.mozilla.org/en-US/docs/Web/API/PublicKeyCredential)
 
-**FIDO Metadata Service**
+**FIDO Metadata Services**
 - [FIDO Metadata Service](https://fidoalliance.org/specs/mds/fido-metadata-service-v3.0-ps-20210518.html)
 - [FIDO Metadata Statement](https://fidoalliance.org/specs/mds/fido-metadata-statement-v3.0-ps-20210518.html)
 - [FIDO Convenience Metadata Service](https://fidoalliance.org/specs/mds/fido-convenience-metadata-service-v1.0-ps-20250521.html)
