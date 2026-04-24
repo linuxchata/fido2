@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging.Console;
+using Shark.Fido2.ConvenienceMetadata.Core;
 using Shark.Fido2.Core;
 using Shark.Fido2.InMemory;
 using Shark.Fido2.Sample.Blazor.Abstractions.Services;
@@ -33,6 +34,8 @@ builder.Services.AddSession(options =>
 
 builder.Services.AddFido2(builder.Configuration);
 builder.Services.AddFido2InMemoryStore();
+builder.Services.AddFido2ConvenienceMetadataService(builder.Configuration);
+
 builder.Services.AddScoped<ICredentialService, CredentialService>();
 
 // Client's dependencies

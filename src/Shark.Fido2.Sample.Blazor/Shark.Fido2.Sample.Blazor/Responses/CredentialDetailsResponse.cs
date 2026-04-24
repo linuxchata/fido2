@@ -1,4 +1,4 @@
-﻿namespace Shark.Fido2.Sample.Blazor.Responses;
+namespace Shark.Fido2.Sample.Blazor.Responses;
 
 public class CredentialDetailsResponse
 {
@@ -11,6 +11,8 @@ public class CredentialDetailsResponse
     public string UserDisplayName { get; init; } = null!;
 
     public string AaGuid { get; init; } = null!;
+
+    public string? Authenticator { get; init; }
 
     public uint SignCount { get; init; }
 
