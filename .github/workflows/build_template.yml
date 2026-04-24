@@ -9,7 +9,7 @@ on:
   push:
     branches: [ main ]
     paths:
-      - 'src/Shark.Fido2.VisualStudio.Template/**'
+      - 'templates/projects/Shark.Fido2.VisualStudio.Template/**'
   workflow_dispatch:
 
 jobs:
@@ -33,13 +33,13 @@ jobs:
         dotnet-version: 8.0.x
 
     - name: Restore dependencies
-      run: dotnet restore src/Shark.Fido2.VisualStudio.Template/Shark.Fido2.VisualStudio.Template.csproj
+      run: dotnet restore templates/projects/Shark.Fido2.VisualStudio.Template/Shark.Fido2.VisualStudio.Template.csproj
 
     - name: Build
-      run: dotnet build src/Shark.Fido2.VisualStudio.Template/Shark.Fido2.VisualStudio.Template.csproj --configuration Release --no-restore
+      run: dotnet build templates/projects/Shark.Fido2.VisualStudio.Template/Shark.Fido2.VisualStudio.Template.csproj --configuration Release --no-restore
 
     - name: Pack
-      run: dotnet pack src/Shark.Fido2.VisualStudio.Template/Shark.Fido2.VisualStudio.Template.csproj --configuration Release --no-restore --output ./out /p:Version=1.4.0.${{ github.run_number }}
+      run: dotnet pack templates/projects/Shark.Fido2.VisualStudio.Template/Shark.Fido2.VisualStudio.Template.csproj --configuration Release --no-restore --output ./out /p:Version=1.4.0.${{ github.run_number }}
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v6
