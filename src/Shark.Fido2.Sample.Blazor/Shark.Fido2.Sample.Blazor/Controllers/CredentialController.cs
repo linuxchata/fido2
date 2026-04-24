@@ -1,6 +1,7 @@
 using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
 using Shark.Fido2.Common.Extensions;
+using Shark.Fido2.ConvenienceMetadata.Core.Abstractions;
 using Shark.Fido2.Sample.Blazor.Abstractions.Services;
 using Shark.Fido2.Sample.Blazor.Responses;
 
@@ -11,7 +12,9 @@ namespace Shark.Fido2.Sample.Blazor.Controllers;
 /// </summary>
 [Route("api/[controller]")]
 [ApiController]
-public class CredentialController(ICredentialService credentialService) : ControllerBase
+public class CredentialController(
+    ICredentialService credentialService,
+    IConvenienceMetadataCachedService convenienceMetadataService) : ControllerBase
 {
     /// <summary>
     /// Gets credential details by the credential identifier.
@@ -45,8 +48,9 @@ public class CredentialController(ICredentialService credentialService) : Contro
             UserHandle = credential.UserHandle.ToBase64Url(),
             UserName = credential.UserName,
             UserDisplayName = credential.UserDisplayName,
-            AaGuid = $"{credential.AaGuid}",
             SignCount = credential.SignCount,
+            AaGuid = $"{credential.AaGuid}",
+            Authenticator = (await convenienceMetadataService.Get(credential.AaGuid, cancellationToken))?.GetDefaultName(),
             Algorithm = PublicKeyAlgorithms.Get(credential.CredentialPublicKey.Algorithm),
             Transports = credential.Transports ?? [],
             CreatedAt = credential.CreatedAt,

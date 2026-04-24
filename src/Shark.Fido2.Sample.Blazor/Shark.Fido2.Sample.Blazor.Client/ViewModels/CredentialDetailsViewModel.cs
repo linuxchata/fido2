@@ -1,4 +1,4 @@
-﻿namespace Shark.Fido2.Sample.Blazor.Client.ViewModels;
+namespace Shark.Fido2.Sample.Blazor.Client.ViewModels;
 
 public class CredentialDetailsViewModel
 {
@@ -11,6 +11,8 @@ public class CredentialDetailsViewModel
     public string UserDisplayName { get; init; } = null!;
 
     public string AaGuid { get; init; } = null!;
+
+    public string? Authenticator { get; init; }
 
     public uint SignCount { get; init; }
 
