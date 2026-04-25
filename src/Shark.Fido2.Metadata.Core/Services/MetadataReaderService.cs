@@ -131,7 +131,7 @@ internal sealed class MetadataReaderService : IMetadataReaderService
             NextUpdateDateTimeFormat,
             CultureInfo.InvariantCulture,
             DateTimeStyles.AssumeUniversal,
-            out DateTime nextUpdate))
+            out var nextUpdate))
         {
             throw new InvalidDataException("Metadata token payload 'nextUpdate' property is not date");
         }

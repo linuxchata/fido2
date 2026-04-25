@@ -117,7 +117,7 @@ public static class NoneAttestationGenerator
     {
         var bytes = guid.ToByteArray();
 
-        byte[] bigEndian = new byte[16];
+        var bigEndian = new byte[16];
 
         // Part 1 (4 bytes) – reverse
         bigEndian[0] = bytes[3];

@@ -9,7 +9,6 @@ using Shark.Fido2.Core.Models;
 using Shark.Fido2.Core.Results;
 using Shark.Fido2.Domain;
 using Shark.Fido2.Domain.Enums;
-using Shark.Fido2.Domain.Tpm;
 
 namespace Shark.Fido2.Core.Validators.AttestationStatementValidators;
 
@@ -64,14 +63,14 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
 
         if (!attestationStatementDict.TryGetValue(AttestationStatement.PubArea, out var pubArea) ||
             pubArea is not byte[] ||
-            !_tpmtPublicAreaParserService.Parse((byte[])pubArea, out TpmtPublic tpmtPublic))
+            !_tpmtPublicAreaParserService.Parse((byte[])pubArea, out var tpmtPublic))
         {
             return ValidatorInternalResult.Invalid("TPM attestation statement pubArea cannot be read");
         }
 
         if (!attestationStatementDict.TryGetValue(AttestationStatement.CertInfo, out var certInfo) ||
             certInfo is not byte[] ||
-            !_tpmsAttestationParserService.Parse((byte[])certInfo, out TpmsAttestation tpmsAttestation))
+            !_tpmsAttestationParserService.Parse((byte[])certInfo, out var tpmsAttestation))
         {
             return ValidatorInternalResult.Invalid("TPM attestation statement certInfo cannot be read");
         }

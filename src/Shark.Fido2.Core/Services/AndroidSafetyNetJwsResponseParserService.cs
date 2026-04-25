@@ -8,7 +8,7 @@ using Shark.Fido2.Domain;
 namespace Shark.Fido2.Core.Services;
 
 /// <summary>
-/// Gode sample from Google:
+/// Code sample from Google:
 /// https://github.com/googlesamples/android-play-safetynet/tree/master/server/csharp.
 /// </summary>
 internal sealed class AndroidSafetyNetJwsResponseParserService : IAndroidSafetyNetJwsResponseParserService
@@ -78,7 +78,7 @@ internal sealed class AndroidSafetyNetJwsResponseParserService : IAndroidSafetyN
 
     private static bool? ParseBoolOrNull(string? input)
     {
-        if (bool.TryParse(input, out bool result))
+        if (bool.TryParse(input, out var result))
         {
             return result;
         }

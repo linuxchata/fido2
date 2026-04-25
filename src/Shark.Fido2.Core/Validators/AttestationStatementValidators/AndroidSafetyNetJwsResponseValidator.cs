@@ -97,7 +97,7 @@ internal sealed class AndroidSafetyNetJwsResponseValidator : IAndroidSafetyNetJw
         try
         {
             var handler = new JwtSecurityTokenHandler();
-            handler.ValidateToken(jwsResponse.RawToken, validationParameters, out SecurityToken validatedToken);
+            handler.ValidateToken(jwsResponse.RawToken, validationParameters, out var validatedToken);
             if (validatedToken is not JwtSecurityToken)
             {
                 return false;
@@ -139,7 +139,7 @@ internal sealed class AndroidSafetyNetJwsResponseValidator : IAndroidSafetyNetJw
             jwsResponse.TimestampMs,
             NumberStyles.Integer,
             CultureInfo.InvariantCulture,
-            out long unixTimestampMs))
+            out var unixTimestampMs))
         {
             return false;
         }

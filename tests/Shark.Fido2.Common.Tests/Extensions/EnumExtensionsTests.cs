@@ -71,7 +71,7 @@ internal class EnumExtensionsTests
     public void ToNullableEnum_WhenValueIsValid_ThenReturnsEnumItem()
     {
         // Arrange
-        string? value = "custom-value";
+        var value = "custom-value";
 
         // Act
         var result = value.ToNullableEnum<TestEnum>();
@@ -84,7 +84,7 @@ internal class EnumExtensionsTests
     public void ToNullableEnum_WhenValueIsInvalid_ThenThrowsArgumentException()
     {
         // Arrange
-        string? value = "not-exist";
+        var value = "not-exist";
 
         // Act & Assert
         Assert.Throws<ArgumentException>(() => value.ToNullableEnum<TestEnum>());
