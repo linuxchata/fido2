@@ -1,4 +1,4 @@
-﻿using System.Net.Mime;
+using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
@@ -35,11 +35,6 @@ public class AttestationController(IAttestation attestation) : ControllerBase
         ServerPublicKeyCredentialCreationOptionsRequest request,
         CancellationToken cancellationToken)
     {
-        if (request == null)
-        {
-            return BadRequest(ServerResponse.CreateFailed());
-        }
-
         var createOptions = await _attestation.BeginRegistration(request.Map(), cancellationToken);
 
         HttpContext.Session.SetString(SessionName, JsonSerializer.Serialize(createOptions));
@@ -62,18 +57,13 @@ public class AttestationController(IAttestation attestation) : ControllerBase
         ServerPublicKeyCredentialAttestation request,
         CancellationToken cancellationToken)
     {
-        if (request == null || request.Response == null)
-        {
-            return BadRequest(ServerResponse.CreateFailed());
-        }
-
         var createOptionsString = HttpContext.Session.GetString(SessionName);
         if (string.IsNullOrWhiteSpace(createOptionsString))
         {
             return BadRequest(ServerResponse.CreateFailed());
         }
 
-        var createOptions = JsonSerializer.Deserialize<PublicKeyCredentialCreationOptions>(createOptionsString!);
+        var createOptions = JsonSerializer.Deserialize<PublicKeyCredentialCreationOptions>(createOptionsString);
 
         var response = await _attestation.CompleteRegistration(request.Map(), createOptions!, cancellationToken);
 

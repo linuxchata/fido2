@@ -1,6 +1,5 @@
-﻿using System.Net.Mime;
+using System.Net.Mime;
 using System.Text.Json;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Domain.Options;
@@ -35,11 +34,6 @@ public class AssertionController(IAssertion assertion) : ControllerBase
         ServerPublicKeyCredentialGetOptionsRequest request,
         CancellationToken cancellationToken)
     {
-        if (request == null)
-        {
-            return BadRequest(ServerResponse.CreateFailed());
-        }
-
         var requestOptions = await _assertion.BeginAuthentication(request.Map(), cancellationToken);
 
         HttpContext.Session.SetString(SessionName, JsonSerializer.Serialize(requestOptions));
@@ -62,18 +56,13 @@ public class AssertionController(IAssertion assertion) : ControllerBase
         ServerPublicKeyCredentialAssertion request,
         CancellationToken cancellationToken)
     {
-        if (request == null || request.Response == null)
-        {
-            return BadRequest(ServerResponse.CreateFailed());
-        }
-
         var requestOptionsString = HttpContext.Session.GetString(SessionName);
         if (string.IsNullOrWhiteSpace(requestOptionsString))
         {
             return BadRequest(ServerResponse.CreateFailed());
         }
 
-        var requestOptions = JsonSerializer.Deserialize<PublicKeyCredentialRequestOptions>(requestOptionsString!);
+        var requestOptions = JsonSerializer.Deserialize<PublicKeyCredentialRequestOptions>(requestOptionsString);
 
         var response = await _assertion.CompleteAuthentication(request.Map(), requestOptions!, cancellationToken);
 

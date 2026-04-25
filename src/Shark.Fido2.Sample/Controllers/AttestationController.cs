@@ -1,4 +1,4 @@
-﻿using System.Net.Mime;
+using System.Net.Mime;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Shark.Fido2.Core.Abstractions;
@@ -39,11 +39,6 @@ public class AttestationController(IAttestation attestation, ILogger<Attestation
         ServerPublicKeyCredentialCreationOptionsRequest request,
         CancellationToken cancellationToken)
     {
-        if (request == null)
-        {
-            return BadRequest(ServerResponse.CreateFailed());
-        }
-
         var createOptions = await attestation.BeginRegistration(request.Map(), cancellationToken);
 
         HttpContext.Session.SetString(SessionName, JsonSerializer.Serialize(createOptions));
@@ -66,11 +61,6 @@ public class AttestationController(IAttestation attestation, ILogger<Attestation
         ServerPublicKeyCredentialAttestation request,
         CancellationToken cancellationToken)
     {
-        if (request == null || request.Response == null)
-        {
-            return BadRequest(ServerResponse.CreateFailed());
-        }
-
         var createOptionsString = HttpContext.Session.GetString(SessionName);
         if (string.IsNullOrWhiteSpace(createOptionsString))
         {
@@ -78,7 +68,7 @@ public class AttestationController(IAttestation attestation, ILogger<Attestation
         }
 
         logger.LogInformation("Create options: {CreateOptionsString}", createOptionsString);
-        var createOptions = JsonSerializer.Deserialize<PublicKeyCredentialCreationOptions>(createOptionsString!);
+        var createOptions = JsonSerializer.Deserialize<PublicKeyCredentialCreationOptions>(createOptionsString);
 
         logger.LogInformation("Attestation request: {Request}", JsonSerializer.Serialize(request.Map()));
         var response = await attestation.CompleteRegistration(request.Map(), createOptions!, cancellationToken);
