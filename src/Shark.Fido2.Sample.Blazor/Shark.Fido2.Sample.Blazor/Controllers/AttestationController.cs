@@ -19,8 +19,6 @@ public class AttestationController(IAttestation attestation) : ControllerBase
 {
     private const string SessionName = "WebAuthn.CreateOptions";
 
-    private readonly IAttestation _attestation = attestation;
-
     /// <summary>
     /// Gets credential create options.
     /// </summary>
@@ -28,6 +26,7 @@ public class AttestationController(IAttestation attestation) : ControllerBase
     /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>The HTTP response.</returns>
     [HttpPost("options")]
+    [IgnoreAntiforgeryToken]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -35,7 +34,7 @@ public class AttestationController(IAttestation attestation) : ControllerBase
         ServerPublicKeyCredentialCreationOptionsRequest request,
         CancellationToken cancellationToken)
     {
-        var createOptions = await _attestation.BeginRegistration(request.Map(), cancellationToken);
+        var createOptions = await attestation.BeginRegistration(request.Map(), cancellationToken);
 
         HttpContext.Session.SetString(SessionName, JsonSerializer.Serialize(createOptions));
 
@@ -49,6 +48,7 @@ public class AttestationController(IAttestation attestation) : ControllerBase
     /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>The HTTP response.</returns>
     [HttpPost("result")]
+    [IgnoreAntiforgeryToken]
     [Consumes(MediaTypeNames.Application.Json)]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -65,7 +65,7 @@ public class AttestationController(IAttestation attestation) : ControllerBase
 
         var createOptions = JsonSerializer.Deserialize<PublicKeyCredentialCreationOptions>(createOptionsString);
 
-        var response = await _attestation.CompleteRegistration(request.Map(), createOptions!, cancellationToken);
+        var response = await attestation.CompleteRegistration(request.Map(), createOptions!, cancellationToken);
 
         HttpContext.Session.Remove(SessionName);
 

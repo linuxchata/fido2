@@ -18,8 +18,6 @@ public class AssertionController(IAssertion assertion) : ControllerBase
 {
     private const string SessionName = "WebAuthn.RequestOptions";
 
-    private readonly IAssertion _assertion = assertion;
-
     /// <summary>
     /// Gets credential request options.
     /// </summary>
@@ -27,6 +25,7 @@ public class AssertionController(IAssertion assertion) : ControllerBase
     /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>The HTTP response.</returns>
     [HttpPost("options")]
+    [IgnoreAntiforgeryToken]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -34,7 +33,7 @@ public class AssertionController(IAssertion assertion) : ControllerBase
         ServerPublicKeyCredentialGetOptionsRequest request,
         CancellationToken cancellationToken)
     {
-        var requestOptions = await _assertion.BeginAuthentication(request.Map(), cancellationToken);
+        var requestOptions = await assertion.BeginAuthentication(request.Map(), cancellationToken);
 
         HttpContext.Session.SetString(SessionName, JsonSerializer.Serialize(requestOptions));
 
@@ -48,6 +47,7 @@ public class AssertionController(IAssertion assertion) : ControllerBase
     /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>The HTTP response.</returns>
     [HttpPost("result")]
+    [IgnoreAntiforgeryToken]
     [Consumes(MediaTypeNames.Application.Json)]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -64,7 +64,7 @@ public class AssertionController(IAssertion assertion) : ControllerBase
 
         var requestOptions = JsonSerializer.Deserialize<PublicKeyCredentialRequestOptions>(requestOptionsString);
 
-        var response = await _assertion.CompleteAuthentication(request.Map(), requestOptions!, cancellationToken);
+        var response = await assertion.CompleteAuthentication(request.Map(), requestOptions!, cancellationToken);
 
         HttpContext.Session.Remove(SessionName);
 
