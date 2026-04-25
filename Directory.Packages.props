@@ -5,14 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageVersion Include="AWSSDK.DynamoDBv2" Version="4.0.17.2" />
+    <PackageVersion Include="AWSSDK.DynamoDBv2" Version="4.0.17.11" />
     <PackageVersion Include="BouncyCastle.Cryptography" Version="2.6.2" />
     <PackageVersion Include="coverlet.collector" Version="[8.0.1, 9.0.0)" />
     <PackageVersion Include="Dapper" Version="2.1.72" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="$(MicrosoftAspNetCoreVersion)" />
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="$(MicrosoftAspNetCoreVersion)" />
     <PackageVersion Include="Microsoft.AspNetCore.WebUtilities" Version="$(MicrosoftAspNetCoreVersion)" />
-    <PackageVersion Include="Microsoft.Data.SqlClient" Version="6.1.4" />
+    <PackageVersion Include="Microsoft.Data.SqlClient" Version="7.0.1" />
     <PackageVersion Include="Microsoft.Extensions.Caching.Abstractions" Version="[8.0.0, 9.0.0)" />
     <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="[8.0.1, 9.0.0)" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="[8.0.0, 9.0.0)" />
