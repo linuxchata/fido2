@@ -16,7 +16,7 @@ jobs:
       CI: true # Enable deterministic builds
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       FIDO2_GITHUB_PAT: ${{ secrets.FIDO2_GITHUB_PAT }}
-      NUGET_USER: ${{ secrets.NUGET_USER }}
+      NUGET_USER: ${{ vars.NUGET_USERNAME }}
 
     strategy:
       matrix:
@@ -49,7 +49,7 @@ jobs:
       run: dotnet pack ${{ matrix.project }} --configuration Release --no-restore --output ./nupkg /p:Version=1.4.0.${{ github.run_number }} /p:EmbedUntrackedSources=true /p:IncludeSymbols=true /p:SymbolPackageFormat=snupkg /p:ContinuousIntegrationBuild=true /p:DebugType=portable /p:DebugSymbols=true
 
     - name: Add nuget source
-      run: dotnet nuget add source --username linuxchata --password $GITHUB_TOKEN --store-password-in-clear-text --name github "https://nuget.pkg.github.com/linuxchata/index.json"
+      run: dotnet nuget add source --username ${{ vars.NUGET_USERNAME }} --password $GITHUB_TOKEN --store-password-in-clear-text --name github "https://nuget.pkg.github.com/${{ vars.NUGET_USERNAME }}/index.json"
 
     - name: Push packages to github.com
       run: |

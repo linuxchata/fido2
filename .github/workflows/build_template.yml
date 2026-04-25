@@ -20,7 +20,7 @@ jobs:
       CI: true # Enable deterministic builds
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       FIDO2_GITHUB_PAT: ${{ secrets.FIDO2_GITHUB_PAT }}
-      NUGET_USER: ${{ secrets.NUGET_USER }}
+      NUGET_USER: ${{ vars.NUGET_USERNAME }}
 
     steps:
     - uses: actions/checkout@v6
@@ -48,7 +48,7 @@ jobs:
         path: out/*.nupkg
 
     - name: Add nuget source
-      run: dotnet nuget add source --username linuxchata --password $GITHUB_TOKEN --store-password-in-clear-text --name github "https://nuget.pkg.github.com/linuxchata/index.json"
+      run: dotnet nuget add source --username ${{ vars.NUGET_USERNAME }} --password $GITHUB_TOKEN --store-password-in-clear-text --name github "https://nuget.pkg.github.com/${{ vars.NUGET_USERNAME }}/index.json"
 
     - name: Push packages to github.com
       run: dotnet nuget push "./out/*.nupkg" --api-key $FIDO2_GITHUB_PAT --source "github" --skip-duplicate --no-symbols
