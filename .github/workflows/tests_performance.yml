@@ -16,18 +16,18 @@ jobs:
       with:
         dotnet-version: 8.0.x
     - name: Restore dependencies
-      run: dotnet restore ./src/Shark.Fido2.slnx
+      run: dotnet restore tests_perf/Shark.Fido2.Core.Performance.Tests.slnx
 
     - name: Build
-      run: dotnet build ./src/Shark.Fido2.slnx --configuration Release --no-restore
+      run: dotnet build tests_perf/Shark.Fido2.Core.Performance.Tests.slnx --configuration Release --no-restore
 
     - name: Test
-      run: dotnet test ./src/Shark.Fido2.slnx --filter FullyQualifiedName=Shark.Fido2.Core.Performance.Tests --configuration Release --no-build --verbosity normal
+      run: dotnet test tests_perf/Shark.Fido2.Core.Performance.Tests.slnx --configuration Release --no-build --verbosity normal
 
     - name: Collect performance reports
       run: |
         mkdir -p nbomber_reports
-        cp -r tests/Shark.Fido2.Core.Performance.Tests/bin/Release/*/nbomber_reports/* nbomber_reports/ || true
+        cp -r tests_perf/Shark.Fido2.Core.Performance.Tests/bin/Release/*/nbomber_reports/* nbomber_reports/ || true
 
     - name: Check for performance reports
       id: check-reports
