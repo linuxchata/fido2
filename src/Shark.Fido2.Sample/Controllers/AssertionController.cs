@@ -34,6 +34,7 @@ public class AssertionController(
     /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>The HTTP response.</returns>
     [HttpPost("options")]
+    [IgnoreAntiforgeryToken]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -58,6 +59,7 @@ public class AssertionController(
     /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>The HTTP response.</returns>
     [HttpPost("result")]
+    [IgnoreAntiforgeryToken]
     [Consumes(MediaTypeNames.Application.Json)]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]

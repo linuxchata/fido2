@@ -26,6 +26,7 @@ public class AssertionController(IAssertion assertion, ICredentialService creden
     /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>The HTTP response.</returns>
     [HttpPost("options")]
+    [IgnoreAntiforgeryToken]
     [Produces(MediaTypeNames.Application.Json)]
     public async Task<IActionResult> Options(
         ServerPublicKeyCredentialGetOptionsRequest request,
@@ -45,6 +46,7 @@ public class AssertionController(IAssertion assertion, ICredentialService creden
     /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>The HTTP response.</returns>
     [HttpPost("result")]
+    [IgnoreAntiforgeryToken]
     [Consumes(MediaTypeNames.Application.Json)]
     [Produces(MediaTypeNames.Application.Json)]
     public async Task<IActionResult> Result(

@@ -25,6 +25,7 @@ public class AttestationController(IAttestation attestation) : ControllerBase
     /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>The HTTP response.</returns>
     [HttpPost("options")]
+    [IgnoreAntiforgeryToken]
     [Produces(MediaTypeNames.Application.Json)]
     public async Task<IActionResult> Options(
         ServerPublicKeyCredentialCreationOptionsRequest request,
@@ -44,6 +45,7 @@ public class AttestationController(IAttestation attestation) : ControllerBase
     /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>The HTTP response.</returns>
     [HttpPost("result")]
+    [IgnoreAntiforgeryToken]
     [Consumes(MediaTypeNames.Application.Json)]
     [Produces(MediaTypeNames.Application.Json)]
     public async Task<IActionResult> Result(
