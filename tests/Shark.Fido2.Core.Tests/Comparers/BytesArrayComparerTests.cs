@@ -52,7 +52,7 @@ internal class BytesArrayComparerTests
     {
         // Arrange
         byte[] expected = [1, 2, 3];
-        byte[] actual = expected;
+        var actual = expected;
 
         // Act
         var result = BytesArrayComparer.CompareNullable(expected, actual);

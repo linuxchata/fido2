@@ -60,7 +60,7 @@ internal static class CredentialEntityMapper
 
     private static DateTime? GetNullableDateTime(Dictionary<string, AttributeValue> item, string attributeName)
     {
-        if (item.TryGetValue(attributeName, out AttributeValue? value) && value != null && value.S != null)
+        if (item.TryGetValue(attributeName, out var value) && value != null && value.S != null)
         {
             return DateTime.Parse(value.S, DateTimeFormatInfo.InvariantInfo);
         }

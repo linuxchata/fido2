@@ -33,7 +33,7 @@ internal class TpmCapabilitiesVendorsTests
     public void Exists_WhenVerdonIdDoesNotExist_ThenReturnsFalse()
     {
         // Arrange
-        string vendorId = "12345d00";
+        var vendorId = "12345d00";
 
         // Act
         var result = TpmCapabilitiesVendors.Exists(vendorId);
@@ -46,7 +46,7 @@ internal class TpmCapabilitiesVendorsTests
     public void Exists_WhenVendorIdHasExtraSpace_ThenReturnsFalse()
     {
         // Arrange
-        string vendorId = " 414D4400 ";
+        var vendorId = " 414D4400 ";
 
         // Act
         var result = TpmCapabilitiesVendors.Exists(vendorId);

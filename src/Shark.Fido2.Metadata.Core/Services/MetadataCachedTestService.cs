@@ -130,7 +130,7 @@ internal sealed class MetadataCachedTestService : IMetadataCachedService
         {
             var metadataBlobs = Directory.GetFiles(localPath, "*.json");
 
-            foreach (string metadataBlob in metadataBlobs)
+            foreach (var metadataBlob in metadataBlobs)
             {
                 var metadata = File.ReadAllText(metadataBlob);
                 var payloadEntry = JsonSerializer.Deserialize<MetadataStatement>(metadata);
