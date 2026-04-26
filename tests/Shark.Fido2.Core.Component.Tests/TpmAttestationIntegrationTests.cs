@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Domain.Constants;
 using Shark.Fido2.Domain.Enums;
@@ -64,7 +65,7 @@ internal class TpmAttestationIntegrationTests
         };
 
         // Act
-        var result = await attestation.BeginRegistration(request, CancellationToken.None);
+        var result = await attestation.BeginRegistration(request, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -94,7 +95,7 @@ internal class TpmAttestationIntegrationTests
         var creationOptions = DataReader.ReadCreationOptions(TpmCreationOptions);
 
         // Act
-        var result = await attestation.CompleteRegistration(attestationData, creationOptions, CancellationToken.None);
+        var result = await attestation.CompleteRegistration(attestationData, creationOptions, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -111,10 +112,10 @@ internal class TpmAttestationIntegrationTests
         var attestationData = DataReader.ReadAttestationData(TpmAttestation);
         var creationOptions = DataReader.ReadCreationOptions(TpmCreationOptions);
 
-        await attestation.CompleteRegistration(attestationData, creationOptions, CancellationToken.None);
+        await attestation.CompleteRegistration(attestationData, creationOptions, It.IsAny<CancellationToken>());
 
         // Act
-        var result = await attestation.CompleteRegistration(attestationData, creationOptions, CancellationToken.None);
+        var result = await attestation.CompleteRegistration(attestationData, creationOptions, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -135,7 +136,7 @@ internal class TpmAttestationIntegrationTests
         };
 
         // Act
-        var result = await assertion.BeginAuthentication(request, CancellationToken.None);
+        var result = await assertion.BeginAuthentication(request, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -162,13 +163,13 @@ internal class TpmAttestationIntegrationTests
 
         var attestationData = DataReader.ReadAttestationData(TpmAttestation);
         var creationOptions = DataReader.ReadCreationOptions(TpmCreationOptions);
-        await attestation.CompleteRegistration(attestationData, creationOptions, CancellationToken.None);
+        await attestation.CompleteRegistration(attestationData, creationOptions, It.IsAny<CancellationToken>());
 
         var assertionData = DataReader.ReadAssertionData(TpmAssertion);
         var requestOptions = DataReader.ReadRequestOptions(TpmRequestOptions);
 
         // Act
-        var result = await assertion.CompleteAuthentication(assertionData, requestOptions, CancellationToken.None);
+        var result = await assertion.CompleteAuthentication(assertionData, requestOptions, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -185,15 +186,15 @@ internal class TpmAttestationIntegrationTests
 
         var attestationData = DataReader.ReadAttestationData(TpmAttestation);
         var creationOptions = DataReader.ReadCreationOptions(TpmCreationOptions);
-        await attestation.CompleteRegistration(attestationData, creationOptions, CancellationToken.None);
+        await attestation.CompleteRegistration(attestationData, creationOptions, It.IsAny<CancellationToken>());
 
         var assertionData = DataReader.ReadAssertionData(TpmAssertion);
         var requestOptions = DataReader.ReadRequestOptions(TpmRequestOptions);
 
-        await assertion.CompleteAuthentication(assertionData, requestOptions, CancellationToken.None);
+        await assertion.CompleteAuthentication(assertionData, requestOptions, It.IsAny<CancellationToken>());
 
         // Act
-        var result = await assertion.CompleteAuthentication(assertionData, requestOptions, CancellationToken.None);
+        var result = await assertion.CompleteAuthentication(assertionData, requestOptions, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.Not.Null);

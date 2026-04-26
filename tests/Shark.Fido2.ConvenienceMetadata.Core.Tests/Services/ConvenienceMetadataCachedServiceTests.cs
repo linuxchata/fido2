@@ -65,7 +65,7 @@ internal class ConvenienceMetadataCachedServiceTests
             .Returns(true);
 
         // Act
-        var result = await _sut.Get(_aaguid, CancellationToken.None);
+        var result = await _sut.Get(_aaguid, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.EqualTo(expectedItem));
@@ -90,11 +90,11 @@ internal class ConvenienceMetadataCachedServiceTests
         var bytes = System.Text.Encoding.UTF8.GetBytes(serializedEntries);
 
         _distributedCacheMock
-            .Setup(x => x.GetAsync(CacheKey, CancellationToken.None))
+            .Setup(x => x.GetAsync(CacheKey, It.IsAny<CancellationToken>()))
             .ReturnsAsync(bytes);
 
         // Act
-        var result = await _sut.Get(_aaguid, CancellationToken.None);
+        var result = await _sut.Get(_aaguid, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -112,7 +112,7 @@ internal class ConvenienceMetadataCachedServiceTests
             .Returns(false);
 
         _distributedCacheMock
-            .Setup(x => x.GetAsync(CacheKey, CancellationToken.None))
+            .Setup(x => x.GetAsync(CacheKey, It.IsAny<CancellationToken>()))
             .ReturnsAsync((byte[]?)null);
 
         var serviceEntries = new Dictionary<string, JsonElement>();
@@ -123,23 +123,23 @@ internal class ConvenienceMetadataCachedServiceTests
         var servicePayload = new ConvenienceMetadataPayload { Entries = serviceEntries };
 
         _convenienceMetadataServiceMock
-            .Setup(x => x.Get(CancellationToken.None))
+            .Setup(x => x.Get(It.IsAny<CancellationToken>()))
             .ReturnsAsync(servicePayload);
 
         // Act
-        var result = await _sut.Get(_aaguid, CancellationToken.None);
+        var result = await _sut.Get(_aaguid, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.Not.Null);
         Assert.That(result!.Aaguid, Is.EqualTo(_aaguid));
 
-        _convenienceMetadataServiceMock.Verify(x => x.Get(CancellationToken.None), Times.Once);
+        _convenienceMetadataServiceMock.Verify(x => x.Get(It.IsAny<CancellationToken>()), Times.Once);
         _distributedCacheMock.Verify(
             x => x.SetAsync(
                 CacheKey,
                 It.IsAny<byte[]>(),
                 It.IsAny<DistributedCacheEntryOptions>(),
-                CancellationToken.None),
+                It.IsAny<CancellationToken>()),
             Times.Once);
         _memoryCacheMock.Verify(x => x.CreateEntry(It.IsAny<object>()), Times.Once);
     }
@@ -154,15 +154,15 @@ internal class ConvenienceMetadataCachedServiceTests
             .Returns(false);
 
         _distributedCacheMock
-            .Setup(x => x.GetAsync(CacheKey, CancellationToken.None))
+            .Setup(x => x.GetAsync(CacheKey, It.IsAny<CancellationToken>()))
             .ReturnsAsync((byte[]?)null);
 
         _convenienceMetadataServiceMock
-            .Setup(x => x.Get(CancellationToken.None))
+            .Setup(x => x.Get(It.IsAny<CancellationToken>()))
             .ReturnsAsync((ConvenienceMetadataPayload?)null);
 
         // Act
-        var result = await _sut.Get(_aaguid, CancellationToken.None);
+        var result = await _sut.Get(_aaguid, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.Null);
@@ -209,7 +209,7 @@ internal class ConvenienceMetadataCachedServiceTests
             .Returns(Task.CompletedTask);
 
         // Act
-        var tasks = Enumerable.Range(0, 10).Select(_ => _sut.Get(_aaguid, CancellationToken.None)).ToList();
+        var tasks = Enumerable.Range(0, 10).Select(_ => _sut.Get(_aaguid, It.IsAny<CancellationToken>())).ToList();
         await Task.WhenAll(tasks);
 
         // Assert

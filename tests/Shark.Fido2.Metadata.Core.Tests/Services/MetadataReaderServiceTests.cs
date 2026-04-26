@@ -53,7 +53,7 @@ internal class MetadataReaderServiceTests
         Assert.ThrowsAsync<ArgumentNullException>(() => _sut.ValidateAndRead(
             null!,
             _rootCertificateMock.Object,
-            CancellationToken.None));
+            It.IsAny<CancellationToken>()));
     }
 
     [Test]
@@ -65,7 +65,7 @@ internal class MetadataReaderServiceTests
         Assert.ThrowsAsync<ArgumentException>(() => _sut.ValidateAndRead(
             metadataBlob,
             _rootCertificateMock.Object,
-            CancellationToken.None));
+            It.IsAny<CancellationToken>()));
     }
 
     [Test]
@@ -78,7 +78,7 @@ internal class MetadataReaderServiceTests
         Assert.ThrowsAsync<ArgumentNullException>(() => _sut.ValidateAndRead(
             invalidJwt,
             null!,
-            CancellationToken.None));
+            It.IsAny<CancellationToken>()));
     }
 
     [Test]
@@ -92,7 +92,7 @@ internal class MetadataReaderServiceTests
         Assert.ThrowsAsync<InvalidOperationException>(() => _sut.ValidateAndRead(
             metadataBlob,
             _rootCertificateMock.Object,
-            CancellationToken.None));
+            It.IsAny<CancellationToken>()));
     }
 
     [Test]
@@ -105,6 +105,6 @@ internal class MetadataReaderServiceTests
         Assert.ThrowsAsync<InvalidOperationException>(() => _sut.ValidateAndRead(
             metadataBlob,
             _rootCertificateMock.Object,
-            CancellationToken.None));
+            It.IsAny<CancellationToken>()));
     }
 }

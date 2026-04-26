@@ -63,7 +63,7 @@ internal class AttestationFidoMetadataServiceValidatorTests
         _configuration.EnableMetadataService = false;
 
         // Act
-        var result = await _sut.Validate(_authenticatorData, CancellationToken.None);
+        var result = await _sut.Validate(_authenticatorData, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result.IsValid, Is.True);
@@ -85,11 +85,11 @@ internal class AttestationFidoMetadataServiceValidatorTests
         };
 
         _metadataServiceMock
-            .Setup(m => m.Get(_aaGuid, CancellationToken.None))
+            .Setup(m => m.Get(_aaGuid, It.IsAny<CancellationToken>()))
             .ReturnsAsync(metadataItem);
 
         // Act
-        var result = await _sut.Validate(_authenticatorData, CancellationToken.None);
+        var result = await _sut.Validate(_authenticatorData, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result.IsValid, Is.True);
@@ -112,11 +112,11 @@ internal class AttestationFidoMetadataServiceValidatorTests
         };
 
         _metadataServiceMock
-            .Setup(m => m.Get(_aaGuid, CancellationToken.None))
+            .Setup(m => m.Get(_aaGuid, It.IsAny<CancellationToken>()))
             .ReturnsAsync(metadataItem);
 
         // Act
-        var result = await _sut.Validate(_authenticatorData, CancellationToken.None);
+        var result = await _sut.Validate(_authenticatorData, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result.IsValid, Is.False);
@@ -143,11 +143,11 @@ internal class AttestationFidoMetadataServiceValidatorTests
         };
 
         _metadataServiceMock
-            .Setup(m => m.Get(_aaGuid, CancellationToken.None))
+            .Setup(m => m.Get(_aaGuid, It.IsAny<CancellationToken>()))
             .ReturnsAsync(metadataItem);
 
         // Act
-        var result = await _sut.Validate(_authenticatorData, CancellationToken.None);
+        var result = await _sut.Validate(_authenticatorData, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result.IsValid, Is.False);
@@ -161,11 +161,11 @@ internal class AttestationFidoMetadataServiceValidatorTests
         _configuration.EnableStrictAuthenticatorVerification = false;
 
         _metadataServiceMock
-            .Setup(m => m.Get(_aaGuid, CancellationToken.None))
+            .Setup(m => m.Get(_aaGuid, It.IsAny<CancellationToken>()))
             .ReturnsAsync((MetadataPayloadItem?)null);
 
         // Act
-        var result = await _sut.Validate(_authenticatorData, CancellationToken.None);
+        var result = await _sut.Validate(_authenticatorData, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result.IsValid, Is.True);
@@ -179,11 +179,11 @@ internal class AttestationFidoMetadataServiceValidatorTests
         _configuration.EnableStrictAuthenticatorVerification = true;
 
         _metadataServiceMock
-            .Setup(m => m.Get(_aaGuid, CancellationToken.None))
+            .Setup(m => m.Get(_aaGuid, It.IsAny<CancellationToken>()))
             .ReturnsAsync((MetadataPayloadItem?)null);
 
         // Act
-        var result = await _sut.Validate(_authenticatorData, CancellationToken.None);
+        var result = await _sut.Validate(_authenticatorData, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result.IsValid, Is.False);
@@ -199,7 +199,7 @@ internal class AttestationFidoMetadataServiceValidatorTests
         var trustPath = _certificates;
 
         // Act
-        var result = await _sut.ValidateBasicAttestation(_authenticatorData, trustPath, CancellationToken.None);
+        var result = await _sut.ValidateBasicAttestation(_authenticatorData, trustPath, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result.IsValid, Is.True);
@@ -213,11 +213,11 @@ internal class AttestationFidoMetadataServiceValidatorTests
         var trustPath = _certificates;
 
         _metadataServiceMock
-            .Setup(m => m.Get(_aaGuid, CancellationToken.None))
+            .Setup(m => m.Get(_aaGuid, It.IsAny<CancellationToken>()))
             .ReturnsAsync((MetadataPayloadItem?)null);
 
         // Act
-        var result = await _sut.ValidateBasicAttestation(_authenticatorData, trustPath, CancellationToken.None);
+        var result = await _sut.ValidateBasicAttestation(_authenticatorData, trustPath, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result.IsValid, Is.True);
@@ -232,11 +232,11 @@ internal class AttestationFidoMetadataServiceValidatorTests
         var metadataItem = CreateMetadataPayloadItem(["basic_surrogate"]);
 
         _metadataServiceMock
-            .Setup(m => m.Get(_aaGuid, CancellationToken.None))
+            .Setup(m => m.Get(_aaGuid, It.IsAny<CancellationToken>()))
             .ReturnsAsync(metadataItem);
 
         // Act
-        var result = await _sut.ValidateBasicAttestation(_authenticatorData, trustPath, CancellationToken.None);
+        var result = await _sut.ValidateBasicAttestation(_authenticatorData, trustPath, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result.IsValid, Is.False);
@@ -251,11 +251,11 @@ internal class AttestationFidoMetadataServiceValidatorTests
         var metadataItem = CreateMetadataPayloadItem(["basic_surrogate"]);
 
         _metadataServiceMock
-            .Setup(m => m.Get(_aaGuid, CancellationToken.None))
+            .Setup(m => m.Get(_aaGuid, It.IsAny<CancellationToken>()))
             .ReturnsAsync(metadataItem);
 
         // Act
-        var result = await _sut.ValidateBasicAttestation(_authenticatorData, trustPath, CancellationToken.None);
+        var result = await _sut.ValidateBasicAttestation(_authenticatorData, trustPath, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result.IsValid, Is.True);
@@ -270,11 +270,11 @@ internal class AttestationFidoMetadataServiceValidatorTests
         var metadataItem = CreateMetadataPayloadItem(null!);
 
         _metadataServiceMock
-            .Setup(m => m.Get(_aaGuid, CancellationToken.None))
+            .Setup(m => m.Get(_aaGuid, It.IsAny<CancellationToken>()))
             .ReturnsAsync(metadataItem);
 
         // Act
-        var result = await _sut.ValidateBasicAttestation(_authenticatorData, trustPath, CancellationToken.None);
+        var result = await _sut.ValidateBasicAttestation(_authenticatorData, trustPath, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result.IsValid, Is.True);
@@ -289,11 +289,11 @@ internal class AttestationFidoMetadataServiceValidatorTests
         var metadataItem = CreateMetadataPayloadItem([]);
 
         _metadataServiceMock
-            .Setup(m => m.Get(_aaGuid, CancellationToken.None))
+            .Setup(m => m.Get(_aaGuid, It.IsAny<CancellationToken>()))
             .ReturnsAsync(metadataItem);
 
         // Act
-        var result = await _sut.ValidateBasicAttestation(_authenticatorData, trustPath, CancellationToken.None);
+        var result = await _sut.ValidateBasicAttestation(_authenticatorData, trustPath, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result.IsValid, Is.True);
@@ -308,11 +308,11 @@ internal class AttestationFidoMetadataServiceValidatorTests
         var metadataItem = CreateMetadataPayloadItem(["basic_surrogate"]);
 
         _metadataServiceMock
-            .Setup(m => m.Get(_aaGuid, CancellationToken.None))
+            .Setup(m => m.Get(_aaGuid, It.IsAny<CancellationToken>()))
             .ReturnsAsync(metadataItem);
 
         // Act
-        var result = await _sut.ValidateBasicAttestation(_authenticatorData, trustPath, CancellationToken.None);
+        var result = await _sut.ValidateBasicAttestation(_authenticatorData, trustPath, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result.IsValid, Is.True);
@@ -327,11 +327,11 @@ internal class AttestationFidoMetadataServiceValidatorTests
         var metadataItem = CreateMetadataPayloadItem(["basic", "basic_surrogate", "attca"]);
 
         _metadataServiceMock
-            .Setup(m => m.Get(_aaGuid, CancellationToken.None))
+            .Setup(m => m.Get(_aaGuid, It.IsAny<CancellationToken>()))
             .ReturnsAsync(metadataItem);
 
         // Act
-        var result = await _sut.ValidateBasicAttestation(_authenticatorData, trustPath, CancellationToken.None);
+        var result = await _sut.ValidateBasicAttestation(_authenticatorData, trustPath, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result.IsValid, Is.True);
@@ -346,11 +346,11 @@ internal class AttestationFidoMetadataServiceValidatorTests
         var metadataItem = CreateMetadataPayloadItem(["basic", "attca"]);
 
         _metadataServiceMock
-            .Setup(m => m.Get(_aaGuid, CancellationToken.None))
+            .Setup(m => m.Get(_aaGuid, It.IsAny<CancellationToken>()))
             .ReturnsAsync(metadataItem);
 
         // Act
-        var result = await _sut.ValidateBasicAttestation(_authenticatorData, trustPath, CancellationToken.None);
+        var result = await _sut.ValidateBasicAttestation(_authenticatorData, trustPath, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result.IsValid, Is.True);

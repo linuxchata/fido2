@@ -1,3 +1,4 @@
+using Moq;
 using Shark.Fido2.Metadata.Core.Services;
 
 namespace Shark.Fido2.Metadata.Core.Tests.Services;
@@ -21,7 +22,7 @@ internal class MetadataCachedNullServiceTests
     public async Task Get_WhenAaguidIsValid_ThenReturnsNull()
     {
         // Act
-        var result = await _sut.Get(_aaguid, CancellationToken.None);
+        var result = await _sut.Get(_aaguid, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.Null);
@@ -31,7 +32,7 @@ internal class MetadataCachedNullServiceTests
     public async Task Get_WhenAaguidIsEmptyGuid_ThenReturnsNull()
     {
         // Act
-        var result = await _sut.Get(Guid.Empty, CancellationToken.None);
+        var result = await _sut.Get(Guid.Empty, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.Null);
@@ -44,7 +45,7 @@ internal class MetadataCachedNullServiceTests
         var newGuid = Guid.NewGuid();
 
         // Act
-        var result = await _sut.Get(newGuid, CancellationToken.None);
+        var result = await _sut.Get(newGuid, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.Null);
@@ -54,9 +55,9 @@ internal class MetadataCachedNullServiceTests
     public async Task Get_WhenCalledMultipleTimes_ThenReturnsNull()
     {
         // Act
-        var result1 = await _sut.Get(_aaguid, CancellationToken.None);
-        var result2 = await _sut.Get(_aaguid, CancellationToken.None);
-        var result3 = await _sut.Get(Guid.NewGuid(), CancellationToken.None);
+        var result1 = await _sut.Get(_aaguid, It.IsAny<CancellationToken>());
+        var result2 = await _sut.Get(_aaguid, It.IsAny<CancellationToken>());
+        var result3 = await _sut.Get(Guid.NewGuid(), It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result1, Is.Null);
