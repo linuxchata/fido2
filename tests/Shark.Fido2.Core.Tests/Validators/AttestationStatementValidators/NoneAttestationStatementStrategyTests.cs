@@ -32,7 +32,7 @@ internal class NoneAttestationStatementStrategyTests
                 It.IsAny<AttestationObjectData>(),
                 It.IsAny<ClientData>(),
                 It.IsAny<PublicKeyCredentialCreationOptions>(),
-                CancellationToken.None))
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(ValidatorInternalResult.Valid());
 
         _authenticatorDataParserService = new AuthenticatorDataParserService();
@@ -54,7 +54,7 @@ internal class NoneAttestationStatementStrategyTests
         var clientData = ClientDataBuilder.Build(attestationResponseData!.ClientDataJson);
 
         var internalResult = await _attestationObjectHandler.Handle(
-            attestationResponseData!.AttestationObject, clientData, _creationOptions, CancellationToken.None);
+            attestationResponseData!.AttestationObject, clientData, _creationOptions, It.IsAny<CancellationToken>());
 
         // Act
         var validatorInternalResult = _sut.Validate(internalResult.Value!, clientData);

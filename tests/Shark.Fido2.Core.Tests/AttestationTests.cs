@@ -60,7 +60,7 @@ internal class AttestationTests
                 It.IsAny<string>(),
                 It.IsAny<ClientData>(),
                 It.IsAny<PublicKeyCredentialCreationOptions>(),
-                CancellationToken.None))
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(new InternalResult<AttestationObjectData>(new AttestationObjectData
             {
                 AuthenticatorData = new AuthenticatorData
@@ -94,7 +94,7 @@ internal class AttestationTests
 
         _credentialRepositoryMock = new Mock<ICredentialRepository>();
         _credentialRepositoryMock
-            .Setup(a => a.Exists(It.IsAny<byte[]>(), CancellationToken.None))
+            .Setup(a => a.Exists(It.IsAny<byte[]>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(false);
 
         _fido2Configuration = new Fido2Configuration
@@ -155,7 +155,7 @@ internal class AttestationTests
         Assert.ThrowsAsync<ArgumentNullException>(
             () => _sut.BeginRegistration(
                 It.IsAny<PublicKeyCredentialCreationOptionsRequest>(),
-                CancellationToken.None));
+                It.IsAny<CancellationToken>()));
     }
 
     [Test]
@@ -171,7 +171,7 @@ internal class AttestationTests
         };
 
         // Act
-        var result = await _sut.BeginRegistration(request, CancellationToken.None);
+        var result = await _sut.BeginRegistration(request, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -194,7 +194,7 @@ internal class AttestationTests
         };
 
         // Act
-        var result = await _sut.BeginRegistration(request, CancellationToken.None);
+        var result = await _sut.BeginRegistration(request, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -212,7 +212,7 @@ internal class AttestationTests
         };
 
         _credentialRepositoryMock
-            .Setup(a => a.Get(UserName, CancellationToken.None))
+            .Setup(a => a.Get(UserName, It.IsAny<CancellationToken>()))
             .ReturnsAsync([credential]);
 
         var request = new PublicKeyCredentialCreationOptionsRequest
@@ -224,7 +224,7 @@ internal class AttestationTests
         };
 
         // Act
-        var result = await _sut.BeginRegistration(request, CancellationToken.None);
+        var result = await _sut.BeginRegistration(request, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -256,7 +256,7 @@ internal class AttestationTests
         };
 
         // Act
-        var result = await _sut.BeginRegistration(request, CancellationToken.None);
+        var result = await _sut.BeginRegistration(request, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -295,7 +295,7 @@ internal class AttestationTests
             _sut.CompleteRegistration(
                 _attestation,
                 _creationOptions,
-                CancellationToken.None));
+                It.IsAny<CancellationToken>()));
     }
 
     [Test]
@@ -312,7 +312,7 @@ internal class AttestationTests
         var result = await _sut.CompleteRegistration(
             _attestation,
             _creationOptions,
-            CancellationToken.None);
+            It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -330,7 +330,7 @@ internal class AttestationTests
         var result = await _sut.CompleteRegistration(
             _attestation,
             _creationOptions,
-            CancellationToken.None);
+            It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -357,7 +357,7 @@ internal class AttestationTests
         var result = await _sut.CompleteRegistration(
             _attestation,
             _creationOptions,
-            CancellationToken.None);
+            It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -381,14 +381,14 @@ internal class AttestationTests
                 It.IsAny<string>(),
                 It.IsAny<ClientData>(),
                 It.IsAny<PublicKeyCredentialCreationOptions>(),
-                CancellationToken.None))
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(new InternalResult<AttestationObjectData>("Attestation object validation failed"));
 
         // Act
         var result = await _sut.CompleteRegistration(
             _attestation,
             _creationOptions,
-            CancellationToken.None);
+            It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -401,14 +401,14 @@ internal class AttestationTests
     {
         // Arrange
         _credentialRepositoryMock
-            .Setup(a => a.Exists(It.IsAny<byte[]>(), CancellationToken.None))
+            .Setup(a => a.Exists(It.IsAny<byte[]>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
 
         // Act
         var result = await _sut.CompleteRegistration(
             _attestation,
             _creationOptions,
-            CancellationToken.None);
+            It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -422,7 +422,7 @@ internal class AttestationTests
         // Arrange
         Credential? credential = null;
         _credentialRepositoryMock
-            .Setup(a => a.Add(It.IsAny<Credential>(), CancellationToken.None))
+            .Setup(a => a.Add(It.IsAny<Credential>(), It.IsAny<CancellationToken>()))
             .Callback<Credential, CancellationToken>((c, ct) => credential = c)
             .Returns(Task.CompletedTask);
 
@@ -430,7 +430,7 @@ internal class AttestationTests
         var result = await _sut.CompleteRegistration(
             _attestation,
             _creationOptions,
-            CancellationToken.None);
+            It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -475,7 +475,7 @@ internal class AttestationTests
         var result = await _sut.CompleteRegistration(
             attestation,
             _creationOptions,
-            CancellationToken.None);
+            It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -509,7 +509,7 @@ internal class AttestationTests
         var result = await _sut.CompleteRegistration(
             attestation,
             _creationOptions,
-            CancellationToken.None);
+            It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.Not.Null);

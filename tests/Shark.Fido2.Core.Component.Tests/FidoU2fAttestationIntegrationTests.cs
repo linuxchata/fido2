@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Domain.Constants;
 using Shark.Fido2.Domain.Enums;
@@ -62,7 +63,7 @@ internal class FidoU2fAttestationIntegrationTests
         };
 
         // Act
-        var result = await attestation.BeginRegistration(request, CancellationToken.None);
+        var result = await attestation.BeginRegistration(request, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -92,7 +93,7 @@ internal class FidoU2fAttestationIntegrationTests
         var creationOptions = DataReader.ReadCreationOptions(FidoU2fCreationOptions);
 
         // Act
-        var result = await attestation.CompleteRegistration(attestationData, creationOptions, CancellationToken.None);
+        var result = await attestation.CompleteRegistration(attestationData, creationOptions, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -109,10 +110,10 @@ internal class FidoU2fAttestationIntegrationTests
         var attestationData = DataReader.ReadAttestationData(FidoU2fAttestation);
         var creationOptions = DataReader.ReadCreationOptions(FidoU2fCreationOptions);
 
-        await attestation.CompleteRegistration(attestationData, creationOptions, CancellationToken.None);
+        await attestation.CompleteRegistration(attestationData, creationOptions, It.IsAny<CancellationToken>());
 
         // Act
-        var result = await attestation.CompleteRegistration(attestationData, creationOptions, CancellationToken.None);
+        var result = await attestation.CompleteRegistration(attestationData, creationOptions, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.Not.Null);

@@ -2,6 +2,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.Time.Testing;
+using Moq;
 using Shark.Fido2.Domain;
 
 namespace Shark.Fido2.InMemory.Tests;
@@ -38,7 +39,7 @@ internal class CredentialRepositoryTests
     public async Task Get_WhenCredentialIdIsNull_ThenReturnsNull()
     {
         // Act
-        var result = await _sut.Get((byte[]?)null, CancellationToken.None);
+        var result = await _sut.Get((byte[]?)null, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.Null);
@@ -48,7 +49,7 @@ internal class CredentialRepositoryTests
     public async Task Get_WhenCredentialIdIsEmpty_ThenReturnsNull()
     {
         // Act
-        var result = await _sut.Get([], CancellationToken.None);
+        var result = await _sut.Get([], It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.Null);
@@ -58,7 +59,7 @@ internal class CredentialRepositoryTests
     public async Task Get_WhenCredentialDoesNotExist_ThenReturnsNull()
     {
         // Act
-        var result = await _sut.Get(CredentialId, CancellationToken.None);
+        var result = await _sut.Get(CredentialId, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.Null);
@@ -69,10 +70,10 @@ internal class CredentialRepositoryTests
     {
         // Arrange
         var credential = CreateTestCredential();
-        await _sut.Add(credential, CancellationToken.None);
+        await _sut.Add(credential, It.IsAny<CancellationToken>());
 
         // Act
-        var result = await _sut.Get(CredentialId, CancellationToken.None);
+        var result = await _sut.Get(CredentialId, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -91,7 +92,7 @@ internal class CredentialRepositoryTests
     public async Task Get_WhenUserNameIsNullOrEmpty_ThenReturnsEmptyList(string userName)
     {
         // Act
-        var result = await _sut.Get(userName, CancellationToken.None);
+        var result = await _sut.Get(userName, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -102,7 +103,7 @@ internal class CredentialRepositoryTests
     public async Task Get_WhenUserHasNoCredentials_ThenReturnsEmptyList()
     {
         // Act
-        var result = await _sut.Get(UserName, CancellationToken.None);
+        var result = await _sut.Get(UserName, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -114,10 +115,10 @@ internal class CredentialRepositoryTests
     {
         // Arrange
         var credential = CreateTestCredential();
-        await _sut.Add(credential, CancellationToken.None);
+        await _sut.Add(credential, It.IsAny<CancellationToken>());
 
         // Act
-        var result = await _sut.Get(UserName, CancellationToken.None);
+        var result = await _sut.Get(UserName, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -133,11 +134,11 @@ internal class CredentialRepositoryTests
         // Arrange
         var credential1 = CreateTestCredential();
         var credential2 = CreateTestCredential(CredentialId2);
-        await _sut.Add(credential1, CancellationToken.None);
-        await _sut.Add(credential2, CancellationToken.None);
+        await _sut.Add(credential1, It.IsAny<CancellationToken>());
+        await _sut.Add(credential2, It.IsAny<CancellationToken>());
 
         // Act
-        var result = await _sut.Get(UserName, CancellationToken.None);
+        var result = await _sut.Get(UserName, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -154,7 +155,7 @@ internal class CredentialRepositoryTests
     public async Task Exists_WhenCredentialIdIsNull_ThenReturnsFalse()
     {
         // Act
-        var result = await _sut.Exists((byte[]?)null, CancellationToken.None);
+        var result = await _sut.Exists((byte[]?)null, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.False);
@@ -164,7 +165,7 @@ internal class CredentialRepositoryTests
     public async Task Exists_WhenCredentialIdIsEmpty_ThenReturnsFalse()
     {
         // Act
-        var result = await _sut.Exists([], CancellationToken.None);
+        var result = await _sut.Exists([], It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.False);
@@ -174,7 +175,7 @@ internal class CredentialRepositoryTests
     public async Task Exists_WhenCredentialDoesNotExist_ThenReturnsFalse()
     {
         // Act
-        var result = await _sut.Exists(CredentialId, CancellationToken.None);
+        var result = await _sut.Exists(CredentialId, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.False);
@@ -185,10 +186,10 @@ internal class CredentialRepositoryTests
     {
         // Arrange
         var credential = CreateTestCredential();
-        await _sut.Add(credential, CancellationToken.None);
+        await _sut.Add(credential, It.IsAny<CancellationToken>());
 
         // Act
-        var result = await _sut.Exists(CredentialId, CancellationToken.None);
+        var result = await _sut.Exists(CredentialId, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.True);
@@ -202,7 +203,7 @@ internal class CredentialRepositoryTests
     public void Add_WhenCredentialIsNull_ThenThrowsArgumentNullException()
     {
         // Act & Assert
-        Assert.ThrowsAsync<ArgumentNullException>(() => _sut.Add(null!, CancellationToken.None));
+        Assert.ThrowsAsync<ArgumentNullException>(() => _sut.Add(null!, It.IsAny<CancellationToken>()));
     }
 
     [Test]
@@ -213,7 +214,7 @@ internal class CredentialRepositoryTests
         credential.CredentialId = null!;
 
         // Act & Assert
-        Assert.ThrowsAsync<ArgumentNullException>(() => _sut.Add(credential, CancellationToken.None));
+        Assert.ThrowsAsync<ArgumentNullException>(() => _sut.Add(credential, It.IsAny<CancellationToken>()));
     }
 
     [Test]
@@ -224,7 +225,7 @@ internal class CredentialRepositoryTests
         credential.UserName = null!;
 
         // Act & Assert
-        Assert.ThrowsAsync<ArgumentNullException>(() => _sut.Add(credential, CancellationToken.None));
+        Assert.ThrowsAsync<ArgumentNullException>(() => _sut.Add(credential, It.IsAny<CancellationToken>()));
     }
 
     [Test]
@@ -235,7 +236,7 @@ internal class CredentialRepositoryTests
         credential.UserName = string.Empty;
 
         // Act & Assert
-        Assert.ThrowsAsync<ArgumentException>(() => _sut.Add(credential, CancellationToken.None));
+        Assert.ThrowsAsync<ArgumentException>(() => _sut.Add(credential, It.IsAny<CancellationToken>()));
     }
 
     [Test]
@@ -246,7 +247,7 @@ internal class CredentialRepositoryTests
         credential.UserHandle = null!;
 
         // Act & Assert
-        Assert.ThrowsAsync<ArgumentNullException>(() => _sut.Add(credential, CancellationToken.None));
+        Assert.ThrowsAsync<ArgumentNullException>(() => _sut.Add(credential, It.IsAny<CancellationToken>()));
     }
 
     [Test]
@@ -257,7 +258,7 @@ internal class CredentialRepositoryTests
         credential.CredentialPublicKey = null!;
 
         // Act & Assert
-        Assert.ThrowsAsync<ArgumentNullException>(() => _sut.Add(credential, CancellationToken.None));
+        Assert.ThrowsAsync<ArgumentNullException>(() => _sut.Add(credential, It.IsAny<CancellationToken>()));
     }
 
     [Test]
@@ -267,10 +268,10 @@ internal class CredentialRepositoryTests
         var credential = CreateTestCredential();
 
         // Act
-        await _sut.Add(credential, CancellationToken.None);
+        await _sut.Add(credential, It.IsAny<CancellationToken>());
 
         // Assert
-        var result = await _sut.Get(CredentialId, CancellationToken.None);
+        var result = await _sut.Get(CredentialId, It.IsAny<CancellationToken>());
         Assert.That(result, Is.Not.Null);
         Assert.That(result!.CredentialId, Is.EqualTo(CredentialId));
     }
@@ -283,10 +284,10 @@ internal class CredentialRepositoryTests
         var expectedTime = _timeProvider.GetUtcNow().UtcDateTime;
 
         // Act
-        await _sut.Add(credential, CancellationToken.None);
+        await _sut.Add(credential, It.IsAny<CancellationToken>());
 
         // Assert
-        var result = await _sut.Get(CredentialId, CancellationToken.None);
+        var result = await _sut.Get(CredentialId, It.IsAny<CancellationToken>());
         Assert.That(result, Is.Not.Null);
         Assert.That(result!.CreatedAt, Is.EqualTo(expectedTime));
     }
@@ -299,11 +300,11 @@ internal class CredentialRepositoryTests
         var credential2 = CreateTestCredential(CredentialId2);
 
         // Act
-        await _sut.Add(credential1, CancellationToken.None);
-        await _sut.Add(credential2, CancellationToken.None);
+        await _sut.Add(credential1, It.IsAny<CancellationToken>());
+        await _sut.Add(credential2, It.IsAny<CancellationToken>());
 
         // Assert
-        var credentials = await _sut.Get(UserName, CancellationToken.None);
+        var credentials = await _sut.Get(UserName, It.IsAny<CancellationToken>());
         Assert.That(credentials, Has.Count.EqualTo(2));
     }
 
@@ -315,7 +316,7 @@ internal class CredentialRepositoryTests
     public void UpdateSignCount_WhenCredentialDoesNotExist_ThenNotThrowException()
     {
         // Act & Assert
-        Assert.DoesNotThrowAsync(() => _sut.UpdateSignCount(CredentialId, 42, CancellationToken.None));
+        Assert.DoesNotThrowAsync(() => _sut.UpdateSignCount(CredentialId, 42, It.IsAny<CancellationToken>()));
     }
 
     [Test]
@@ -323,16 +324,16 @@ internal class CredentialRepositoryTests
     {
         // Arrange
         var credential = CreateTestCredential();
-        await _sut.Add(credential, CancellationToken.None);
+        await _sut.Add(credential, It.IsAny<CancellationToken>());
 
         _timeProvider.Advance(TimeSpan.FromHours(1));
         var expectedTime = _timeProvider.GetUtcNow().UtcDateTime;
 
         // Act
-        await _sut.UpdateSignCount(CredentialId, 42, CancellationToken.None);
+        await _sut.UpdateSignCount(CredentialId, 42, It.IsAny<CancellationToken>());
 
         // Assert
-        var result = await _sut.Get(CredentialId, CancellationToken.None);
+        var result = await _sut.Get(CredentialId, It.IsAny<CancellationToken>());
         Assert.That(result, Is.Not.Null);
         Assert.That(result!.SignCount, Is.EqualTo(42));
         Assert.That(result!.UpdatedAt, Is.EqualTo(expectedTime));
@@ -347,7 +348,7 @@ internal class CredentialRepositoryTests
     public void UpdateLastUsedAt_WhenCredentialDoesNotExist_ThenNotThrowException()
     {
         // Act & Assert
-        Assert.DoesNotThrowAsync(() => _sut.UpdateLastUsedAt(CredentialId, CancellationToken.None));
+        Assert.DoesNotThrowAsync(() => _sut.UpdateLastUsedAt(CredentialId, It.IsAny<CancellationToken>()));
     }
 
     [Test]
@@ -355,16 +356,16 @@ internal class CredentialRepositoryTests
     {
         // Arrange
         var credential = CreateTestCredential();
-        await _sut.Add(credential, CancellationToken.None);
+        await _sut.Add(credential, It.IsAny<CancellationToken>());
 
         _timeProvider.Advance(TimeSpan.FromHours(2));
         var expectedTime = _timeProvider.GetUtcNow().UtcDateTime;
 
         // Act
-        await _sut.UpdateLastUsedAt(CredentialId, CancellationToken.None);
+        await _sut.UpdateLastUsedAt(CredentialId, It.IsAny<CancellationToken>());
 
         // Assert
-        var result = await _sut.Get(CredentialId, CancellationToken.None);
+        var result = await _sut.Get(CredentialId, It.IsAny<CancellationToken>());
         Assert.That(result, Is.Not.Null);
         Assert.That(result!.LastUsedAt, Is.EqualTo(expectedTime));
     }

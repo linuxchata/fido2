@@ -29,7 +29,7 @@ internal class AttestationObjectHandlerTests
                 It.IsAny<AttestationObjectData?>(),
                 It.IsAny<ClientData>(),
                 It.IsAny<PublicKeyCredentialCreationOptions>(),
-                CancellationToken.None))
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(ValidatorInternalResult.Valid());
 
         _sut = new AttestationObjectHandler(
@@ -49,7 +49,7 @@ internal class AttestationObjectHandlerTests
 
         // Act
         var result = await _sut.Handle(
-            attestationObject!, ClientDataBuilder.BuildCreate(), creationOptions, CancellationToken.None);
+            attestationObject!, ClientDataBuilder.BuildCreate(), creationOptions, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -66,7 +66,7 @@ internal class AttestationObjectHandlerTests
 
         // Act
         var result = await _sut.Handle(
-            attestationObject, ClientDataBuilder.BuildCreate(), null!, CancellationToken.None);
+            attestationObject, ClientDataBuilder.BuildCreate(), null!, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -87,7 +87,7 @@ internal class AttestationObjectHandlerTests
             attestationObject,
             ClientDataBuilder.BuildCreate(),
             creationOptions,
-            CancellationToken.None));
+            It.IsAny<CancellationToken>()));
     }
 
     [Test]
@@ -102,12 +102,12 @@ internal class AttestationObjectHandlerTests
                 It.IsAny<AttestationObjectData?>(),
                 It.IsAny<ClientData>(),
                 It.IsAny<PublicKeyCredentialCreationOptions>(),
-                CancellationToken.None))
+                It.IsAny<CancellationToken>()))
             .ReturnsAsync(ValidatorInternalResult.Invalid("RP ID hash mismatch"));
 
         // Act
         var result = await _sut.Handle(
-            attestationObject, ClientDataBuilder.BuildCreate(), creationOptions, CancellationToken.None);
+            attestationObject, ClientDataBuilder.BuildCreate(), creationOptions, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -127,7 +127,7 @@ internal class AttestationObjectHandlerTests
 
         // Act
         var result = await _sut.Handle(
-            attestationObject, ClientDataBuilder.BuildCreate(), creationOptions, CancellationToken.None);
+            attestationObject, ClientDataBuilder.BuildCreate(), creationOptions, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -147,7 +147,7 @@ internal class AttestationObjectHandlerTests
 
         // Act
         var result = await _sut.Handle(
-            attestationObject, ClientDataBuilder.BuildCreate(), creationOptions, CancellationToken.None);
+            attestationObject, ClientDataBuilder.BuildCreate(), creationOptions, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.Not.Null);
@@ -167,7 +167,7 @@ internal class AttestationObjectHandlerTests
 
         // Act
         var result = await _sut.Handle(
-            attestationObject, ClientDataBuilder.BuildCreate(), creationOptions, CancellationToken.None);
+            attestationObject, ClientDataBuilder.BuildCreate(), creationOptions, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.Not.Null);

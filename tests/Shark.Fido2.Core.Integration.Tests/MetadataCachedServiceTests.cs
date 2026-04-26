@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using Shark.Fido2.InMemory;
 using Shark.Fido2.Metadata.Core.Abstractions;
 
@@ -39,7 +40,7 @@ public class MetadataCachedServiceTests
         var service = _serviceProvider.GetRequiredService<IMetadataCachedService>();
 
         // Act
-        var result = await service.Get(_aaGuid, CancellationToken.None);
+        var result = await service.Get(_aaGuid, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(service.GetType().Name, Is.EqualTo("MetadataCachedService"));

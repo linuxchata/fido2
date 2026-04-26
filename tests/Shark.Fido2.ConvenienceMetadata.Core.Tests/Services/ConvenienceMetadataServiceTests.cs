@@ -31,11 +31,11 @@ internal class ConvenienceMetadataServiceTests
     {
         // Arrange
         _httpClientRepositoryMock
-            .Setup(x => x.GetConvenienceMetadataBlob(CancellationToken.None))
+            .Setup(x => x.GetConvenienceMetadataBlob(It.IsAny<CancellationToken>()))
             .ThrowsAsync(new HttpRequestException());
 
         // Act
-        var result = await _sut.Get(CancellationToken.None);
+        var result = await _sut.Get(It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.Null);
@@ -47,7 +47,7 @@ internal class ConvenienceMetadataServiceTests
         // Arrange
         var blob = "some-blob";
         _httpClientRepositoryMock
-            .Setup(x => x.GetConvenienceMetadataBlob(CancellationToken.None))
+            .Setup(x => x.GetConvenienceMetadataBlob(It.IsAny<CancellationToken>()))
             .ReturnsAsync(blob);
 
         _convenienceMetadataReaderServiceMock
@@ -55,7 +55,7 @@ internal class ConvenienceMetadataServiceTests
             .Throws(new InvalidDataException());
 
         // Act
-        var result = await _sut.Get(CancellationToken.None);
+        var result = await _sut.Get(It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.Null);
@@ -72,7 +72,7 @@ internal class ConvenienceMetadataServiceTests
         };
 
         _httpClientRepositoryMock
-            .Setup(x => x.GetConvenienceMetadataBlob(CancellationToken.None))
+            .Setup(x => x.GetConvenienceMetadataBlob(It.IsAny<CancellationToken>()))
             .ReturnsAsync(blob);
 
         _convenienceMetadataReaderServiceMock
@@ -80,11 +80,11 @@ internal class ConvenienceMetadataServiceTests
             .Returns(expectedPayload);
 
         // Act
-        var result = await _sut.Get(CancellationToken.None);
+        var result = await _sut.Get(It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(result, Is.EqualTo(expectedPayload));
-        _httpClientRepositoryMock.Verify(x => x.GetConvenienceMetadataBlob(CancellationToken.None), Times.Once);
+        _httpClientRepositoryMock.Verify(x => x.GetConvenienceMetadataBlob(It.IsAny<CancellationToken>()), Times.Once);
         _convenienceMetadataReaderServiceMock.Verify(x => x.Read(blob), Times.Once);
     }
 }

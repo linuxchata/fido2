@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Moq;
 using Shark.Fido2.ConvenienceMetadata.Core;
 using Shark.Fido2.ConvenienceMetadata.Core.Abstractions;
 using Shark.Fido2.InMemory;
@@ -41,7 +42,7 @@ public class ConvenienceMetadataCachedServiceTests
         var service = _serviceProvider.GetRequiredService<IConvenienceMetadataCachedService>();
 
         // Act
-        var result = await service.Get(_aaGuid, CancellationToken.None);
+        var result = await service.Get(_aaGuid, It.IsAny<CancellationToken>());
 
         // Assert
         Assert.That(service.GetType().Name, Is.EqualTo("ConvenienceMetadataCachedService"));
