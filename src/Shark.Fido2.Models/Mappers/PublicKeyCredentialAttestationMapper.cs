@@ -1,4 +1,4 @@
-﻿using Shark.Fido2.Common.Extensions;
+using Shark.Fido2.Common.Extensions;
 using Shark.Fido2.Domain;
 using Shark.Fido2.Domain.Enums;
 using Shark.Fido2.Domain.Extensions;
@@ -8,6 +8,11 @@ namespace Shark.Fido2.Models.Mappers;
 
 public static class PublicKeyCredentialAttestationMapper
 {
+    /// <summary>
+    /// Maps a <see cref="ServerPublicKeyCredentialAttestation"/> to a <see cref="PublicKeyCredentialAttestation"/>.
+    /// </summary>
+    /// <param name="attestation">The server-side public key credential attestation to map.</param>
+    /// <returns>A new instance of <see cref="PublicKeyCredentialAttestation"/>.</returns>
     public static PublicKeyCredentialAttestation Map(this ServerPublicKeyCredentialAttestation attestation)
     {
         ArgumentNullException.ThrowIfNull(attestation);

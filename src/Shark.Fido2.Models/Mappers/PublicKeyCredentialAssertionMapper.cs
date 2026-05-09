@@ -1,4 +1,4 @@
-﻿using Shark.Fido2.Domain;
+using Shark.Fido2.Domain;
 using Shark.Fido2.Domain.Extensions;
 using Shark.Fido2.Models.Responses;
 
@@ -6,6 +6,11 @@ namespace Shark.Fido2.Models.Mappers;
 
 public static class PublicKeyCredentialAssertionMapper
 {
+    /// <summary>
+    /// Maps a <see cref="ServerPublicKeyCredentialAssertion"/> to a <see cref="PublicKeyCredentialAssertion"/>.
+    /// </summary>
+    /// <param name="assertion">The server-side public key credential assertion to map.</param>
+    /// <returns>A new instance of <see cref="PublicKeyCredentialAssertion"/>.</returns>
     public static PublicKeyCredentialAssertion Map(this ServerPublicKeyCredentialAssertion assertion)
     {
         ArgumentNullException.ThrowIfNull(assertion);
