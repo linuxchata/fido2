@@ -12,4 +12,9 @@ public sealed class ConvenienceMetadataServiceConfiguration
     /// Gets or sets a location of the convenience metadata service BLOB.
     /// </summary>
     public string ConvenienceMetadataBlobLocation { get; set; } = "https://c-mds.fidoalliance.org/";
+
+    /// <summary>
+    /// Gets or sets the cache expiration.
+    /// </summary>
+    public TimeSpan CacheExpiration { get; set; } = TimeSpan.FromHours(24);
 }
