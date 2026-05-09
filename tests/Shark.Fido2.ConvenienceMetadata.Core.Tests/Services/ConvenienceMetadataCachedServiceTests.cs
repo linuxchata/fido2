@@ -1,8 +1,10 @@
 using System.Text.Json;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
 using Moq;
 using Shark.Fido2.ConvenienceMetadata.Core.Abstractions;
+using Shark.Fido2.ConvenienceMetadata.Core.Configurations;
 using Shark.Fido2.ConvenienceMetadata.Core.Constants;
 using Shark.Fido2.ConvenienceMetadata.Core.Domain;
 using Shark.Fido2.ConvenienceMetadata.Core.Models;
@@ -20,6 +22,7 @@ internal class ConvenienceMetadataCachedServiceTests
     private Mock<IDistributedCache> _distributedCacheMock;
     private Mock<IMemoryCache> _memoryCacheMock;
     private Mock<TimeProvider> _timeProviderMock;
+    private Mock<IOptions<ConvenienceMetadataServiceConfiguration>> _optionsMock;
 
     private ConvenienceMetadataCachedService _sut = null!;
 
@@ -38,12 +41,21 @@ internal class ConvenienceMetadataCachedServiceTests
 
         _timeProviderMock = new Mock<TimeProvider>();
         _timeProviderMock.Setup(x => x.GetUtcNow()).Returns(DateTimeOffset.UtcNow);
+        _optionsMock = new Mock<IOptions<ConvenienceMetadataServiceConfiguration>>();
+
+        var configuration = new ConvenienceMetadataServiceConfiguration
+        {
+            CacheExpiration = TimeSpan.FromHours(1),
+        };
+
+        _optionsMock.Setup(x => x.Value).Returns(configuration);
 
         _sut = new ConvenienceMetadataCachedService(
             _convenienceMetadataServiceMock.Object,
             _distributedCacheMock.Object,
             _memoryCacheMock.Object,
-            _timeProviderMock.Object);
+            _timeProviderMock.Object,
+            _optionsMock.Object);
     }
 
     [Test]

@@ -1,7 +1,9 @@
 using System.Text.Json;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
 using Shark.Fido2.ConvenienceMetadata.Core.Abstractions;
+using Shark.Fido2.ConvenienceMetadata.Core.Configurations;
 using Shark.Fido2.ConvenienceMetadata.Core.Domain;
 using Shark.Fido2.ConvenienceMetadata.Core.Models;
 
@@ -11,7 +13,6 @@ internal sealed class ConvenienceMetadataCachedService : IConvenienceMetadataCac
 {
     private const string CacheKey = "cmds_payload";
     private const string KeyPrefix = "cmds";
-    private const int DefaultDistributedCacheExpirationInHours = 24;
     private const int DefaultMemoryCacheExpirationInMinutes = 10;
 
     private static readonly SemaphoreSlim OperationLock = new(1, 1);
@@ -20,17 +21,20 @@ internal sealed class ConvenienceMetadataCachedService : IConvenienceMetadataCac
     private readonly IDistributedCache _distributedCache;
     private readonly IMemoryCache _memoryCache;
     private readonly TimeProvider _timeProvider;
+    private readonly ConvenienceMetadataServiceConfiguration _configuration;
 
     public ConvenienceMetadataCachedService(
         IConvenienceMetadataService convenienceMetadataService,
         IDistributedCache distributedCache,
         IMemoryCache memoryCache,
-        TimeProvider timeProvider)
+        TimeProvider timeProvider,
+        IOptions<ConvenienceMetadataServiceConfiguration> options)
     {
         _convenienceMetadataService = convenienceMetadataService;
         _distributedCache = distributedCache;
         _memoryCache = memoryCache;
         _timeProvider = timeProvider;
+        _configuration = options.Value;
     }
 
     public async Task<ConvenienceMetadataPayloadItem?> Get(Guid aaguid, CancellationToken cancellationToken)
@@ -89,7 +93,7 @@ internal sealed class ConvenienceMetadataCachedService : IConvenienceMetadataCac
 
     private DateTimeOffset GetAbsoluteExpiration()
     {
-        return _timeProvider.GetUtcNow().AddHours(DefaultDistributedCacheExpirationInHours);
+        return _timeProvider.GetUtcNow().Add(_configuration.CacheExpiration);
     }
 
     private static ConvenienceMetadataPayloadItem? GetMetadataPayloadItem(string serializedPayload, Guid aaguid)

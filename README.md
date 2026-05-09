@@ -110,6 +110,7 @@ The server side can be customized using the following configuration options. You
 | Option | Default | Description |
 |-|-|-|
 | `ConvenienceMetadataBlobLocation` | `https://c-mds.fidoalliance.org/` | Location of the convenience centric information about FIDO authenticators (Convenience Metadata Service BLOB). |
+| `CacheExpiration` | `1.00:00:00` | The duration for which the convenience metadata should be cached. |
 
 Example `appsettings.json` file: [appsettings.Production.json](https://github.com/linuxchata/fido2/blob/main/src/Shark.Fido2.Sample/appsettings.Production.json)
 
