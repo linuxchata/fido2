@@ -1,4 +1,4 @@
-﻿using Shark.Fido2.Common.Extensions;
+using Shark.Fido2.Common.Extensions;
 using Shark.Fido2.Domain.Enums;
 using Shark.Fido2.Domain.Extensions;
 using Shark.Fido2.Domain.Options;
@@ -8,6 +8,11 @@ namespace Shark.Fido2.Models.Mappers;
 
 public static class PublicKeyCredentialCreationOptionsMapper
 {
+    /// <summary>
+    /// Maps a <see cref="PublicKeyCredentialCreationOptions"/> to a <see cref="ServerPublicKeyCredentialCreationOptionsResponse"/>.
+    /// </summary>
+    /// <param name="credentialOptions">The public key credential creation options to map.</param>
+    /// <returns>A new instance of <see cref="ServerPublicKeyCredentialCreationOptionsResponse"/>.</returns>
     public static ServerPublicKeyCredentialCreationOptionsResponse Map(
         this PublicKeyCredentialCreationOptions credentialOptions)
     {
