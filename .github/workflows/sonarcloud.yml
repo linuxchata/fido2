@@ -11,7 +11,7 @@ on:
 jobs:
   build:
     name: Build and analyze
-    runs-on: windows-latest
+    runs-on: windows-2025-vs2026
     steps:
       - name: Set up JDK 17
         uses: actions/setup-java@v4
