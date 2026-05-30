@@ -14,8 +14,8 @@ public sealed class AttestationParametersValidator : IAttestationParametersValid
     public void Validate(PublicKeyCredentialCreationOptionsRequest request)
     {
         ArgumentNullException.ThrowIfNull(request);
-        ArgumentNullException.ThrowIfNullOrWhiteSpace(request.UserName);
-        ArgumentNullException.ThrowIfNullOrWhiteSpace(request.DisplayName);
+        ArgumentException.ThrowIfNullOrWhiteSpace(request.UserName);
+        ArgumentException.ThrowIfNullOrWhiteSpace(request.DisplayName);
 
         if (request.UserName.Length > MaxUserNameLength)
         {
@@ -37,8 +37,8 @@ public sealed class AttestationParametersValidator : IAttestationParametersValid
         PublicKeyCredentialCreationOptions creationOptions)
     {
         ArgumentNullException.ThrowIfNull(attestation);
-        ArgumentNullException.ThrowIfNullOrWhiteSpace(attestation.Id);
-        ArgumentNullException.ThrowIfNullOrWhiteSpace(attestation.RawId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(attestation.Id);
+        ArgumentException.ThrowIfNullOrWhiteSpace(attestation.RawId);
 
         ArgumentNullException.ThrowIfNull(creationOptions);
         ArgumentNullException.ThrowIfNull(creationOptions.RelyingParty);
@@ -46,7 +46,7 @@ public sealed class AttestationParametersValidator : IAttestationParametersValid
         ArgumentNullException.ThrowIfNull(creationOptions.PublicKeyCredentialParams);
         ArgumentNullException.ThrowIfNull(creationOptions.ExcludeCredentials);
         ArgumentNullException.ThrowIfNull(creationOptions.AuthenticatorSelection);
-        ArgumentNullException.ThrowIfNullOrWhiteSpace(creationOptions.Attestation);
+        ArgumentException.ThrowIfNullOrWhiteSpace(creationOptions.Attestation);
 
         if (!attestation.Id.IsBase64Url())
         {

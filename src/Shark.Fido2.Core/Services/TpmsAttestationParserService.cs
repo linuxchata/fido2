@@ -8,7 +8,7 @@ internal sealed class TpmsAttestationParserService : ITpmsAttestationParserServi
 {
     public bool Parse(byte[] certInfo, out TpmsAttestation tpmsAttestation)
     {
-        ArgumentNullException.ThrowIfNull(certInfo, nameof(certInfo));
+        ArgumentNullException.ThrowIfNull(certInfo);
 
         try
         {

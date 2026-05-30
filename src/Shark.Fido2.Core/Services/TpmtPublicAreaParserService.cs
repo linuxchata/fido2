@@ -9,7 +9,7 @@ internal sealed class TpmtPublicAreaParserService : ITpmtPublicAreaParserService
 {
     public bool Parse(byte[] pubArea, out TpmtPublic tpmtPublic)
     {
-        ArgumentNullException.ThrowIfNull(pubArea, nameof(pubArea));
+        ArgumentNullException.ThrowIfNull(pubArea);
 
         try
         {

@@ -21,7 +21,7 @@ internal sealed class AuthenticatorDataParserService : IAuthenticatorDataParserS
 
     public AuthenticatorData? Parse(byte[]? authenticatorDataArray)
     {
-        ArgumentNullException.ThrowIfNull(authenticatorDataArray, nameof(authenticatorDataArray));
+        ArgumentNullException.ThrowIfNull(authenticatorDataArray);
 
         var authenticatorData = new AuthenticatorData
         {
