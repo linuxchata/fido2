@@ -12,7 +12,6 @@ using Shark.Fido2.InMemory;
 namespace Shark.Fido2.Core.Performance.Tests;
 
 [TestFixture]
-[SuppressMessage("Major Code Smell", "S2699:Tests should include assertions", Justification = "Performance tests do not have assertions.")]
 public class PerformanceTestScenarios
 {
     private const string ReportsLocation = "nbomber_reports";
@@ -144,7 +143,7 @@ public class PerformanceTestScenarios
     private ScenarioProps GetAttestationScenario(IAttestation attestation, string name)
     {
         var registrationScenario = Scenario
-            .Create($"{name}_registration", async context =>
+            .Create($"{name}_registration", async _ =>
             {
                 var request = _performanceTestHelper.GenerateRegistrationRequest();
                 var result = await attestation.CompleteRegistration(
@@ -154,16 +153,16 @@ public class PerformanceTestScenarios
 
                 _enduranceTestUsers.Add((request.CredentialId.ToBase64Url(), request.Username));
 
-                return result != null && result.IsValid ? Response.Ok() : Response.Fail();
+                return result.IsValid ? Response.Ok() : Response.Fail();
             });
 
         return registrationScenario;
     }
 
-    private ScenarioProps GetAssertionScenario(IAssertion assertion, string name)
+    private ScenarioProps GetAssertionScenario(IAssertion assertion, string testName)
     {
         var authenticationScenario = Scenario
-            .Create($"{name}_authentication", async context =>
+            .Create($"{testName}_authentication", async _ =>
             {
                 if (_enduranceTestUsers.IsEmpty)
                 {
@@ -178,7 +177,7 @@ public class PerformanceTestScenarios
                     request.RequestOptions,
                     CancellationToken.None);
 
-                return result != null && result.IsValid ? Response.Ok() : Response.Fail();
+                return result.IsValid ? Response.Ok() : Response.Fail();
             });
 
         return authenticationScenario;
