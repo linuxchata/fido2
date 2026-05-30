@@ -18,8 +18,8 @@ public class CredentialClientService : ICredentialClientService
 
     public async Task<Response<CredentialDetailsViewModel>> Get(Uri baseUri, string id, CancellationToken cancellationToken)
     {
-        ArgumentNullException.ThrowIfNull(baseUri, nameof(baseUri));
-        ArgumentNullException.ThrowIfNullOrWhiteSpace(id, nameof(id));
+        ArgumentNullException.ThrowIfNull(baseUri);
+        ArgumentException.ThrowIfNullOrWhiteSpace(id);
 
         _httpClient.BaseAddress = baseUri;
 

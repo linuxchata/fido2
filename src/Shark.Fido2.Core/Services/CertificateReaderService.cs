@@ -8,7 +8,7 @@ internal sealed class CertificateReaderService : ICertificateReaderService
 {
     public X509Certificate2 Read(string embeddedCertificateName)
     {
-        ArgumentNullException.ThrowIfNullOrWhiteSpace(embeddedCertificateName, nameof(embeddedCertificateName));
+        ArgumentException.ThrowIfNullOrWhiteSpace(embeddedCertificateName);
 
         var certificates = ReadCertificateFromEmbeddedResource(embeddedCertificateName);
 
