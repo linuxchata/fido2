@@ -2,7 +2,7 @@
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
-    <MicrosoftExtensionsVersion>[9.0.15, 10.0.0)</MicrosoftExtensionsVersion>
+    <MicrosoftExtensionsVersion>[10.0.8, 11.0.0)</MicrosoftExtensionsVersion>
   </PropertyGroup>
 
   <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Packages.props', '$(MSBuildThisFileDirectory)../'))" />
@@ -14,6 +14,6 @@
     <PackageVersion Update="Microsoft.Extensions.Configuration.FileExtensions" Version="$(MicrosoftExtensionsVersion)" />
     <PackageVersion Update="Microsoft.Extensions.Configuration.Json" Version="$(MicrosoftExtensionsVersion)" />
     <PackageVersion Include="Microsoft.Extensions.Logging" Version="$(MicrosoftExtensionsVersion)" />
-    <PackageVersion Include="NBomber" Version="6.3.0" />
+    <PackageVersion Include="NBomber" Version="6.4.1" />
   </ItemGroup>
 </Project>
