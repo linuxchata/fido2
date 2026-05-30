@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Http.Json;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
@@ -45,7 +45,11 @@ internal class HttpClientConformanceTestRepository(
             throw new InvalidOperationException($"Root certificate cannot be obtained from {url}");
         }
 
+#if NET9_0_OR_GREATER
+        return X509CertificateLoader.LoadCertificate(response);
+#else
         return new X509Certificate2(response);
+#endif
     }
 
     private sealed record ApiResponse(string status, string[] result);

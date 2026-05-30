@@ -30,7 +30,11 @@ internal sealed class HttpClientRepository(
             throw new InvalidOperationException($"Root certificate cannot be obtained from {url}");
         }
 
+#if NET9_0_OR_GREATER
+        return X509CertificateLoader.LoadCertificate(response);
+#else
         return new X509Certificate2(response);
+#endif
     }
 
     public async Task<List<X509Certificate2>> GetCertificates(string url, CancellationToken cancellationToken)
@@ -47,7 +51,11 @@ internal sealed class HttpClientRepository(
         foreach (var certificate in certificates)
         {
             var bytes = Convert.FromBase64String(certificate);
+#if NET9_0_OR_GREATER
+            result.Add(X509CertificateLoader.LoadCertificate(bytes));
+#else
             result.Add(new X509Certificate2(bytes));
+#endif
         }
 
         return result;

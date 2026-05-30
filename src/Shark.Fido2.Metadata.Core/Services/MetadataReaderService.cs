@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
@@ -281,7 +281,11 @@ internal sealed class MetadataReaderService : IMetadataReaderService
             var certificateString = certificate?.ToString();
             if (!string.IsNullOrWhiteSpace(certificateString))
             {
+#if NET9_0_OR_GREATER
+                var x509Certificate = X509CertificateLoader.LoadCertificate(Convert.FromBase64String(certificateString));
+#else
                 var x509Certificate = new X509Certificate2(Convert.FromBase64String(certificateString));
+#endif
                 certificates.Add(x509Certificate);
             }
         }

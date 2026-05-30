@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using Shark.Fido2.Core.Abstractions.Services;
 
@@ -50,6 +50,10 @@ internal sealed class CertificateReaderService : ICertificateReaderService
         }
 
         var certificateByteArray = Convert.FromBase64String(certificates[0]);
+#if NET9_0_OR_GREATER
+        return X509CertificateLoader.LoadCertificate(certificateByteArray);
+#else
         return new X509Certificate2(certificateByteArray);
+#endif
     }
 }

@@ -1,4 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Shark.Fido2.Tests.Common.DataReaders;
 
@@ -15,7 +15,11 @@ public static class CertificateDataReader
         foreach (var certificate in certificatesText)
         {
             var certificateByteArray = Convert.FromBase64String(certificate);
+#if NET9_0_OR_GREATER
+            var x509Certificate = X509CertificateLoader.LoadCertificate(certificateByteArray);
+#else
             var x509Certificate = new X509Certificate2(certificateByteArray);
+#endif
             certificates.Add(x509Certificate);
         }
 

@@ -1,4 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
+using System.Security.Cryptography.X509Certificates;
 using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Constants;
 
@@ -24,7 +24,11 @@ internal sealed class AttestationCertificateProviderService : IAttestationCertif
 
         foreach (var certificate in certificates)
         {
+#if NET9_0_OR_GREATER
+            var x509Certificate = X509CertificateLoader.LoadCertificate((byte[])certificate);
+#else
             var x509Certificate = new X509Certificate2((byte[])certificate);
+#endif
             attestationTrustPath.Add(x509Certificate);
         }
 
@@ -38,7 +42,11 @@ internal sealed class AttestationCertificateProviderService : IAttestationCertif
         foreach (var certificate in certificates)
         {
             var certificateByteArray = Convert.FromBase64String((string)certificate);
+#if NET9_0_OR_GREATER
+            var x509Certificate = X509CertificateLoader.LoadCertificate(certificateByteArray);
+#else
             var x509Certificate = new X509Certificate2(certificateByteArray);
+#endif
             attestationTrustPath.Add(x509Certificate);
         }
 
