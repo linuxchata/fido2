@@ -1,16 +1,16 @@
 <Project>
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    <MicrosoftAspNetCoreVersion>[8.0.27, 9.0.0)</MicrosoftAspNetCoreVersion>
+    <DotNetVersion>[10.0.8, 11.0.0)</DotNetVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageVersion Include="AWSSDK.DynamoDBv2" Version="4.0.18.1" />
     <PackageVersion Include="BouncyCastle.Cryptography" Version="2.6.2" />
     <PackageVersion Include="coverlet.collector" Version="[8.0.1, 9.0.0)" />
     <PackageVersion Include="Dapper" Version="2.1.72" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="$(MicrosoftAspNetCoreVersion)" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="$(MicrosoftAspNetCoreVersion)" />
-    <PackageVersion Include="Microsoft.AspNetCore.WebUtilities" Version="$(MicrosoftAspNetCoreVersion)" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly" Version="$(DotNetVersion)" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="$(DotNetVersion)" />
+    <PackageVersion Include="Microsoft.AspNetCore.WebUtilities" Version="$(DotNetVersion)" />
     <PackageVersion Include="Microsoft.Data.SqlClient" Version="7.0.1" />
     <PackageVersion Include="Microsoft.Extensions.Caching.Abstractions" Version="[8.0.0, 9.0.0)" />
     <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="[8.0.1, 9.0.0)" />
@@ -34,8 +34,8 @@
     <PackageVersion Include="prometheus-net" Version="8.2.1" />
     <PackageVersion Include="prometheus-net.AspNetCore" Version="8.2.1" />
     <PackageVersion Include="StyleCop.Analyzers" Version="1.1.118" />
-    <PackageVersion Include="Swashbuckle.AspNetCore" Version="[8.1.4, 9.0.0)" />
-    <PackageVersion Include="Swashbuckle.AspNetCore.Filters" Version="[8.0.3, 9.0.0)" />
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="10.2.1" />
+    <PackageVersion Include="Swashbuckle.AspNetCore.Filters" Version="10.0.1" />
     <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.18.0" />
     <PackageVersion Include="System.Security.Cryptography.Cose" Version="[8.0.2, 9.0.0)" />
   </ItemGroup>
