@@ -7,8 +7,6 @@ using Shark.Fido2.Models.Mappers;
 using Shark.Fido2.Models.Requests;
 using Shark.Fido2.Models.Responses;
 using Shark.Fido2.Sample.Filters;
-using Shark.Fido2.Sample.Swagger;
-using Swashbuckle.AspNetCore.Filters;
 
 namespace Shark.Fido2.Sample.Controllers;
 
@@ -33,9 +31,6 @@ public class AttestationController(IAttestation attestation, ILogger<Attestation
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [SwaggerRequestExample(
-        typeof(ServerPublicKeyCredentialCreationOptionsRequest),
-        typeof(ServerPublicKeyCredentialCreationOptionsRequestExample))]
     public async Task<IActionResult> Options(
         ServerPublicKeyCredentialCreationOptionsRequest request,
         CancellationToken cancellationToken)

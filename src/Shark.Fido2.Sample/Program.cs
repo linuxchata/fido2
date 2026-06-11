@@ -8,8 +8,6 @@ using Shark.Fido2.Sample.Abstractions.Services;
 using Shark.Fido2.Sample.Formatters;
 using Shark.Fido2.Sample.Middlewares;
 using Shark.Fido2.Sample.Services;
-using Shark.Fido2.Sample.Swagger;
-using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -67,12 +65,7 @@ builder.Services
 
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.ExampleFilters();
-    c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, "Shark.Fido2.Sample.xml"));
-});
-builder.Services.AddSwaggerExamplesFromAssemblyOf<ServerPublicKeyCredentialCreationOptionsRequestExample>();
+builder.Services.AddOpenApi("internal");
 
 if (!builder.Environment.IsDevelopment())
 {
@@ -121,8 +114,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHttpsRedirection();
 }
 
-app.UseSwagger();
-app.UseSwaggerUI();
+app.MapOpenApi();
 
 app.UseStaticFiles();
 
