@@ -8,8 +8,6 @@ using Shark.Fido2.Models.Requests;
 using Shark.Fido2.Models.Responses;
 using Shark.Fido2.Sample.Abstractions.Services;
 using Shark.Fido2.Sample.Filters;
-using Shark.Fido2.Sample.Swagger;
-using Swashbuckle.AspNetCore.Filters;
 
 namespace Shark.Fido2.Sample.Controllers;
 
@@ -38,9 +36,6 @@ public class AssertionController(
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [SwaggerRequestExample(
-        typeof(ServerPublicKeyCredentialGetOptionsRequest),
-        typeof(ServerPublicKeyCredentialGetOptionsRequestExample))]
     public async Task<IActionResult> Options(
         ServerPublicKeyCredentialGetOptionsRequest request,
         CancellationToken cancellationToken)
