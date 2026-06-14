@@ -16,7 +16,6 @@ public sealed class ServerPublicKeyCredentialGetOptionsRequest
 
     /// <summary>
     /// Gets the Relying Party's requirement for user verification.
-    /// "required", "preferred", or "discouraged".
     /// </summary>
     [JsonPropertyName("userVerification")]
     public string? UserVerification { get; init; }
