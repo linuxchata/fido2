@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.Logging.Console;
 using Prometheus;
+using Scalar.AspNetCore;
 using Shark.Fido2.ConvenienceMetadata.Core;
 using Shark.Fido2.Core;
 using Shark.Fido2.InMemory;
@@ -64,8 +65,7 @@ builder.Services
     });
 
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddOpenApi("internal");
+builder.Services.AddOpenApi();
 
 if (!builder.Environment.IsDevelopment())
 {
@@ -115,6 +115,15 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.MapOpenApi();
+app.MapScalarApiReference(options =>
+{
+    options.Favicon = "/favicon.ico";
+    options.ShowDeveloperTools = DeveloperToolsVisibility.Never;
+    options.HideTestRequestButton = true;
+    options.DisableAgent();
+    options.HideClientButton = true;
+    options.HideSearch = true;
+});
 
 app.UseStaticFiles();
 
