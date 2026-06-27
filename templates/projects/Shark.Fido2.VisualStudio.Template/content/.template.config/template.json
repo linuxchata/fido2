@@ -12,5 +12,6 @@
     "type": "project"
   },
   "sourceName": "Shark.Fido2.Sample.VisualStudio.Template",
-  "preferNameDirectory": true
+  "preferNameDirectory": true,
+  "icon": "icon.png"
 }
