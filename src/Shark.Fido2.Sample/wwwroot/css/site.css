@@ -275,7 +275,7 @@ input:-webkit-autofill {
 }
 
 .notyf {
-    word-break: break-word;
+    overflow-wrap: anywhere;
 }
 
 .notyf__icon {
