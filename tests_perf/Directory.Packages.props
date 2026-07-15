@@ -14,6 +14,6 @@
     <PackageVersion Update="Microsoft.Extensions.Configuration.Json" Version="$(MicrosoftExtensionsVersion)" />
     <PackageVersion Update="Microsoft.Extensions.DependencyInjection" Version="$(MicrosoftExtensionsVersion)" />
     <PackageVersion Include="Microsoft.Extensions.Logging" Version="$(MicrosoftExtensionsVersion)" />
-    <PackageVersion Include="NBomber" Version="6.4.1" />
+    <PackageVersion Include="NBomber" Version="6.5.0" />
   </ItemGroup>
 </Project>
