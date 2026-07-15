@@ -11,6 +11,9 @@ on:
       - .github/**
       - src/**
       - tests/**
+      - Directory.Build.props
+      - Directory.Build.targets
+      - Directory.Packages.props
   pull_request:
     branches:
       - main
@@ -18,6 +21,9 @@ on:
       - .github/**
       - src/**
       - tests/**
+      - Directory.Build.props
+      - Directory.Build.targets
+      - Directory.Packages.props
 
 jobs:
   build:
