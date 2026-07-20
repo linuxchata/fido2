@@ -59,6 +59,8 @@ internal class TpmCapabilitiesVendorsTests
     [TestCase("414D4400")]
     [TestCase("49424D00")]
     [TestCase("49424d00")]
+    [TestCase("51434F4D")]
+    [TestCase("51434f4d")]
     public void Exists_WhenVerdonIdIsMatched_ThenReturnsTrue(string vendorId)
     {
         // Act
