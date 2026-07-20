@@ -32,6 +32,7 @@ internal static class TpmCapabilitiesVendors
         { "4E534700", "NSING" },
         { "4E544300", "Nuvoton Technology" },
         { "51434F4D", "Qualcomm" },
+        { "51434f4d", "Qualcomm" }, // To address firmware defect
         { "534D534E", "Samsung" },
         { "53454345", "SecEdge" },
         { "534E5300", "Sinosun" },
