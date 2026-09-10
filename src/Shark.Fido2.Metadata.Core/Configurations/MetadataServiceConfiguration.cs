@@ -22,5 +22,5 @@ public sealed class MetadataServiceConfiguration
     /// Gets or sets a maximum token size in bytes that will be processed. This configuration is related
     /// to the Metadata Service BLOB size.
     /// </summary>
-    public int MaximumTokenSizeInBytes { get; set; } = 10485760;
+    public int MaximumTokenSizeInBytes { get; set; } = 13107200;
 }
