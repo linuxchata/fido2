@@ -1,10 +1,10 @@
 <Project>
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    <DotNetVersion>[10.0.11, 11.0.0)</DotNetVersion>
+    <DotNetVersion>[10.0.12, 11.0.0)</DotNetVersion>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="AWSSDK.DynamoDBv2" Version="4.0.103.4" />
+    <PackageVersion Include="AWSSDK.DynamoDBv2" Version="4.0.103.7" />
     <PackageVersion Include="BouncyCastle.Cryptography" Version="2.7.0" />
     <PackageVersion Include="coverlet.collector" Version="[8.0.1, 9.0.0)" />
     <PackageVersion Include="Dapper" Version="2.1.79" />
@@ -12,7 +12,7 @@
     <PackageVersion Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="$(DotNetVersion)" />
     <PackageVersion Include="Microsoft.AspNetCore.WebUtilities" Version="$(DotNetVersion)" />
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="$(DotNetVersion)" />
-    <PackageVersion Include="Microsoft.Data.SqlClient" Version="7.0.2" />
+    <PackageVersion Include="Microsoft.Data.SqlClient" Version="7.0.3" />
     <PackageVersion Include="Microsoft.Extensions.Caching.Abstractions" Version="[8.0.0, 9.0.0)" />
     <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="[8.0.1, 9.0.0)" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="[8.0.0, 9.0.0)" />
@@ -24,7 +24,7 @@
     <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="[8.0.0, 9.0.0)" />
     <PackageVersion Include="Microsoft.Extensions.TimeProvider.Testing" Version="[8.10.0, 9.0.0)" />
     <PackageVersion Include="Microsoft.IdentityModel.Tokens" Version="8.22.0" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.9.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.10.0" />
     <PackageVersion Include="Microsoft.OpenApi" Version="2.12.2" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="[8.0.0, 9.0.0)" />
     <PackageVersion Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.23.0" />
@@ -32,10 +32,10 @@
     <PackageVersion Include="Npgsql" Version="[8.0.9, 9.0.0)" />
     <PackageVersion Include="NUnit" Version="4.6.1" />
     <PackageVersion Include="NUnit.Analyzers" Version="4.14.0" />
-    <PackageVersion Include="NUnit3TestAdapter" Version="6.2.0" />
+    <PackageVersion Include="NUnit3TestAdapter" Version="6.3.0" />
     <PackageVersion Include="prometheus-net" Version="8.2.1" />
     <PackageVersion Include="prometheus-net.AspNetCore" Version="8.2.1" />
-    <PackageVersion Include="Scalar.AspNetCore" Version="2.17.1" />
+    <PackageVersion Include="Scalar.AspNetCore" Version="2.17.3" />
     <PackageVersion Include="StyleCop.Analyzers" Version="1.1.118" />
     <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.22.0" />
     <PackageVersion Include="System.Security.Cryptography.Cose" Version="[8.0.2, 9.0.0)" />
