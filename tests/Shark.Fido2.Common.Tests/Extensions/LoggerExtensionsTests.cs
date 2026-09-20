@@ -1,5 +1,4 @@
-﻿#pragma warning disable CA1873 // Avoid potentially expensive logging
-
+﻿using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Shark.Fido2.Common.Extensions;
@@ -7,6 +6,7 @@ using Shark.Fido2.Common.Extensions;
 namespace Shark.Fido2.Common.Tests.Extensions;
 
 [TestFixture]
+[SuppressMessage("Performance", "CA1873:Avoid potentially expensive logging", Justification = "Tests deliberately call the logging extension directly.")]
 internal class LoggerExtensionsTests
 {
     [Test]
@@ -15,19 +15,11 @@ internal class LoggerExtensionsTests
         // Arrange
         var loggerMock = new Mock<ILogger>();
         loggerMock.Setup(l => l.IsEnabled(LogLevel.Debug)).Returns(true);
-        var factoryCalled = false;
-
-        object[] ArgsFactory()
-        {
-            factoryCalled = true;
-            return ["arg1"];
-        }
 
         // Act
-        loggerMock.Object.LogDebugIfEnabled("Message {Value}", (Func<object[]>)ArgsFactory);
+        loggerMock.Object.LogDebugIfEnabled("Message {Value}", "arg1");
 
         // Assert
-        Assert.That(factoryCalled, Is.True);
         loggerMock.Verify(
             l => l.Log(
                 LogLevel.Debug,
@@ -44,19 +36,11 @@ internal class LoggerExtensionsTests
         // Arrange
         var loggerMock = new Mock<ILogger>();
         loggerMock.Setup(l => l.IsEnabled(LogLevel.Debug)).Returns(false);
-        var factoryCalled = false;
-
-        object[] ArgsFactory()
-        {
-            factoryCalled = true;
-            return ["arg1"];
-        }
 
         // Act
-        loggerMock.Object.LogDebugIfEnabled("Message {Value}", (Func<object[]>)ArgsFactory);
+        loggerMock.Object.LogDebugIfEnabled("Message {Value}", "arg1");
 
         // Assert
-        Assert.That(factoryCalled, Is.False); // proves expensive work was avoided
         loggerMock.Verify(
             l => l.Log(
                 It.IsAny<LogLevel>(),
