@@ -15,7 +15,7 @@ public static class CertificateDataReader
         foreach (var certificate in certificatesText)
         {
             var certificateByteArray = Convert.FromBase64String(certificate);
-            var x509Certificate = new X509Certificate2(certificateByteArray);
+            var x509Certificate = X509CertificateLoader.LoadCertificate(certificateByteArray);
             certificates.Add(x509Certificate);
         }
 

@@ -24,7 +24,7 @@ internal sealed class AttestationCertificateProviderService : IAttestationCertif
 
         foreach (var certificate in certificates)
         {
-            var x509Certificate = new X509Certificate2((byte[])certificate);
+            var x509Certificate = X509CertificateLoader.LoadCertificate((byte[])certificate);
             attestationTrustPath.Add(x509Certificate);
         }
 
@@ -38,7 +38,7 @@ internal sealed class AttestationCertificateProviderService : IAttestationCertif
         foreach (var certificate in certificates)
         {
             var certificateByteArray = Convert.FromBase64String((string)certificate);
-            var x509Certificate = new X509Certificate2(certificateByteArray);
+            var x509Certificate = X509CertificateLoader.LoadCertificate(certificateByteArray);
             attestationTrustPath.Add(x509Certificate);
         }
 

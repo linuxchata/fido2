@@ -45,7 +45,7 @@ internal class HttpClientConformanceTestRepository(
             throw new InvalidOperationException($"Root certificate cannot be obtained from {url}");
         }
 
-        return new X509Certificate2(response);
+        return X509CertificateLoader.LoadCertificate(response);
     }
 
     private sealed record ApiResponse(string status, string[] result);

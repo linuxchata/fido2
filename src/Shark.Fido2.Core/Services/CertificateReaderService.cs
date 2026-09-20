@@ -50,6 +50,6 @@ internal sealed class CertificateReaderService : ICertificateReaderService
         }
 
         var certificateByteArray = Convert.FromBase64String(certificates[0]);
-        return new X509Certificate2(certificateByteArray);
+        return X509CertificateLoader.LoadCertificate(certificateByteArray);
     }
 }
