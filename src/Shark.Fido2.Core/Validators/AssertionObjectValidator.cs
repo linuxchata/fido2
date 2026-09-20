@@ -91,7 +91,7 @@ internal class AssertionObjectValidator : IAssertionObjectValidator
             return ValidatorInternalResult.Invalid("User Verified bit is not set as user verification is required");
         }
 
-        _logger.LogDebug(
+        _logger.LogDebugIfEnabled(
             "User Verified bit is verified. User verification option is {UserVerification}",
             requestOptions.UserVerification);
 

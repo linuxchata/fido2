@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Shark.Fido2.Common.Extensions;
 using Shark.Fido2.Core.Abstractions.Handlers;
 using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Abstractions.Validators;
@@ -54,7 +55,7 @@ internal class AttestationObjectHandler : IAttestationObjectHandler
             return new InternalResult<AttestationObjectData>(result.Message!);
         }
 
-        _logger.LogDebug(
+        _logger.LogDebugIfEnabled(
             "Attestation object for '{AttestationStatementFormat}' attestation statement format is valid",
             attestationObjectData.AttestationStatementFormat);
 
@@ -80,7 +81,7 @@ internal class AttestationObjectHandler : IAttestationObjectHandler
             AuthenticatorRawData = authenticatorDataArray!,
         };
 
-        _logger.LogDebug(
+        _logger.LogDebugIfEnabled(
             "Attestation object data is parsed. Attestation statement format is '{AttestationStatementFormat}'",
             attestationObjectData.AttestationStatementFormat);
 

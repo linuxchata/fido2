@@ -28,9 +28,7 @@ internal sealed class MetadataService : IMetadataService
         // More information can be found at https://fidoalliance.org/metadata/
         using var rootCertificate = await _httpClientRepository.GetRootCertificate(cancellationToken);
 
-        _logger.LogDebug(
-            "Root certificate with subject '{Subject}' was downloaded",
-            rootCertificate.Subject);
+        _logger.LogDebug("Metadata BLOB's root certificate was downloaded");
 
         // Step 3
         // The FIDO Server MUST be able to download the latest metadata BLOB object from the well-known URL when
