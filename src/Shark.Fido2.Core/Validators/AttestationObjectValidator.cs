@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Shark.Fido2.Common.Extensions;
 using Shark.Fido2.Core.Abstractions.Validators;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Comparers;
@@ -92,7 +93,7 @@ internal class AttestationObjectValidator : IAttestationObjectValidator
             return ValidatorInternalResult.Invalid("User Verified bit is not set as user verification is required");
         }
 
-        _logger.LogDebug(
+        _logger.LogDebugIfEnabled(
             "User Verified bit is verified. User verification option is {UserVerification}",
             creationOptions.AuthenticatorSelection.UserVerification);
 
@@ -105,7 +106,7 @@ internal class AttestationObjectValidator : IAttestationObjectValidator
             return ValidatorInternalResult.Invalid("Credential public key algorithm mismatch");
         }
 
-        _logger.LogDebug("Credential public key algorithm is verified. Algorithm is {Algorithm}", algorithm);
+        _logger.LogDebugIfEnabled("Credential public key algorithm is verified. Algorithm is {Algorithm}", algorithm);
 
         // Step 17
         // Verify that the values of the client extension outputs in clientExtensionResults and the authenticator
@@ -126,7 +127,7 @@ internal class AttestationObjectValidator : IAttestationObjectValidator
                 $"Attestation statement format [{attestationStatementFormat}] is not supported");
         }
 
-        _logger.LogDebug(
+        _logger.LogDebugIfEnabled(
             "Attestation statement format '{AttestationStatementFormat}' is supported",
             attestationStatementFormat);
 
@@ -159,7 +160,7 @@ internal class AttestationObjectValidator : IAttestationObjectValidator
             return trustAnchorValidationResult;
         }
 
-        _logger.LogDebug(
+        _logger.LogDebugIfEnabled(
             "Attestation trust anchor is verified. AAGUID of the authenticator is '{AaGuid}'",
             attestationObjectData.AuthenticatorData?.AttestedCredentialData.AaGuid ?? Guid.Empty);
 

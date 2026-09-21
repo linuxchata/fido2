@@ -1,10 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using Shark.Fido2.Metadata.Core.Models;
 
 namespace Shark.Fido2.Metadata.Core.Tests.Models;
 
 [TestFixture]
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1861:Avoid constant arrays as arguments", Justification = "For improved unit test readability")]
+[SuppressMessage("Performance", "CA1861:Avoid constant arrays as arguments", Justification = "For improved unit test readability")]
 internal class MetadataBlobPayloadEntryTests
 {
     [Test]

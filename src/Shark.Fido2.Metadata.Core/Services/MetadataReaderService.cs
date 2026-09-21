@@ -281,7 +281,7 @@ internal sealed class MetadataReaderService : IMetadataReaderService
             var certificateString = certificate?.ToString();
             if (!string.IsNullOrWhiteSpace(certificateString))
             {
-                var x509Certificate = new X509Certificate2(Convert.FromBase64String(certificateString));
+                var x509Certificate = X509CertificateLoader.LoadCertificate(Convert.FromBase64String(certificateString));
                 certificates.Add(x509Certificate);
             }
         }

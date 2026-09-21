@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Shark.Fido2.Common.Extensions;
 using Shark.Fido2.Core.Abstractions.Services;
 using Shark.Fido2.Core.Abstractions.Validators.AttestationStatementValidators;
 using Shark.Fido2.Core.Comparers;
@@ -139,7 +140,7 @@ internal class TpmAttestationStatementStrategy : IAttestationStatementStrategy
             return ValidatorInternalResult.Invalid("TPM attestation statement algorithm is not supported");
         }
 
-        _logger.LogDebug("Algorithm {Algorithm} is not supported", algorithm);
+        _logger.LogDebugIfEnabled("Algorithm {Algorithm} is not supported", algorithm);
 
         // Concatenate authenticatorData and clientDataHash to form attToBeSigned.
         var attToBeSigned = BytesArrayHelper.Concatenate(

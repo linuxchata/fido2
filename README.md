@@ -47,7 +47,7 @@ ASP.NET Core Identity includes built-in support for passkeys starting in .NET 10
 | Capability | Shark WebAuthn | ASP.NET Core Identity |
 |---|---|---|
 | Library Scope | General-purpose WebAuthn library, not tied to ASP.NET Core Identity | Integrated with ASP.NET Core Identity; not a general WebAuthn library and primarily scoped to Identity use cases |
-| .NET Version | Targets .NET 8 (compatible with .NET 8/9/10) | Requires .NET 10 SDK |
+| .NET Version | Targets .NET 10 (version 1.4.5 targets .NET 8) | Requires .NET 10 SDK |
 | Developer Experience | Available as NuGet packages | Built into .NET 10, no package to install |
 | Attestation Support | Comprehensive support for all attestation formats | :x: No default attestation validation |
 | Cryptographic Algorithms | Supports all WebAuthn-defined cryptographic algorithms | Supports all WebAuthn-defined cryptographic algorithms except EdDSA. [Source](https://github.com/dotnet/aspnetcore/pull/62112) |
