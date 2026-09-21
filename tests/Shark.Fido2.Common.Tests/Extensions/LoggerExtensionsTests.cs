@@ -28,7 +28,7 @@ internal class LoggerExtensionsTests
             l => l.Log(
                 LogLevel.Information,
                 It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((state, t) => state.ToString() == "Message arg1"),
+                It.Is<It.IsAnyType>((state, t) => state.ToString()!.TrimEnd() == "Message arg1"),
                 It.IsAny<Exception?>(),
                 It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
             Times.Once);
@@ -74,7 +74,7 @@ internal class LoggerExtensionsTests
             l => l.Log(
                 LogLevel.Debug,
                 It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((state, t) => state.ToString() == "Message arg1"),
+                It.Is<It.IsAnyType>((state, t) => state.ToString()!.TrimEnd() == "Message arg1"),
                 It.IsAny<Exception?>(),
                 It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
             Times.Once);

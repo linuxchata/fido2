@@ -10,7 +10,7 @@ public static class LoggerExtensions
     {
         if (logger.IsEnabled(LogLevel.Information))
         {
-            var sanitizedArgs = args.Select(a => a is string s ? SanitizeForLog(s) : a).ToArray();
+            var sanitizedArgs = args.Select(SanitizeArgumentForLog).ToArray();
             logger.LogInformation(message, sanitizedArgs);
         }
     }
@@ -19,16 +19,44 @@ public static class LoggerExtensions
     {
         if (logger.IsEnabled(LogLevel.Debug))
         {
-            var sanitizedArgs = args.Select(a => a is string s ? SanitizeForLog(s) : a).ToArray();
+            var sanitizedArgs = args.Select(SanitizeArgumentForLog).ToArray();
             logger.LogDebug(message, sanitizedArgs);
         }
     }
 
+    private static object? SanitizeArgumentForLog(object? value)
+    {
+        if (value == null)
+        {
+            return null;
+        }
+
+        if (value is string stringValue)
+        {
+            return SanitizeForLog(stringValue);
+        }
+
+        var text = value is IFormattable formattable
+            ? formattable.ToString(null, System.Globalization.CultureInfo.InvariantCulture)
+            : value.ToString();
+
+        return SanitizeForLog(text ?? string.Empty);
+    }
+
     private static string SanitizeForLog(string value)
     {
-        return value
-            .Replace("\r\n", string.Empty, StringComparison.Ordinal)
-            .Replace("\n", string.Empty, StringComparison.Ordinal)
-            .Replace("\r", string.Empty, StringComparison.Ordinal);
+        // Replace \r\n, \n and \r
+        if (value.IndexOfAny(['\r', '\n']) < 0)
+        {
+            return value;
+        }
+
+        return string.Create(value.Length, value, static (span, src) =>
+        {
+            for (var i = 0; i < src.Length; i++)
+            {
+                span[i] = src[i] is '\r' or '\n' ? ' ' : src[i];
+            }
+        });
     }
 }
