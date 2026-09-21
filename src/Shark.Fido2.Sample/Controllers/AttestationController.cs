@@ -1,6 +1,7 @@
 using System.Net.Mime;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
+using Shark.Fido2.Common.Extensions;
 using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Domain.Options;
 using Shark.Fido2.Models.Mappers;
@@ -64,10 +65,10 @@ public class AttestationController(IAttestation attestation, ILogger<Attestation
             return BadRequest(ServerResponse.CreateFailed());
         }
 
-        logger.LogInformation("Create options: {CreateOptionsString}", createOptionsString);
+        logger.LogInformationIfEnabled("Create options: {CreateOptionsString}", createOptionsString);
         var createOptions = JsonSerializer.Deserialize<PublicKeyCredentialCreationOptions>(createOptionsString);
 
-        logger.LogInformation("Attestation request: {Request}", JsonSerializer.Serialize(request.Map()));
+        logger.LogInformationIfEnabled("Attestation request: {Request}", JsonSerializer.Serialize(request.Map()));
         var response = await attestation.CompleteRegistration(request.Map(), createOptions!, cancellationToken);
 
         HttpContext.Session.Remove(SessionName);

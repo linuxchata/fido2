@@ -1,6 +1,7 @@
 using System.Net.Mime;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
+using Shark.Fido2.Common.Extensions;
 using Shark.Fido2.Core.Abstractions;
 using Shark.Fido2.Domain.Options;
 using Shark.Fido2.Models.Mappers;
@@ -70,10 +71,10 @@ public class AssertionController(
             return BadRequest(ServerResponse.CreateFailed());
         }
 
-        logger.LogInformation("Request options: {RequestOptionsString}", requestOptionsString);
+        logger.LogInformationIfEnabled("Request options: {RequestOptionsString}", requestOptionsString);
         var requestOptions = JsonSerializer.Deserialize<PublicKeyCredentialRequestOptions>(requestOptionsString);
 
-        logger.LogInformation("Assertion request: {Request}", JsonSerializer.Serialize(request.Map()));
+        logger.LogInformationIfEnabled("Assertion request: {Request}", JsonSerializer.Serialize(request.Map()));
         var response = await assertion.CompleteAuthentication(request.Map(), requestOptions!, cancellationToken);
 
         HttpContext.Session.Remove(SessionName);
