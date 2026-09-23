@@ -192,7 +192,7 @@ The application will be accessible at `http://localhost:8080`.
 # FIDO Conformance Tests
 All test cases successfully passed using the official [FIDO Conformance Tool](https://fidoalliance.org/certification/conformance/), confirming full compliance with the WebAuthn Level 2 and FIDO2 specifications.
 
-<img alt="FIDO Conformance Tests" src="https://github.com/user-attachments/assets/2fb8d419-bd98-4936-bce1-54e3c6e6cd4d" />
+<img alt="FIDO Conformance Tests" src="https://github.com/user-attachments/assets/a765b52d-5605-4074-8ec2-0846200e47bc" />
 
 # License
 This project is licensed under the [BSD 3-Clause License](LICENSE).
