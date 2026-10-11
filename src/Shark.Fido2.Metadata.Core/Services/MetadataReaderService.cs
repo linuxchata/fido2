@@ -145,10 +145,17 @@ internal sealed class MetadataReaderService : IMetadataReaderService
         {
             if (string.Equals(claim.Type, MetadataBlobConstants.ClientTypeEntries, StringComparison.OrdinalIgnoreCase))
             {
-                var payloadEntry = JsonSerializer.Deserialize<MetadataBlobPayloadEntry>(claim.Value);
-                if (payloadEntry != null)
+                try
                 {
-                    payload.Add(payloadEntry);
+                    var payloadEntry = JsonSerializer.Deserialize<MetadataBlobPayloadEntry>(claim.Value);
+                    if (payloadEntry != null)
+                    {
+                        payload.Add(payloadEntry);
+                    }
+                }
+                catch (JsonException ex)
+                {
+                    _logger.LogWarning(ex, "Skipping metadata payload entry: {Message}", ex.Message);
                 }
             }
         });
