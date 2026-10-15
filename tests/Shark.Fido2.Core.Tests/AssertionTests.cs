@@ -133,7 +133,7 @@ internal class AssertionTests
     #region BeginAuthentication Tests
 
     [Test]
-    public void BeginAuthentication_WhenParametersValidatorThrowsArgumentNullException_ThenThrowsArgumentNullException()
+    public async Task BeginAuthentication_WhenParametersValidatorThrowsArgumentNullException_ThenThrowsArgumentNullException()
     {
         // Arrange
         _assertionParametersValidatorMock
@@ -141,7 +141,7 @@ internal class AssertionTests
             .Throws<ArgumentNullException>();
 
         // Act & Assert
-        Assert.ThrowsAsync<ArgumentNullException>(
+        await Assert.ThrowsAsync<ArgumentNullException>(
             () => _sut.BeginAuthentication(
                 It.IsAny<PublicKeyCredentialRequestOptionsRequest>(),
                 It.IsAny<CancellationToken>()));
@@ -235,7 +235,7 @@ internal class AssertionTests
     #region CompleteAuthentication Tests
 
     [Test]
-    public void CompleteAuthentication_WhenParametersValidatorThrowsArgumentNullException_ThenThrowsArgumentNullException()
+    public async Task CompleteAuthentication_WhenParametersValidatorThrowsArgumentNullException_ThenThrowsArgumentNullException()
     {
         // Arrange
         _assertionParametersValidatorMock
@@ -245,7 +245,7 @@ internal class AssertionTests
             .Throws<ArgumentNullException>();
 
         // Act & Assert
-        Assert.ThrowsAsync<ArgumentNullException>(() =>
+        await Assert.ThrowsAsync<ArgumentNullException>(() =>
             _sut.CompleteAuthentication(
                 _assertion,
                 _requestOptions,

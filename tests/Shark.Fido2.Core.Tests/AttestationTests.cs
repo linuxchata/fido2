@@ -144,7 +144,7 @@ internal class AttestationTests
     #region BeginRegistration Tests
 
     [Test]
-    public void BeginRegistration_WhenParametersValidatorThrowsArgumentNullException_ThenThrowsArgumentNullException()
+    public async Task BeginRegistration_WhenParametersValidatorThrowsArgumentNullException_ThenThrowsArgumentNullException()
     {
         // Arrange
         _attestationParametersValidatorMock
@@ -152,7 +152,7 @@ internal class AttestationTests
             .Throws<ArgumentNullException>();
 
         // Act & Assert
-        Assert.ThrowsAsync<ArgumentNullException>(
+        await Assert.ThrowsAsync<ArgumentNullException>(
             () => _sut.BeginRegistration(
                 It.IsAny<PublicKeyCredentialCreationOptionsRequest>(),
                 It.IsAny<CancellationToken>()));
@@ -281,7 +281,7 @@ internal class AttestationTests
     #region CompleteRegistration Tests
 
     [Test]
-    public void CompleteRegistration_WhenParametersValidatorThrowsArgumentNullException_ThenThrowsArgumentNullException()
+    public async Task CompleteRegistration_WhenParametersValidatorThrowsArgumentNullException_ThenThrowsArgumentNullException()
     {
         // Arrange
         _attestationParametersValidatorMock
@@ -291,7 +291,7 @@ internal class AttestationTests
             .Throws<ArgumentNullException>();
 
         // Act & Assert
-        Assert.ThrowsAsync<ArgumentNullException>(() =>
+        await Assert.ThrowsAsync<ArgumentNullException>(() =>
             _sut.CompleteRegistration(
                 _attestation,
                 _creationOptions,

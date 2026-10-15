@@ -78,7 +78,7 @@ internal class MetadataCachedServiceTests
     }
 
     [Test]
-    public void Get_WhenDistributedCacheThrowsException_ThenRethrowsException()
+    public async Task Get_WhenDistributedCacheThrowsException_ThenRethrowsException()
     {
         // Arrange
         var expectedException = new InvalidOperationException("Cache error");
@@ -94,11 +94,11 @@ internal class MetadataCachedServiceTests
             .ThrowsAsync(expectedException);
 
         // Act & Assert
-        Assert.ThrowsAsync<InvalidOperationException>(() => _sut.Get(_aaguid, It.IsAny<CancellationToken>()));
+        await Assert.ThrowsAsync<InvalidOperationException>(() => _sut.Get(_aaguid, It.IsAny<CancellationToken>()));
     }
 
     [Test]
-    public void Get_WhenMetadataServiceThrowsException_ThenRethrowsException()
+    public async Task Get_WhenMetadataServiceThrowsException_ThenRethrowsException()
     {
         // Arrange
         var expectedException = new HttpRequestException("Service error");
@@ -118,7 +118,7 @@ internal class MetadataCachedServiceTests
             .ThrowsAsync(expectedException);
 
         // Act & Assert
-        Assert.ThrowsAsync<HttpRequestException>(() => _sut.Get(_aaguid, It.IsAny<CancellationToken>()));
+        await Assert.ThrowsAsync<HttpRequestException>(() => _sut.Get(_aaguid, It.IsAny<CancellationToken>()));
     }
 
     [Test]
