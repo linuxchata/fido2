@@ -200,65 +200,65 @@ internal class CredentialRepositoryTests
     #region Add Tests
 
     [Test]
-    public void Add_WhenCredentialIsNull_ThenThrowsArgumentNullException()
+    public async Task Add_WhenCredentialIsNull_ThenThrowsArgumentNullException()
     {
         // Act & Assert
-        Assert.ThrowsAsync<ArgumentNullException>(() => _sut.Add(null!, It.IsAny<CancellationToken>()));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => _sut.Add(null!, It.IsAny<CancellationToken>()));
     }
 
     [Test]
-    public void Add_WhenCredentialIdIsNull_ThenThrowsArgumentNullException()
+    public async Task Add_WhenCredentialIdIsNull_ThenThrowsArgumentNullException()
     {
         // Arrange
         var credential = CreateTestCredential();
         credential.CredentialId = null!;
 
         // Act & Assert
-        Assert.ThrowsAsync<ArgumentNullException>(() => _sut.Add(credential, It.IsAny<CancellationToken>()));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => _sut.Add(credential, It.IsAny<CancellationToken>()));
     }
 
     [Test]
-    public void Add_WhenUserNameIsNull_ThenThrowsArgumentNullException()
+    public async Task Add_WhenUserNameIsNull_ThenThrowsArgumentNullException()
     {
         // Arrange
         var credential = CreateTestCredential();
         credential.UserName = null!;
 
         // Act & Assert
-        Assert.ThrowsAsync<ArgumentNullException>(() => _sut.Add(credential, It.IsAny<CancellationToken>()));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => _sut.Add(credential, It.IsAny<CancellationToken>()));
     }
 
     [Test]
-    public void Add_WhenUserNameIsEmpty_ThenThrowsArgumentException()
+    public async Task Add_WhenUserNameIsEmpty_ThenThrowsArgumentException()
     {
         // Arrange
         var credential = CreateTestCredential();
         credential.UserName = string.Empty;
 
         // Act & Assert
-        Assert.ThrowsAsync<ArgumentException>(() => _sut.Add(credential, It.IsAny<CancellationToken>()));
+        await Assert.ThrowsAsync<ArgumentException>(() => _sut.Add(credential, It.IsAny<CancellationToken>()));
     }
 
     [Test]
-    public void Add_WhenUserHandleIsNull_ThenThrowsArgumentNullException()
+    public async Task Add_WhenUserHandleIsNull_ThenThrowsArgumentNullException()
     {
         // Arrange
         var credential = CreateTestCredential();
         credential.UserHandle = null!;
 
         // Act & Assert
-        Assert.ThrowsAsync<ArgumentNullException>(() => _sut.Add(credential, It.IsAny<CancellationToken>()));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => _sut.Add(credential, It.IsAny<CancellationToken>()));
     }
 
     [Test]
-    public void Add_WhenCredentialPublicKeyIsNull_ThenThrowsArgumentNullException()
+    public async Task Add_WhenCredentialPublicKeyIsNull_ThenThrowsArgumentNullException()
     {
         // Arrange
         var credential = CreateTestCredential();
         credential.CredentialPublicKey = null!;
 
         // Act & Assert
-        Assert.ThrowsAsync<ArgumentNullException>(() => _sut.Add(credential, It.IsAny<CancellationToken>()));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => _sut.Add(credential, It.IsAny<CancellationToken>()));
     }
 
     [Test]
@@ -313,10 +313,10 @@ internal class CredentialRepositoryTests
     #region UpdateSignCount Tests
 
     [Test]
-    public void UpdateSignCount_WhenCredentialDoesNotExist_ThenNotThrowException()
+    public async Task UpdateSignCount_WhenCredentialDoesNotExist_ThenNotThrowException()
     {
         // Act & Assert
-        Assert.DoesNotThrowAsync(() => _sut.UpdateSignCount(CredentialId, 42, It.IsAny<CancellationToken>()));
+        await Assert.DoesNotThrowAsync(() => _sut.UpdateSignCount(CredentialId, 42, It.IsAny<CancellationToken>()));
     }
 
     [Test]
@@ -345,10 +345,10 @@ internal class CredentialRepositoryTests
     #region UpdateLastUsedAt Tests
 
     [Test]
-    public void UpdateLastUsedAt_WhenCredentialDoesNotExist_ThenNotThrowException()
+    public async Task UpdateLastUsedAt_WhenCredentialDoesNotExist_ThenNotThrowException()
     {
         // Act & Assert
-        Assert.DoesNotThrowAsync(() => _sut.UpdateLastUsedAt(CredentialId, It.IsAny<CancellationToken>()));
+        await Assert.DoesNotThrowAsync(() => _sut.UpdateLastUsedAt(CredentialId, It.IsAny<CancellationToken>()));
     }
 
     [Test]

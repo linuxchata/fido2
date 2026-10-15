@@ -42,7 +42,7 @@ internal class MetadataServiceTests
     }
 
     [Test]
-    public void Get_WhenHttpClientRepositoryThrowsException_ThenRethrowsException()
+    public async Task Get_WhenHttpClientRepositoryThrowsException_ThenRethrowsException()
     {
         // Arrange
         var expectedException = new HttpRequestException("Network error");
@@ -52,11 +52,11 @@ internal class MetadataServiceTests
             .ThrowsAsync(expectedException);
 
         // Act & Assert
-        Assert.ThrowsAsync<HttpRequestException>(() => _sut.Get(It.IsAny<CancellationToken>()));
+        await Assert.ThrowsAsync<HttpRequestException>(() => _sut.Get(It.IsAny<CancellationToken>()));
     }
 
     [Test]
-    public void Get_WhenMetadataReaderServiceThrowsException_ThenRethrowsException()
+    public async Task Get_WhenMetadataReaderServiceThrowsException_ThenRethrowsException()
     {
         // Arrange
         var metadataBlob = "jwt-token-blob";
@@ -75,11 +75,11 @@ internal class MetadataServiceTests
             .ThrowsAsync(expectedException);
 
         // Act & Assert
-        Assert.ThrowsAsync<InvalidOperationException>(() => _sut.Get(It.IsAny<CancellationToken>()));
+        await Assert.ThrowsAsync<InvalidOperationException>(() => _sut.Get(It.IsAny<CancellationToken>()));
     }
 
     [Test]
-    public void Get_WhenGetMetadataBlobThrowsException_ThenRethrowsException()
+    public async Task Get_WhenGetMetadataBlobThrowsException_ThenRethrowsException()
     {
         // Arrange
         var expectedException = new HttpRequestException("Metadata blob download failed");
@@ -93,7 +93,7 @@ internal class MetadataServiceTests
             .ThrowsAsync(expectedException);
 
         // Act & Assert
-        Assert.ThrowsAsync<HttpRequestException>(() => _sut.Get(It.IsAny<CancellationToken>()));
+        await Assert.ThrowsAsync<HttpRequestException>(() => _sut.Get(It.IsAny<CancellationToken>()));
     }
 
     [Test]

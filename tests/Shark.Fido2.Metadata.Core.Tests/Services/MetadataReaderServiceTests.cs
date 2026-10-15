@@ -47,10 +47,10 @@ internal class MetadataReaderServiceTests
     }
 
     [Test]
-    public void ValidateAndRead_WhenMetadataBlobIsNull_ThenThrowsArgumentNullException()
+    public async Task ValidateAndRead_WhenMetadataBlobIsNull_ThenThrowsArgumentNullException()
     {
         // Act & Assert
-        Assert.ThrowsAsync<ArgumentNullException>(() => _sut.ValidateAndRead(
+        await Assert.ThrowsAsync<ArgumentNullException>(() => _sut.ValidateAndRead(
             null!,
             _rootCertificateMock.Object,
             It.IsAny<CancellationToken>()));
@@ -59,23 +59,23 @@ internal class MetadataReaderServiceTests
     [Test]
     [TestCase("")]
     [TestCase("   ")]
-    public void ValidateAndRead_WhenMetadataBlobIsEmpty_ThenThrowsArgumentException(string metadataBlob)
+    public async Task ValidateAndRead_WhenMetadataBlobIsEmpty_ThenThrowsArgumentException(string metadataBlob)
     {
         // Act & Assert
-        Assert.ThrowsAsync<ArgumentException>(() => _sut.ValidateAndRead(
+        await Assert.ThrowsAsync<ArgumentException>(() => _sut.ValidateAndRead(
             metadataBlob,
             _rootCertificateMock.Object,
             It.IsAny<CancellationToken>()));
     }
 
     [Test]
-    public void ValidateAndRead_WhenRootCertificateIsNull_ThenThrowsArgumentNullException()
+    public async Task ValidateAndRead_WhenRootCertificateIsNull_ThenThrowsArgumentNullException()
     {
         // Arrange
         var invalidJwt = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.signature";
 
         // Act & Assert
-        Assert.ThrowsAsync<ArgumentNullException>(() => _sut.ValidateAndRead(
+        await Assert.ThrowsAsync<ArgumentNullException>(() => _sut.ValidateAndRead(
             invalidJwt,
             null!,
             It.IsAny<CancellationToken>()));
@@ -86,23 +86,23 @@ internal class MetadataReaderServiceTests
     [TestCase("this-is-not-a-jwt-at-all")]
     [TestCase(".eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.signature")]
     [TestCase("eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9..signature")]
-    public void ValidateAndRead_WhenMetadataBlobIsInvalid_ThenThrowsInvalidOperationException(string metadataBlob)
+    public async Task ValidateAndRead_WhenMetadataBlobIsInvalid_ThenThrowsInvalidOperationException(string metadataBlob)
     {
         // Act & Assert
-        Assert.ThrowsAsync<InvalidOperationException>(() => _sut.ValidateAndRead(
+        await Assert.ThrowsAsync<InvalidOperationException>(() => _sut.ValidateAndRead(
             metadataBlob,
             _rootCertificateMock.Object,
             It.IsAny<CancellationToken>()));
     }
 
     [Test]
-    public void ValidateAndRead_WhenMetadataBlobIsInvalid_ThenThrowsInvalidOperationException()
+    public async Task ValidateAndRead_WhenMetadataBlobIsInvalid_ThenThrowsInvalidOperationException()
     {
         // Arrange
         var metadataBlob = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.invalid.signature";
 
         // Act & Assert
-        Assert.ThrowsAsync<InvalidOperationException>(() => _sut.ValidateAndRead(
+        await Assert.ThrowsAsync<InvalidOperationException>(() => _sut.ValidateAndRead(
             metadataBlob,
             _rootCertificateMock.Object,
             It.IsAny<CancellationToken>()));
