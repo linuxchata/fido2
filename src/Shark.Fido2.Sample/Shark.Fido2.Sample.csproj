@@ -13,7 +13,6 @@
     <PackageReference Include="Microsoft.OpenApi" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />
     <PackageReference Include="Scalar.AspNetCore" />
-    <PackageReference Include="System.Security.Cryptography.Pkcs" />
     <PackageReference Include="prometheus-net" />
     <PackageReference Include="prometheus-net.AspNetCore" />
   </ItemGroup>
