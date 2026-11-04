@@ -18,6 +18,7 @@ internal class AttestationFidoMetadataServiceValidatorTests
     private const string FidoCertifiedStatus = "FIDO_CERTIFIED";
 
     private Mock<IMetadataCachedService> _metadataServiceMock = null!;
+    private Mock<TimeProvider> _timeProviderMock;
 
     private AuthenticatorData _authenticatorData;
     private Fido2Configuration _configuration;
@@ -46,12 +47,16 @@ internal class AttestationFidoMetadataServiceValidatorTests
 
         _certificates = CertificateDataReader.Read("FidoU2f.pem");
 
+        _timeProviderMock = new Mock<TimeProvider>();
+        _timeProviderMock.Setup(x => x.GetUtcNow()).Returns(DateTimeOffset.UtcNow);
+
         _configuration = Fido2ConfigurationBuilder.Build();
         _configuration.EnableMetadataService = true;
         var options = Options.Create(_configuration);
 
         _sut = new AttestationFidoMetadataServiceValidator(
             _metadataServiceMock.Object,
+            _timeProviderMock.Object,
             options,
             NullLogger<AttestationFidoMetadataServiceValidator>.Instance);
     }

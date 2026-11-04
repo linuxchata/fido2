@@ -24,7 +24,7 @@ internal class MetadataPayloadItemTests
         };
 
         // Act
-        var result = item.HasIncreasedRisk();
+        var result = item.HasIncreasedRisk(DateTimeOffset.Now);
 
         // Assert
         Assert.That(result, Is.False);
@@ -46,7 +46,7 @@ internal class MetadataPayloadItemTests
         };
 
         // Act
-        var result = item.HasIncreasedRisk();
+        var result = item.HasIncreasedRisk(DateTimeOffset.Now);
 
         // Assert
         Assert.That(result, Is.False);
@@ -73,7 +73,7 @@ internal class MetadataPayloadItemTests
         };
 
         // Act
-        var result = item.HasIncreasedRisk();
+        var result = item.HasIncreasedRisk(DateTimeOffset.Now);
 
         // Assert
         Assert.That(result, Is.True);
@@ -97,7 +97,7 @@ internal class MetadataPayloadItemTests
         };
 
         // Act
-        var result = item.HasIncreasedRisk();
+        var result = item.HasIncreasedRisk(DateTimeOffset.Now);
 
         // Assert
         Assert.That(result, Is.False);
@@ -116,7 +116,7 @@ internal class MetadataPayloadItemTests
         };
 
         // Act
-        var result = item.GetLastStatus();
+        var result = item.GetLastStatus(DateTimeOffset.Now);
 
         // Assert
         Assert.That(result, Is.EqualTo("-"));
@@ -138,7 +138,7 @@ internal class MetadataPayloadItemTests
         };
 
         // Act
-        var result = item.GetLastStatus();
+        var result = item.GetLastStatus(DateTimeOffset.Now);
 
         // Assert
         Assert.That(result, Is.EqualTo(FidoCertifiedStatus));
@@ -162,7 +162,7 @@ internal class MetadataPayloadItemTests
         };
 
         // Act
-        var result = item.GetLastStatus();
+        var result = item.GetLastStatus(DateTimeOffset.Now);
 
         // Assert
         Assert.That(result, Is.EqualTo(RevokedStatus));
