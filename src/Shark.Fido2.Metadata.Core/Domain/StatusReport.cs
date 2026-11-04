@@ -19,19 +19,12 @@ public sealed class StatusReport
 
     public DateTimeOffset? ParseEffectiveDate()
     {
-        // Case: effective while present - if there's no date, the status
-        // counts as active for as long as the entry is in the list.
-        if (string.IsNullOrWhiteSpace(EffectiveDate))
-        {
-            return null;
-        }
-
         return DateTimeOffset.TryParse(
             EffectiveDate,
             CultureInfo.InvariantCulture,
             DateTimeStyles.AssumeUniversal,
             out var result)
             ? result
-            : DateTimeOffset.MaxValue;
+            : null;
     }
 }
