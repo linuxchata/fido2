@@ -14,15 +14,18 @@ namespace Shark.Fido2.Core.Validators;
 internal class AttestationFidoMetadataServiceValidator : IAttestationTrustAnchorValidator
 {
     private readonly IMetadataCachedService _metadataService;
+    private readonly TimeProvider _timeProvider;
     private readonly Fido2Configuration _configuration;
     private readonly ILogger<AttestationFidoMetadataServiceValidator> _logger;
 
     public AttestationFidoMetadataServiceValidator(
         IMetadataCachedService metadataService,
+        TimeProvider timeProvider,
         IOptions<Fido2Configuration> options,
         ILogger<AttestationFidoMetadataServiceValidator> logger)
     {
         _metadataService = metadataService;
+        _timeProvider = timeProvider;
         _configuration = options.Value;
         _logger = logger;
     }
@@ -42,10 +45,11 @@ internal class AttestationFidoMetadataServiceValidator : IAttestationTrustAnchor
             var authenticatorMetadata = await _metadataService.Get(aaGuid, cancellationToken);
             if (authenticatorMetadata != null)
             {
-                if (authenticatorMetadata.HasIncreasedRisk())
+                var now = _timeProvider.GetUtcNow();
+                if (authenticatorMetadata.HasIncreasedRisk(now))
                 {
                     return ValidatorInternalResult.Invalid(
-                        $"Authenticator {aaGuid} has {authenticatorMetadata.GetLastStatus()} status (increased risk)");
+                        $"Authenticator {aaGuid} has {authenticatorMetadata.GetLastStatus(now)} status (increased risk)");
                 }
 
                 _logger.LogDebugIfEnabled("Authenticator '{AaGuid}' metadata is valid", aaGuid);

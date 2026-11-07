@@ -30,10 +30,11 @@ public sealed class MetadataPayloadItem
     /// <summary>
     /// Gets a value indicating whether the authenticator has an increased risk status.
     /// </summary>
+    /// <param name="now">The current date and time.</param>
     /// <returns><see langword="true"/> if the authenticator has an increased risk status; otherwise, <see langword="false"/>.</returns>
-    public bool HasIncreasedRisk()
+    public bool HasIncreasedRisk(DateTimeOffset now)
     {
-        var lastStatusReport = GetLastStatusReport();
+        var lastStatusReport = GetLastStatusReport(now);
         if (lastStatusReport == null)
         {
             return false;
@@ -45,14 +46,21 @@ public sealed class MetadataPayloadItem
     /// <summary>
     /// Gets the last status of the authenticator.
     /// </summary>
+    /// <param name="now">The current date and time.</param>
     /// <returns>The last status, or "-" if no status reports are present.</returns>
-    public string GetLastStatus()
+    public string GetLastStatus(DateTimeOffset now)
     {
-        return GetLastStatusReport()?.Status ?? "-";
+        return GetLastStatusReport(now)?.Status ?? "-";
     }
 
-    private StatusReport? GetLastStatusReport()
+    private StatusReport? GetLastStatusReport(DateTimeOffset now)
     {
-        return StatusReports.LastOrDefault();
+        return StatusReports
+            .Select((r, index) => (Report: r, Index: index, Date: r.ParseEffectiveDate()))
+            .Where(x => x.Date is null || x.Date <= now)
+            .OrderBy(x => x.Date ?? DateTimeOffset.MinValue)
+            .ThenBy(x => x.Index)
+            .Select(x => x.Report)
+            .LastOrDefault();
     }
 }

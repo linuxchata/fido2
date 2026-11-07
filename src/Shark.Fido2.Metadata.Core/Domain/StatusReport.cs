@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace Shark.Fido2.Metadata.Core.Domain;
 
 /// <summary>
@@ -14,4 +16,15 @@ public sealed class StatusReport
     /// Gets the status of the authenticator.
     /// </summary>
     public required string Status { get; init; }
+
+    public DateTimeOffset? ParseEffectiveDate()
+    {
+        return DateTimeOffset.TryParse(
+            EffectiveDate,
+            CultureInfo.InvariantCulture,
+            DateTimeStyles.AssumeUniversal,
+            out var result)
+            ? result
+            : null;
+    }
 }
