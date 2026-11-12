@@ -13,7 +13,7 @@ public class TokenBindingStatusConverter : JsonConverter<TokenBindingStatus>
             Constants.TokenBindingStatus.Present => TokenBindingStatus.Present,
             Constants.TokenBindingStatus.Supported => TokenBindingStatus.Supported,
             Constants.TokenBindingStatus.NotSupported => TokenBindingStatus.NotSupported,
-            _ => throw new JsonException($"Unknown {nameof(TokenBindingStatus)} value: {value}")
+            _ => throw new JsonException($"Unknown {nameof(TokenBindingStatus)} value: {value}"),
         };
     }
 
@@ -24,7 +24,7 @@ public class TokenBindingStatusConverter : JsonConverter<TokenBindingStatus>
             TokenBindingStatus.Present => Constants.TokenBindingStatus.Present,
             TokenBindingStatus.Supported => Constants.TokenBindingStatus.Supported,
             TokenBindingStatus.NotSupported => Constants.TokenBindingStatus.NotSupported,
-            _ => throw new ArgumentOutOfRangeException(nameof(value), $"Unknown {nameof(TokenBindingStatus)} value: {value}")
+            _ => throw new ArgumentOutOfRangeException(nameof(value), $"Unknown {nameof(TokenBindingStatus)} value: {value}"),
         };
         writer.WriteStringValue(stringValue);
     }

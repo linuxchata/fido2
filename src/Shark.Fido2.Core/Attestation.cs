@@ -95,12 +95,9 @@ public sealed class Attestation : IAttestation
                 AppIdExclude = !string.IsNullOrWhiteSpace(appIdExclude) ? appIdExclude : null,
                 UserVerificationMethod = _configuration.UseUserVerificationMethod,
                 CredentialProperties = _configuration.UseCredentialProperties,
-                LargeBlob = _configuration.UseLargeBlob ?
-                new AuthenticationExtensionsLargeBlobInputs
-                {
-                    Support = _configuration.LargeBlobSupport,
-                }
-                : null,
+                LargeBlob = _configuration.UseLargeBlob
+                    ? new AuthenticationExtensionsLargeBlobInputs { Support = _configuration.LargeBlobSupport, }
+                    : null,
             },
         };
 
@@ -206,7 +203,7 @@ public sealed class Attestation : IAttestation
             CoseAlgorithmsSet.Extended => CoseAlgorithms.Extended,
             CoseAlgorithmsSet.Recommended => CoseAlgorithms.Recommended,
             CoseAlgorithmsSet.Required => CoseAlgorithms.Required,
-            _ => CoseAlgorithms.Extended
+            _ => CoseAlgorithms.Extended,
         };
 
         return coseAlgorithms
@@ -217,8 +214,8 @@ public sealed class Attestation : IAttestation
     private static AuthenticatorSelectionCriteria GetAuthenticatorSelection(
         PublicKeyCredentialCreationOptionsRequest request)
     {
-        return request.AuthenticatorSelection != null ?
-            new AuthenticatorSelectionCriteria
+        return request.AuthenticatorSelection != null
+            ? new AuthenticatorSelectionCriteria
             {
                 AuthenticatorAttachment = request.AuthenticatorSelection.AuthenticatorAttachment,
                 ResidentKey = GetResidentKeyRequirement(request.AuthenticatorSelection.ResidentKey),
@@ -241,8 +238,9 @@ public sealed class Attestation : IAttestation
             return AttestationConveyancePreference.None;
         }
 
-        return AttestationConveyancePreference.Supported.Contains(attestation) ?
-            attestation : AttestationConveyancePreference.None;
+        return AttestationConveyancePreference.Supported.Contains(attestation)
+            ? attestation
+            : AttestationConveyancePreference.None;
     }
 
     private static ResidentKeyRequirement GetResidentKeyRequirement(ResidentKeyRequirement residentKeyRequirement)

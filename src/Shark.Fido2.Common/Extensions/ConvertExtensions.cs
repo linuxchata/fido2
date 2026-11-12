@@ -49,7 +49,7 @@ public static class ConvertExtensions
         {
             2 => (GetBase64UrlValue(span[^1]) & 0xF) == 0,
             3 => (GetBase64UrlValue(span[^1]) & 0x3) == 0,
-            _ => true
+            _ => true,
         };
     }
 
@@ -60,6 +60,6 @@ public static class ConvertExtensions
         >= '0' and <= '9' => c - '0' + 52,
         '-' => 62,
         '_' => 63,
-        _ => -1
+        _ => -1,
     };
 }

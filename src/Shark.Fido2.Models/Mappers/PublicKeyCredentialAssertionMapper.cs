@@ -43,12 +43,13 @@ public static class PublicKeyCredentialAssertionMapper
         {
             AppId = extensions.AppId,
             UserVerificationMethod = extensions.UserVerificationMethod,
-            LargeBlob = extensions.LargeBlob != null ? new AuthenticationExtensionsLargeBlobOutputs
-            {
-                Blob = extensions.LargeBlob.Blob,
-                Written = extensions.LargeBlob.Written,
-            }
-            : null,
+            LargeBlob = extensions.LargeBlob != null
+                ? new AuthenticationExtensionsLargeBlobOutputs
+                {
+                    Blob = extensions.LargeBlob.Blob,
+                    Written = extensions.LargeBlob.Written,
+                }
+                : null,
         };
     }
 }

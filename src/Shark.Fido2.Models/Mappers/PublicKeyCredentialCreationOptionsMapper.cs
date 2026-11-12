@@ -112,11 +112,12 @@ public static class PublicKeyCredentialCreationOptionsMapper
             AppIdExclude = extensions.AppIdExclude,
             UserVerificationMethod = extensions.UserVerificationMethod,
             CredentialProperties = extensions.CredentialProperties,
-            LargeBlob = extensions.LargeBlob != null ? new ServerAuthenticationExtensionsLargeBlobInputs
-            {
-                Support = extensions.LargeBlob.Support,
-            }
-             : null,
+            LargeBlob = extensions.LargeBlob != null
+                ? new ServerAuthenticationExtensionsLargeBlobInputs
+                {
+                    Support = extensions.LargeBlob.Support,
+                }
+                : null,
             Example = true,
         };
     }

@@ -16,6 +16,6 @@ public static class AttestationConveyancePreference
 
     public static readonly HashSet<string> Supported =
     [
-        None, Indirect, Direct, Enterprise
+        None, Indirect, Direct, Enterprise,
     ];
 }

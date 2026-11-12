@@ -113,8 +113,9 @@ internal class PackedAttestationStatementStrategy : IAttestationStatementStrateg
 
             // Optionally, inspect x5c and consult externally provided knowledge to determine whether attStmt conveys
             // a Basic or AttCA attestation.
-            var attestationType = IsRootCertificate(attestationCertificate) ?
-                AttestationType.AttCA : AttestationType.Basic;
+            var attestationType = IsRootCertificate(attestationCertificate)
+                ? AttestationType.AttCA
+                : AttestationType.Basic;
 
             // Verify that trust path does not contain a root certificate
             if (certificates[1..].Exists(IsRootCertificate))

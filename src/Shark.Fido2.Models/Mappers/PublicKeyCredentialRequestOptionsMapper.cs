@@ -60,12 +60,13 @@ public static class PublicKeyCredentialRequestOptionsMapper
         {
             AppId = extensions.AppId,
             UserVerificationMethod = extensions.UserVerificationMethod,
-            LargeBlob = extensions.LargeBlob != null ? new ServerAuthenticationExtensionsLargeBlobInputs
-            {
-                Read = extensions.LargeBlob.Read,
-                Write = extensions.LargeBlob.Write,
-            }
-            : null,
+            LargeBlob = extensions.LargeBlob != null
+                ? new ServerAuthenticationExtensionsLargeBlobInputs
+                {
+                    Read = extensions.LargeBlob.Read,
+                    Write = extensions.LargeBlob.Write,
+                }
+                : null,
             Example = true,
         };
     }

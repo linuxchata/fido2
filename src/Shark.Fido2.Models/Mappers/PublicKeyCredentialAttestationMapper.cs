@@ -53,12 +53,13 @@ public static class PublicKeyCredentialAttestationMapper
             {
                 RequireResidentKey = extensions.CredentialProperties?.RequireResidentKey,
             },
-            LargeBlob = extensions.LargeBlob != null ? new AuthenticationExtensionsLargeBlobOutputs
-            {
-                Supported = extensions.LargeBlob.Supported,
-                Blob = extensions.LargeBlob.Blob,
-            }
-            : null,
+            LargeBlob = extensions.LargeBlob != null
+                ? new AuthenticationExtensionsLargeBlobOutputs
+                {
+                    Supported = extensions.LargeBlob.Supported,
+                    Blob = extensions.LargeBlob.Blob,
+                }
+                : null,
         };
     }
 }

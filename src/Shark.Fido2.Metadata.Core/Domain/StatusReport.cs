@@ -19,11 +19,7 @@ public sealed class StatusReport
 
     public DateTimeOffset? ParseEffectiveDate()
     {
-        return DateTimeOffset.TryParse(
-            EffectiveDate,
-            CultureInfo.InvariantCulture,
-            DateTimeStyles.AssumeUniversal,
-            out var result)
+        return DateTimeOffset.TryParse(EffectiveDate, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal, out var result)
             ? result
             : null;
     }
