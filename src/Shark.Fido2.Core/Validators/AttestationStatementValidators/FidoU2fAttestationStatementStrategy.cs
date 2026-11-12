@@ -129,8 +129,9 @@ internal class FidoU2FAttestationStatementStrategy : IAttestationStatementStrate
 
         // Optionally, inspect x5c and consult externally provided knowledge to determine whether attStmt conveys a
         // Basic or AttCA attestation.
-        var attestationType = IsRootCertificate(attestationCertificate) ?
-            AttestationType.Basic : AttestationType.AttCA;
+        var attestationType = IsRootCertificate(attestationCertificate)
+            ? AttestationType.Basic
+            : AttestationType.AttCA;
 
         certificateScope.Release();
 

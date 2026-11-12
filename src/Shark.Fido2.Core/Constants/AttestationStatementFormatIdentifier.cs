@@ -48,6 +48,6 @@ internal static class AttestationStatementFormatIdentifier
 
     public static readonly HashSet<string> Supported =
     [
-        Packed, Tpm, AndroidKey, AndroidSafetyNet, FidoU2F, Apple, None
+        Packed, Tpm, AndroidKey, AndroidSafetyNet, FidoU2F, Apple, None,
     ];
 }
