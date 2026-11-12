@@ -44,6 +44,7 @@ public class CustomConsoleFormatter : ConsoleFormatter
                         }
                     }
                 }
-            }, textWriter);
+            },
+            textWriter);
     }
 }

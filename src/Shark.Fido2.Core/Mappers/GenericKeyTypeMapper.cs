@@ -5,7 +5,7 @@ namespace Shark.Fido2.Core.Mappers;
 
 public static class GenericKeyTypeMapper
 {
-    public static (KeyType, HashAlgorithmName) Get(int coseAlgorithm)
+    public static (KeyType KeyType, HashAlgorithmName HashAlgorithmName) Get(int coseAlgorithm)
     {
         var rs256Algorithm = RsaKeyTypeMapper.Get(coseAlgorithm);
         if (rs256Algorithm != null)

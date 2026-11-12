@@ -44,7 +44,7 @@ internal class MetadataPayloadItemTests
             Description = Description,
             StatusReports =
             [
-                new StatusReport { Status = FidoCertifiedStatus, EffectiveDate = "2023-01-01" }
+                new StatusReport { Status = FidoCertifiedStatus, EffectiveDate = "2023-01-01" },
             ],
             AttestationTypes = [],
         };
@@ -71,7 +71,7 @@ internal class MetadataPayloadItemTests
             StatusReports =
             [
                 new StatusReport { Status = FidoCertifiedStatus, EffectiveDate = "2023-01-01" },
-                new StatusReport { Status = riskStatus, EffectiveDate = "2023-02-01" }
+                new StatusReport { Status = riskStatus, EffectiveDate = "2023-02-01" },
             ],
             AttestationTypes = [],
         };
@@ -95,7 +95,7 @@ internal class MetadataPayloadItemTests
             [
                 new StatusReport { Status = FidoCertifiedStatus, EffectiveDate = "2023-01-01" },
                 new StatusReport { Status = RevokedStatus, EffectiveDate = "2023-02-01" },
-                new StatusReport { Status = FidoCertifiedStatus, EffectiveDate = "2023-03-01" }
+                new StatusReport { Status = FidoCertifiedStatus, EffectiveDate = "2023-03-01" },
             ],
             AttestationTypes = [],
         };
@@ -136,7 +136,7 @@ internal class MetadataPayloadItemTests
             Description = Description,
             StatusReports =
             [
-                new StatusReport { Status = FidoCertifiedStatus, EffectiveDate = "2023-01-01" }
+                new StatusReport { Status = FidoCertifiedStatus, EffectiveDate = "2023-01-01" },
             ],
             AttestationTypes = [],
         };
@@ -160,7 +160,7 @@ internal class MetadataPayloadItemTests
             [
                 new StatusReport { Status = FidoCertifiedStatus, EffectiveDate = "2023-01-01" },
                 new StatusReport { Status = UpdateAvailableStatus, EffectiveDate = "2023-02-01" },
-                new StatusReport { Status = RevokedStatus, EffectiveDate = "2023-03-01" }
+                new StatusReport { Status = RevokedStatus, EffectiveDate = "2023-03-01" },
             ],
             AttestationTypes = [],
         };
