@@ -5,6 +5,8 @@ namespace Shark.Fido2.Metadata.Core.Validators;
 
 internal sealed class CertificateValidator : ICertificateValidator
 {
+    private static readonly TimeSpan RevocationTimeout = TimeSpan.FromSeconds(10);
+
     private readonly TimeProvider _timeProvider;
 
     public CertificateValidator(TimeProvider timeProvider)
@@ -17,10 +19,17 @@ internal sealed class CertificateValidator : ICertificateValidator
         ArgumentNullException.ThrowIfNull(rootCertificate);
         ArgumentNullException.ThrowIfNull(certificates);
 
+        if (certificates.Count == 0)
+        {
+            throw new ArgumentException("Certificate chain must contain at least the leaf certificate.", nameof(certificates));
+        }
+
         using var chain = new X509Chain();
         chain.ChainPolicy.RevocationMode = X509RevocationMode.Online;
+        chain.ChainPolicy.RevocationFlag = X509RevocationFlag.ExcludeRoot;
+        chain.ChainPolicy.UrlRetrievalTimeout = RevocationTimeout;
         chain.ChainPolicy.VerificationFlags = X509VerificationFlags.NoFlag;
-        chain.ChainPolicy.VerificationTime = _timeProvider.GetLocalNow().DateTime;
+        chain.ChainPolicy.VerificationTime = _timeProvider.GetUtcNow().UtcDateTime;
 
         // Add root certificate
         chain.ChainPolicy.TrustMode = X509ChainTrustMode.CustomRootTrust;
@@ -39,6 +48,13 @@ internal sealed class CertificateValidator : ICertificateValidator
             var errors = chain.ChainStatus.Select(x => x.StatusInformation);
             throw new InvalidOperationException(
                 $"Invalid certificate. Errors:{Environment.NewLine}{string.Join(Environment.NewLine, errors)}");
+        }
+
+        // Defense in depth: the chain must end at the pinned root.
+        var lastCertificate = chain.ChainElements[chain.ChainElements.Count - 1].Certificate;
+        if (!lastCertificate.RawData.AsSpan().SequenceEqual(rootCertificate.RawData))
+        {
+            throw new InvalidOperationException("Certificate chain does not terminate at the expected root.");
         }
     }
 }
