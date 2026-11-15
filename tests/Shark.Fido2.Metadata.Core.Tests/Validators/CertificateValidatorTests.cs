@@ -15,7 +15,7 @@ internal class CertificateValidatorTests
     public void Setup()
     {
         _fakeTimeProvider = new FakeTimeProvider();
-        _fakeTimeProvider.SetUtcNow(new DateTimeOffset(2025, 8, 14, 10, 0, 0, TimeSpan.Zero));
+        _fakeTimeProvider.SetUtcNow(new DateTimeOffset(2026, 11, 15, 10, 0, 0, TimeSpan.Zero));
 
         _sut = new CertificateValidator(_fakeTimeProvider);
     }
@@ -42,6 +42,18 @@ internal class CertificateValidatorTests
 
         // Act & Assert
         Assert.Throws<ArgumentNullException>(() => _sut.ValidateX509Chain(rootCertificate, null!));
+    }
+
+    [Test]
+    public void ValidateX509Chain_WhenCertificatesAreEmpty_ThenThrowsArgumentNullException()
+    {
+        // Arrange
+        var allCertificates = CertificateDataReader.Read("Metadata.pem");
+
+        var rootCertificate = allCertificates.LastOrDefault();
+
+        // Act & Assert
+        Assert.Throws<ArgumentException>(() => _sut.ValidateX509Chain(rootCertificate, []));
     }
 
     [Test]
